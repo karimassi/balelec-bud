@@ -1,4 +1,4 @@
-package ch.epfl.bootcamp;
+package ch.epfl.balelecbud;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("ch.epfl.bootcamp", appContext.getPackageName());
+        assertEquals("ch.epfl.balelecbud", appContext.getPackageName());
     }
 }

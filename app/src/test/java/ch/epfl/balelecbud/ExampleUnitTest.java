@@ -1,4 +1,4 @@
-package ch.epfl.bootcamp;
+package ch.epfl.balelecbud;
 
 import org.junit.Test;
 

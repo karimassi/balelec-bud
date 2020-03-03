@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="ch.epfl.bootcamp"
+    package="ch.epfl.balelecbud"
     tools:ignore="GoogleAppIndexingWarning">
 
     <application
@@ -12,11 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".GreetingActivity"
+            android:name="ch.epfl.balelecbud.GreetingActivity"
             android:label="@string/title_activity_greeting"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity">></activity>
-        <activity android:name=".MainActivity">
+            android:parentActivityName="ch.epfl.balelecbud.MainActivity"></activity>
+        <activity android:name="ch.epfl.balelecbud.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

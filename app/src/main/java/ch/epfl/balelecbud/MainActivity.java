@@ -1,4 +1,4 @@
-package ch.epfl.bootcamp;
+package ch.epfl.balelecbud;
 
 import androidx.appcompat.app.AppCompatActivity;
 
