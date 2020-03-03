@@ -1,4 +1,4 @@
-package ch.epfl.sdp.utils;
+package ch.epfl.balelecbud.utils;
 
 public class Preconditions {
 

@@ -1,4 +1,4 @@
-package ch.epfl.sdp.schedule;
+package ch.epfl.balelecbud.schedule;
 
 import android.graphics.Bitmap;
 

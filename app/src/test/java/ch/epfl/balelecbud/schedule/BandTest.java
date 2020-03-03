@@ -1,4 +1,4 @@
-package ch.epfl.sdp.schedule;
+package ch.epfl.balelecbud.schedule;
 
 import android.graphics.Bitmap;
 
@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static java.util.Optional.empty;
 import static org.junit.Assert.*;
 
 

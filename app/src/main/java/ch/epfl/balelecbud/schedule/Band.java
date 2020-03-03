@@ -1,13 +1,11 @@
-package ch.epfl.sdp.schedule;
+package ch.epfl.balelecbud.schedule;
 
 import android.graphics.Bitmap;
-
-import androidx.annotation.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import ch.epfl.sdp.utils.Preconditions;
+import ch.epfl.balelecbud.utils.Preconditions;
 
 public class Band {
 
