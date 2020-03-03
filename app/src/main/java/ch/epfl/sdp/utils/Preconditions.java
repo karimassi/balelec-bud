@@ -12,4 +12,10 @@ public class Preconditions {
             throw new IllegalArgumentException(message);
         }
     }
+
+    public static void checkNonNull(Object obj){
+        if(obj == null){
+            throw new NullPointerException();
+        }
+    }
 }
