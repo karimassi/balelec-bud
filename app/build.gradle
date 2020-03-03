@@ -9,7 +9,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "ch.epfl.bootcamp"
+        applicationId "ch.epfl.balelecbud"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
