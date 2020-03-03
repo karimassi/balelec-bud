@@ -3,9 +3,7 @@ package ch.epfl.sdp.schedule;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-import java.util.Optional;
+import static org.junit.Assert.assertEquals;
 
 public class TimeSlotTest {
 
