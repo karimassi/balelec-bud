@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "138520216656",
+    "firebase_url": "https://balelecbud-3043a.firebaseio.com",
+    "project_id": "balelecbud-3043a",
+    "storage_bucket": "balelecbud-3043a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138520216656:android:9886d4a8ded2c0798e3d55",
+        "android_client_info": {
+          "package_name": "ch.epfl.balelecbud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138520216656-kv8aqjm62ok0kho2951uhsi486s2p5t5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.balelecbud",
+            "certificate_hash": "dfe98eeb2f7ae4318000b8281ce47e497dac5b8c"
+          }
+        },
+        {
+          "client_id": "138520216656-np673btkbicjruitkba79tkegqb4his7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXeGkVNrqnCtLiWVzfYDZJ8W1USLg56p8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138520216656-np673btkbicjruitkba79tkegqb4his7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
