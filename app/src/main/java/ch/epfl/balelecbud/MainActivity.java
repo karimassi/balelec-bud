@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 public class MainActivity extends BasicActivity {
-
     private Class<? extends Activity> activityClass;
 
     @Override
@@ -25,6 +24,4 @@ public class MainActivity extends BasicActivity {
         Intent intent = new Intent(this, activityClass);
         startActivity(intent);
     }
-
-
 }
