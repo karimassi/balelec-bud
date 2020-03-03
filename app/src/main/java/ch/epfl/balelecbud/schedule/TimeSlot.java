@@ -29,7 +29,7 @@ public class TimeSlot {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if(!(obj instanceof TimeSlot)){
+        if (!(obj instanceof TimeSlot)) {
             return false;
         }
         TimeSlot other = (TimeSlot) obj;
@@ -65,7 +65,7 @@ public class TimeSlot {
 
         @Override
         public boolean equals(@Nullable Object obj) {
-            if(!(obj instanceof Time)){
+            if (!(obj instanceof Time)) {
                 return false;
             }
             Time other = (Time) obj;

@@ -37,13 +37,13 @@ public class Band {
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof Band)){
+        if (!(obj instanceof Band)) {
             return false;
         }
         Band other = (Band) obj;
         return name.equals(other.name) &&
-               description.equals(other.description) &&
-               picture.equals(other.picture);
+                description.equals(other.description) &&
+                picture.equals(other.picture);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class Concert {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if(!(obj instanceof Concert)) {
+        if (!(obj instanceof Concert)) {
             return false;
         }
         Concert other = (Concert) obj;

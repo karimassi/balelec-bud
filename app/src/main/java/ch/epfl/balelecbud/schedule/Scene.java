@@ -23,7 +23,7 @@ public class Scene {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        if(!(obj instanceof Scene)){
+        if (!(obj instanceof Scene)) {
             return false;
         }
         Scene other = (Scene) obj;
