@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ch.epfl.balelecbud"
     tools:ignore="GoogleAppIndexingWarning">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:allowBackup="true"

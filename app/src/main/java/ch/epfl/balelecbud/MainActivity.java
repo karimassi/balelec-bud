@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
-
     public static final String EXTRA_MESSAGE = "ch.epfl.bootcamp.MESSAGE";
 
     @Override
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     public void sendMessage(View view) {
         Intent intent = new Intent(this, GreetingActivity.class);
         EditText editText = (EditText) findViewById(R.id.mainTextEdit);
-        String message = "Hello from my unit test!";
+        String message = "Hello "  + editText.getText() + "!";
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
