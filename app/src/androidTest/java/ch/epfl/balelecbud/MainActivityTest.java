@@ -1,4 +1,4 @@
-package ch.epfl.bootcamp;
+package ch.epfl.balelecbud;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
