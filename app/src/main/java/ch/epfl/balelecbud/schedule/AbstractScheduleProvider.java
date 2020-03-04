@@ -2,9 +2,11 @@ package ch.epfl.balelecbud.schedule;
 
 import java.util.List;
 
+import ch.epfl.balelecbud.schedule.models.Band;
+
 public interface AbstractScheduleProvider {
 
-    Band getBandFromId(Band.Id id);
+    void subscribeConcerts(List<Concert> concerts);
 
     Scene getSceneFromId(Scene.Id id);
 
