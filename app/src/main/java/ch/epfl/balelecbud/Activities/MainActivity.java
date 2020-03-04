@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Intent intent = new Intent(this, AuthenticationActivity.class);
             startActivity(intent);
+            finish();
         }
         setContentView(R.layout.activity_main);
     }

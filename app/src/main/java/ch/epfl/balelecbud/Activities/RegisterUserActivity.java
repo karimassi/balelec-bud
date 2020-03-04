@@ -95,7 +95,8 @@ public class RegisterUserActivity extends AppCompatActivity {
     public void onClick(View view) {
         if (view.getId() == R.id.buttonRegister) {
             register(emailField.getText().toString(), passwordField.getText().toString());
-        } else if (view.getId() == R.id.buttonRegisterToLogin){
+        }
+        if (view.getId() == R.id.buttonRegisterToLogin){
             Intent intent = new Intent(RegisterUserActivity.this, AuthenticationActivity.class);
             startActivity(intent);
             finish();
