@@ -5,10 +5,12 @@ import android.Manifest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.runner.permission.PermissionRequester;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,12 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 public class LocalizationServiceTest {
-    FusedLocationProviderClient client;
-
-    @Rule
-    public GrantPermissionRule mRuntimePermissionRule =
-               GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION,
-                       Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+    private FusedLocationProviderClient client;
 
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule =
@@ -42,13 +39,18 @@ public class LocalizationServiceTest {
 
     @Test
     public void testCanSwitchOnLocalization() {
+        PermissionRequester pr = new PermissionRequester();
+        pr.addPermissions(Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
+        pr.requestPermissions();
         onView(withId(R.id.localizationSwitch)).perform(click());
+        Assert.assertTrue(mActivityRule.getActivity().isLocalizationActive());
     }
 
     @Test
     public void testCanSwitchOffLocalization() {
         onView(withId(R.id.localizationSwitch)).perform(click());
         onView(withId(R.id.localizationSwitch)).perform(click());
+        Assert.assertFalse(mActivityRule.getActivity().isLocalizationActive());
     }
 
 }
