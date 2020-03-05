@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">BalelecBud</string>
-
     <string name="title_activity_greeting">GreetingActivity</string>
     <string name="title_activity_authentication">Sign in</string>
 
