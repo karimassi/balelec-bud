@@ -1,19 +1,11 @@
 package ch.epfl.balelecbud.schedule;
 
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+import ch.epfl.balelecbud.schedule.models.Slot;
 
 public interface AbstractScheduleProvider {
 
-    void subscribeConcerts(List<Concert> concerts);
-
-    Scene getSceneFromId(Scene.Id id);
-
-    Concert getConcertFromId(Concert.Id id);
-
-    List<Band.Id> getBandIds();
-
-    List<Scene.Id> getSceneIds();
-
-    List<Concert.Id> getConcertIds();
+    void subscribeSlots(RecyclerView.Adapter adapter, List<Slot> slots, List<String> concertIds);
 
 }

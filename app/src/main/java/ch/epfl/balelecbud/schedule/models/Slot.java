@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.schedule;
+package ch.epfl.balelecbud.schedule.models;
 
 public class Slot {
     private String artistName;
@@ -9,10 +9,6 @@ public class Slot {
         this.artistName = artistName;
         this.timeSlot = timeSlot;
         this.sceneName = sceneName;
-    }
-
-    public Slot(){
-        // Default constructor required for calls to DataSnapshot.getValue(Comment.class)
     }
 
     public String getArtistName() {
