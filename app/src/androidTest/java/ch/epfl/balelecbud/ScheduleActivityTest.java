@@ -1,10 +1,14 @@
 package ch.epfl.balelecbud;
 
+import android.view.View;
+
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -16,11 +20,10 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
@@ -29,9 +32,7 @@ public class ScheduleActivityTest {
 
     @Test
     public void testCanGreetUsers() {
-        onView(withId(R.id.mainTextEdit)).perform(typeText("from my unit test")).perform(closeSoftKeyboard());
-        onView(withId(R.id.mainButton)).perform(click());
-        onView(withId(R.id.greetingMessage)).check(matches(withText("Hello from my unit test!")));
+        onView(withId(R.id.rvSchedule)).perform(RecyclerViewActions.actionOnItem(hasDescendant(withText("example text")), click()))
     }
 
     class MockScheduleProvider implements AbstractScheduleProvider {
@@ -44,78 +45,23 @@ public class ScheduleActivityTest {
             String id1 = "oui";
             String id2 = "ouioui";
             String id3 = "ouiouioui";
-
-            slots.add(slot1);
-            slots.add(slot2);
-            slots.add(slot3);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-            slots.add(slot1);
-
-            concertIds.add(id1);
-            concertIds.add(id2);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
-            concertIds.add(id3);
         }
     }
+
+    public static Matcher<View> withViewAtPosition(final int position, final Matcher<View> itemMatcher) {
+        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
+            @Override
+            public void describeTo(org.hamcrest.Description description) {
+                itemMatcher.describeTo(description);
+            }
+
+            @Override
+            protected boolean matchesSafely(RecyclerView recyclerView) {
+                final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+                return viewHolder != null && itemMatcher.matches(viewHolder.itemView);
+            }
+        };
+    }
+
+
 }

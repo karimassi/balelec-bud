@@ -27,7 +27,7 @@ public class FirebaseRealtimeScheduleProvider implements AbstractScheduleProvide
     private static final String SLOT_LOCATION = "slots";
 
     public FirebaseRealtimeScheduleProvider (String rootPath) {
-        root = FirebaseDatabase.getInstance().getReference().child(rootPath);
+        root = FirebaseDatabase.getInstance().getReference();//.child(rootPath);
     }
 
 
