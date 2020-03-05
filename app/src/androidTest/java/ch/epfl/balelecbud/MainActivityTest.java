@@ -12,6 +12,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -23,6 +24,6 @@ public class MainActivityTest {
 
     @Test
     public void testCanShowMap() {
-        onView(withId(R.id.mapButton)).perform(click());
+        onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
     }
 }
