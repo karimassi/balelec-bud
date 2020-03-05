@@ -1,4 +1,4 @@
-package ch.epfl.bootcamp.Localization;
+package ch.epfl.balelecbud.localization;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.runner.RunWith;
