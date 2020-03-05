@@ -136,21 +136,21 @@ public class MainActivity extends BasicActivity { //implements SharedPreferences
 //                .registerOnSharedPreferenceChangeListener(this);
 //    }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //updateButtonsState(Utils.getRequestingLocationUpdates(this));
-        //mLocationUpdatesResultView.setText(Utils.getLocationUpdatesResult(this));
-        client.flushLocations().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (!task.isSuccessful()) {
-                    Log.d(TAG, "Flushing the client failed");
-                }
-            }
-        });
-    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        //updateButtonsState(Utils.getRequestingLocationUpdates(this));
+//        //mLocationUpdatesResultView.setText(Utils.getLocationUpdatesResult(this));
+//        client.flushLocations().addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.d(TAG, "Flushing the client failed");
+//                }
+//            }
+//        });
+//    }
 
 //    @Override
 //    protected void onStop() {
@@ -220,12 +220,6 @@ public class MainActivity extends BasicActivity { //implements SharedPreferences
 
         int backgroundLocationPermissionState = ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-
-        if (backgroundLocationPermissionState == PackageManager.PERMISSION_GRANTED &&
-                fineLocationPermissionState == PackageManager.PERMISSION_GRANTED)
-            Log.d(TAG, "Permission is fine");
-        else
-            Log.d(TAG, "Need to ask for permission");
 
         return (fineLocationPermissionState == PackageManager.PERMISSION_GRANTED) &&
                 (backgroundLocationPermissionState == PackageManager.PERMISSION_GRANTED);
