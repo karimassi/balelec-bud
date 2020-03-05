@@ -1,15 +1,20 @@
 package ch.epfl.balelecbud;
 
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.Activities.AuthenticationActivity;
+import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -26,6 +31,24 @@ public class AuthenticationActivityTest {
     @Rule
     public final ActivityTestRule<AuthenticationActivity> mActivityRule =
             new ActivityTestRule<>(AuthenticationActivity.class);
+
+    @Before
+    public void setUp() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseAuthenticator.getInstance().signOut();
+            user.delete();
+        }
+    }
+
+    @After
+    public void tearDown() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseAuthenticator.getInstance().signOut();
+            user.delete();
+        }
+    }
 
     @Test
     public void testCantSignIn1() {
@@ -68,9 +91,9 @@ public class AuthenticationActivityTest {
     @Test
     public void testCanSignInButFails() {
         onView(withId(R.id.editTextEmailLogin)).perform(typeText("fakemail@correct.ch")).perform(closeSoftKeyboard());
-        onView(withId(R.id.editTextPasswordLogin)).perform(typeText("1234")).perform(closeSoftKeyboard());
+        onView(withId(R.id.editTextPasswordLogin)).perform(typeText("123456")).perform(closeSoftKeyboard());
         onView(withId(R.id.buttonLogin)).perform(click());
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        Assert.assertTrue(FirebaseAuth.getInstance().getCurrentUser() == null);
     }
 
     @Test
