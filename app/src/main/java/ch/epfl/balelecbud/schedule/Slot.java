@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.schedule;
 
-import java.util.ArrayList;
-
 public class Slot {
     private String artistName;
     private String timeSlot;
@@ -11,6 +9,10 @@ public class Slot {
         this.artistName = artistName;
         this.timeSlot = timeSlot;
         this.sceneName = sceneName;
+    }
+
+    public Slot(){
+        // Default constructor required for calls to DataSnapshot.getValue(Comment.class)
     }
 
     public String getArtistName() {
@@ -25,13 +27,4 @@ public class Slot {
         return sceneName;
     }
 
-    private static int lastContactId = 0;
-
-    public static ArrayList<Slot> createSchedule(int numSlots) {
-        ArrayList<Slot> schedule = new ArrayList<Slot>();
-        for (int i = 1; i <= numSlots; i++) {
-            schedule.add(new Slot("oui", "oui", "oui"));
-        }
-        return schedule;
-    }
 }
