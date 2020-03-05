@@ -1,0 +1,32 @@
+package ch.epfl.balelecbud.schedule;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.os.Bundle;
+import ch.epfl.balelecbud.R;
+
+public class ScheduleActivity extends AppCompatActivity{
+    private AbstractScheduleProvider scheduleProvider;
+
+    private ScheduleAdapter mAdapter;
+    private RecyclerView rvSchedule;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_schedule);
+
+<<<<<<< HEAD
+       // initialize scheduleprovider
+        AbstractScheduleProvider scheduleProvider = new FirebaseRealtimeScheduleProvider();
+=======
+       scheduleProvider = new FirebaseRealtimeScheduleProvider("oui");
+>>>>>>> feb5e0161c8bf23d8ba8da2a922c3badfd3ef370
+
+        rvSchedule = findViewById(R.id.rvSchedule);
+        mAdapter = new ScheduleAdapter(scheduleProvider);
+        rvSchedule.setLayoutManager(new LinearLayoutManager(this));
+        rvSchedule.setAdapter(mAdapter);
+    }
+}

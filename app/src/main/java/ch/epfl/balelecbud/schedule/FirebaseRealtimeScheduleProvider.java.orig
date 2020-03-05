@@ -4,18 +4,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-import ch.epfl.balelecbud.schedule.models.Concert;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 public class FirebaseRealtimeScheduleProvider implements AbstractScheduleProvider {
@@ -26,10 +23,14 @@ public class FirebaseRealtimeScheduleProvider implements AbstractScheduleProvide
 
     private static final String SLOT_LOCATION = "slots";
 
+<<<<<<< HEAD
     public FirebaseRealtimeScheduleProvider () {
         root = FirebaseDatabase.getInstance().getReference();
+=======
+    public FirebaseRealtimeScheduleProvider (String rootPath) {
+        root = FirebaseDatabase.getInstance().getReference();//.child(rootPath);
+>>>>>>> feb5e0161c8bf23d8ba8da2a922c3badfd3ef370
     }
-
 
     @Override
     public void subscribeSlots(final ScheduleAdapterFacade adapter, final List<Slot> slots, final List<String> slotIds){
