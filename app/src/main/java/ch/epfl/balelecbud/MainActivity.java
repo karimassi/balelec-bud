@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the Map button */
     public void openMapActivity () {
-        Intent intent = new Intent(this, MapActivity.class);
+        Intent intent = new Intent(this, MapViewActivity.class);
         startActivity(intent);
     }
 }

@@ -11,7 +11,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
