@@ -10,7 +10,6 @@
     map:cameraTilt="30"
     map:cameraZoom="15"
     map:mapType="normal"
-    map:uiCompass="true"
     map:uiRotateGestures="true"
     map:uiScrollGestures="true"
     map:uiTiltGestures="true"

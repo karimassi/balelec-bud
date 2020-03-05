@@ -10,8 +10,6 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MESSAGE = "ch.epfl.bootcamp.MESSAGE";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,15 +27,6 @@ public class MainActivity extends AppCompatActivity {
     /** Called when the user taps the Map button */
     public void openMapActivity () {
         Intent intent = new Intent(this, MapActivity.class);
-        startActivity(intent);
-    }
-
-    /** Called when the user taps the Send button */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, GreetingActivity.class);
-        EditText editText = (EditText) findViewById(R.id.mainTextEdit);
-        String message = "Hello from my unit test!";
-        intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 }
