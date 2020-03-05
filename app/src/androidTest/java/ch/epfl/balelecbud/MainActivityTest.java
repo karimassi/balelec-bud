@@ -26,4 +26,9 @@ public class MainActivityTest {
         onView(withId(R.id.mainButton)).perform(click());
         onView(withId(R.id.greetingMessage)).check(matches(withText("Hello from my unit test!")));
     }
+
+    @Test
+    public void testCanShowMap() {
+        onView(withId(R.id.mapButton)).perform(click());
+    }
 }
