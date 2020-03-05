@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Model;
+package ch.epfl.balelecbud.Authentication;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -7,10 +7,11 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class FirebaseAuthenticator implements Authenticator {
 
-    private FirebaseAuth mAuth;
+    private static final FirebaseAuthenticator instance = new FirebaseAuthenticator();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-    public FirebaseAuthenticator() {
-        mAuth = FirebaseAuth.getInstance();
+    private FirebaseAuthenticator() {
+
     }
 
     @Override
@@ -26,5 +27,9 @@ public class FirebaseAuthenticator implements Authenticator {
     @Override
     public void signOut() {
         mAuth.signOut();
+    }
+
+    public static FirebaseAuthenticator getInstance(){
+        return instance;
     }
 }

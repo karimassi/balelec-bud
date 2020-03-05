@@ -1,7 +1,6 @@
-package ch.epfl.balelecbud.Model;
+package ch.epfl.balelecbud.Authentication;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.auth.FirebaseUser;
 
 public interface Authenticator {
 

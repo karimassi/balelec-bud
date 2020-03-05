@@ -7,9 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import ch.epfl.balelecbud.Model.FirebaseAuthenticator;
+import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.R;
-
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,8 +36,8 @@ public class AuthenticationActivity extends AppCompatActivity {
         if (!validateEntry()) {
             return;
         }
-        FirebaseAuthenticator auth = new FirebaseAuthenticator();
-        auth.signIn(email, password, new OnCompleteListener() {
+
+        FirebaseAuthenticator.getInstance().signIn(email, password, new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {

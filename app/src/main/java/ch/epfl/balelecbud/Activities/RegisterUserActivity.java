@@ -12,10 +12,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import ch.epfl.balelecbud.Model.FirebaseAuthenticator;
+import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.R;
 
 public class RegisterUserActivity extends AppCompatActivity {
@@ -34,13 +32,12 @@ public class RegisterUserActivity extends AppCompatActivity {
         repeatPasswordField = findViewById(R.id.editTextRepeatPasswordRegister);
     }
 
-    public void register(String email, String password) {
+    private void register(String email, String password) {
         if (!validateEntry()) {
             return;
         }
 
-        FirebaseAuthenticator auth = new FirebaseAuthenticator();
-        auth.createAccount(email, password, new OnCompleteListener() {
+        FirebaseAuthenticator.getInstance().createAccount(email, password, new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
@@ -70,7 +67,11 @@ public class RegisterUserActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             passwordField.setError(getString(R.string.require_password));
             valid = false;
+        } else if (password.length() < 6) {
+            passwordField.setError(getString(R.string.invalid_password));
+            valid = false;
         }
+
         String passwordRepeated = repeatPasswordField.getText().toString();
         if (TextUtils.isEmpty(passwordRepeated)) {
             repeatPasswordField.setError(getString(R.string.require_password_repeated));
