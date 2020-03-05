@@ -8,16 +8,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleViewHolder> {
 
     private List<Slot> slots;
-    private List<String> slotIds = new ArrayList<>();
+    private List<String> slotIds;
 
-    public ScheduleAdapter(final List<Slot> slots, AbstractScheduleProvider scheduleProvider) {
-        this.slots = slots;
+    public ScheduleAdapter(AbstractScheduleProvider scheduleProvider) {
+        slots = new ArrayList<>();
+        slotIds = new ArrayList<>();
         scheduleProvider.subscribeSlots(this, slots, slotIds);
     }
 
