@@ -20,7 +20,23 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleViewHolder> {
     public ScheduleAdapter(AbstractScheduleProvider scheduleProvider) {
         slots = new ArrayList<>();
         slotIds = new ArrayList<>();
-        scheduleProvider.subscribeSlots(this, slots, slotIds);
+        ScheduleAdapterFacade facade = new ScheduleAdapterFacade() {
+            @Override
+            public void notifyItemInserted(int position) {
+                ScheduleAdapter.this.notifyItemInserted(position);
+            }
+
+            @Override
+            public void notifyItemChanged(int position) {
+                ScheduleAdapter.this.notifyItemChanged(position);
+            }
+
+            @Override
+            public void notifyItemRemoved(int position) {
+                ScheduleAdapter.this.notifyItemRemoved(position);
+            }
+        };
+        scheduleProvider.subscribeSlots(facade, slots, slotIds);
     }
 
     @NonNull
