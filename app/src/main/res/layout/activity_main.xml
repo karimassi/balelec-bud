@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
         android:backgroundTint="#00CF0C0C"
-        android:onClick="sendMessage"
         android:text="click me"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

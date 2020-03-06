@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.localization;
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;

@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
@@ -24,8 +22,7 @@ import ch.epfl.balelecbud.localization.LocalizationService;
 /**
  * @note Localization service inspired from https://github.com/android/location-samples
  */
-public class MainActivity extends AppCompatActivity { //implements SharedPreferences.OnSharedPreferenceChangeListener {
-    public static final String EXTRA_MESSAGE = "ch.epfl.balelecbud.MESSAGE";
+public class MainActivity extends AppCompatActivity {
     private Switch ls;
     private boolean isLocalizationActive;
 
@@ -37,6 +34,10 @@ public class MainActivity extends AppCompatActivity { //implements SharedPrefere
 
     private LocationRequest lr;
     private FusedLocationProviderClient client;
+
+    public boolean isLocalizationSwitchClickable() {
+        return this.ls.isClickable();
+    }
 
     public boolean isLocalizationActive() {
         return isLocalizationActive;
@@ -160,14 +161,5 @@ public class MainActivity extends AppCompatActivity { //implements SharedPrefere
         Log.i(TAG, "Removing location updates");
         client.removeLocationUpdates(getPendingIntent());
         this.isLocalizationActive = false;
-    }
-
-    /** Called when the user taps the Send button */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, GreetingActivity.class);
-        EditText editText = findViewById(R.id.mainTextEdit);
-        String message = "Hello "  + editText.getText() + "!";
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
     }
 }

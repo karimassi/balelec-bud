@@ -13,11 +13,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name="ch.epfl.balelecbud.GreetingActivity"
-            android:label="@string/title_activity_greeting"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="ch.epfl.balelecbud.MainActivity"></activity>
         <activity android:name="ch.epfl.balelecbud.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,5 +25,4 @@
             android:name=".localization.LocalizationService"
             android:exported="false" />
     </application>
-
 </manifest>
