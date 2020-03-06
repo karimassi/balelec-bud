@@ -11,13 +11,12 @@ import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.R;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 
-public class AuthenticationActivity extends AppCompatActivity {
+public class LoginUserActivity extends BasicActivity {
 
     private EditText emailField;
     private EditText passwordField;
@@ -25,7 +24,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_authentication);
+        setContentView(R.layout.activity_login_user);
 
         emailField = findViewById(R.id.editTextEmailLogin);
         passwordField = findViewById(R.id.editTextPasswordLogin);
@@ -36,15 +35,20 @@ public class AuthenticationActivity extends AppCompatActivity {
         if (!validateEntry()) {
             return;
         }
-
+        if (idlingResource != null) {
+            idlingResource.setIdleState(false);
+        }
         FirebaseAuthenticator.getInstance().signIn(email, password, new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
+                if (idlingResource != null) {
+                    idlingResource.setIdleState(true);
+                }
                 if (task.isSuccessful()) {
                     onAuthComplete();
                 }
                 else {
-                    Toast.makeText(AuthenticationActivity.this, getString(R.string.login_failed),
+                    Toast.makeText(LoginUserActivity.this, getString(R.string.login_failed),
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -72,7 +76,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void onAuthComplete() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
         finish();
     }

@@ -1,7 +1,6 @@
 package ch.epfl.balelecbud.Activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +15,7 @@ import com.google.android.gms.tasks.Task;
 import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.R;
 
-public class RegisterUserActivity extends AppCompatActivity {
+public class RegisterUserActivity extends BasicActivity {
 
     private EditText emailField;
     private EditText passwordField;
@@ -36,10 +35,15 @@ public class RegisterUserActivity extends AppCompatActivity {
         if (!validateEntry()) {
             return;
         }
-
+        if (idlingResource != null) {
+            idlingResource.setIdleState(false);
+        }
         FirebaseAuthenticator.getInstance().createAccount(email, password, new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
+                if (idlingResource != null) {
+                    idlingResource.setIdleState(true);
+                }
                 if (task.isSuccessful()) {
                     onAuthComplete();
                 } else {
@@ -88,7 +92,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     private void onAuthComplete() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
         finish();
     }
@@ -98,7 +102,7 @@ public class RegisterUserActivity extends AppCompatActivity {
             register(emailField.getText().toString(), passwordField.getText().toString());
         }
         if (view.getId() == R.id.buttonRegisterToLogin){
-            Intent intent = new Intent(RegisterUserActivity.this, AuthenticationActivity.class);
+            Intent intent = new Intent(RegisterUserActivity.this, LoginUserActivity.class);
             startActivity(intent);
             finish();
         }
