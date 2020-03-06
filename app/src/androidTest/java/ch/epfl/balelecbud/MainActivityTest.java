@@ -39,5 +39,13 @@ public class MainActivityTest {
     @Test
     public void testMapButtonShows() {
         onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.mapButton)).perform(click());
+    }
+
+    @Test
+    public void testMapShows() {
+        onView(withId(R.id.mapButton)).perform(click());
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
+        onView(withId((R.id.mapButton))).check(doesNotExist());
     }
 }
