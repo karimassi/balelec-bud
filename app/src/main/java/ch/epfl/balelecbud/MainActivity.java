@@ -38,6 +38,10 @@ public class MainActivity extends BasicActivity { //implements SharedPreferences
     private LocationRequest lr;
     private FusedLocationProviderClient client;
 
+    public boolean isLocalizationSwitchClickable() {
+        return this.ls.isClickable();
+    }
+
     public boolean isLocalizationActive() {
         return isLocalizationActive;
     }
@@ -182,30 +186,4 @@ public class MainActivity extends BasicActivity { //implements SharedPreferences
         client.removeLocationUpdates(getPendingIntent());
         this.isLocalizationActive = false;
     }
-
-<<<<<<< HEAD
-    /**
-     * Ensures that only one button is enabled at any time. The Start Updates button is enabled
-     * if the user is not requesting location updates. The Stop Updates button is enabled if the
-     * user is requesting location updates.
-     */
-//    private void updateButtonsState(boolean requestingLocationUpdates) {
-//        if (requestingLocationUpdates) {
-//            mRequestUpdatesButton.setEnabled(false);
-//            mRemoveUpdatesButton.setEnabled(true);
-//        } else {
-//            mRequestUpdatesButton.setEnabled(true);
-//            mRemoveUpdatesButton.setEnabled(false);
-//        }
-//    }
-=======
-    /** Called when the user taps the Send button */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, GreetingActivity.class);
-        EditText editText = findViewById(R.id.mainTextEdit);
-        String message = "Hello "  + editText.getText() + "!";
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
->>>>>>> Some cleanup and tests
 }

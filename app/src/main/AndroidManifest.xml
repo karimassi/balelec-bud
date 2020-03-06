@@ -28,5 +28,4 @@
             android:name=".localization.LocalizationService"
             android:exported="false" />
     </application>
-
 </manifest>
