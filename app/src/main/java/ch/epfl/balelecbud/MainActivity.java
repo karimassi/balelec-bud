@@ -17,6 +17,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Arrays;
+
 import ch.epfl.balelecbud.localization.LocalizationService;
 
 /**
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.isLocalizationActive = false;
 
+        this.ls = findViewById(R.id.localizationSwitch);
+        this.ls.setClickable(false);
         // Check if the user revoked runtime permissions.
         if (!checkPermissions()) {
             requestPermissions();
@@ -56,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             this.ls.setClickable(true);
         }
 
-        this.ls = findViewById(R.id.localizationSwitch);
 
         this.ls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -124,14 +127,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionResult");
+        Log.i(TAG, "onRequestPermissionResult (PERMISSION_GRANTED = " + PackageManager.PERMISSION_GRANTED + ")");
+        Log.d(TAG, "onRequestPermissionsResult: Permission = " + Arrays.toString(permissions));
+        Log.d(TAG, "onRequestPermissionsResult: grantResults = " + Arrays.toString(grantResults));
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
                 // If user interaction was interrupted, the permission request is cancelled and you
                 // receive empty arrays.
                 Log.i(TAG, "User interaction was cancelled.");
                 this.ls.setClickable(false);
-            } else if ((grantResults[0] == PackageManager.PERMISSION_GRANTED) &&
+            } else if ((grantResults[0] == PackageManager.PERMISSION_GRANTED) && 
                     (grantResults[1] == PackageManager.PERMISSION_GRANTED)
             ) {
                 // Permission was granted.
