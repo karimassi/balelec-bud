@@ -33,7 +33,7 @@ public class FirebaseRealtimeScheduleProvider implements AbstractScheduleProvide
 
 
     @Override
-    public void subscribeSlots(final ScheduleAdapterFacade adapter, final List<Slot> slots, final List<String> slotIds){
+    public ChildEventListener subscribeSlots(final ScheduleAdapterFacade adapter, final List<Slot> slots, final List<String> slotIds){
         ChildEventListener concertsListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String previousChildName) {
@@ -83,5 +83,6 @@ public class FirebaseRealtimeScheduleProvider implements AbstractScheduleProvide
             }
         };
         root.child(SLOT_LOCATION).addChildEventListener(concertsListener);
+        return concertsListener;
     }
 }
