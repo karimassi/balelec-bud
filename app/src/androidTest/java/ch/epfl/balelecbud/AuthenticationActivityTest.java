@@ -51,7 +51,7 @@ public class AuthenticationActivityTest {
     }
 
     @Test
-    public void testCantSignIn1() {
+    public void testCantSignInEmptyFields() {
         // empty email empty password
         onView(withId(R.id.editTextEmailLogin)).perform(typeText("")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordLogin)).perform(typeText("")).perform(closeSoftKeyboard());
@@ -61,7 +61,7 @@ public class AuthenticationActivityTest {
     }
 
     @Test
-    public void testCantSignIn2() {
+    public void testCantSignInInvalidEmailEmptyPassword() {
         // invalid email empty pws
         onView(withId(R.id.editTextEmailLogin)).perform(typeText("fakemail")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordLogin)).perform(typeText("")).perform(closeSoftKeyboard());
@@ -71,7 +71,7 @@ public class AuthenticationActivityTest {
     }
 
     @Test
-    public void testCantSignIn3() {
+    public void testCantSignInvalidEmailEmptyPassword() {
         // valid email empty pws
         onView(withId(R.id.editTextEmailLogin)).perform(typeText("fakemail@correct.ch")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordLogin)).perform(typeText("")).perform(closeSoftKeyboard());
@@ -80,7 +80,7 @@ public class AuthenticationActivityTest {
     }
 
     @Test
-    public void testCantSignIn4() {
+    public void testCantSignInInvalidEmail() {
         // invalid email non-empty pws
         onView(withId(R.id.editTextEmailLogin)).perform(typeText("fakemail")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordLogin)).perform(typeText("1234")).perform(closeSoftKeyboard());
@@ -89,7 +89,7 @@ public class AuthenticationActivityTest {
     }
 
     @Test
-    public void testCanSignInButFails() {
+    public void testValidInputsButFails() {
         onView(withId(R.id.editTextEmailLogin)).perform(typeText("fakemail@correct.ch")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordLogin)).perform(typeText("123456")).perform(closeSoftKeyboard());
         onView(withId(R.id.buttonLogin)).perform(click());

@@ -48,7 +48,7 @@ public class RegisterUserActivityTest {
     }
 
     @Test
-    public void testCantRegister1() {
+    public void testCantRegisterWithEmptyFields() {
         // empty email empty password
         onView(withId(R.id.editTextEmailRegister)).perform(typeText("")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordRegister)).perform(typeText("")).perform(closeSoftKeyboard());
@@ -60,8 +60,8 @@ public class RegisterUserActivityTest {
     }
 
     @Test
-    public void testCantRegister2() {
-        // invalid email empty pws
+    public void testCantRegisterInvalidEmailEmptyPassword() {
+        // invalid email empty pwd
         onView(withId(R.id.editTextEmailRegister)).perform(typeText("fakemail")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordRegister)).perform(typeText("")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextRepeatPasswordRegister)).perform(typeText("")).perform(closeSoftKeyboard());
@@ -72,8 +72,8 @@ public class RegisterUserActivityTest {
     }
 
     @Test
-    public void testCantRegister3() {
-        // valid email empty pws
+    public void testCantRegisterValidEmailEmptyPassword() {
+        // valid email empty pwd
         onView(withId(R.id.editTextEmailRegister)).perform(typeText("fakemail@correct.ch")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordRegister)).perform(typeText("")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextRepeatPasswordRegister)).perform(typeText("")).perform(closeSoftKeyboard());
@@ -83,8 +83,8 @@ public class RegisterUserActivityTest {
     }
 
     @Test
-    public void testCantRegister4() {
-        // invalid email non-empty pws
+    public void testCantRegisterInvalidEmail() {
+        // invalid email valid pwd
         onView(withId(R.id.editTextEmailRegister)).perform(typeText("fakemail")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordRegister)).perform(typeText("123456")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextRepeatPasswordRegister)).perform(typeText("123546")).perform(closeSoftKeyboard());
@@ -94,12 +94,13 @@ public class RegisterUserActivityTest {
     }
 
     @Test
-    public void testCantRegister5() {
+    public void testCantRegisterInvalidEmailInvalidPassword() {
         // invalid email invalid password
         onView(withId(R.id.editTextEmailRegister)).perform(typeText("fakemail")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordRegister)).perform(typeText("126")).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextRepeatPasswordRegister)).perform(typeText("126")).perform(closeSoftKeyboard());
         onView(withId(R.id.buttonRegister)).perform(click());
+
         onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Enter a valid email!")));
         onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password should be at least 6 characters long.")));
     }
