@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /** Called when the user taps the Map button */
+    /** Called when the user clicks the Map button */
     public void openMapActivity () {
         Intent intent = new Intent(this, MapViewActivity.class);
         startActivity(intent);
