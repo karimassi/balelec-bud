@@ -16,7 +16,8 @@ public class ScheduleActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-        this.scheduleProvider = new FirebaseRealtimeScheduleProvider("oui");
+       // initialize scheduleprovider
+        AbstractScheduleProvider scheduleProvider = new FirebaseRealtimeScheduleProvider();
 
         rvSchedule = findViewById(R.id.rvSchedule);
         mAdapter = new ScheduleAdapter(scheduleProvider);

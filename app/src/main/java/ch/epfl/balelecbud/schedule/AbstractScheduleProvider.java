@@ -1,11 +1,13 @@
 package ch.epfl.balelecbud.schedule;
 
-import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.database.ChildEventListener;
+
 import java.util.List;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 public interface AbstractScheduleProvider {
 
-    void subscribeSlots(RecyclerView.Adapter adapter, List<Slot> slots, List<String> concertIds);
+    //returns listener to be able to remove it at any point
+    ChildEventListener subscribeSlots(ScheduleAdapterFacade adapter, List<Slot> slots, List<String> slotIds);
 
 }

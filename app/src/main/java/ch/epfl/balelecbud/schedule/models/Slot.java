@@ -11,6 +11,10 @@ public class Slot {
         this.sceneName = sceneName;
     }
 
+    public Slot(){
+
+    }
+
     public String getArtistName() {
         return artistName;
     }
