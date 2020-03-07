@@ -8,9 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
-import ch.epfl.balelecbud.R;
-
 public class MainActivity extends AppCompatActivity {
 
     private Class<? extends Activity> activityClass;
