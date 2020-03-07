@@ -8,7 +8,6 @@ import ch.epfl.balelecbud.R;
 
 public class ScheduleActivity extends AppCompatActivity{
     private AbstractScheduleProvider scheduleProvider;
-
     private ScheduleAdapter mAdapter;
     private RecyclerView rvSchedule;
 
@@ -17,7 +16,7 @@ public class ScheduleActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-       scheduleProvider = new FirebaseRealtimeScheduleProvider("oui");
+        this.scheduleProvider = new FirebaseRealtimeScheduleProvider("oui");
 
         rvSchedule = findViewById(R.id.rvSchedule);
         mAdapter = new ScheduleAdapter(scheduleProvider);
