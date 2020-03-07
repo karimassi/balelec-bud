@@ -3,6 +3,7 @@ package ch.epfl.balelecbud.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,7 +32,7 @@ public class LoginUserActivity extends BasicActivity {
 
     }
 
-    private void login(String email, String password) {
+    private void login(final String email, String password) {
         if (!validateEntry()) {
             return;
         }
@@ -46,10 +47,13 @@ public class LoginUserActivity extends BasicActivity {
                 }
                 if (task.isSuccessful()) {
                     onAuthComplete();
+                    System.out.println("Login successful with email " + email);
                 }
                 else {
                     Toast.makeText(LoginUserActivity.this, getString(R.string.login_failed),
                             Toast.LENGTH_SHORT).show();
+                    System.out.println("Login failed with email " + email + " : " + task.getException().toString());
+
                 }
             }
         });

@@ -11,7 +11,6 @@ public class BasicActivity extends AppCompatActivity {
 
     @Nullable protected BasicIdlingResource idlingResource;
 
-    @VisibleForTesting
     @NonNull
     public BasicIdlingResource getIdlingResource() {
         if (idlingResource == null) {
