@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CompoundButton;
@@ -114,11 +115,18 @@ public class MainActivity extends AppCompatActivity {
      * Request the localization permission
      */
     private void requestPermissions() {
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[] {
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION },
-                REQUEST_PERMISSIONS_REQUEST_CODE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
     }
 
     /**
@@ -136,8 +144,9 @@ public class MainActivity extends AppCompatActivity {
                 // receive empty arrays.
                 Log.i(TAG, "User interaction was cancelled.");
                 this.ls.setClickable(false);
-            } else if ((grantResults[0] == PackageManager.PERMISSION_GRANTED) && 
-                    (grantResults[1] == PackageManager.PERMISSION_GRANTED)
+            } else if ((grantResults[0] == PackageManager.PERMISSION_GRANTED) &&
+                    (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
+                            grantResults[1] == PackageManager.PERMISSION_GRANTED)
             ) {
                 // Permission was granted.
                 Log.d(TAG, "onRequestPermissionsResult: Permission granted");

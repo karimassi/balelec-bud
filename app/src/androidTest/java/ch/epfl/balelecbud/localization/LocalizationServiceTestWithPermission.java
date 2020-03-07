@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.localization;
 
-import android.Manifest;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.SystemClock;
@@ -8,19 +7,18 @@ import android.os.SystemClock;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.SearchCondition;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.Until;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.IOException;
 
 import ch.epfl.balelecbud.MainActivity;
 import ch.epfl.balelecbud.R;
@@ -32,6 +30,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 @RunWith(AndroidJUnit4.class)
 public class LocalizationServiceTestWithPermission {
+    private static final long TIMEOUT_LENGTH = 1000;
     private FusedLocationProviderClient client;
     private UiDevice device;
 
@@ -44,13 +43,15 @@ public class LocalizationServiceTestWithPermission {
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
-        if (this.device.hasObject(By.text("ALLOW")))
-            this.device.findObject(By.text("ALLOW")).click();
+        this.device.wait(Until.hasObject(By.text("ALLOW")), TIMEOUT_LENGTH);
+        this.device.findObject(By.text("ALLOW")).click();
+        device.waitForIdle();
     }
 
 
     @Test
     public void testCanSwitchOnLocalization() {
+        device.wait(Until.hasObject(By.clickable(true)), TIMEOUT_LENGTH);
         Assert.assertTrue(this.mActivityRule.getActivity().isLocalizationSwitchClickable());
         onView(withId(R.id.localizationSwitch)).perform(click());
         Assert.assertTrue(mActivityRule.getActivity().isLocalizationActive());
