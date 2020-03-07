@@ -7,7 +7,7 @@ import android.os.Bundle;
 import ch.epfl.balelecbud.R;
 
 public class ScheduleActivity extends AppCompatActivity{
-    private AbstractScheduleProvider scheduleProvider;
+    private ScheduleProvider scheduleProvider;
 
     private ScheduleAdapter mAdapter;
     private RecyclerView rvSchedule;
@@ -18,7 +18,7 @@ public class ScheduleActivity extends AppCompatActivity{
         setContentView(R.layout.activity_schedule);
 
        // initialize scheduleprovider
-        AbstractScheduleProvider scheduleProvider = new FirebaseRealtimeScheduleProvider();
+        ScheduleProvider scheduleProvider = new ScheduleProvider();
 
         rvSchedule = findViewById(R.id.rvSchedule);
         mAdapter = new ScheduleAdapter(scheduleProvider);
