@@ -44,7 +44,8 @@ public class LocalizationServiceTestWithPermission {
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
         this.device.wait(Until.hasObject(By.text("ALLOW")), TIMEOUT_LENGTH);
-        this.device.findObject(By.text("ALLOW")).click();
+        if (this.device.hasObject(By.text("ALLOW")))
+            this.device.findObject(By.text("ALLOW")).click();
         device.waitForIdle();
     }
 

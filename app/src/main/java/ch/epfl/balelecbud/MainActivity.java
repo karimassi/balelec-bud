@@ -128,8 +128,11 @@ public class MainActivity extends BasicActivity { //implements SharedPreferences
         int fineLocationPermissionState = ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION);
 
-        int backgroundLocationPermissionState = ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        int backgroundLocationPermissionState =
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ?
+                        PackageManager.PERMISSION_GRANTED :
+                        ActivityCompat.checkSelfPermission(
+                                this, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
 
         return (fineLocationPermissionState == PackageManager.PERMISSION_GRANTED) &&
                 (backgroundLocationPermissionState == PackageManager.PERMISSION_GRANTED);
