@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import ch.epfl.balelecbud.schedule.AbstractScheduleProvider;
 import ch.epfl.balelecbud.schedule.ScheduleActivity;
 import ch.epfl.balelecbud.schedule.models.Slot;
 

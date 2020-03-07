@@ -16,7 +16,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleViewHolder> {
 
     private List<Slot> slots;
 
-    public ScheduleAdapter(ScheduleProvider scheduleProvider) {
+    public ScheduleAdapter() {
         slots = new ArrayList<>();
         ScheduleAdapterFacade facade = new ScheduleAdapterFacade() {
             @Override
