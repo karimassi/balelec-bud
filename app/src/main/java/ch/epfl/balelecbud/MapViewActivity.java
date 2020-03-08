@@ -3,20 +3,20 @@ package ch.epfl.balelecbud;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import ch.epfl.balelecbud.R;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final LatLng EPFL = new LatLng(46.518802,6.567550);
+    public static final LatLng DEFAULT_LOCATION = new LatLng(46.518802,6.567550);
+
+    private LatLng position;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,8 +30,18 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap map) {
-        LatLng currentPosition = EPFL;
-        map.addMarker(new MarkerOptions().position(currentPosition).title("currentPosition"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
+        setPosition(DEFAULT_LOCATION);
+        map.addMarker(new MarkerOptions().position(position).title("defaultPosition"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(position));
+    }
+
+    public void setPosition(LatLng position) {
+        if (position != null) {
+            this.position = position;
+        }
+    }
+
+    public LatLng getPosition() {
+        return this.position;
     }
 }
