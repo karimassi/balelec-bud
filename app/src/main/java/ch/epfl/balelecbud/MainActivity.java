@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -33,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static final long UPDATE_INTERVAL = 6_000;
     private static final long FASTEST_UPDATE_INTERVAL = 3_000;
-    private static final long MAX_WAIT_TIME = UPDATE_INTERVAL; // Every times a value is ready
+    private static final long MAX_WAIT_TIME = UPDATE_INTERVAL;
+    public static final String LAST_STATE = "ch.epfl.balelecbud.LAST_SATE";
 
     private LocationRequest lr;
     private FusedLocationProviderClient client;
@@ -44,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isLocalizationActive() {
         return isLocalizationActive;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+        Bundle bundle = new Bundle();
+        bundle.putAll(savedInstanceState);
+        bundle.putAll(persistentState);
+        this.onCreate(bundle);
     }
 
     @Override
@@ -79,6 +91,21 @@ public class MainActivity extends AppCompatActivity {
 
         client = LocationServices.getFusedLocationProviderClient(this);
         createLocationRequest();
+
+        if (checkPermissions()) {
+            if (savedInstanceState != null && savedInstanceState.getBoolean(LAST_STATE)) {
+                requestLocationUpdates();
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putBoolean(LAST_STATE, this.isLocalizationActive);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            outPersistentState.putBoolean(LAST_STATE, this.isLocalizationActive);
+        }
     }
 
     private void createLocationRequest() {
