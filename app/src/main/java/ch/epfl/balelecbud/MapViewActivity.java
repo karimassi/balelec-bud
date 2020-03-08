@@ -9,12 +9,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    public static final LatLng DEFAULT_LOCATION = new LatLng(46.518802,6.567550);
+    private static final LatLng DEFAULT_LOCATION = new LatLng(46.518802,6.567550);
 
     private LatLng position;
 
