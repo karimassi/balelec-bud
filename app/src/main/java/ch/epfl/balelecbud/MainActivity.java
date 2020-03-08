@@ -1,28 +1,30 @@
 package ch.epfl.balelecbud;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
+import android.os.Handler;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BasicActivity {
 
-    public static final String EXTRA_MESSAGE = "ch.epfl.bootcamp.MESSAGE";
+    private Class<? extends Activity> activityClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        choseActivity();
+
     }
 
-    /** Called when the user taps the Send button */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, GreetingActivity.class);
-        EditText editText = (EditText) findViewById(R.id.mainTextEdit);
-        String message = "Hello from my unit test!";
-        intent.putExtra(EXTRA_MESSAGE, message);
+    private void choseActivity() {
+        if (getAuthenticator().getCurrentUser() == null) {
+            activityClass = LoginUserActivity.class;
+        } else {
+            activityClass = WelcomeActivity.class;
+        }
+        Intent intent = new Intent(this, activityClass);
         startActivity(intent);
     }
+
+
 }
