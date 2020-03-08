@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud.localization;
 
 import android.Manifest;
+import android.os.Build;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -21,7 +22,11 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 
 import ch.epfl.balelecbud.MainActivity;
+import ch.epfl.balelecbud.R;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
@@ -38,13 +43,25 @@ public class LocalizationServiceTestWithoutPermission {
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
+        this.device.pressBack();
         if (this.device.hasObject(By.text("DENY")))
             this.device.findObject(By.text("DENY")).click();
+        this.device.waitForIdle();
     }
+
+//    @After
+//    public void tearDown() throws IOException {
+//        this.device.executeShellCommand(
+//                "pm revoke ${getTargetContext().packageName} " + Manifest.permission.ACCESS_FINE_LOCATION);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+//            this.device.executeShellCommand(
+//                    "pm revoke ${getTargetContext().packageName} " + Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+//    }
 
     @Test
     public void cantActivateLocationWithoutPermission() {
         Assert.assertFalse(false);
-//        Assert.assertFalse(mActivityRule.getActivity().isLocalizationSwitchClickable());
+        onView(withId(R.id.localizationSwitch)).perform(click());
+//        Assert.assertFalse(mActivityRule.getActivity().isLocalizationActive());
     }
 }

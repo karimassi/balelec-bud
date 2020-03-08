@@ -1,27 +1,29 @@
 package ch.epfl.balelecbud.localization;
 
-import android.app.Instrumentation;
+import android.Manifest;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.os.Build;
 import android.os.SystemClock;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.SearchCondition;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.Until;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
 
 import ch.epfl.balelecbud.MainActivity;
 import ch.epfl.balelecbud.R;
@@ -29,7 +31,6 @@ import ch.epfl.balelecbud.R;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
@@ -47,12 +48,22 @@ public class LocalizationServiceTestWithPermission {
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
+        this.device.pressBack();
         this.device.wait(Until.hasObject(By.text("ALLOW")), TIMEOUT_LENGTH);
         if (this.device.hasObject(By.text("ALLOW")))
             this.device.findObject(By.text("ALLOW")).click();
         device.waitForIdle();
+
     }
 
+//    @After
+//    public void tearDown() throws IOException {
+//        this.device.executeShellCommand(
+//                "pm revoke ${getTargetContext().packageName} " + Manifest.permission.ACCESS_FINE_LOCATION);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+//            this.device.executeShellCommand(
+//                    "pm revoke ${getTargetContext().packageName} " + Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+//    }
 
     @Test
     public void testCanSwitchOnLocalization() {

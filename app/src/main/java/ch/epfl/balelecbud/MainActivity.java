@@ -15,12 +15,12 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
 import java.util.Arrays;
 
 import ch.epfl.balelecbud.localization.LocalizationService;
@@ -28,7 +28,7 @@ import ch.epfl.balelecbud.localization.LocalizationService;
 /**
  * @note Localization service inspired from https://github.com/android/location-samples
  */
-public class MainActivity extends BasicActivity { //implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends BasicActivity {
     private Class<? extends Activity> activityClass;
     public static final String EXTRA_MESSAGE = "ch.epfl.balelecbud.MESSAGE";
     private Switch ls;
