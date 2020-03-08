@@ -21,7 +21,6 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-
 import java.util.Arrays;
 
 import ch.epfl.balelecbud.localization.LocalizationService;
@@ -125,15 +124,6 @@ public class MainActivity extends BasicActivity { //implements SharedPreferences
         startActivity(intent);
     }
 
-    private void createLocationRequest() {
-        lr = new LocationRequest();
-
-        lr.setInterval(UPDATE_INTERVAL);
-        lr.setFastestInterval(FASTEST_UPDATE_INTERVAL);
-        lr.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        lr.setMaxWaitTime(MAX_WAIT_TIME);
-    }
-
     private PendingIntent getPendingIntent() {
         Intent intent = new Intent(this, LocalizationService.class);
         intent.setAction(LocalizationService.ACTION_PROCESS_UPDATES);
@@ -156,6 +146,15 @@ public class MainActivity extends BasicActivity { //implements SharedPreferences
 
         return (fineLocationPermissionState == PackageManager.PERMISSION_GRANTED) &&
                 (backgroundLocationPermissionState == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void createLocationRequest() {
+        lr = new LocationRequest();
+
+        lr.setInterval(UPDATE_INTERVAL);
+        lr.setFastestInterval(FASTEST_UPDATE_INTERVAL);
+        lr.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        lr.setMaxWaitTime(MAX_WAIT_TIME);
     }
 
     /**

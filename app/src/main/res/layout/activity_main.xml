@@ -3,23 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/mainTextEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="enter some text"
-        android:inputType="textPersonName"/>
-
-    <Button
-        android:id="@+id/mainButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:backgroundTint="#00CF0C0C"
-        android:onClick="sendMessage"
-        android:text="click me"/>
-
     <Switch
         android:id="@+id/localizationSwitch"
         android:layout_width="wrap_content"
