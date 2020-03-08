@@ -55,6 +55,6 @@ public class MapViewActivityTest {
     public void testNullPositionIsNotSet() {
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPosition(null);
-        assertThat(mActivity.getPosition(), notNullValue());
+        assertThat(mActivity.getPosition(), is(notNullValue()));
     }
 }

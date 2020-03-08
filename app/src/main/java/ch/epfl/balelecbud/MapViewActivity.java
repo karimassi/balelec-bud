@@ -15,7 +15,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     private static final LatLng DEFAULT_LOCATION = new LatLng(46.518802,6.567550);
 
-    private LatLng position;
+    private LatLng position = DEFAULT_LOCATION;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,6 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap map) {
-        setPosition(DEFAULT_LOCATION);
         map.addMarker(new MarkerOptions().position(position).title("defaultPosition"));
         map.moveCamera(CameraUpdateFactory.newLatLng(position));
     }
