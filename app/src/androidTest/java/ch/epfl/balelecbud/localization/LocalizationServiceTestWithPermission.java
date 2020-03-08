@@ -1,7 +1,10 @@
 package ch.epfl.balelecbud.localization;
 
+import android.app.Instrumentation;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.os.SystemClock;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -26,6 +29,7 @@ import ch.epfl.balelecbud.R;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
@@ -113,4 +117,75 @@ public class LocalizationServiceTestWithPermission {
         client.setMockLocation(mockLocation);
         client.flushLocations();
     }
+
+//    @Test
+//    public void pauseAndRestartActivityWithNullBundle() {
+//        Instrumentation inst = new Instrumentation();
+//        this.device.pressHome();
+//        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
+//        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null);
+//        Assert.assertFalse(this.mActivityRule.getActivity().isLocalizationActive());
+//    }
+//
+//
+//    @Test
+//    public void pauseAndRestartActivityWithBundleWithFalseValue() {
+//        Instrumentation inst = new Instrumentation();
+//        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
+//        Bundle bundle = new Bundle();
+//        bundle.putBoolean(MainActivity.LAST_STATE, false);
+//        inst.callActivityOnCreate(this.mActivityRule.getActivity(), bundle);
+//        Assert.assertFalse(this.mActivityRule.getActivity().isLocalizationActive());
+//    }
+//
+//    @Test
+//    public void pauseAndRestartActivityWithBundleWithTrueValue() {
+//        Instrumentation inst = new Instrumentation();
+//        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
+//        Bundle bundle = new Bundle();
+//        bundle.putBoolean(MainActivity.LAST_STATE, true);
+//        inst.callActivityOnCreate(this.mActivityRule.getActivity(), bundle);
+//        Assert.assertTrue(this.mActivityRule.getActivity().isLocalizationActive());
+//    }
+//
+//    @Test
+//    public void pauseAndRestartActivityWithPersistentBundleWithTrueValue() {
+//        Instrumentation inst = new Instrumentation();
+//        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
+//        PersistableBundle bundle = new PersistableBundle();
+//        bundle.putBoolean(MainActivity.LAST_STATE, true);
+//        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null, bundle);
+//        Assert.assertTrue(this.mActivityRule.getActivity().isLocalizationActive());
+//    }
+//
+//    @Test
+//    public void pauseAndRestartActivityWithPersistentBundleWithFalseValue() {
+//        Instrumentation inst = new Instrumentation();
+//        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
+//        PersistableBundle bundle = new PersistableBundle();
+//        bundle.putBoolean(MainActivity.LAST_STATE, false);
+//        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null, bundle);
+//        Assert.assertFalse(this.mActivityRule.getActivity().isLocalizationActive());
+//    }
+//
+//
+//    @Test
+//    public void pauseAndRestartActivityWithNullPersistentBundle() {
+//        Instrumentation inst = new Instrumentation();
+//        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
+//        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null, null);
+//        Assert.assertTrue(this.mActivityRule.getActivity().isLocalizationActive());
+//    }
+//
+//    @Test
+//    public void pauseAndRestartActivityWithPersistentAndNormalBundle() {
+//        Instrumentation inst = new Instrumentation();
+//        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
+//        PersistableBundle pb = new PersistableBundle();
+//        pb.putBoolean(MainActivity.LAST_STATE, true);
+//        Bundle b = new Bundle();
+//        b.putBoolean(MainActivity.LAST_STATE, false);
+//        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null, pb);
+//        Assert.assertTrue(this.mActivityRule.getActivity().isLocalizationActive());
+//    }
 }
