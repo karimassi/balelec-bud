@@ -3,11 +3,12 @@ package ch.epfl.balelecbud.Authentication;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class FirebaseAuthenticator implements Authenticator {
 
-    private static final FirebaseAuthenticator instance = new FirebaseAuthenticator();
+    private static final Authenticator instance = new FirebaseAuthenticator();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private FirebaseAuthenticator() {
@@ -29,7 +30,12 @@ public class FirebaseAuthenticator implements Authenticator {
         mAuth.signOut();
     }
 
-    public static FirebaseAuthenticator getInstance(){
+    @Override
+    public FirebaseUser getCurrentUser() {
+        return mAuth.getCurrentUser();
+    }
+
+    public static Authenticator getInstance(){
         return instance;
     }
 }

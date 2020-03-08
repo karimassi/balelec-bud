@@ -1,23 +1,18 @@
 package ch.epfl.balelecbud;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.IdlingRegistry;
-import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Random;
 
-import ch.epfl.balelecbud.Activities.RegisterUserActivity;
+import ch.epfl.balelecbud.Authentication.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -28,36 +23,25 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-
+@Ignore
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest {
     @Rule
     public final ActivityTestRule<RegisterUserActivity> mActivityRule =
             new ActivityTestRule<>(RegisterUserActivity.class);
 
-    private IdlingResource mActivityResource;
 
     @Before
     public void setUp() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            FirebaseAuth.getInstance().signOut();
-        }
         ActivityScenario activityScenario = ActivityScenario.launch(RegisterUserActivity.class);
         activityScenario.onActivity(new ActivityScenario.ActivityAction<RegisterUserActivity>() {
             @Override
             public void perform(RegisterUserActivity activity) {
-                mActivityResource = activity.getIdlingResource();
-                IdlingRegistry.getInstance().register(mActivityResource);
+                activity.setAuthenticator(MockAuthenticator.getInstance());
             }
         });
-    }
+        MockAuthenticator.getInstance().signOut();
 
-    @After
-    public void tearDown() {
-        if (mActivityResource != null) {
-            IdlingRegistry.getInstance().unregister(mActivityResource);
-        }
     }
 
     @Test
@@ -87,7 +71,7 @@ public class RegisterUserActivityTest {
     @Test
     public void testCantRegisterValidEmailEmptyPassword() {
         // valid email empty pwd
-        enterEmail("invalid@email.com");
+        enterEmail("valid@email.com");
         enterPassword("");
         repeatPassword("");
         onView(withId(R.id.buttonRegister)).perform(click());
@@ -165,6 +149,5 @@ public class RegisterUserActivityTest {
     private String randomInt() {
         return String.valueOf(new Random().nextInt(10000));
     }
-
 
 }

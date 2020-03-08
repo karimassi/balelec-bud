@@ -1,17 +1,13 @@
-package ch.epfl.balelecbud.Activities;
+package ch.epfl.balelecbud;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
-import ch.epfl.balelecbud.R;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -25,7 +21,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private void signOut() {
         FirebaseAuthenticator.getInstance().signOut();
     }
-
 
     public void onClick(View view) {
         if (view.getId() == R.id.buttonSignOut) {

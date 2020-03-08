@@ -1,15 +1,11 @@
-package ch.epfl.balelecbud.Activities;
+package ch.epfl.balelecbud;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
-import ch.epfl.balelecbud.R;
 
 import androidx.annotation.NonNull;
 
@@ -36,15 +32,9 @@ public class LoginUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        if (idlingResource != null) {
-            idlingResource.setIdleState(false);
-        }
-        FirebaseAuthenticator.getInstance().signIn(email, password, new OnCompleteListener() {
+        getAuthenticator().signIn(email, password, new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
-                if (idlingResource != null) {
-                    idlingResource.setIdleState(true);
-                }
                 if (task.isSuccessful()) {
                     onAuthComplete();
                     System.out.println("Login successful with email " + email);
@@ -92,7 +82,6 @@ public class LoginUserActivity extends BasicActivity {
         if (view.getId() == R.id.buttonLoginToRegister) {
             Intent intent = new Intent(this, RegisterUserActivity.class);
             startActivity(intent);
-            finish();
         }
     }
 

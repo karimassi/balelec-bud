@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Activities;
+package ch.epfl.balelecbud;
 
 import androidx.annotation.NonNull;
 
@@ -11,9 +11,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
-import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
-import ch.epfl.balelecbud.R;
 
 public class RegisterUserActivity extends BasicActivity {
 
@@ -35,15 +32,9 @@ public class RegisterUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        if (idlingResource != null) {
-            idlingResource.setIdleState(false);
-        }
-        FirebaseAuthenticator.getInstance().createAccount(email, password, new OnCompleteListener() {
+        getAuthenticator().createAccount(email, password, new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
-                if (idlingResource != null) {
-                    idlingResource.setIdleState(true);
-                }
                 if (task.isSuccessful()) {
                     onAuthComplete();
                 } else {
