@@ -13,14 +13,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final LatLng DEFAULT_LOCATION = new LatLng(46.518802,6.567550);
+    private double defaultLat;
+    private double defaultLng;
 
-    private LatLng position = DEFAULT_LOCATION;
+    private LatLng position;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        defaultLat = Double.parseDouble(getString(R.string.default_lat));
+        defaultLng = Double.parseDouble(getString(R.string.default_lng));
+        LatLng default_location = new LatLng(defaultLat,defaultLng);
+
+        setPosition(default_location);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

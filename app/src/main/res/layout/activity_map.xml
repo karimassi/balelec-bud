@@ -11,15 +11,15 @@
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        map:cameraTargetLat="-33.796923"
-        map:cameraTargetLng="150.922433"
-        map:cameraTilt="30"
-        map:cameraZoom="15"
+        map:cameraTargetLat="@string/camera_target_lat"
+        map:cameraTargetLng="@string/camera_target_lng"
+        map:cameraTilt="@string/camera_tilt"
+        map:cameraZoom="@string/camera_zoom"
         map:mapType="normal"
-        map:uiRotateGestures="true"
-        map:uiScrollGestures="true"
-        map:uiTiltGestures="true"
-        map:uiZoomControls="true"
-        map:uiZoomGestures="true"/>
+        map:uiRotateGestures="@bool/ui_rotate_gestures"
+        map:uiScrollGestures="@bool/ui_scroll_gestures"
+        map:uiTiltGestures="@bool/ui_tilt_gestures"
+        map:uiZoomControls="@bool/ui_zoom_controls"
+        map:uiZoomGestures="@bool/ui_zoom_gestures"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
