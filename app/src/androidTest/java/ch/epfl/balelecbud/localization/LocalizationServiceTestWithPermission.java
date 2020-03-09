@@ -1,10 +1,14 @@
 package ch.epfl.balelecbud.localization;
 
+import android.app.Instrumentation;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.os.SystemClock;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
@@ -125,7 +129,7 @@ public class LocalizationServiceTestWithPermission {
 
 //    @Test
 //    public void pauseAndRestartActivityWithNullBundle() {
-//        Instrumentation inst = ???
+//        Instrumentation inst = InstrumentationRegistry.getInstrumentation();
 //        this.device.pressHome();
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null);
@@ -135,7 +139,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithBundleWithFalseValue() {
-//        Instrumentation inst = ???
+//        Instrumentation inst = InstrumentationRegistry.getInstrumentation();
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        Bundle bundle = new Bundle();
 //        bundle.putBoolean(MainActivity.LAST_STATE, false);
@@ -145,7 +149,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithBundleWithTrueValue() {
-//        Instrumentation inst = ???
+//        Instrumentation inst = InstrumentationRegistry.getInstrumentation();
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        Bundle bundle = new Bundle();
 //        bundle.putBoolean(MainActivity.LAST_STATE, true);
@@ -155,7 +159,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithPersistentBundleWithTrueValue() {
-//        Instrumentation inst = ???
+//        Instrumentation inst = InstrumentationRegistry.getInstrumentation();
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        PersistableBundle bundle = new PersistableBundle();
 //        bundle.putBoolean(MainActivity.LAST_STATE, true);
@@ -165,7 +169,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithPersistentBundleWithFalseValue() {
-//        Instrumentation inst = ???
+//        Instrumentation inst = InstrumentationRegistry.getInstrumentation();
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        PersistableBundle bundle = new PersistableBundle();
 //        bundle.putBoolean(MainActivity.LAST_STATE, false);
@@ -176,7 +180,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithNullPersistentBundle() {
-//        Instrumentation inst = ???
+//        Instrumentation inst = InstrumentationRegistry.getInstrumentation();
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null, null);
 //        Assert.assertTrue(this.mActivityRule.getActivity().isLocalizationActive());
@@ -184,7 +188,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithPersistentAndNormalBundle() {
-//        Instrumentation inst = ???
+//        Instrumentation inst = InstrumentationRegistry.getInstrumentation();
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        PersistableBundle pb = new PersistableBundle();
 //        pb.putBoolean(MainActivity.LAST_STATE, true);
