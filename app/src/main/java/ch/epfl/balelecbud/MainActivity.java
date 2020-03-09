@@ -3,7 +3,6 @@ package ch.epfl.balelecbud;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 
 public class MainActivity extends BasicActivity {
 
@@ -13,7 +12,6 @@ public class MainActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         choseActivity();
-
     }
 
     private void choseActivity() {
@@ -25,6 +23,4 @@ public class MainActivity extends BasicActivity {
         Intent intent = new Intent(this, activityClass);
         startActivity(intent);
     }
-
-
 }

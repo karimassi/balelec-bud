@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 
 import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
@@ -16,6 +17,13 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
+        Button mapButton = findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMapActivity();
+            }
+        });
     }
 
     private void signOut() {
@@ -31,5 +39,9 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-
+    /** Called when the user clicks the Map button */
+    public void openMapActivity () {
+        Intent intent = new Intent(this, MapViewActivity.class);
+        startActivity(intent);
+    }
 }

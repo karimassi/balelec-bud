@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -29,4 +30,16 @@ public class WelcomeActivityTest {
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void testMapButtonIsDisplayed() {
+        onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.mapButton)).perform(click());
+    }
+
+    @Test
+    public void testMapIsDisplayed() {
+        onView(withId(R.id.mapButton)).perform(click());
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
+        onView(withId((R.id.mapButton))).check(doesNotExist());
+    }
 }
