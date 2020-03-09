@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.localization;
+package ch.epfl.balelecbud.Location;
 
 import android.Manifest;
 import android.os.Build;

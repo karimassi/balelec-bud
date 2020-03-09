@@ -25,7 +25,7 @@
         <activity android:name=".LoginUserActivity"></activity>
         <activity android:name=".WelcomeActivity"></activity>
         <service
-            android:name=".localization.LocalizationService"
+            android:name=".Location.LocationService"
             android:exported="false" />
     </application>
 </manifest>

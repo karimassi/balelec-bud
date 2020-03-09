@@ -23,14 +23,13 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.Arrays;
 
-import ch.epfl.balelecbud.localization.LocalizationService;
+import ch.epfl.balelecbud.Location.LocationService;
 
 /**
  * @note Localization service inspired from https://github.com/android/location-samples
  */
 public class MainActivity extends BasicActivity {
     private Class<? extends Activity> activityClass;
-    public static final String EXTRA_MESSAGE = "ch.epfl.balelecbud.MESSAGE";
     private Switch ls;
     private boolean isLocalizationActive;
 
@@ -44,11 +43,11 @@ public class MainActivity extends BasicActivity {
     private LocationRequest lr;
     private FusedLocationProviderClient client;
 
-    public boolean isLocalizationSwitchClickable() {
+    public boolean isLocationSwitchClickable() {
         return this.ls.isClickable();
     }
 
-    public boolean isLocalizationActive() {
+    public boolean isLocationActive() {
         return isLocalizationActive;
     }
 
@@ -81,12 +80,12 @@ public class MainActivity extends BasicActivity {
         this.ls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    // The localization is enabled
-                    Log.d(TAG, "Localization switched: ON");
+                    // The location is enabled
+                    Log.d(TAG, "Location switched: ON");
                     requestLocationUpdates();
                 } else {
-                    // The localization is disabled
-                    Log.d(TAG,"Localization switched: OFF");
+                    // The location is disabled
+                    Log.d(TAG,"Location switched: OFF");
                     removeLocationUpdates();
                 }
             }
@@ -125,13 +124,13 @@ public class MainActivity extends BasicActivity {
     }
 
     private PendingIntent getPendingIntent() {
-        Intent intent = new Intent(this, LocalizationService.class);
-        intent.setAction(LocalizationService.ACTION_PROCESS_UPDATES);
+        Intent intent = new Intent(this, LocationService.class);
+        intent.setAction(LocationService.ACTION_PROCESS_UPDATES);
         return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
-     * Check the permission required for the localization service
+     * Check the permission required for the location service
      * @return true if the application has the required permission
      */
     private boolean checkPermissions() {
@@ -158,7 +157,7 @@ public class MainActivity extends BasicActivity {
     }
 
     /**
-     * Request the localization permission
+     * Request the location permission
      */
     private void requestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

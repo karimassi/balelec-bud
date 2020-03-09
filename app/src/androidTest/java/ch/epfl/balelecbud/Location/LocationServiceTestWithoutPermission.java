@@ -1,11 +1,6 @@
-package ch.epfl.balelecbud.localization;
+package ch.epfl.balelecbud.Location;
 
-import android.Manifest;
-import android.os.Build;
-
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
@@ -20,18 +15,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
-
 import ch.epfl.balelecbud.MainActivity;
-import ch.epfl.balelecbud.R;
 
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
-public class LocalizationServiceTestWithoutPermission {
+public class LocationServiceTestWithoutPermission {
     private FusedLocationProviderClient client;
     private UiDevice device;
 
