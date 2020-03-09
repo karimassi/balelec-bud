@@ -1,15 +1,10 @@
 package ch.epfl.balelecbud.localization;
 
-import android.Manifest;
-import android.app.Instrumentation;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.SystemClock;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
@@ -30,7 +25,6 @@ import java.io.IOException;
 import ch.epfl.balelecbud.MainActivity;
 import ch.epfl.balelecbud.R;
 
-import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -48,25 +42,21 @@ public class LocalizationServiceTestWithPermission {
 
     @Before
     public void setUpClient() {
+        LocalizationUtils.grantPermissions();
+
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
         this.device.pressBack();
-        this.device.wait(Until.hasObject(By.text("ALLOW")), TIMEOUT_LENGTH);
-        if (this.device.hasObject(By.text("ALLOW")))
-            this.device.findObject(By.text("ALLOW")).click();
+//        this.device.wait(Until.hasObject(By.text("ALLOW")), TIMEOUT_LENGTH);
+//        if (this.device.hasObject(By.text("ALLOW")))
+//            this.device.findObject(By.text("ALLOW")).click();
         device.waitForIdle();
     }
 
     @After
-    public void tearDown() throws IOException {
-        InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
-                "pm revoke " + ApplicationProvider.getApplicationContext().getPackageName() + " "
-                        + Manifest.permission.ACCESS_FINE_LOCATION);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm revoke " + ApplicationProvider.getApplicationContext().getPackageName() + " "
-                            + Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+    public void tearDown() {
+        LocalizationUtils.revokePermissions();
     }
 
     @Test
@@ -135,7 +125,7 @@ public class LocalizationServiceTestWithPermission {
 
 //    @Test
 //    public void pauseAndRestartActivityWithNullBundle() {
-//        Instrumentation inst = new Instrumentation();
+//        Instrumentation inst = ???
 //        this.device.pressHome();
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null);
@@ -145,7 +135,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithBundleWithFalseValue() {
-//        Instrumentation inst = new Instrumentation();
+//        Instrumentation inst = ???
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        Bundle bundle = new Bundle();
 //        bundle.putBoolean(MainActivity.LAST_STATE, false);
@@ -155,7 +145,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithBundleWithTrueValue() {
-//        Instrumentation inst = new Instrumentation();
+//        Instrumentation inst = ???
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        Bundle bundle = new Bundle();
 //        bundle.putBoolean(MainActivity.LAST_STATE, true);
@@ -165,7 +155,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithPersistentBundleWithTrueValue() {
-//        Instrumentation inst = new Instrumentation();
+//        Instrumentation inst = ???
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        PersistableBundle bundle = new PersistableBundle();
 //        bundle.putBoolean(MainActivity.LAST_STATE, true);
@@ -175,7 +165,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithPersistentBundleWithFalseValue() {
-//        Instrumentation inst = new Instrumentation();
+//        Instrumentation inst = ???
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        PersistableBundle bundle = new PersistableBundle();
 //        bundle.putBoolean(MainActivity.LAST_STATE, false);
@@ -186,7 +176,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithNullPersistentBundle() {
-//        Instrumentation inst = new Instrumentation();
+//        Instrumentation inst = ???
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        inst.callActivityOnCreate(this.mActivityRule.getActivity(), null, null);
 //        Assert.assertTrue(this.mActivityRule.getActivity().isLocalizationActive());
@@ -194,7 +184,7 @@ public class LocalizationServiceTestWithPermission {
 //
 //    @Test
 //    public void pauseAndRestartActivityWithPersistentAndNormalBundle() {
-//        Instrumentation inst = new Instrumentation();
+//        Instrumentation inst = ???
 //        inst.callActivityOnDestroy(this.mActivityRule.getActivity());
 //        PersistableBundle pb = new PersistableBundle();
 //        pb.putBoolean(MainActivity.LAST_STATE, true);

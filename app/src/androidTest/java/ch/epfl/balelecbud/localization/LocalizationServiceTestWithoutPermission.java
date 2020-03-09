@@ -41,24 +41,20 @@ public class LocalizationServiceTestWithoutPermission {
 
     @Before
     public void setUpClient() {
+        //LocalizationUtils.grantPermissions();
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
         this.device.pressBack();
+//        LocalizationUtils.revokePermissions();
         if (this.device.hasObject(By.text("DENY")))
             this.device.findObject(By.text("DENY")).click();
         this.device.waitForIdle();
     }
 
     @After
-    public void tearDown() throws IOException {
-        InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
-                "pm revoke " + ApplicationProvider.getApplicationContext().getPackageName() + " "
-                        + Manifest.permission.ACCESS_FINE_LOCATION);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
-                    "pm revoke " + ApplicationProvider.getApplicationContext().getPackageName() + " "
-                            + Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+    public void tearDown() {
+        //LocalizationUtils.revokePermissions();
     }
 
     @Test
