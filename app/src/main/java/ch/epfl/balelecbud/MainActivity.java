@@ -5,24 +5,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final String EXTRA_MESSAGE = "ch.epfl.bootcamp.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button mapButton = findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMapActivity();
+            }
+        });
     }
 
-    /** Called when the user taps the Send button */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, GreetingActivity.class);
-        EditText editText = (EditText) findViewById(R.id.mainTextEdit);
-        String message = "Hello from my unit test!";
-        intent.putExtra(EXTRA_MESSAGE, message);
+    /** Called when the user clicks the Map button */
+    public void openMapActivity () {
+        Intent intent = new Intent(this, MapViewActivity.class);
         startActivity(intent);
     }
 }
