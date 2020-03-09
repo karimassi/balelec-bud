@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ch.epfl.balelecbud"
     tools:ignore="GoogleAppIndexingWarning">
-
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
@@ -16,6 +15,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,7 +25,7 @@
             android:name=".MapViewActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".WelcomeActivity" />
+            android:parentActivityName=".WelcomeActivity"></activity>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

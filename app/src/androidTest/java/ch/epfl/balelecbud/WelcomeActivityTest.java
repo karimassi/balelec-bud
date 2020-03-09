@@ -33,6 +33,7 @@ public class WelcomeActivityTest {
     @Test
     public void testMapButtonIsDisplayed() {
         onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.mapButton)).perform(click());
     }
 
     @Test

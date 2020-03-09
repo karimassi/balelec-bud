@@ -12,7 +12,6 @@ public class MainActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         choseActivity();
-
     }
 
     private void choseActivity() {

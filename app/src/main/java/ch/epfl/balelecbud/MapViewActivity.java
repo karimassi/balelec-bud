@@ -25,7 +25,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
         defaultLat = Double.parseDouble(getString(R.string.default_lat));
         defaultLng = Double.parseDouble(getString(R.string.default_lng));
-        LatLng default_location = new LatLng(defaultLat,defaultLng);
+        LatLng default_location = new LatLng(defaultLat, defaultLng);
 
         setPosition(default_location);
 
