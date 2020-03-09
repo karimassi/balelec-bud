@@ -1,11 +1,13 @@
 package ch.epfl.balelecbud.localization;
 
 import android.Manifest;
+import android.app.Instrumentation;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.SystemClock;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import ch.epfl.balelecbud.MainActivity;
 import ch.epfl.balelecbud.R;
 
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -53,17 +56,18 @@ public class LocalizationServiceTestWithPermission {
         if (this.device.hasObject(By.text("ALLOW")))
             this.device.findObject(By.text("ALLOW")).click();
         device.waitForIdle();
-
     }
 
-//    @After
-//    public void tearDown() throws IOException {
-//        this.device.executeShellCommand(
-//                "pm revoke ${getTargetContext().packageName} " + Manifest.permission.ACCESS_FINE_LOCATION);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-//            this.device.executeShellCommand(
-//                    "pm revoke ${getTargetContext().packageName} " + Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-//    }
+    @After
+    public void tearDown() throws IOException {
+        InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
+                "pm revoke " + ApplicationProvider.getApplicationContext().getPackageName() + " "
+                        + Manifest.permission.ACCESS_FINE_LOCATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm revoke " + ApplicationProvider.getApplicationContext().getPackageName() + " "
+                            + Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+    }
 
     @Test
     public void testCanSwitchOnLocalization() {

@@ -3,6 +3,7 @@ package ch.epfl.balelecbud.localization;
 import android.Manifest;
 import android.os.Build;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -49,19 +50,21 @@ public class LocalizationServiceTestWithoutPermission {
         this.device.waitForIdle();
     }
 
-//    @After
-//    public void tearDown() throws IOException {
-//        this.device.executeShellCommand(
-//                "pm revoke ${getTargetContext().packageName} " + Manifest.permission.ACCESS_FINE_LOCATION);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-//            this.device.executeShellCommand(
-//                    "pm revoke ${getTargetContext().packageName} " + Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-//    }
+    @After
+    public void tearDown() throws IOException {
+        InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
+                "pm revoke " + ApplicationProvider.getApplicationContext().getPackageName() + " "
+                        + Manifest.permission.ACCESS_FINE_LOCATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm revoke " + ApplicationProvider.getApplicationContext().getPackageName() + " "
+                            + Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+    }
 
     @Test
     public void cantActivateLocationWithoutPermission() {
-        Assert.assertFalse(false);
+        Assert.assertFalse(mActivityRule.getActivity().isLocalizationSwitchClickable());
         onView(withId(R.id.localizationSwitch)).perform(click());
-//        Assert.assertFalse(mActivityRule.getActivity().isLocalizationActive());
+        Assert.assertFalse(mActivityRule.getActivity().isLocalizationActive());
     }
 }
