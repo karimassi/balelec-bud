@@ -1,31 +1,27 @@
 package ch.epfl.balelecbud;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BasicActivity {
+
+    private Class<? extends Activity> activityClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        choseActivity();
 
-        Button mapButton = findViewById(R.id.mapButton);
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMapActivity();
-            }
-        });
     }
 
-    /** Called when the user clicks the Map button */
-    public void openMapActivity () {
-        Intent intent = new Intent(this, MapViewActivity.class);
+    private void choseActivity() {
+        if (getAuthenticator().getCurrentUser() == null) {
+            activityClass = LoginUserActivity.class;
+        } else {
+            activityClass = WelcomeActivity.class;
+        }
+        Intent intent = new Intent(this, activityClass);
         startActivity(intent);
     }
 }
