@@ -17,7 +17,6 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
     private List<Slot> slots;
-    private List<String> slotIds;
 
     public class ScheduleViewHolder extends RecyclerView.ViewHolder {
         public TextView timeSlotView;
@@ -32,9 +31,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         }
     }
 
-    public ScheduleAdapter(AbstractScheduleProvider scheduleProvider) {
+    public ScheduleAdapter() {
         slots = new ArrayList<>();
-        slotIds = new ArrayList<>();
         ScheduleAdapterFacade facade = new ScheduleAdapterFacade() {
             @Override
             public void notifyItemInserted(int position) {
@@ -51,7 +49,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 ScheduleAdapter.this.notifyItemRemoved(position);
             }
         };
-        scheduleProvider.subscribeSlots(facade, slots, slotIds);
+        ScheduleProvider.subscribeSlots(new FirebaseScheduleDatabase(), facade, slots);
     }
 
     @NonNull
