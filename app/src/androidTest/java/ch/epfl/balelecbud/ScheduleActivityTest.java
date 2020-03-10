@@ -1,15 +1,25 @@
 package ch.epfl.balelecbud;
 
-import android.content.res.Resources;
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import com.google.firebase.database.ChildEventListener;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,29 +28,100 @@ import java.util.List;
 
 import ch.epfl.balelecbud.schedule.AbstractScheduleProvider;
 import ch.epfl.balelecbud.schedule.ScheduleActivity;
+import ch.epfl.balelecbud.schedule.ScheduleAdapterFacade;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
-    @Rule
-    public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<>(ScheduleActivity.class);
+    //@Rule
+    //public ActivityTestRule<ScheduleActivity> activityRule = new ActivityTestRule<>(ScheduleActivity.class, false, true);
 
-    /**@Test
-    public void testCanGreetUsers() {
-        //onView(withId(R.id.itemlayout)).check(matches(atPosition(0, hasDescendant(withText("19h - 20h")))));
-        onView(withRecyclerView(R.id.rvSchedule)
-                .atPositionOnView(1, R.id.tim))
-                .check(matches(withText("Test text")));
+    @Rule
+    public ActivityTestRule<ScheduleActivity> mActivityRule =
+            new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class, false, true) {
+                @Override
+                protected Intent getActivityIntent() {
+                    Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+                    Intent result = new Intent(targetContext, ScheduleActivity.class);
+                    result.putExtra("db", "mock");
+                    return result;
+                }
+
+                @Override
+                public ScheduleActivity launchActivity(@Nullable Intent startIntent) {
+                    return super.launchActivity(getActivityIntent());
+                }
+            };
+
+
+    @Test
+    public void testRecyclerViewVisible() {
+        onView(withId(R.id.rvSchedule))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mActivityRule.getActivity().getWindow().getDecorView())))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testCaseForRecyclerItemView() {
+        onView(withId(R.id.rvSchedule))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mActivityRule.getActivity().getWindow().getDecorView())))
+                .check(matches(withViewAtPosition(0, Matchers.allOf(
+                        withId(R.id.item_schedule), isDisplayed()))));
+    }
+
+    @Test
+    public void testCaseForRecyclerItems() {
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText("19h - 20h")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText("Mr Oizo")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText("Grande scène")));
+    }
+
+    public Matcher<View> withViewAtPosition(final int position, final Matcher<View> itemMatcher) {
+        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
+            @Override
+            public void describeTo(Description description) {
+                itemMatcher.describeTo(description);
+            }
+
+            @Override
+            protected boolean matchesSafely(RecyclerView recyclerView) {
+                final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+                return viewHolder != null && itemMatcher.matches(viewHolder.itemView);
+            }
+        };
+    }
+
+    public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with "+childPosition+" child view of type parentMatcher");
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                if (!(view.getParent() instanceof ViewGroup)) {
+                    return parentMatcher.matches(view.getParent());
+                }
+
+                ViewGroup group = (ViewGroup) view.getParent();
+                return parentMatcher.matches(view.getParent()) && group.getChildAt(childPosition).equals(view);
+            }
+        };
     }
 
     class MockScheduleProvider implements AbstractScheduleProvider {
         @Override
-        public void subscribeSlots(RecyclerView.Adapter adapter, List<Slot> slots, List<String> concertIds) {
+        public ChildEventListener subscribeSlots(ScheduleAdapterFacade adapter, List<Slot> slots, List<String> slotIds) {
             Slot slot1 = new Slot("Mr Oizo", "19h - 20h", "Grande scène") ;
             Slot slot2 = new Slot("Walking Furret", "20h - 21h", "Les Azimutes") ;
             Slot slot3 = new Slot("There's no need to be upset", "19h - 20h", "Scène Sat'") ;
@@ -48,65 +129,8 @@ public class ScheduleActivityTest {
             String id1 = "oui";
             String id2 = "ouioui";
             String id3 = "ouiouioui";
+
+            return null;
         }
     }
-
-    public class RecyclerViewMatcher {
-        private final int recyclerViewId;
-
-        public RecyclerViewMatcher(int recyclerViewId) {
-            this.recyclerViewId = recyclerViewId;
-        }
-
-        public Matcher<View> atPosition(final int position) {
-            return atPositionOnView(position, -1);
-        }
-
-        public Matcher<View> atPositionOnView(final int position, final int targetViewId) {
-
-            return new TypeSafeMatcher<View>() {
-                Resources resources = null;
-                View childView;
-
-                public void describeTo(Description description) {
-                    String idDescription = Integer.toString(recyclerViewId);
-                    if (this.resources != null) {
-                        try {
-                            idDescription = this.resources.getResourceName(recyclerViewId);
-                        } catch (Resources.NotFoundException var4) {
-                            idDescription = String.format("%s (resource name not found)",
-                                    new Object[] { Integer.valueOf
-                                            (recyclerViewId) });
-                        }
-                    }
-
-                    description.appendText("with id: " + idDescription);
-                }
-
-                public boolean matchesSafely(View view) {
-
-                    this.resources = view.getResources();
-
-                    if (childView == null) {
-                        RecyclerView recyclerView =
-                                (RecyclerView) view.getRootView().findViewById(recyclerViewId);
-                        if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
-                            childView = recyclerView.findViewHolderForAdapterPosition(position).itemView;
-                        }
-                        else {
-                            return false;
-                        }
-                    }
-
-                    if (targetViewId == -1) {
-                        return view == childView;
-                    } else {
-                        View targetView = childView.findViewById(targetViewId);
-                        return view == targetView;
-                    }
-
-                }
-            };
-        }
-    }**/
 }
