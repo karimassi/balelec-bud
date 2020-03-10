@@ -1,32 +1,27 @@
 package ch.epfl.balelecbud.Location;
 
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.SystemClock;
+import android.Manifest;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.By;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.Until;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.MainActivity;
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.WelcomeActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
 public class LocationServiceTestWithPermission {
@@ -35,91 +30,94 @@ public class LocationServiceTestWithPermission {
     private UiDevice device;
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<WelcomeActivity> mActivityRule =
+            new ActivityTestRule<>(WelcomeActivity.class);
+
+    @Rule
+    public final GrantPermissionRule fineLocation = GrantPermissionRule.grant(
+            Manifest.permission.ACCESS_FINE_LOCATION
+    );
 
     @Before
     public void setUpClient() {
-        LocalizationUtils.grantPermissions();
+//        LocalizationUtils.grantPermissions();
 
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
-        this.device = UiDevice.getInstance(getInstrumentation());
-        this.device.pressBack();
+//        this.device = UiDevice.getInstance(getInstrumentation());
 //        this.device.wait(Until.hasObject(By.text("ALLOW")), TIMEOUT_LENGTH);
 //        if (this.device.hasObject(By.text("ALLOW")))
 //            this.device.findObject(By.text("ALLOW")).click();
-        device.waitForIdle();
+//        device.waitForIdle();
     }
 
-    @After
-    public void tearDown() {
-        LocalizationUtils.revokePermissions();
-    }
+//    @After
+//    public void tearDown() {
+//        LocalizationUtils.revokePermissions();
+//    }
 
     @Test
     public void testCanSwitchOnLocalization() {
-        device.wait(Until.hasObject(By.clickable(true)), TIMEOUT_LENGTH);
         Assert.assertTrue(this.mActivityRule.getActivity().isLocationSwitchClickable());
-        onView(withId(R.id.localizationSwitch)).perform(click());
+        onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertTrue(mActivityRule.getActivity().isLocationActive());
     }
 
     @Test
     public void testCanSwitchOffLocalization() {
-        onView(withId(R.id.localizationSwitch)).perform(click());
-        onView(withId(R.id.localizationSwitch)).perform(click());
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertFalse(mActivityRule.getActivity().isLocationActive());
     }
 
-    @Test
-    public void sendANullLocation() {
-        onView(withId(R.id.localizationSwitch)).perform(click());
-        client.setMockLocation(null);
-        client.flushLocations();
-    }
-
-    @Test
-    public void sendValidLocationViaGPS() {
-        onView(withId(R.id.localizationSwitch)).perform(click());
-        Location mockLocation = new Location(LocationManager.GPS_PROVIDER);
-        mockLocation.setLatitude(1.2797677);
-        mockLocation.setLongitude(103.8459285);
-        mockLocation.setAltitude(0);
-        mockLocation.setTime(System.currentTimeMillis());
-        mockLocation.setAccuracy(1);
-        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-        client.setMockLocation(mockLocation);
-        client.flushLocations();
-    }
-
-    @Test
-    public void sendValidLocationViaNetworkProvider() {
-        onView(withId(R.id.localizationSwitch)).perform(click());
-        Location mockLocation = new Location(LocationManager.NETWORK_PROVIDER);
-        mockLocation.setLatitude(42.0);
-        mockLocation.setLongitude(50.42);
-        mockLocation.setAltitude(4);
-        mockLocation.setTime(System.currentTimeMillis());
-        mockLocation.setAccuracy(0.5f);
-        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-        client.setMockLocation(mockLocation);
-        client.flushLocations();
-    }
-
-    @Test
-    public void sendValidLocationViaPassiveProvider() {
-        onView(withId(R.id.localizationSwitch)).perform(click());
-        Location mockLocation = new Location(LocationManager.PASSIVE_PROVIDER);
-        mockLocation.setLatitude(2.0);
-        mockLocation.setLongitude(55.42);
-        mockLocation.setAltitude(42);
-        mockLocation.setTime(System.currentTimeMillis());
-        mockLocation.setAccuracy(4.5f);
-        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-        client.setMockLocation(mockLocation);
-        client.flushLocations();
-    }
+//    @Test
+//    public void sendANullLocation() {
+//        onView(withId(R.id.locationSwitch)).perform(click());
+//        client.setMockLocation(null);
+//        client.flushLocations();
+//    }
+//
+//    @Test
+//    public void sendValidLocationViaGPS() {
+//        onView(withId(R.id.locationSwitch)).perform(click());
+//        Location mockLocation = new Location(LocationManager.GPS_PROVIDER);
+//        mockLocation.setLatitude(1.2797677);
+//        mockLocation.setLongitude(103.8459285);
+//        mockLocation.setAltitude(0);
+//        mockLocation.setTime(System.currentTimeMillis());
+//        mockLocation.setAccuracy(1);
+//        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+//        client.setMockLocation(mockLocation);
+//        client.flushLocations();
+//    }
+//
+//    @Test
+//    public void sendValidLocationViaNetworkProvider() {
+//        onView(withId(R.id.locationSwitch)).perform(click());
+//        Location mockLocation = new Location(LocationManager.NETWORK_PROVIDER);
+//        mockLocation.setLatitude(42.0);
+//        mockLocation.setLongitude(50.42);
+//        mockLocation.setAltitude(4);
+//        mockLocation.setTime(System.currentTimeMillis());
+//        mockLocation.setAccuracy(0.5f);
+//        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+//        client.setMockLocation(mockLocation);
+//        client.flushLocations();
+//    }
+//
+//    @Test
+//    public void sendValidLocationViaPassiveProvider() {
+//        onView(withId(R.id.locationSwitch)).perform(click());
+//        Location mockLocation = new Location(LocationManager.PASSIVE_PROVIDER);
+//        mockLocation.setLatitude(2.0);
+//        mockLocation.setLongitude(55.42);
+//        mockLocation.setAltitude(42);
+//        mockLocation.setTime(System.currentTimeMillis());
+//        mockLocation.setAccuracy(4.5f);
+//        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+//        client.setMockLocation(mockLocation);
+//        client.flushLocations();
+//    }
 
 //    @Test
 //    public void pauseAndRestartActivityWithNullBundle() {

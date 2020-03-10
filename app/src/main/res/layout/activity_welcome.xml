@@ -17,4 +17,10 @@
         android:layout_height="wrap_content"
         android:onClick="onClick"
         android:text="@string/action_sign_out" />
+
+    <Switch
+        android:id="@+id/locationSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Location" />
 </LinearLayout>
