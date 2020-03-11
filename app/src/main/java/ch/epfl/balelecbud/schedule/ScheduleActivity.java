@@ -3,6 +3,7 @@ package ch.epfl.balelecbud.schedule;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
 import ch.epfl.balelecbud.R;
 
@@ -21,4 +22,10 @@ public class ScheduleActivity extends AppCompatActivity{
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
     }
+        /**String db = getIntent().getStringExtra("db");
+        if(db == "mock"){
+            scheduleProvider = new MockScheduleProvider();
+        } else {
+            scheduleProvider = new FirebaseRealtimeScheduleProvider();
+        }**/
 }
