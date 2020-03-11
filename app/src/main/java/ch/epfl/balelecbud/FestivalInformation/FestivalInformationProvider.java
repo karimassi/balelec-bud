@@ -13,5 +13,4 @@ public class FestivalInformationProvider {
     public void unsubscribe() {
         db.unregisterListener();
     }
-
 }
