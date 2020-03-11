@@ -308,6 +308,17 @@ public class MockAuthenticator implements Authenticator {
                     return null;
                 }
 
+                @NonNull
+                @Override
+                public zzz zzh() {
+                    return null;
+                }
+
+                @Override
+                public void zzb(List<zzy> list) {
+
+                }
+
                 @Override
                 public zzz zzh() {
                     return null;
