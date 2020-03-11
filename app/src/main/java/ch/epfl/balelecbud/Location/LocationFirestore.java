@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.location;
+package ch.epfl.balelecbud.Location;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.GeoPoint;

@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.location;
+package ch.epfl.balelecbud.Location;
 
 import android.provider.Settings;
 import android.util.Log;

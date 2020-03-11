@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.location;
+package ch.epfl.balelecbud.Location;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -7,7 +7,6 @@ import android.os.Build;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 
@@ -44,11 +43,6 @@ public class LocationRequesterTest {
     }
 
     @Rule
-    public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-            Manifest.permission.ACCESS_FINE_LOCATION
-    );
-
-    @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<>(WelcomeActivity.class);
 
@@ -57,11 +51,11 @@ public class LocationRequesterTest {
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
+        grantPermission();
     }
 
     @Test
     public void testCanSwitchOnLocalization() {
-        grantPermission();
         Assert.assertTrue(this.mActivityRule.getActivity().isLocationSwitchClickable());
         onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertTrue(mActivityRule.getActivity().isLocationActive());
@@ -69,10 +63,18 @@ public class LocationRequesterTest {
 
     @Test
     public void testCanSwitchOffLocalization() {
-        grantPermission();
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertFalse(mActivityRule.getActivity().isLocationActive());
+    }
+
+    @Test
+    public void whenPermissionGrantedCanSwitchOnLocation() {
+        this.mActivityRule.getActivity().onRequestPermissionsResult(
+                WelcomeActivity.REQUEST_PERMISSIONS_REQUEST_CODE,
+                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                new int[] { PackageManager.PERMISSION_GRANTED });
+        Assert.assertTrue(this.mActivityRule.getActivity().isLocationSwitchClickable());
     }
 
     @Test

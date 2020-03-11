@@ -21,7 +21,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
-import ch.epfl.balelecbud.location.LocationService;
+import ch.epfl.balelecbud.Location.LocationService;
 
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
@@ -154,8 +154,7 @@ public class WelcomeActivity extends AppCompatActivity {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
                 onPermissionCanceled();
-            } else if (isLocationPermissionGranted(grantResults)
-            ) {
+            } else if (isLocationPermissionGranted(grantResults)) {
                 onPermissionGranted();
             } else {
                 onPermissionDenied();
