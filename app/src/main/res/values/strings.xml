@@ -3,6 +3,9 @@
     <string name="title_activity_greeting">GreetingActivity</string>
     <string name="title_activity_authentication">Sign in</string>
 
+    <string name="title_activity_map">MapActivity</string>
+    <string name="map_view">Map View</string>
+
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_name">Name</string>
@@ -15,7 +18,7 @@
     <string name="action_sign_out">Sign Out</string>
 
 
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="login_failed">"Login failed..."</string>
     <string name="registration_failed">Registration failed...</string>
@@ -27,5 +30,4 @@
     <string name="mismatch_password">Passwords do not match!</string>
     <string name="require_password_repeated">Repeat password!</string>
     <string name="location">Location</string>
-
 </resources>

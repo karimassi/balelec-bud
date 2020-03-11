@@ -1,9 +1,5 @@
 package ch.epfl.balelecbud;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -12,9 +8,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -50,6 +50,14 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        Button mapButton = findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMapActivity();
+            }
+        });
 
         this.isLocalizationActive = false;
 
@@ -196,5 +204,9 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-
+    /** Called when the user clicks the Map button */
+    public void openMapActivity () {
+        Intent intent = new Intent(this, MapViewActivity.class);
+        startActivity(intent);
+    }
 }

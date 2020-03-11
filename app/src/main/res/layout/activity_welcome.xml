@@ -8,8 +8,8 @@
         android:id="@+id/greetingTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome !"
-        android:textSize="30sp" />
+        android:text="@string/welcome"
+        android:textSize="@dimen/welcome_text_size" />
 
     <Button
         android:id="@+id/buttonSignOut"
@@ -17,6 +17,12 @@
         android:layout_height="wrap_content"
         android:onClick="onClick"
         android:text="@string/action_sign_out" />
+
+    <Button
+        android:id="@+id/mapButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/map_view" />
 
     <Switch
         android:id="@+id/locationSwitch"
