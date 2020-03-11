@@ -4,6 +4,6 @@ import java.util.List;
 
 import ch.epfl.balelecbud.Transport.Object.Transport;
 
-public interface TransportDataBase {
+public interface TransportDatabase {
     TransportListener getTransportListener(TransportAdapterFacade adapter, List<Transport> transports);
 }
