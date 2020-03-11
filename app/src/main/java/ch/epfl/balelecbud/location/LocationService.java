@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Location;
+package ch.epfl.balelecbud.location;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -13,9 +13,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.GeoPoint;
 
-/**
- * @note Location service inspired from https://github.com/android/location-samples
- */
 public class LocationService extends IntentService {
     public static final String ACTION_PROCESS_UPDATES =
             "ch.epfl.balelecbud.location.LocationService.PROCESS_UPDATES";
@@ -58,12 +55,15 @@ public class LocationService extends IntentService {
         if (intent != null) {
             String action = intent.getAction();
             if (ACTION_PROCESS_UPDATES.equals(action)) {
-                LocationResult result = LocationResult.extractResult(intent);
-                if (result != null) {
-                    Location location = result.getLastLocation();
-                    lf.handleGeoPoint(transformToGeoPoint(location), this.callback);
-                }
+                handleLocationFromIntent(intent);
             }
+        }
+    }
+
+    private void handleLocationFromIntent(@NonNull Intent intent) {
+        LocationResult result = LocationResult.extractResult(intent);
+        if (result != null) {
+            lf.handleGeoPoint(transformToGeoPoint(result.getLastLocation()), this.callback);
         }
     }
 }

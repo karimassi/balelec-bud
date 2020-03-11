@@ -20,17 +20,15 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.Arrays;
-
 import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
-import ch.epfl.balelecbud.Location.LocationService;
+import ch.epfl.balelecbud.location.LocationService;
 
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
     private Switch ls;
     private boolean isLocalizationActive;
 
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static final long UPDATE_INTERVAL = 60_000;
     private static final long FASTEST_UPDATE_INTERVAL = 30_000;
     private static final long MAX_WAIT_TIME = UPDATE_INTERVAL;
@@ -59,6 +57,11 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
+        setUpLocation();
+
+    }
+
+    private void setUpLocation() {
         this.isLocalizationActive = false;
 
         this.ls = findViewById(R.id.locationSwitch);
@@ -88,7 +91,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
         client = LocationServices.getFusedLocationProviderClient(this);
         createLocationRequest();
-
     }
 
 
@@ -149,30 +151,44 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionResult (PERMISSION_GRANTED = " + PackageManager.PERMISSION_GRANTED + ")");
-        Log.d(TAG, "onRequestPermissionsResult: Permission = " + Arrays.toString(permissions));
-        Log.d(TAG, "onRequestPermissionsResult: grantResults = " + Arrays.toString(grantResults));
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
-                // If user interaction was interrupted, the permission request is cancelled and you
-                // receive empty arrays.
-                Log.i(TAG, "User interaction was cancelled.");
-                this.ls.setClickable(false);
-            } else if ((grantResults[0] == PackageManager.PERMISSION_GRANTED) &&
-                    (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
-                            grantResults[1] == PackageManager.PERMISSION_GRANTED)
+                onPermissionCanceled();
+            } else if (isLocationPermissionGranted(grantResults)
             ) {
-                // Permission was granted.
-                Log.d(TAG, "onRequestPermissionsResult: Permission granted");
-                this.ls.setClickable(true);
+                onPermissionGranted();
+            } else {
+                onPermissionDenied();
             }
         }
+    }
+
+    private boolean isLocationPermissionGranted(@NonNull int[] grantResults) {
+        return (grantResults[0] == PackageManager.PERMISSION_GRANTED) &&
+                (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED);
+    }
+
+
+    private void onPermissionCanceled() {
+        Log.i(TAG, "onRequestPermissionsResult: Permission request canceled");
+        this.ls.setClickable(false);
+    }
+
+    private void onPermissionDenied() {
+        Log.i(TAG, "onRequestPermissionsResult: Permission denied");
+        this.ls.setClickable(false);
+    }
+
+    private void onPermissionGranted() {
+        Log.i(TAG, "onRequestPermissionsResult: Permission granted");
+        this.ls.setClickable(true);
     }
 
     /**
      * Handles the Request Updates button and requests start of location updates.
      */
-    public void requestLocationUpdates() {
+    private void requestLocationUpdates() {
         try {
             Log.i(TAG, "Starting location updates");
             client.requestLocationUpdates(lr, getPendingIntent());
@@ -185,7 +201,7 @@ public class WelcomeActivity extends AppCompatActivity {
     /**
      * Handles the Remove Updates button, and requests removal of location updates.
      */
-    public void removeLocationUpdates() {
+    private void removeLocationUpdates() {
         Log.i(TAG, "Removing location updates");
         client.removeLocationUpdates(getPendingIntent());
         this.isLocalizationActive = false;
@@ -205,7 +221,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     /** Called when the user clicks the Map button */
-    public void openMapActivity () {
+    private void openMapActivity () {
         Intent intent = new Intent(this, MapViewActivity.class);
         startActivity(intent);
     }
