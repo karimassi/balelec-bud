@@ -5,7 +5,7 @@ import java.util.List;
 import ch.epfl.balelecbud.Transport.Object.Transport;
 
 public class TransportProvider {
-    static TransportListener subscribeSlots(TransportDatabase db, TransportAdapterFacade adapter, List<Transport> transports){
+    static TransportListener subscribeTransport(TransportDatabase db, TransportAdapterFacade adapter, List<Transport> transports){
         return db.getTransportListener(adapter, transports);
     }
 }

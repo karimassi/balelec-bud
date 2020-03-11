@@ -1,13 +1,5 @@
 package ch.epfl.balelecbud.Transport;
 
-import android.util.Log;
-
-import androidx.annotation.Nullable;
-
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +10,7 @@ public class TransportListener {
     private static final String TAG = TransportListener.class.getSimpleName();
 
     private final TransportAdapterFacade adapter;
-    private List<Transport> transports;
+    private final List<Transport> transports;
     private final List<String> transportsIds;
     private WrappedListener inner;
 
@@ -30,18 +22,19 @@ public class TransportListener {
         inner.registerOuterListener(this);
     }
 
-    public void updateTransport(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-        if (queryDocumentSnapshots != null) {
-            Log.d(TAG, "updateTransport: transport successfully updated");
-            List<Transport> newTransports = new LinkedList<>();
-            for (DocumentSnapshot d : queryDocumentSnapshots.getDocuments()) {
-                newTransports.add(d.toObject(Transport.class));
-            }
-            this.transports = newTransports;
-            // TODO update the adapter
-        } else {
-            Log.w(TAG, "updateTransport: failed to update the transport", e);
-        }
+    public void addTransport(Transport newTransport, int index) {
+        this.transports.add(index, newTransport);
+        this.adapter.notifyItemInserted(index);
+    }
+
+    public void removeTransport(int index) {
+        this.transports.remove(index);
+        this.adapter.notifyItemRemoved(index);
+    }
+
+    public void modifyTransport(Transport newTransport, int index) {
+        this.transports.set(index, newTransport);
+        this.adapter.notifyItemChanged(index);
     }
 
     //remove the listener
