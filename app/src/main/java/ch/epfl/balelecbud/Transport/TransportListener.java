@@ -2,6 +2,12 @@ package ch.epfl.balelecbud.Transport;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +18,7 @@ public class TransportListener {
     private static final String TAG = TransportListener.class.getSimpleName();
 
     private final TransportAdapterFacade adapter;
-    private final List<Transport> transports;
+    private List<Transport> transports;
     private final List<String> transportsIds;
     private WrappedListener inner;
 
@@ -24,32 +30,17 @@ public class TransportListener {
         inner.registerOuterListener(this);
     }
 
-
-    public void transportAdded(Transport newTransport, String newTransportKey) {
-        //should log everything at some point
-        transportsIds.add(newTransportKey);
-        this.transports.add(newTransport);
-        adapter.notifyItemInserted(this.transports.size() - 1);
-    }
-
-    public void transportChanged(Transport updatedTransport, String updatedTransportKey) {
-        int index = transportsIds.indexOf(updatedTransportKey);
-        if(index != -1){
-            this.transports.set(index, updatedTransport);
-            adapter.notifyItemChanged(index);
-        }else{
-            Log.w(TAG, "child " + updatedTransportKey +" changed but was not tracked to start with");
-        }
-    }
-
-    public void transportRemoved(String removedTransportKey) {
-        int index = transportsIds.indexOf(removedTransportKey);
-        if(index != -1){
-            transportsIds.remove(index);
-            this.transports.remove(index);
-            adapter.notifyItemRemoved(index);
-        }else{
-            Log.w(TAG, "child " + removedTransportKey +" deleted but was not tracked to start with");
+    public void updateTransport(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+        if (queryDocumentSnapshots != null) {
+            Log.d(TAG, "updateTransport: transport successfully updated");
+            List<Transport> newTransports = new LinkedList<>();
+            for (DocumentSnapshot d : queryDocumentSnapshots.getDocuments()) {
+                newTransports.add(d.toObject(Transport.class));
+            }
+            this.transports = newTransports;
+            // TODO update the adapter
+        } else {
+            Log.w(TAG, "updateTransport: failed to update the transport", e);
         }
     }
 
