@@ -45,7 +45,7 @@ public class FirebaseTransportDatabase implements TransportDatabase {
 
         @Override
         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-            this.outerListener.updateTransport(queryDocumentSnapshots, e);
+
         }
     }
 }
