@@ -217,7 +217,7 @@ public class ScheduleProviderUnitTest {
 
         listener.getSlotIds().remove(1);
 
-        listener.slotChanged(slot2, slotKey2);
-        listener.slotChanged(slot, slotKey1);
+        listener.slotRemoved(slotKey2);
+        listener.slotRemoved(slotKey1);
     }
 }
