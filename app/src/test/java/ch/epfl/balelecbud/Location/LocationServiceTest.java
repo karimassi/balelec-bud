@@ -19,7 +19,7 @@ import org.junit.runners.JUnit4;
 
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(JUnit4.class)
 public class LocationServiceTest {

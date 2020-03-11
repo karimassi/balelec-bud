@@ -31,8 +31,8 @@ public class WelcomeActivity extends AppCompatActivity {
     private boolean isLocalizationActive;
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-    private static final long UPDATE_INTERVAL = 6_000;
-    private static final long FASTEST_UPDATE_INTERVAL = 3_000;
+    private static final long UPDATE_INTERVAL = 60_000;
+    private static final long FASTEST_UPDATE_INTERVAL = 30_000;
     private static final long MAX_WAIT_TIME = UPDATE_INTERVAL;
 
     private LocationRequest lr;

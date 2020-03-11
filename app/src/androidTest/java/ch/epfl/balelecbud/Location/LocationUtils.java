@@ -6,7 +6,7 @@ import android.os.Build;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-public class LocalizationUtils {
+public class LocationUtils {
     public static void grantPermissions() {
         InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
                 "pm grant " + ApplicationProvider.getApplicationContext().getPackageName() + " "
