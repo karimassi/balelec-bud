@@ -58,7 +58,6 @@ public class WelcomeActivity extends AppCompatActivity {
         });
 
         setUpLocation();
-
     }
 
     private void setUpLocation() {
@@ -97,7 +96,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private PendingIntent getPendingIntent() {
         Intent intent = new Intent(this, LocationService.class);
         intent.setAction(LocationService.ACTION_PROCESS_UPDATES);
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
