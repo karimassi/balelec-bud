@@ -46,7 +46,6 @@ public class RecyclerViewMatcher {
                                         (recyclerViewId) });
                     }
                 }
-
                 description.appendText("with id: " + idDescription);
             }
 
@@ -64,14 +63,12 @@ public class RecyclerViewMatcher {
                         return false;
                     }
                 }
-
                 if (targetViewId == -1) {
                     return view == childView;
                 } else {
                     View targetView = childView.findViewById(targetViewId);
                     return view == targetView;
                 }
-
             }
         };
     }

@@ -5,11 +5,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import ch.epfl.balelecbud.FestivalInformation.FestivalInformation;
-import ch.epfl.balelecbud.FestivalInformation.FestivalInformationAdapter;
+import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
 
 public class FestivalInformationActivity extends BasicActivity {
 

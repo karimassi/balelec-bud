@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.FestivalInformation;
+package ch.epfl.balelecbud.festivalInformation;
 
 import java.util.ArrayList;
 import java.util.List;

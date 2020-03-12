@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.FestivalInformation;
+package ch.epfl.balelecbud.festivalInformation;
 
 import androidx.annotation.Nullable;
 
