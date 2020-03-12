@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.epfl.balelecbud.FestivalInformation.FestivalInformation;
 import ch.epfl.balelecbud.FestivalInformation.FestivalInformationAdapter;
 
 public class FestivalInformationActivity extends BasicActivity {
@@ -15,11 +16,11 @@ public class FestivalInformationActivity extends BasicActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter festivalInfoAdapter;
 
-    private static List<String> DUMMY_INFORMATION = new LinkedList<>();
+    private static List<FestivalInformation> DUMMY_INFORMATION = new LinkedList<>();
     static {
-        DUMMY_INFORMATION.add("Date: 12.05.2020");
-        DUMMY_INFORMATION.add("Location: EPFL");
-        DUMMY_INFORMATION.add("Hours: 5pm-5am");
+        DUMMY_INFORMATION.add(new FestivalInformation("Date", "12.05.2020"));
+        DUMMY_INFORMATION.add(new FestivalInformation("Location", "EPFL"));
+        DUMMY_INFORMATION.add(new FestivalInformation("Hours", "5pm-5am"));
     }
 
     @Override

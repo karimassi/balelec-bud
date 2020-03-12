@@ -14,9 +14,9 @@ import ch.epfl.balelecbud.R;
 
 public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInformationAdapter.FestivalInformationHolder> {
 
-    private List<String> informationData;
+    private List<FestivalInformation> informationData;
 
-    public FestivalInformationAdapter(List<String> informationList) {
+    public FestivalInformationAdapter(List<FestivalInformation> informationList) {
         this.informationData = informationList;
     }
 
@@ -29,8 +29,8 @@ public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInf
 
     @Override
     public void onBindViewHolder(@NonNull FestivalInformationHolder holder, int position) {
-        holder.informationTitleTextView.setText(informationData.get(position));
-        holder.informationContentTextView.setText(informationData.get(position));
+        holder.informationTitleTextView.setText(informationData.get(position).getTitle());
+        holder.informationContentTextView.setText(informationData.get(position).getInformation());
     }
 
     @Override
