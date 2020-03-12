@@ -4,8 +4,10 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
@@ -18,6 +20,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
@@ -35,7 +39,8 @@ public class LocationRequesterTest {
     private FusedLocationProviderClient client;
     private UiDevice device;
 
-    private void grantPermission() {
+    private void grantPermission() throws IOException {
+        UiDevice.getInstance(getInstrumentation()).executeShellCommand("pm reset-permission");
         if (this.device.hasObject(By.text("ALLOW"))) {
             this.device.findObject(By.text("ALLOW")).click();
             this.device.waitForWindowUpdate(null, TIMEOUT);
@@ -47,7 +52,7 @@ public class LocationRequesterTest {
             new ActivityTestRule<>(WelcomeActivity.class);
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
