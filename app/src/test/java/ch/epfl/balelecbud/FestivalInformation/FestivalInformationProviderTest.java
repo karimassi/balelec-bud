@@ -58,7 +58,7 @@ public class FestivalInformationProviderTest {
         };
         FestivalInformationListener listener = new FestivalInformationListener(facade, info);
         provider.subscribe(listener, mockDB);
-        listener.addInformation(DUMMY_INFORMATION.get(0), 0);
+        listener.addInformation(DUMMY_INFORMATION.get(0));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class FestivalInformationProviderTest {
         FestivalInformationListener listener = new FestivalInformationListener(facade, info);
         provider.subscribe(listener, mockDB);
 
-        listener.addInformation(DUMMY_INFORMATION.get(0), 0);
+        listener.addInformation(DUMMY_INFORMATION.get(0));
         listener.removeInformation(DUMMY_INFORMATION.get(0), 0);
     }
 
@@ -102,7 +102,7 @@ public class FestivalInformationProviderTest {
         FestivalInformationListener listener = new FestivalInformationListener(facade, info);
         provider.subscribe(listener, mockDB);
 
-        listener.addInformation(DUMMY_INFORMATION.get(0), 0);
+        listener.addInformation(DUMMY_INFORMATION.get(0));
         listener.modifyInformation(DUMMY_INFORMATION.get(1), 0);
     }
 
@@ -122,7 +122,7 @@ public class FestivalInformationProviderTest {
         FestivalInformationListener listener = new FestivalInformationListener(facade, info);
         provider.subscribe(listener, mockDB);
 
-        listener.addInformation(DUMMY_INFORMATION.get(1), 0);
+        listener.addInformation(DUMMY_INFORMATION.get(1));
         listener.removeInformation(DUMMY_INFORMATION.get(0), 0);
     }
 
@@ -142,8 +142,8 @@ public class FestivalInformationProviderTest {
         FestivalInformationListener listener = new FestivalInformationListener(facade, info);
         provider.subscribe(listener, mockDB);
 
-        listener.addInformation(DUMMY_INFORMATION.get(0), 0);
-        listener.addInformation(DUMMY_INFORMATION.get(1), 1);
+        listener.addInformation(DUMMY_INFORMATION.get(0));
+        listener.addInformation(DUMMY_INFORMATION.get(1));
         listener.removeInformation(DUMMY_INFORMATION.get(0), 0);
     }
 
@@ -164,8 +164,8 @@ public class FestivalInformationProviderTest {
         FestivalInformationListener listener = new FestivalInformationListener(facade, info);
         provider.subscribe(listener, mockDB);
 
-        listener.addInformation(DUMMY_INFORMATION.get(0), 0);
-        listener.addInformation(DUMMY_INFORMATION.get(1), 0);
+        listener.addInformation(DUMMY_INFORMATION.get(0));
+        listener.addInformation(DUMMY_INFORMATION.get(1));
         listener.modifyInformation(DUMMY_INFORMATION.get(2), 4);
     }
 }
