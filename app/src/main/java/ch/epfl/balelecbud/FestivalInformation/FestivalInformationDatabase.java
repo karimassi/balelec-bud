@@ -46,5 +46,4 @@ public class FestivalInformationDatabase implements BasicDatabase {
     public void unregisterListener() {
         if (lr != null)  lr.remove();
     }
-
 }
