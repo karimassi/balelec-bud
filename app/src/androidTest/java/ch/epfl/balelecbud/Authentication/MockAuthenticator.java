@@ -292,11 +292,13 @@ public class MockAuthenticator implements Authenticator {
 
                 }
 
+                @NonNull
                 @Override
                 public String zzf() {
                     return null;
                 }
 
+                @NonNull
                 @Override
                 public String zzg() {
                     return null;
@@ -309,16 +311,6 @@ public class MockAuthenticator implements Authenticator {
                 }
 
                 @NonNull
-                @Override
-                public zzz zzh() {
-                    return null;
-                }
-
-                @Override
-                public void zzb(List<zzy> list) {
-
-                }
-
                 @Override
                 public zzz zzh() {
                     return null;
