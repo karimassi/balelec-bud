@@ -210,4 +210,10 @@ public class ScheduleProviderUnitTest {
         listener.slotRemoved(slotKey2);
         listener.slotRemoved(slotKey1);
     }
+
+    @Test
+    public void slotConstructorWorksCorrectly(){
+        new Slot();
+    }
+
 }
