@@ -48,9 +48,4 @@ public class TransportTest {
     public void testGetTime() {
         Assert.assertThat(t1.getTime(), is(new Timestamp(0, 0)));
     }
-
-    @Test
-    public void testGetTimeString() {
-        Assert.assertThat(t1.getTimeString(), is("1:0"));
-    }
 }
