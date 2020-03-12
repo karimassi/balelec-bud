@@ -19,11 +19,9 @@ public class FestivalInformationListener {
     }
 
     public void modifyInformation(FestivalInformation information, int index) {
-        if (informationList.contains(information)) {
+        if (index < informationList.size()) {
             informationList.set(index, information);
             facade.notifyItemModified(index);
-        } else {
-            addInformation(information, index);
         }
     }
 

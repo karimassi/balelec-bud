@@ -1,13 +1,49 @@
 package ch.epfl.balelecbud.FestivalInformation;
 
+import androidx.annotation.Nullable;
+
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
+public class FestivalInformationDatabase implements BasicDatabase {
 
-public interface FestivalInformationDatabase {
+    private FestivalInformationListener listener;
+    private ListenerRegistration lr;
 
-    void addListener(FestivalInformationListener listener);
-    void unregisterListener();
+    @Override
+    public void listen() {
+        lr = FirebaseFirestore.getInstance().collection("festivalInformation").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e!= null | listener == null) return;
+                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED:
+                            listener.addInformation(dc.getDocument().toObject(FestivalInformation.class), dc.getOldIndex());
+                            break;
+                        case MODIFIED:
+                            listener.modifyInformation(dc.getDocument().toObject(FestivalInformation.class), dc.getOldIndex());
+                            break;
+                        case REMOVED:
+                            listener.removeInformation(dc.getDocument().toObject(FestivalInformation.class), dc.getOldIndex());
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void registerListener(FestivalInformationListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public void unregisterListener() {
+        if (lr != null)  lr.remove();
+    }
 }
