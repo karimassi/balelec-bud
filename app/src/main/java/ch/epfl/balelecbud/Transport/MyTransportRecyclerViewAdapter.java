@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.Transport;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -11,20 +12,43 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.Transport.Object.Transport;
 import ch.epfl.balelecbud.Transport.TransportListFragment.OnListFragmentInteractionListener;
 
+import java.util.LinkedList;
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTransportRecyclerViewAdapter.ViewHolder> {
+
+    //default implementation is Firebase
+    static private TransportDatabase databaseImplementation= new FirebaseTransportDatabase();
+
+    //Used to insert mocks
+    @VisibleForTesting
+    public static void setTransportDatabase(TransportDatabase databaseImp){
+        databaseImplementation = databaseImp;
+    }
 
     private final List<Transport> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyTransportRecyclerViewAdapter(List<Transport> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MyTransportRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
+        mValues = new LinkedList<>();
+        TransportAdapterFacade facade = new TransportAdapterFacade() {
+            @Override
+            public void notifyItemInserted(int position) {
+                MyTransportRecyclerViewAdapter.this.notifyItemInserted(position);
+            }
+
+            @Override
+            public void notifyItemChanged(int position) {
+                MyTransportRecyclerViewAdapter.this.notifyItemChanged(position);
+            }
+
+            @Override
+            public void notifyItemRemoved(int position) {
+                MyTransportRecyclerViewAdapter.this.notifyItemRemoved(position);
+            }
+        };
+        databaseImplementation.getTransportListener(facade, mValues);
         mListener = listener;
     }
 

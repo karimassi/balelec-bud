@@ -2,7 +2,7 @@ package ch.epfl.balelecbud.Transport.Object;
 
 import androidx.annotation.NonNull;
 
-enum TransportType {
+public enum TransportType {
     METRO {
         @NonNull
         @Override
