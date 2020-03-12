@@ -9,7 +9,6 @@ public class FestivalInformationDatabaseTest {
 
     @Test
     public void testFestivalDatabaseWithoutListening() {
-        FestivalInformationProvider provider = new FestivalInformationProvider();
         final List<FestivalInformation> info = new ArrayList<>();
         FestivalInformationAdapterFacade facade = new FestivalInformationAdapterFacade() {
             @Override
