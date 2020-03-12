@@ -18,6 +18,10 @@ public class TransportListener {
         inner.registerOuterListener(this);
     }
 
+    public void newTransports(List<Transport> newTransports) {
+
+    }
+
     public void addTransport(Transport newTransport, int index) {
         this.transports.add(index, newTransport);
         this.adapter.notifyItemInserted(index);
