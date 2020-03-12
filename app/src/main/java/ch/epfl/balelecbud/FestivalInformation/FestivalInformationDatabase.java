@@ -16,14 +16,14 @@ public class FestivalInformationDatabase implements BasicDatabase {
 
     @Override
     public void listen() {
-        lr = FirebaseFirestore.getInstance().collection("festivalInformation").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        lr = FirebaseFirestore.getInstance().collection("festivalInfo").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (e!= null | listener == null) return;
                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {
                         case ADDED:
-                            listener.addInformation(dc.getDocument().toObject(FestivalInformation.class), dc.getOldIndex());
+                            listener.addInformation(dc.getDocument().toObject(FestivalInformation.class));
                             break;
                         case MODIFIED:
                             listener.modifyInformation(dc.getDocument().toObject(FestivalInformation.class), dc.getOldIndex());

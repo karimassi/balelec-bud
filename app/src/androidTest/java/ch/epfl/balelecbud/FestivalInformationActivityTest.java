@@ -8,14 +8,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
-import ch.epfl.balelecbud.FestivalInformation.FestivalInformation;
-import ch.epfl.balelecbud.FestivalInformation.FestivalInformationListener;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class FestivalInformationActivityTest {

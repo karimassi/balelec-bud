@@ -12,9 +12,9 @@ public class FestivalInformationListener {
         this.informationList = informationList;
     }
 
-    public static void addInformation(FestivalInformation information, int index) {
-        informationList.add(index, information);
-        facade.notifyItemInserted(index);
+    public static void addInformation(FestivalInformation information) {
+        informationList.add(information);
+        facade.notifyItemInserted(informationList.size()-1);
     }
 
     public static void modifyInformation(FestivalInformation information, int index) {

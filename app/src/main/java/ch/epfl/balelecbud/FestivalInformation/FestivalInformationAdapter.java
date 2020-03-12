@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
@@ -16,8 +17,26 @@ public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInf
 
     private List<FestivalInformation> informationData;
 
-    public FestivalInformationAdapter(List<FestivalInformation> informationList) {
-        this.informationData = informationList;
+    public FestivalInformationAdapter() {
+        this.informationData = new ArrayList<>();
+        FestivalInformationAdapterFacade facade = new FestivalInformationAdapterFacade() {
+            @Override
+            public void notifyItemInserted(int position) {
+                FestivalInformationAdapter.this.notifyItemInserted(position);
+            }
+
+            @Override
+            public void notifyItemModified(int position) {
+                FestivalInformationAdapter.this.notifyItemChanged(position);
+            }
+
+            @Override
+            public void notifyItemRemoved(int position) {
+                FestivalInformationAdapter.this.notifyItemRemoved(position);
+            }
+        };
+        FestivalInformationListener listener = new FestivalInformationListener(facade, informationData);
+        new FestivalInformationProvider().subscribe(listener, new FestivalInformationDatabase());
     }
 
     @Override
