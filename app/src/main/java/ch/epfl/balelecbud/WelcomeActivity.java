@@ -65,10 +65,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
         this.locationSwitch = findViewById(R.id.locationSwitch);
         this.locationSwitch.setClickable(false);
-        // Check if the user revoked runtime permissions.
-        if (!checkPermissions()) {
-            requestPermissions();
-        } else {
+
+        requestPermissions();
+        if (checkPermissions()) {
             this.locationSwitch.setClickable(true);
         }
 

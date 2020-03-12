@@ -6,6 +6,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -13,37 +15,43 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.util.Collections;
 
+import ch.epfl.balelecbud.WelcomeActivity;
+
 import static org.hamcrest.CoreMatchers.is;
 
-@RunWith(JUnit4.class)
+@RunWith(AndroidJUnit4.class)
 public class LocationServiceTest {
     private final static String LOCATION_KEY = "com.google.android.gms.location.EXTRA_LOCATION_RESULT";
     private final LocationFirestore emptyLf = new LocationFirestore() {
         @Override
         public void handleGeoPoint(GeoPoint gp, OnCompleteListener<Void> callback) {
-            throw new RuntimeException();
+           Assert.fail();
         }
     };
     private final OnCompleteListener<Void> emptyOncl = new OnCompleteListener<Void>() {
         @Override
         public void onComplete(@NonNull Task<Void> task) {
-            throw new RuntimeException();
+            Assert.fail();
         }
     };
 
+    @Rule
+    public final ActivityTestRule<WelcomeActivity> mActivityRule =
+            new ActivityTestRule<>(WelcomeActivity.class);
+
     private Intent getIntent(Location l) {
-        Intent i = new Intent();
-        i.setAction(LocationService.ACTION_PROCESS_UPDATES);
+        Intent i = new Intent(mActivityRule.getActivity(), LocationService.class);
         LocationResult lr = LocationResult.create(Collections.singletonList(l));
         Bundle b = new Bundle();
         b.putParcelable(LOCATION_KEY, lr);
         i.putExtras(b);
+        i.setAction(LocationService.ACTION_PROCESS_UPDATES);
         return i;
     }
 

@@ -30,7 +30,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.is;
 
-@SdkSuppress(minSdkVersion = Build.VERSION_CODES.N_MR1, maxSdkVersion = (Build.VERSION_CODES.Q - 1))
+@SdkSuppress(maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
 public class LocationRequesterTest {
     private static final long TIMEOUT = 1000;
