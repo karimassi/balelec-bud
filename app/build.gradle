@@ -26,7 +26,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-<<<<<<< HEAD
     testOptions {
         unitTests.returnDefaultValues = true
         unitTests.all {
@@ -34,10 +33,6 @@ android {
                 includeNoLocationClasses = true
             }
         }
-=======
-    testOptions{
-        unitTests.returnDefaultValues = true
->>>>>>> maximized coverage on the welcome activity tests
     }
 }
 

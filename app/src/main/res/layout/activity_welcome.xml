@@ -23,4 +23,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/map_view" />
+
+    <Button
+        android:id="@+id/scheduleButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Schedule" />
+
+    <Button
+        android:id="@+id/infoButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="Informations" />
+
+    <Button
+        android:id="@+id/transportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="Transport" />
+
+    <Switch
+        android:id="@+id/locationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="Toggle Location"/>
 </LinearLayout>
