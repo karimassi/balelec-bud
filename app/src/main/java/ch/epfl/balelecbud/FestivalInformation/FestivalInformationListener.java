@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.FestivalInformation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FestivalInformationListener {
