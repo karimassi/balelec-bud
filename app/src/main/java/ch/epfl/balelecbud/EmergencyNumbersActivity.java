@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -98,10 +99,22 @@ public class EmergencyNumbersActivity extends BasicActivity {
                                     long id) {
                 String entry = (String) parent.getAdapter().getItem(position);
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + repertoryMap.get(entry)));
+
+                String permissions[] = {Manifest.permission.CALL_PHONE};
+                int PERMISSION_TO_CALL = 0;
+
+                while (ActivityCompat.checkSelfPermission(EmergencyNumbersActivity.this,
+                        Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(EmergencyNumbersActivity.this,
+                            permissions,
+                            PERMISSION_TO_CALL);
+                }
+
                 startActivity(intent);
 
             }
         });
     }
+
 
 }
