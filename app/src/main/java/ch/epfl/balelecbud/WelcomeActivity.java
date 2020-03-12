@@ -210,13 +210,11 @@ public class WelcomeActivity extends AppCompatActivity {
         FirebaseAuthenticator.getInstance().signOut();
     }
 
-    public void onClick(View view) {
-        if (view.getId() == R.id.buttonSignOut) {
-            signOut();
-            Intent intent = new Intent(this, LoginUserActivity.class);
-            startActivity(intent);
-            finish();
-        }
+    public void clickSignOut(View view) {
+        signOut();
+        Intent intent = new Intent(this, LoginUserActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     /** Called when the user clicks the Map button */
