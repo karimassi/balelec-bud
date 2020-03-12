@@ -7,6 +7,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.FestivalInformation.BasicDatabase;
+import ch.epfl.balelecbud.FestivalInformation.FestivalInformationAdapter;
+import ch.epfl.balelecbud.FestivalInformation.FestivalInformationListener;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -22,6 +25,20 @@ public class FestivalInformationActivityTest {
 
     @Test
     public void testFestivalInfoRecyclerViewIsDisplayed() {
+        BasicDatabase mockDatabase = new BasicDatabase() {
+            @Override
+            public void registerListener(FestivalInformationListener listener) {
+            }
+
+            @Override
+            public void unregisterListener() {
+            }
+
+            @Override
+            public void listen() {
+            }
+        };
+        FestivalInformationAdapter.setDatabaseImplementation(mockDatabase);
         onView(withId(R.id.festivalInfoRecyclerView)).check(matches(isDisplayed()));
     }
 }

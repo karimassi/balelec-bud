@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -16,6 +17,12 @@ import ch.epfl.balelecbud.R;
 public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInformationAdapter.FestivalInformationHolder> {
 
     private List<FestivalInformation> informationData;
+    private static BasicDatabase database = new FestivalInformationDatabase();
+
+    @VisibleForTesting
+    public static void setDatabaseImplementation(BasicDatabase basicDatabase){
+        database = basicDatabase;
+    }
 
     public FestivalInformationAdapter() {
         this.informationData = new ArrayList<>();
@@ -36,7 +43,7 @@ public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInf
             }
         };
         FestivalInformationListener listener = new FestivalInformationListener(facade, informationData);
-        new FestivalInformationProvider().subscribe(listener, new FestivalInformationDatabase());
+        new FestivalInformationProvider().subscribe(listener, database);
     }
 
     @Override
