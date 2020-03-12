@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-
 import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
 
 public class WelcomeActivity extends AppCompatActivity {

@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.Transport;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.balelecbud.Transport.Object.Transport;
@@ -11,13 +9,11 @@ public class TransportListener {
 
     private final TransportAdapterFacade adapter;
     private final List<Transport> transports;
-    private final List<String> transportsIds;
     private WrappedListener inner;
 
     public TransportListener(TransportAdapterFacade adapter, List<Transport> transports, WrappedListener inner) {
         this.adapter = adapter;
         this.transports = transports;
-        this.transportsIds = new LinkedList<>();
         this.inner = inner;
         inner.registerOuterListener(this);
     }
@@ -40,11 +36,7 @@ public class TransportListener {
     //remove the listener
     public void remove(){
         inner.remove();
-    }
-
-    //used for testing for now
-    public List<String> getTransportsIds() {
-        return Collections.unmodifiableList(transportsIds);
+        inner = null;
     }
 
     //TODO add something for cancelled

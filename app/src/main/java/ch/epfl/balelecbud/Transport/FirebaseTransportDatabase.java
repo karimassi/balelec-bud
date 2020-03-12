@@ -17,7 +17,7 @@ import java.util.List;
 import ch.epfl.balelecbud.Transport.Object.Transport;
 
 public class FirebaseTransportDatabase implements TransportDatabase {
-    private CollectionReference root= FirebaseFirestore.getInstance().collection("transports");
+    private CollectionReference root = FirebaseFirestore.getInstance().collection("transports");
 
     @Override
     public TransportListener getTransportListener(TransportAdapterFacade adapter, List<Transport> transports) {
@@ -53,7 +53,7 @@ public class FirebaseTransportDatabase implements TransportDatabase {
                 for (DocumentChange d : queryDocumentSnapshots.getDocumentChanges()) {
                     switch (d.getType()) {
                         case ADDED:
-                            this.outerListener.addTransport(d.getDocument().toObject(Transport.class), d.getOldIndex());
+                            this.outerListener.addTransport(d.getDocument().toObject(Transport.class), d.getNewIndex());
                             break;
                         case REMOVED:
                             this.outerListener.removeTransport(d.getOldIndex());

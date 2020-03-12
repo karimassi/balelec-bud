@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.Transport;
 
+import android.text.format.DateUtils;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -8,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.text.DateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,11 +38,11 @@ public class TransportListenerTest {
     };
 
     private Transport t1 = new Transport(TransportType.BUS, 42, "Home",
-            new GeoPoint(24, 42), new Timestamp(Date.from(Instant.EPOCH)));
+            new GeoPoint(24, 42), new Timestamp(0, 0));
     private Transport t2 = new Transport(TransportType.METRO, 2, "Flon",
-            new GeoPoint(4, 45), new Timestamp(Date.from(Instant.ofEpochMilli(12345))));
+            new GeoPoint(4, 45), new Timestamp(12345, 12345));
     private Transport t3 = new Transport(TransportType.BUS, 0, "Lac",
-            new GeoPoint(14, 5), new Timestamp(Date.from(Instant.ofEpochMilli(65432))));
+            new GeoPoint(14, 5), new Timestamp(654321, 65432));
 
     @Test
     public void canAddTransport() {
@@ -118,5 +121,38 @@ public class TransportListenerTest {
 
         tl.modifyTransport(t3, index);
         assertThat(l, is(Arrays.asList(t1, t2, t3)));
+    }
+
+    @Test
+    public void canRemove() {
+        TransportListener tl = new TransportListener(
+                new TransportAdapterFacade() {
+                    @Override
+                    public void notifyItemInserted(int position) {
+                        Assert.fail();
+                    }
+
+                    @Override
+                    public void notifyItemChanged(int position) {
+                        Assert.fail();
+                    }
+
+                    @Override
+                    public void notifyItemRemoved(int position) {
+                        Assert.fail();
+                    }
+                }
+                , new ArrayList<Transport>(), new WrappedListener() {
+            @Override
+            public void remove() {
+
+            }
+
+            @Override
+            public void registerOuterListener(TransportListener outerListener) {
+
+            }
+        });
+        tl.remove();
     }
 }
