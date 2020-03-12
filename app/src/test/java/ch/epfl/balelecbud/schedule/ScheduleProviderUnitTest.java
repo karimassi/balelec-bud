@@ -58,6 +58,7 @@ public class ScheduleProviderUnitTest {
 
         listener.slotAdded(slot, "slot1");
 
+        listener.remove();
     }
 
     @Test
@@ -94,6 +95,7 @@ public class ScheduleProviderUnitTest {
         listener.slotAdded(slot, slotKey);
         listener.slotChanged(updatedSlot, slotKey);
 
+        listener.remove();
     }
 
     @Test
@@ -124,6 +126,8 @@ public class ScheduleProviderUnitTest {
 
         listener.slotAdded(slot, slotKey);
         listener.slotRemoved(slotKey);
+
+        listener.remove();
     }
 
     @Test
@@ -167,6 +171,8 @@ public class ScheduleProviderUnitTest {
         listener.slotChanged(slot, slotKey1);
         listener.slotChanged(slot2, slotKey2);
 
+        listener.remove();
+
     }
 
     @Test
@@ -209,6 +215,8 @@ public class ScheduleProviderUnitTest {
 
         listener.slotRemoved(slotKey2);
         listener.slotRemoved(slotKey1);
+
+        listener.remove();
     }
 
     @Test
