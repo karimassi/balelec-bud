@@ -1,95 +1,169 @@
 package ch.epfl.balelecbud;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.espresso.matcher.BoundedMatcher;
-import androidx.test.espresso.matcher.RootMatchers;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import ch.epfl.balelecbud.schedule.ScheduleActivity;
+import ch.epfl.balelecbud.schedule.ScheduleAdapter;
+import ch.epfl.balelecbud.schedule.ScheduleAdapterFacade;
+import ch.epfl.balelecbud.schedule.ScheduleDatabase;
+import ch.epfl.balelecbud.schedule.SlotListener;
+import ch.epfl.balelecbud.schedule.WrappedListener;
+import ch.epfl.balelecbud.schedule.models.Slot;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
-    //@Rule
-    //public ActivityTestRule<ScheduleActivity> activityRule = new ActivityTestRule<>(ScheduleActivity.class, false, true);
+    SlotListener listener;
 
-    @Rule
-    public ActivityTestRule<ScheduleActivity> mActivityRule =
-            new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class, false, true) {
-                @Override
-                protected Intent getActivityIntent() {
-                    Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-                    Intent result = new Intent(targetContext, ScheduleActivity.class);
-                    result.putExtra("db", "mock");
-                    return result;
-                }
+    @Before
+    public void setUp(){
+        ScheduleDatabase mockDB = new ScheduleDatabase() {
+            @Override
+            public SlotListener getSlotListener(ScheduleAdapterFacade adapter, List<Slot> slots) {
+                listener = new SlotListener(adapter, slots, new WrappedListener() {
+                    @Override
+                    public void remove() {
 
-                @Override
-                public ScheduleActivity launchActivity(@Nullable Intent startIntent) {
-                    return super.launchActivity(getActivityIntent());
-                }
-            };
+                    }
 
+                    @Override
+                    public void registerOuterListener(SlotListener outerListener) {
+
+                    }
+                });
+                return listener;
+            }
+        };
+        ScheduleAdapter.setDatabaseImplementation(mockDB);
+        ActivityScenario.launch(ScheduleActivity.class);
+    }
+
+    private void addItem(final Slot slot, final String id) throws Throwable{
+        Runnable myRunnable = new Runnable(){
+            @Override
+            public void run() {
+                listener.slotAdded(slot, id);
+            }
+        };
+        runOnUiThread(myRunnable);
+        synchronized (myRunnable){
+            myRunnable.wait(1000);
+        }
+    }
+
+    private void modifyItem(final Slot slot, final String id) throws Throwable{
+        Runnable myRunnable = new Runnable(){
+            @Override
+            public void run() {
+                listener.slotChanged(slot, id);
+            }
+        };
+        runOnUiThread(myRunnable);
+        synchronized (myRunnable){
+            myRunnable.wait(1000);
+        }
+    }
+
+    private void removeItem(final String id) throws Throwable{
+        Runnable myRunnable = new Runnable(){
+            @Override
+            public void run() {
+                listener.slotRemoved(id);
+            }
+        };
+        runOnUiThread(myRunnable);
+        synchronized (myRunnable){
+            myRunnable.wait(1000);
+        }
+    }
 
     @Test
     public void testRecyclerViewVisible() {
-        onView(withId(R.id.rvSchedule))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mActivityRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.rvSchedule)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testCaseForRecyclerItemView() {
-        onView(withId(R.id.rvSchedule))
-                .inRoot(RootMatchers.withDecorView(
-                        Matchers.is(mActivityRule.getActivity().getWindow().getDecorView())))
-                .check(matches(withViewAtPosition(0, Matchers.allOf(
-                        withId(R.id.item_schedule), isDisplayed()))));
+    public void testItemModification() throws Throwable{
+
+        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(0)));
+
+        Slot slot1 = new Slot("Mr Oizo", "19h - 20h", "Grande scène") ;
+        String id1 = "oui";
+        addItem(slot1, id1);
+        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(1)));
+
+        Slot slot2 = new Slot("Walking Furret", "20h - 21h", "Les Azimutes") ;
+        String id2 = "ouioui";
+        addItem(slot2, id2);
+        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(2)));
+
+
+        Slot slot3 = new Slot("Upset", "19h - 20h", "Scène Sat'") ;
+        String id3 = "ouiouioui";
+        addItem(slot3, id3);
+        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(3)));
+
+        modifyItem(slot3, id1);
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText("19h - 20h")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText("Upset")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText("Scène Sat'")));
+
+        removeItem(id1);
+        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(2)));
+
+        removeItem(id2);
+        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(1)));
+
+        removeItem(id3);
+        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(0)));
     }
 
     @Test
-    public void testCaseForRecyclerItems() {
+    public void testCaseForRecyclerItems() throws Throwable {
+        Slot slot1 = new Slot("Mr Oizo", "19h - 20h", "Grande scène") ;
+        Slot slot2 = new Slot("Walking Furret", "20h - 21h", "Les Azimutes") ;
+        Slot slot3 = new Slot("Upset", "19h - 20h", "Scène Sat'") ;
+
+        String id1 = "oui";
+        String id2 = "ouioui";
+        String id3 = "ouiouioui";
+
+        addItem(slot1, id1);
+        addItem(slot2, id2);
+        addItem(slot3, id3);
+
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText("19h - 20h")));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText("Mr Oizo")));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText("Grande scène")));
-    }
 
-    public Matcher<View> withViewAtPosition(final int position, final Matcher<View> itemMatcher) {
-        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
-            @Override
-            public void describeTo(Description description) {
-                itemMatcher.describeTo(description);
-            }
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 0)).check(matches(withText("20h - 21h")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 1)).check(matches(withText("Walking Furret")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 2)).check(matches(withText("Les Azimutes")));
 
-            @Override
-            protected boolean matchesSafely(RecyclerView recyclerView) {
-                final RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
-                return viewHolder != null && itemMatcher.matches(viewHolder.itemView);
-            }
-        };
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 0)).check(matches(withText("19h - 20h")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 1)).check(matches(withText("Upset")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 2)).check(matches(withText("Scène Sat'")));
     }
 
     public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {

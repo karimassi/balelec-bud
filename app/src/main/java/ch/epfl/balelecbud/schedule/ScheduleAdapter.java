@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,13 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
+
+    private static ScheduleDatabase databaseImplementation = new FirebaseScheduleDatabase();
+
+    @VisibleForTesting
+    public static void setDatabaseImplementation(ScheduleDatabase dbImplementation){
+        databaseImplementation = dbImplementation;
+    }
 
     private List<Slot> slots;
 
@@ -49,7 +57,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 ScheduleAdapter.this.notifyItemRemoved(position);
             }
         };
-        ScheduleProvider.subscribeSlots(new FirebaseScheduleDatabase(), facade, slots);
+        databaseImplementation.getSlotListener(facade, slots);
     }
 
     @NonNull

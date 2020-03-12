@@ -22,10 +22,4 @@ public class ScheduleActivity extends AppCompatActivity{
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
     }
-        /**String db = getIntent().getStringExtra("db");
-        if(db == "mock"){
-            scheduleProvider = new MockScheduleProvider();
-        } else {
-            scheduleProvider = new FirebaseRealtimeScheduleProvider();
-        }**/
 }
