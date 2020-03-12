@@ -30,6 +30,18 @@ public class WelcomeActivityTest {
     }
 
     @Test
+    public void testInfoButtonIsDisplayed() {
+        onView(withId(R.id.infoButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.infoButton)).perform(click());
+    }
+
+    @Test
+    public void testTransportButtonIsDisplayed() {
+        onView(withId(R.id.transportButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.transportButton)).perform(click());
+    }
+
+    @Test
     public void testScheduleButtonIsDisplayed(){
         onView(withId(R.id.scheduleButton)).check(matches(isDisplayed()));
         onView(withId(R.id.scheduleButton)).perform(click());
@@ -53,6 +65,22 @@ public class WelcomeActivityTest {
         onView(withId(R.id.maplinearlayout)).check(matches(isDisplayed()));
         onView(withId(R.id.map)).check(matches(isDisplayed()));
         onView(withId((R.id.mapButton))).check(doesNotExist());
+    }
+
+    @Test
+    public void testInfoIsDisplayed() {
+        //onView(withId(R.id.infoButton)).perform(click());
+        //onView(withId(R.id.maplinearlayout)).check(matches(isDisplayed()));
+        //onView(withId(R.id.map)).check(matches(isDisplayed()));
+        //onView(withId((R.id.infoButton))).check(doesNotExist());
+    }
+
+    @Test
+    public void testTransportIsDisplayed() {
+        //onView(withId(R.id.transportButton)).perform(click());
+        //onView(withId(R.id.maplinearlayout)).check(matches(isDisplayed()));
+        //onView(withId(R.id.map)).check(matches(isDisplayed()));
+        //onView(withId((R.id.transportButton))).check(doesNotExist());
     }
 
     @Test

@@ -20,11 +20,11 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        Button mapButton = findViewById(R.id.mapButton);
-        mapButton.setOnClickListener(new View.OnClickListener() {
+        Button infoButton = findViewById(R.id.infoButton);
+        infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openMapActivity();
+                openInfoActivity();
             }
         });
 
@@ -36,11 +36,27 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
+        Button mapButton = findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMapActivity();
+            }
+        });
+
+        Button transportButton = findViewById(R.id.transportButton);
+        transportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openTransportActivity();
+            }
+        });
+
         Switch locationSwitch = findViewById(R.id.locationSwitch);
         locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                //should switch on the location
             }
         });
     }
@@ -68,5 +84,17 @@ public class WelcomeActivity extends AppCompatActivity {
     public void openScheduleActivity(){
         Intent intent = new Intent(this, ScheduleActivity.class);
         startActivity(intent);
+    }
+
+    /** Called when the user clicks the Schedule button */
+    public void openInfoActivity(){
+        //Intent intent = new Intent(this, ScheduleActivity.class);
+        //startActivity(intent);
+    }
+
+    /** Called when the user clicks the Schedule button */
+    public void openTransportActivity(){
+        //Intent intent = new Intent(this, ScheduleActivity.class);
+        //startActivity(intent);
     }
 }
