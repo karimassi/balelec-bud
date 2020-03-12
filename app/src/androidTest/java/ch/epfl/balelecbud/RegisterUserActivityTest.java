@@ -24,10 +24,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest {
-    @Rule
-    public final ActivityTestRule<RegisterUserActivity> mActivityRule =
-            new ActivityTestRule<>(RegisterUserActivity.class);
-
 
     @Before
     public void setUp() {
