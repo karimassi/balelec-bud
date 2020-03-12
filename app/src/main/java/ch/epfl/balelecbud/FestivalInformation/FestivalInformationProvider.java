@@ -1,13 +1,16 @@
 package ch.epfl.balelecbud.FestivalInformation;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 public class FestivalInformationProvider {
 
-    public FestivalInformationDatabase subscribe(FestivalInformationListener listener) {
-        FestivalInformationDatabase db = new FirebaseFestivalInformationDatabase();
-        db.addListener(listener);
-        return db;
+    BasicDatabase db;
+
+    public void subscribe(FestivalInformationListener listener, BasicDatabase db) {
+        this.db = db;
+        db.registerListener(listener);
+    }
+
+    public void unsubscribe() {
+        db.unregisterListener();
     }
 
 }
