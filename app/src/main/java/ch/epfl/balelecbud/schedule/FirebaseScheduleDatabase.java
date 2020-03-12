@@ -15,8 +15,6 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 
 public class FirebaseScheduleDatabase implements ScheduleDatabase {
 
-    DatabaseReference root = FirebaseDatabase.getInstance().getReference().child("slots");
-
     @Override
     public SlotListener getSlotListener(ScheduleAdapterFacade adapter, List<Slot> slots) {
         return new SlotListener(adapter, slots, new FirebaseSlotsListener());
@@ -27,7 +25,7 @@ public class FirebaseScheduleDatabase implements ScheduleDatabase {
         SlotListener outerListener;
 
         FirebaseSlotsListener(){
-            root.addChildEventListener(this);
+            FirebaseDatabase.getInstance().getReference().child("slots").addChildEventListener(this);
         }
 
         @Override
@@ -57,7 +55,7 @@ public class FirebaseScheduleDatabase implements ScheduleDatabase {
 
         @Override
         public void remove() {
-            root.removeEventListener(this);
+            FirebaseDatabase.getInstance().getReference().child("slots").removeEventListener(this);
         }
 
         @Override
