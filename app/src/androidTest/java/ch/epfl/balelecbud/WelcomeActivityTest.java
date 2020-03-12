@@ -21,8 +21,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 public class WelcomeActivityTest {
 
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<>(WelcomeActivity.class);
+    public final ActivityTestRule<WelcomeActivity> mActivityRule = new ActivityTestRule<>(WelcomeActivity.class);
 
     @Test
     public void testMapButtonIsDisplayed() {
@@ -51,13 +50,26 @@ public class WelcomeActivityTest {
     @Test
     public void testMapIsDisplayed() {
         onView(withId(R.id.mapButton)).perform(click());
+        onView(withId(R.id.maplinearlayout)).check(matches(isDisplayed()));
         onView(withId(R.id.map)).check(matches(isDisplayed()));
         onView(withId((R.id.mapButton))).check(doesNotExist());
     }
 
     @Test
-    public void testCanLogOut() {
+    public void testScheduleIsDisplayed(){
+        onView(withId(R.id.scheduleButton)).perform(click());
+        onView(withId(R.id.rvSchedule)).check(matches(isDisplayed()));
+        onView(withId((R.id.scheduleButton))).check(doesNotExist());
+    }
+
+    @Test
+    public void testLoginScreenDisplayed(){
         onView(withId(R.id.buttonSignOut)).perform(click());
+        onView(withId(R.id.loginLinearLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
+        onView(withId((R.id.buttonSignOut))).check(doesNotExist());
     }
 }
