@@ -15,7 +15,7 @@ public class MockFestivalInformationDatabase implements BasicDatabase {
 
     public void addInformation(FestivalInformation info) {
         informationList.add(info);
-        listener.addInformation(info, informationList.size() - 1);
+        listener.addInformation(info);
     }
 
     public void modifyInformation(FestivalInformation info, int index) {
