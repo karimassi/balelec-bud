@@ -25,7 +25,7 @@ import ch.epfl.balelecbud.Location.LocationService;
 
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
-    private Switch ls;
+    private Switch locationSwitch;
     private boolean isLocalizationActive;
 
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -33,11 +33,11 @@ public class WelcomeActivity extends AppCompatActivity {
     private static final long FASTEST_UPDATE_INTERVAL = 30_000;
     private static final long MAX_WAIT_TIME = UPDATE_INTERVAL;
 
-    private LocationRequest lr;
+    private LocationRequest locationRequest;
     private FusedLocationProviderClient client;
 
     public boolean isLocationSwitchClickable() {
-        return this.ls.isClickable();
+        return this.locationSwitch.isClickable();
     }
 
     public boolean isLocationActive() {
@@ -64,17 +64,17 @@ public class WelcomeActivity extends AppCompatActivity {
     private void setUpLocation() {
         this.isLocalizationActive = false;
 
-        this.ls = findViewById(R.id.locationSwitch);
-        this.ls.setClickable(false);
+        this.locationSwitch = findViewById(R.id.locationSwitch);
+        this.locationSwitch.setClickable(false);
         // Check if the user revoked runtime permissions.
         if (!checkPermissions()) {
             requestPermissions();
         } else {
-            this.ls.setClickable(true);
+            this.locationSwitch.setClickable(true);
         }
 
 
-        this.ls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // The location is enabled
@@ -119,12 +119,12 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void createLocationRequest() {
-        lr = new LocationRequest();
+        locationRequest = new LocationRequest();
 
-        lr.setInterval(UPDATE_INTERVAL);
-        lr.setFastestInterval(FASTEST_UPDATE_INTERVAL);
-        lr.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        lr.setMaxWaitTime(MAX_WAIT_TIME);
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setMaxWaitTime(MAX_WAIT_TIME);
     }
 
     /**
@@ -171,17 +171,17 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void onPermissionCanceled() {
         Log.i(TAG, "onRequestPermissionsResult: Permission request canceled");
-        this.ls.setClickable(false);
+        this.locationSwitch.setClickable(false);
     }
 
     private void onPermissionDenied() {
         Log.i(TAG, "onRequestPermissionsResult: Permission denied");
-        this.ls.setClickable(false);
+        this.locationSwitch.setClickable(false);
     }
 
     private void onPermissionGranted() {
         Log.i(TAG, "onRequestPermissionsResult: Permission granted");
-        this.ls.setClickable(true);
+        this.locationSwitch.setClickable(true);
     }
 
     /**
@@ -190,7 +190,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void requestLocationUpdates() {
         try {
             Log.i(TAG, "Starting location updates");
-            client.requestLocationUpdates(lr, getPendingIntent());
+            client.requestLocationUpdates(locationRequest, getPendingIntent());
             this.isLocalizationActive = true;
         } catch (SecurityException e) {
             e.printStackTrace();

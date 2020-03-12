@@ -19,12 +19,12 @@ public class LocationService extends IntentService {
 
     private static final String TAG = LocationService.class.getSimpleName();
 
-    private final LocationFirestore lf;
+    private final LocationFirestore locationFirestore;
     private final OnCompleteListener<Void> callback;
 
     public LocationService() {
         super(TAG);
-        this.lf = new FireBaseLocationAdapter();
+        this.locationFirestore = new FireBaseLocationAdapter();
         this.callback = new OnCompleteListener<Void>() {
 
             @Override
@@ -38,9 +38,9 @@ public class LocationService extends IntentService {
         };
     }
 
-    public LocationService(LocationFirestore lf, OnCompleteListener<Void> callback) {
+    public LocationService(LocationFirestore locationFirestore, OnCompleteListener<Void> callback) {
         super(TAG);
-        this.lf = lf;
+        this.locationFirestore = locationFirestore;
         this.callback = callback;
     }
 
@@ -63,7 +63,7 @@ public class LocationService extends IntentService {
     private void handleLocationFromIntent(@NonNull Intent intent) {
         LocationResult result = LocationResult.extractResult(intent);
         if (result != null) {
-            lf.handleGeoPoint(transformToGeoPoint(result.getLastLocation()), this.callback);
+            locationFirestore.handleGeoPoint(transformToGeoPoint(result.getLastLocation()), this.callback);
         }
     }
 }
