@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.Authentication.MockAuthenticator;
+import ch.epfl.balelecbud.authentication.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -20,9 +20,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginUserActivityTest {
-//    @Rule
-//    public final ActivityTestRule<LoginUserActivity> mActivityRule =
-//            new ActivityTestRule<>(LoginUserActivity.class);
 
     @Before
     public void setUp() {
