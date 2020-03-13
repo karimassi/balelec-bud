@@ -125,6 +125,7 @@ public class TransportRecyclerViewTest {
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(1)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
+        onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)).perform(click());
 
         addItem(transport2, 1);
         onView(withId(R.id.fragment)).check(matches(hasChildCount(2)));
@@ -165,6 +166,11 @@ public class TransportRecyclerViewTest {
         removeItem(0);
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
+    }
+
+    @Test
+    public void canCreateOtherFragment() {
+        TransportListFragment.newInstance();
     }
 
 }

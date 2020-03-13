@@ -32,7 +32,7 @@ public class TransportListFragment extends Fragment {
     public TransportListFragment() {
     }
 
-    public static TransportListFragment newInstance(int columnCount) {
+    public static TransportListFragment newInstance() {
         TransportListFragment fragment = new TransportListFragment();
         //right now no need to have any arguments
         return fragment;
@@ -48,13 +48,11 @@ public class TransportListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_transport_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new MyTransportRecyclerViewAdapter(mListener));
-        }
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view;
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(new MyTransportRecyclerViewAdapter(mListener));
+
         return view;
     }
 
@@ -62,12 +60,7 @@ public class TransportListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
+        mListener = (OnListFragmentInteractionListener) context;
     }
 
     @Override
