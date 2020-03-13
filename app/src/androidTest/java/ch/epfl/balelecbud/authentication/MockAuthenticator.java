@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Authentication;
+package ch.epfl.balelecbud.authentication;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -7,7 +7,7 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.internal.firebase_auth.zzcz;
+import com.google.android.gms.internal.firebase_auth.zzff;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -16,6 +16,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.auth.zzy;
+import com.google.firebase.auth.zzz;
 
 import java.util.HashMap;
 import java.util.List;
@@ -221,7 +223,7 @@ public class MockAuthenticator implements Authenticator {
 
                 @Nullable
                 @Override
-                public List<String> getProviders() {
+                public List<String> zza() {
                     return null;
                 }
 
@@ -238,13 +240,13 @@ public class MockAuthenticator implements Authenticator {
                 }
 
                 @Override
-                public FirebaseUser zzce() {
+                public FirebaseUser zzb() {
                     return null;
                 }
 
                 @NonNull
                 @Override
-                public FirebaseApp zzcc() {
+                public FirebaseApp zzc() {
                     return null;
                 }
 
@@ -274,30 +276,30 @@ public class MockAuthenticator implements Authenticator {
 
                 @Nullable
                 @Override
-                public String zzcf() {
+                public String zzd() {
                     return null;
                 }
 
                 @NonNull
                 @Override
-                public zzcz zzcg() {
+                public zzff zze() {
                     return null;
                 }
 
                 @Override
-                public void zza(@NonNull zzcz zzcz) {
+                public void zza(@NonNull zzff zzff) {
 
                 }
 
                 @NonNull
                 @Override
-                public String zzch() {
+                public String zzf() {
                     return null;
                 }
 
                 @NonNull
                 @Override
-                public String zzci() {
+                public String zzg() {
                     return null;
                 }
 
@@ -305,6 +307,17 @@ public class MockAuthenticator implements Authenticator {
                 @Override
                 public FirebaseUserMetadata getMetadata() {
                     return null;
+                }
+
+                @NonNull
+                @Override
+                public zzz zzh() {
+                    return null;
+                }
+
+                @Override
+                public void zzb(List<zzy> list) {
+
                 }
 
                 @Override
