@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.Authentication.MockAuthenticator;
+import ch.epfl.balelecbud.authentication.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -25,14 +25,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 @RunWith(AndroidJUnit4.class)
 public class LoginUserActivityTest {
 
-//    private void grantPermission() throws IOException {
-//        UiDevice device = UiDevice.getInstance(getInstrumentation());
-////        device.executeShellCommand("pm reset-permissions");
-//        if (device.hasObject(By.text("ALLOW"))) {
-//            device.findObject(By.text("ALLOW")).click();
-//            device.waitForWindowUpdate(null, 1000);
-//        }
-//    }
     @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
         Manifest.permission.ACCESS_FINE_LOCATION

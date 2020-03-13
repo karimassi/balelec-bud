@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Authentication;
+package ch.epfl.balelecbud.authentication;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;

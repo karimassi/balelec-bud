@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Authentication;
+package ch.epfl.balelecbud.authentication;
 
 import android.app.Activity;
 import android.net.Uri;

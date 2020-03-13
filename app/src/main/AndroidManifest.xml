@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".RegisterUserActivity" />
         <activity android:name=".schedule.ScheduleActivity" />
+        <activity android:name=".FestivalInformationActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

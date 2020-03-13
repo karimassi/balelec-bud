@@ -30,4 +30,6 @@
     <string name="mismatch_password">Passwords do not match!</string>
     <string name="require_password_repeated">Repeat password!</string>
     <string name="location">Location</string>
+
+    <string name="festival_information">Festival Information</string>
 </resources>
