@@ -1,15 +1,15 @@
 package ch.epfl.balelecbud;
 
-import android.Manifest;
-
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
 
 import ch.epfl.balelecbud.Authentication.MockAuthenticator;
 
@@ -21,17 +21,19 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginUserActivityTest {
-//    @Rule
-//    public final ActivityTestRule<LoginUserActivity> mActivityRule =
-//            new ActivityTestRule<>(LoginUserActivity.class);
 
-    @Rule
-    public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-            Manifest.permission.ACCESS_FINE_LOCATION
-    );
+    private void grantPermission() throws IOException {
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        device.executeShellCommand("pm reset-permissions");
+        if (device.hasObject(By.text("ALLOW"))) {
+            device.findObject(By.text("ALLOW")).click();
+            device.waitForWindowUpdate(null, 1000);
+        }
+    }
 
     @Before
     public void setUp() {

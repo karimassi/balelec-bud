@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
 
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,14 +17,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
 import java.util.Collections;
 
 import ch.epfl.balelecbud.WelcomeActivity;
 
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -44,6 +49,16 @@ public class LocationServiceTest {
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<>(WelcomeActivity.class);
+
+    @Before
+    public void grantPermission() throws IOException {
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        device.executeShellCommand("pm reset-permissions");
+        if (device.hasObject(By.text("ALLOW"))) {
+            device.findObject(By.text("ALLOW")).click();
+            device.waitForWindowUpdate(null, 1000);
+        }
+    }
 
     private Intent getIntent(Location l) {
         Intent i = new Intent(mActivityRule.getActivity(), LocationService.class);
