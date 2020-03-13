@@ -1,3 +1,4 @@
+
 package ch.epfl.balelecbud;
 
 import androidx.test.core.app.ActivityScenario;

@@ -24,6 +24,12 @@ public class WelcomeActivityTest {
     public final ActivityTestRule<WelcomeActivity> mActivityRule = new ActivityTestRule<>(WelcomeActivity.class);
 
     @Test
+    public void testMapButtonIsDisplayed() {
+        onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.mapButton)).perform(click());
+    }
+
+    @Test
     public void testInfoButtonIsDisplayed() {
         onView(withId(R.id.infoButton)).check(matches(isDisplayed()));
         onView(withId(R.id.infoButton)).perform(click());
@@ -45,13 +51,12 @@ public class WelcomeActivityTest {
     public void testSignOutIsDisplayed(){
         onView(withId(R.id.buttonSignOut)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonSignOut)).perform(click());
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testMapButtonIsDisplayed() {
-        onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.mapButton)).perform(click());
+    public void testToggleLocationIsDisplayed(){
+        onView(withId(R.id.locationSwitch)).check(matches(isDisplayed()));
+        onView(withId(R.id.locationSwitch)).perform(click());
     }
 
     @Test
@@ -64,10 +69,9 @@ public class WelcomeActivityTest {
 
     @Test
     public void testInfoIsDisplayed() {
-        //onView(withId(R.id.infoButton)).perform(click());
-        //onView(withId(R.id.maplinearlayout)).check(matches(isDisplayed()));
-        //onView(withId(R.id.map)).check(matches(isDisplayed()));
-        //onView(withId((R.id.infoButton))).check(doesNotExist());
+        onView(withId(R.id.infoButton)).perform(click());
+        onView(withId(R.id.festivalInfoRecyclerView)).check(matches(isDisplayed()));
+        onView(withId((R.id.infoButton))).check(doesNotExist());
     }
 
     @Test
@@ -95,5 +99,4 @@ public class WelcomeActivityTest {
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
         onView(withId((R.id.buttonSignOut))).check(doesNotExist());
     }
-
 }

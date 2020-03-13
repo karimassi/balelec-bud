@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +7,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.schedule.ScheduleActivity;
@@ -90,13 +89,13 @@ public class WelcomeActivity extends BasicActivity {
 
     /** Called when the user clicks the Schedule button */
     public void openInfoActivity(){
-        //Intent intent = new Intent(this, ScheduleActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, FestivalInformationActivity.class);
+        startActivity(intent);
     }
 
     /** Called when the user clicks the Schedule button */
     public void openTransportActivity(){
-        //Intent intent = new Intent(this, ScheduleActivity.class);
-        //startActivity(intent);
+//        Intent intent = new Intent(this, TransportActivity.class);
+//        startActivity(intent);
     }
 }

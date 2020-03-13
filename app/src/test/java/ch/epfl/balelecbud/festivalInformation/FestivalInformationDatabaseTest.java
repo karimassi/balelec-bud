@@ -1,3 +1,4 @@
+
 package ch.epfl.balelecbud.festivalInformation;
 
 import org.junit.Test;
