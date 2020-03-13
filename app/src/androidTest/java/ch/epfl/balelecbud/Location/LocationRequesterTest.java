@@ -38,7 +38,7 @@ public class LocationRequesterTest {
     private UiDevice device;
 
     private void grantPermission() throws IOException {
-        UiDevice.getInstance(getInstrumentation()).executeShellCommand("pm reset-permissions");
+//        UiDevice.getInstance(getInstrumentation()).executeShellCommand("pm reset-permissions");
         if (this.device.hasObject(By.text("ALLOW"))) {
             this.device.findObject(By.text("ALLOW")).click();
             this.device.waitForWindowUpdate(null, TIMEOUT);
@@ -58,14 +58,14 @@ public class LocationRequesterTest {
     }
 
     @Test
-    public void testCanSwitchOnLocalization() {
+    public void testCanSwitchOnLocation() {
         Assert.assertTrue(this.mActivityRule.getActivity().isLocationSwitchClickable());
         onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertTrue(mActivityRule.getActivity().isLocationActive());
     }
 
     @Test
-    public void testCanSwitchOffLocalization() {
+    public void testCanSwitchOffLocation() {
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertFalse(mActivityRule.getActivity().isLocationActive());

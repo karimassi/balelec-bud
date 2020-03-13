@@ -53,7 +53,7 @@ public class LocationServiceTest {
     @Before
     public void grantPermission() throws IOException {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        device.executeShellCommand("pm reset-permissions");
+//        UiDevice.getInstance(getInstrumentation()).executeShellCommand("pm reset-permissions");
         if (device.hasObject(By.text("ALLOW"))) {
             device.findObject(By.text("ALLOW")).click();
             device.waitForWindowUpdate(null, 1000);
@@ -113,7 +113,7 @@ public class LocationServiceTest {
     @Test
     public void intentWithInvalidAction() {
         LocationService ls = new LocationService(this.emptyLf, this.emptyOncl);
-        Intent intent = new Intent();
+        Intent intent = new Intent(this.mActivityRule.getActivity(), LocationService.class);
         intent.setAction("Test");
         ls.onHandleIntent(intent);
     }
