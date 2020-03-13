@@ -1,3 +1,4 @@
+
 package ch.epfl.balelecbud;
 
 import android.Manifest;
@@ -17,6 +18,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -26,7 +28,7 @@ public class MainActivityTest {
     );
 
     @Before
-    public void setUp() {
+    public void setUp() throws Throwable {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
         activityScenario.onActivity(new ActivityScenario.ActivityAction<MainActivity>() {
             @Override
@@ -34,7 +36,16 @@ public class MainActivityTest {
                 activity.setAuthenticator(MockAuthenticator.getInstance());
             }
         });
-        MockAuthenticator.getInstance().signOut();
+        Runnable myRunnable = new Runnable(){
+            @Override
+            public void run() {
+                MockAuthenticator.getInstance().signOut();
+            }
+        };
+        runOnUiThread(myRunnable);
+        synchronized (myRunnable){
+            myRunnable.wait(1000);
+        }
     }
 
     @Test

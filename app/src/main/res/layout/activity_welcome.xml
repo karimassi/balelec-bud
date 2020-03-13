@@ -15,7 +15,6 @@
         android:id="@+id/buttonSignOut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="clickSignOut"
         android:text="@string/action_sign_out" />
 
     <Button
@@ -24,9 +23,30 @@
         android:layout_height="wrap_content"
         android:text="@string/map_view" />
 
-    <Switch
-        android:id="@+id/locationSwitch"
+    <Button
+        android:id="@+id/scheduleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/location" />
+        android:text="Schedule" />
+
+    <Button
+        android:id="@+id/infoButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="Informations" />
+
+    <Button
+        android:id="@+id/transportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="Transport" />
+
+    <Switch
+        android:id="@+id/locationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="Toggle Location"/>
 </LinearLayout>

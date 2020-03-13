@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class MainActivity extends BasicActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
