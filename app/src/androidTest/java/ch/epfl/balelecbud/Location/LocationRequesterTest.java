@@ -3,6 +3,7 @@ package ch.epfl.balelecbud.Location;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.widget.Switch;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
@@ -39,7 +40,7 @@ public class LocationRequesterTest {
 
     private void grantPermission() throws IOException {
 //        UiDevice.getInstance(getInstrumentation()).executeShellCommand("pm reset-permissions");
-        if (this.device.hasObject(By.text("ALLOW"))) {
+        if (!this.device.hasObject(By.clazz(Switch.class))) {
             this.device.findObject(By.text("ALLOW")).click();
             this.device.waitForWindowUpdate(null, TIMEOUT);
         }
@@ -54,6 +55,7 @@ public class LocationRequesterTest {
         this.client = LocationServices.getFusedLocationProviderClient(this.mActivityRule.getActivity());
         this.client.setMockMode(true);
         this.device = UiDevice.getInstance(getInstrumentation());
+        this.device.waitForWindowUpdate(null, TIMEOUT);
         grantPermission();
     }
 
