@@ -27,7 +27,7 @@
         <activity android:name=".LoginUserActivity" />
         <activity android:name=".WelcomeActivity" />
         <service
-            android:name=".Location.LocationService"
+            android:name=".location.LocationService"
             android:exported="false" />
         <activity
             android:name=".MapViewActivity"

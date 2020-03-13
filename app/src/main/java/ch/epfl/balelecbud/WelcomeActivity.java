@@ -20,7 +20,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import ch.epfl.balelecbud.Location.LocationService;
+import ch.epfl.balelecbud.location.LocationService;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 
 public class WelcomeActivity extends AppCompatActivity {

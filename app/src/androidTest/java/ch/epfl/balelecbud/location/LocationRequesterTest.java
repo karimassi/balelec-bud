@@ -1,9 +1,8 @@
-package ch.epfl.balelecbud.Location;
+package ch.epfl.balelecbud.location;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.widget.Switch;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
@@ -31,7 +30,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.is;
 
-@SdkSuppress(maxSdkVersion = (Build.VERSION_CODES.Q - 1))
+@SdkSuppress(minSdkVersion = Build.VERSION_CODES.N_MR1, maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
 public class LocationRequesterTest {
     private static final long TIMEOUT = 1000;
@@ -40,7 +39,7 @@ public class LocationRequesterTest {
 
     private void grantPermission() throws IOException {
 //        UiDevice.getInstance(getInstrumentation()).executeShellCommand("pm reset-permissions");
-        if (!this.device.hasObject(By.clazz(Switch.class))) {
+        if (this.device.hasObject(By.text("ALLOW"))) {
             this.device.findObject(By.text("ALLOW")).click();
             this.device.waitForWindowUpdate(null, TIMEOUT);
         }

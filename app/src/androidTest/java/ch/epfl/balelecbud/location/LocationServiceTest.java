@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Location;
+package ch.epfl.balelecbud.location;
 
 import android.content.Intent;
 import android.location.Location;
