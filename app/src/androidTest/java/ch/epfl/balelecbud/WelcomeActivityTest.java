@@ -69,10 +69,9 @@ public class WelcomeActivityTest {
 
     @Test
     public void testInfoIsDisplayed() {
-        //onView(withId(R.id.infoButton)).perform(click());
-        //onView(withId(R.id.maplinearlayout)).check(matches(isDisplayed()));
-        //onView(withId(R.id.map)).check(matches(isDisplayed()));
-        //onView(withId((R.id.infoButton))).check(doesNotExist());
+        onView(withId(R.id.infoButton)).perform(click());
+        onView(withId(R.id.festivalInfoRecyclerView)).check(matches(isDisplayed()));
+        onView(withId((R.id.infoButton))).check(doesNotExist());
     }
 
     @Test

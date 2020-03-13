@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".FestivalInformationActivity" />
         <activity android:name=".RegisterUserActivity"></activity>
+        <activity android:name=".schedule.ScheduleActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,14 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginUserActivity"></activity>
-        <activity android:name=".WelcomeActivity"></activity>
+        <activity android:name=".LoginUserActivity" />
+        <activity android:name=".WelcomeActivity" />
         <activity
             android:name=".MapViewActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".WelcomeActivity"></activity>
-        <activity android:name=".schedule.ScheduleActivity"></activity>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

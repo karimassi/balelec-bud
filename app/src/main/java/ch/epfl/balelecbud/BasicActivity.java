@@ -2,8 +2,8 @@ package ch.epfl.balelecbud;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.balelecbud.Authentication.Authenticator;
-import ch.epfl.balelecbud.Authentication.FirebaseAuthenticator;
+import ch.epfl.balelecbud.authentication.Authenticator;
+import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 
 public class BasicActivity extends AppCompatActivity {
 

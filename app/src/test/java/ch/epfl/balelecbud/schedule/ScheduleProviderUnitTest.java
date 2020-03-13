@@ -1,20 +1,10 @@
 package ch.epfl.balelecbud.schedule;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.balelecbud.schedule.ScheduleProvider;
-import ch.epfl.balelecbud.schedule.FirebaseScheduleDatabase;
-import ch.epfl.balelecbud.schedule.ScheduleActivity;
-import ch.epfl.balelecbud.schedule.ScheduleAdapterFacade;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 import static org.junit.Assert.*;
@@ -64,10 +54,11 @@ public class ScheduleProviderUnitTest {
             }
         };
 
-        SlotListener listener = ScheduleProvider.subscribeSlots(mock, adapterFacade, slots);
+        SlotListener listener = mock.getSlotListener(adapterFacade, slots);
 
         listener.slotAdded(slot, "slot1");
 
+        listener.remove();
     }
 
     @Test
@@ -99,11 +90,12 @@ public class ScheduleProviderUnitTest {
             }
         };
 
-        SlotListener listener = ScheduleProvider.subscribeSlots(mock, adapterFacade, slots);
+        SlotListener listener = mock.getSlotListener(adapterFacade, slots);
 
         listener.slotAdded(slot, slotKey);
         listener.slotChanged(updatedSlot, slotKey);
 
+        listener.remove();
     }
 
     @Test
@@ -130,10 +122,12 @@ public class ScheduleProviderUnitTest {
             }
         };
 
-        SlotListener listener = ScheduleProvider.subscribeSlots(mock, adapterFacade, slots);
+        SlotListener listener = mock.getSlotListener(adapterFacade, slots);
 
         listener.slotAdded(slot, slotKey);
         listener.slotRemoved(slotKey);
+
+        listener.remove();
     }
 
     @Test
@@ -167,7 +161,7 @@ public class ScheduleProviderUnitTest {
             }
         };
 
-        SlotListener listener = ScheduleProvider.subscribeSlots(mock, adapterFacade, slots);
+        SlotListener listener = mock.getSlotListener(adapterFacade, slots);
 
         listener.slotAdded(slot, slotKey1);
         listener.slotAdded(slot2, slotKey2);
@@ -176,6 +170,8 @@ public class ScheduleProviderUnitTest {
 
         listener.slotChanged(slot, slotKey1);
         listener.slotChanged(slot2, slotKey2);
+
+        listener.remove();
 
     }
 
@@ -210,14 +206,22 @@ public class ScheduleProviderUnitTest {
             }
         };
 
-        SlotListener listener = ScheduleProvider.subscribeSlots(mock, adapterFacade, slots);
+        SlotListener listener = mock.getSlotListener(adapterFacade, slots);
 
         listener.slotAdded(slot, slotKey1);
         listener.slotAdded(slot2, slotKey2);
 
         listener.getSlotIds().remove(1);
 
-        listener.slotChanged(slot2, slotKey2);
-        listener.slotChanged(slot, slotKey1);
+        listener.slotRemoved(slotKey2);
+        listener.slotRemoved(slotKey1);
+
+        listener.remove();
     }
+
+    @Test
+    public void slotConstructorWorksCorrectly(){
+        new Slot();
+    }
+
 }
