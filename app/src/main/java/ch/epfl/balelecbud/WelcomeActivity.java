@@ -13,7 +13,7 @@ import android.widget.Switch;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.schedule.ScheduleActivity;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +52,14 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
+        final Button signoutButton = findViewById(R.id.buttonSignOut);
+        signoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+
         Switch locationSwitch = findViewById(R.id.locationSwitch);
         locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
@@ -62,16 +70,10 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void signOut() {
-        FirebaseAuthenticator.getInstance().signOut();
-    }
-
-    public void onClick(View view) {
-        if (view.getId() == R.id.buttonSignOut) {
-            signOut();
-            Intent intent = new Intent(this, LoginUserActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        getAuthenticator().signOut();
+        Intent intent = new Intent(this, LoginUserActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     /** Called when the user clicks the Map button */

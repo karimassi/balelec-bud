@@ -51,6 +51,7 @@ public class MockAuthenticator implements Authenticator {
 
             @Override
             public boolean isSuccessful() {
+
                 return users.containsKey(email) && users.get(email).equals(password);
             }
 
@@ -118,7 +119,7 @@ public class MockAuthenticator implements Authenticator {
 
     @Override
     public void createAccount(final String email, final String password, OnCompleteListener callback) {
-        if (users.containsKey(email)) {
+        if (!users.containsKey(email)) {
             users.put(email, password);
             setLoggedIn(true);
         }
@@ -130,7 +131,7 @@ public class MockAuthenticator implements Authenticator {
 
             @Override
             public boolean isSuccessful() {
-                return !users.containsKey(email);
+                return loggedIn && users.containsKey(email);
             }
 
             @Override
@@ -197,7 +198,7 @@ public class MockAuthenticator implements Authenticator {
 
     @Override
     public void signOut() {
-
+        setLoggedIn(false);
     }
 
     @Override
