@@ -107,6 +107,27 @@ public class FestivalInformationActivityTest {
     }
 
     @Test
+    public void testCantModifyInfoFromDatabaseThatIsNotThere() throws Throwable {
+        final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
+        final FestivalInformation infoModified = new FestivalInformation();
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                FestivalInformationListener.addInformation(info);
+                FestivalInformationListener.modifyInformation(infoModified, 2);
+            }
+        };
+
+        runOnUiThread(myRunnable);
+        synchronized (myRunnable){
+            myRunnable.wait(1000);
+        }
+
+        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
+    }
+
+    @Test
     public void testCanDeleteInfoFromDatabase() throws Throwable {
         final FestivalInformation info = new FestivalInformation("Bad", "Hello it's a me, bad");
 
@@ -125,5 +146,22 @@ public class FestivalInformationActivityTest {
         }
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
+    }
+
+    @Test
+    public void testCantDeleteInfoFromEmptyDatabase() throws Throwable {
+        final FestivalInformation info = new FestivalInformation();
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                FestivalInformationListener.removeInformation(info, 0);
+            }
+        };
+
+        runOnUiThread(myRunnable);
+        synchronized (myRunnable){
+            myRunnable.wait(1000);
+        }
     }
 }
