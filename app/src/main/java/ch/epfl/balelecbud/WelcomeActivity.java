@@ -13,12 +13,13 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
+import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
+import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationService;
 import ch.epfl.balelecbud.schedule.ScheduleActivity;
 
@@ -33,7 +34,15 @@ public class WelcomeActivity extends BasicActivity {
     private static final long MAX_WAIT_TIME = UPDATE_INTERVAL;
 
     private LocationRequest locationRequest;
-    private FusedLocationProviderClient client;
+    private LocationClient client;
+
+    @VisibleForTesting
+    public static boolean mockMode = false;
+
+    @VisibleForTesting
+    public void setLocationClient(LocationClient client) {
+        this.client = client;
+    }
 
     public boolean isLocationSwitchClickable() {
         return this.locationSwitch.isClickable();
@@ -117,11 +126,11 @@ public class WelcomeActivity extends BasicActivity {
             }
         });
 
-
-        client = LocationServices.getFusedLocationProviderClient(this);
+        if (!mockMode) {
+            client = new FusedLocationClientAdapter(this);
+        }
         createLocationRequest();
     }
-
 
     private PendingIntent getPendingIntent() {
         Intent intent = new Intent(this, LocationService.class);
