@@ -251,6 +251,7 @@ public class MockAuthenticator implements Authenticator {
                     return null;
                 }
 
+
                 @Nullable
                 @Override
                 public String getDisplayName() {

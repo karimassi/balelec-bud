@@ -3,6 +3,8 @@ package ch.epfl.balelecbud;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +17,17 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
+    public void grantPermission() {
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        if (device.hasObject(By.text("ALLOW"))) {
+            device.findObject(By.text("ALLOW")).click();
+            device.waitForWindowUpdate(null, 1000);
+        }
+    }
 
     @Before
     public void setUp() throws Throwable {

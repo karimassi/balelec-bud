@@ -1,10 +1,9 @@
-package ch.epfl.balelecbud.Transport;
+package ch.epfl.balelecbud.transport;
 
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.Transport.Object.Transport;
+import ch.epfl.balelecbud.transport.objects.Transport;
 
 /**
  * A fragment representing a list of Items.

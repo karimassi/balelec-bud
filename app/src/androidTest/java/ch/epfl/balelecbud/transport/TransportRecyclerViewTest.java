@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Transport;
+package ch.epfl.balelecbud.transport;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
@@ -12,19 +12,20 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import static androidx.test.espresso.Espresso.*;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.*;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static org.hamcrest.Matchers.allOf;
-
-
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.Transport.Object.Transport;
-import ch.epfl.balelecbud.Transport.Object.TransportType;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
+import ch.epfl.balelecbud.transport.objects.Transport;
+import ch.epfl.balelecbud.transport.objects.TransportType;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class TransportRecyclerViewTest {
@@ -34,12 +35,6 @@ public class TransportRecyclerViewTest {
     final Transport transport3 = new Transport(TransportType.BUS, 122, "La lune", null, Timestamp.now());
 
     TransportListener myListener;
-
-    /*
-    @Rule
-    public final ActivityTestRule<TransportActivity> mActivityRule =
-            new ActivityTestRule<>(TransportActivity.class);
-    */
     @Before
     public void setUp() {
         TransportDatabase mock = new TransportDatabase() {

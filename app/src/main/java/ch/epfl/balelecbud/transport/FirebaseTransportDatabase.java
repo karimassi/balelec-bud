@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Transport;
+package ch.epfl.balelecbud.transport;
 
 import android.util.Log;
 
@@ -14,7 +14,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-import ch.epfl.balelecbud.Transport.Object.Transport;
+import ch.epfl.balelecbud.transport.objects.Transport;
 
 public class FirebaseTransportDatabase implements TransportDatabase {
     private CollectionReference root = FirebaseFirestore.getInstance().collection("transports");

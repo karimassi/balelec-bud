@@ -1,8 +1,8 @@
-package ch.epfl.balelecbud.Transport;
+package ch.epfl.balelecbud.transport;
 
 import java.util.List;
 
-import ch.epfl.balelecbud.Transport.Object.Transport;
+import ch.epfl.balelecbud.transport.objects.Transport;
 
 public class TransportListener {
     private static final String TAG = TransportListener.class.getSimpleName();

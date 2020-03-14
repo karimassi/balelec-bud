@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Transport;
+package ch.epfl.balelecbud.transport;
 
 interface TransportAdapterFacade {
     void notifyItemInserted(int position);

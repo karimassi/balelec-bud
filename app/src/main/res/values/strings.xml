@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">BalelecBud</string>
+    <string name="title_activity_greeting">GreetingActivity</string>
+    <string name="title_activity_authentication">Sign in</string>
 
     <string name="title_activity_map">MapActivity</string>
     <string name="map_view">Map View</string>
@@ -27,6 +29,7 @@
     <string name="invalid_password">Password should be at least 6 characters long.</string>
     <string name="mismatch_password">Passwords do not match!</string>
     <string name="require_password_repeated">Repeat password!</string>
+    <string name="location">Location</string>
 
     <string name="festival_information">Festival Information</string>
 </resources>

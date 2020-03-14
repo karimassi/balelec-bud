@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Transport.Object;
+package ch.epfl.balelecbud.transport.objects;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;

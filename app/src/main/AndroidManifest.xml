@@ -4,6 +4,9 @@
     package="ch.epfl.balelecbud"
     tools:ignore="GoogleAppIndexingWarning">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,11 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".RegisterUserActivity" />
+        <activity android:name=".schedule.ScheduleActivity" />
         <activity android:name=".FestivalInformationActivity" />
-        <activity android:name=".RegisterUserActivity"></activity>
-        <activity android:name=".TransportActivity"></activity>
-        <activity android:name=".schedule.ScheduleActivity"></activity>
+        <activity android:name=".TransportActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +27,14 @@
         </activity>
         <activity android:name=".LoginUserActivity" />
         <activity android:name=".WelcomeActivity" />
+        <service
+            android:name=".location.LocationService"
+            android:exported="false" />
         <activity
             android:name=".MapViewActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".WelcomeActivity"></activity>
+            android:parentActivityName=".WelcomeActivity" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
