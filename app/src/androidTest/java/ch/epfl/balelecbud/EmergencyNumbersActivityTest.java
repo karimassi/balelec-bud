@@ -1,14 +1,13 @@
 package ch.epfl.balelecbud;
 
-import android.view.View;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import androidx.test.rule.ActivityTestRule;
-
+import android.view.View;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -34,10 +33,6 @@ public class EmergencyNumbersActivityTest {
     public void testListViewIsDisplayed() {
         onView(withId(R.id.numbersListView)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void testRefreshButtonIsDisplayed() {
-        onView(withId((R.id.refreshButton))).check(matches(isDisplayed()));
-    }
+    
 }
 

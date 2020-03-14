@@ -73,20 +73,6 @@ public class EmergencyNumbersActivity extends BasicActivity {
     }
 
 
-    public void fetchInfo(View view) {
-        emergencyNumbersRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    EmergencyNumbers number = documentSnapshot.toObject(EmergencyNumbers.class);
-                    repertoryMap.put(number.getName(), number.getNumber());
-                }
-                upddateListView();
-            }
-        });
-
-    }
-
     private void upddateListView() {
         List<String> numberList = new ArrayList<String>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, numberList);

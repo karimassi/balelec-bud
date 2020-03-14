@@ -49,21 +49,4 @@ public class EmergencyInfoActivity extends BasicActivity {
     }
 
 
-    public void fetchInfo(View view){
-        emergencyInfoRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    String text = "";
-
-                    for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                        EmergencyInfo info = documentSnapshot.toObject(EmergencyInfo.class);
-                        text += "Case: "+ info.getName()+"\nWhat to do: "+info.getInstruction()+"\n\n";
-
-                    }
-                    textViewEmergencyInfo.setText(text);
-                }
-            });
-
-    }
-
 }

@@ -1,11 +1,7 @@
 package ch.epfl.balelecbud;
 import android.view.View;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-
-import com.google.android.gms.maps.model.LatLng;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,10 +29,5 @@ public class EmergencyInfoActivityTest {
     @Test
     public void testTextViewIsDisplayed() {
         onView(withId(R.id.ermergencyTextView)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testRefreshButtonIsDisplayed() {
-        onView(withId((R.id.refreshButton))).check(matches(isDisplayed()));
     }
 }
