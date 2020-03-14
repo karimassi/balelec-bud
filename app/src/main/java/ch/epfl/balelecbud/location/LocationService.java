@@ -20,22 +20,20 @@ public class LocationService extends IntentService {
     private static final String TAG = LocationService.class.getSimpleName();
 
     private final LocationFirestore locationFirestore;
-    private final OnCompleteListener<Void> callback;
+    private OnCompleteListener<Void> callback  = new OnCompleteListener<Void>() {
+        @Override
+        public void onComplete(@NonNull Task<Void> task) {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "onComplete: Location successfully sent");
+            } else {
+                Log.w(TAG, "onComplete: Failed to send the Location", task.getException());
+            }
+        }
+    };
 
     public LocationService() {
         super(TAG);
         this.locationFirestore = new FireBaseLocationAdapter();
-        this.callback = new OnCompleteListener<Void>() {
-
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "onComplete: Location successfully sent");
-                } else {
-                    Log.w(TAG, "onComplete: Failed to send the Location", task.getException());
-                }
-            }
-        };
     }
 
     public LocationService(LocationFirestore locationFirestore, OnCompleteListener<Void> callback) {

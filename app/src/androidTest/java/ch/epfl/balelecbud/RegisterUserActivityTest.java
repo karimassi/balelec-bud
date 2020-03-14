@@ -1,13 +1,12 @@
 package ch.epfl.balelecbud;
 
-import android.Manifest;
-
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
 
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,13 +22,10 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest {
-    @Rule
-    public final GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-            Manifest.permission.ACCESS_FINE_LOCATION
-    );
 
     @Before
     public void setUp() {
@@ -41,7 +37,19 @@ public class RegisterUserActivityTest {
             }
         });
         MockAuthenticator.getInstance().signOut();
+    }
 
+    @After
+    public void teardown() {
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        if (device.hasObject(By.text("ALLOW"))) {
+            device.findObject(By.text("ALLOW")).click();
+            device.waitForWindowUpdate(null, 1000);
+        }
+        if (device.hasObject(By.text("OK"))) {
+            device.findObject(By.text("OK")).click();
+            device.waitForWindowUpdate(null, 1000);
+        }
     }
 
     @Test

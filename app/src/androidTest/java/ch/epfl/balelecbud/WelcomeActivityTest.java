@@ -36,7 +36,7 @@ public class WelcomeActivityTest {
         mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                
+
             }
 
             @Override
