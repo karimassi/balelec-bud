@@ -37,7 +37,6 @@ public class LocationRequesterTest {
     private UiDevice device;
 
     private void grantPermission() {
-//        UiDevice.getInstance(getInstrumentation()).executeShellCommand("pm reset-permissions");
         if (this.device.hasObject(By.text("ALLOW"))) {
             this.device.findObject(By.text("ALLOW")).click();
             this.device.waitForWindowUpdate(null, TIMEOUT);

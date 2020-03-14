@@ -1,6 +1,4 @@
-package ch.epfl.balelecbud.Transport;
-
-import android.text.format.DateUtils;
+package ch.epfl.balelecbud.transport;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
@@ -10,16 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.text.DateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
-import ch.epfl.balelecbud.Transport.Object.Transport;
-import ch.epfl.balelecbud.Transport.Object.TransportType;
+import ch.epfl.balelecbud.transport.objects.Transport;
+import ch.epfl.balelecbud.transport.objects.TransportType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

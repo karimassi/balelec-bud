@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Transport;
+package ch.epfl.balelecbud.transport;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
@@ -6,8 +6,8 @@ import com.google.firebase.firestore.GeoPoint;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ch.epfl.balelecbud.Transport.Object.Transport;
-import ch.epfl.balelecbud.Transport.Object.TransportType;
+import ch.epfl.balelecbud.transport.objects.Transport;
+import ch.epfl.balelecbud.transport.objects.TransportType;
 
 import static org.hamcrest.core.Is.is;
 

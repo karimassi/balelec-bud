@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Transport;
+package ch.epfl.balelecbud.transport;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.Transport.Object.Transport;
-import ch.epfl.balelecbud.Transport.TransportListFragment.OnListFragmentInteractionListener;
+import ch.epfl.balelecbud.transport.objects.Transport;
+import ch.epfl.balelecbud.transport.TransportListFragment.OnListFragmentInteractionListener;
 
 import java.util.LinkedList;
 import java.util.List;

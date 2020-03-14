@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Transport;
+package ch.epfl.balelecbud.transport;
 
 interface WrappedListener {
     void remove();
