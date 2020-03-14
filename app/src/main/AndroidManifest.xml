@@ -4,13 +4,9 @@
     package="ch.epfl.balelecbud"
     tools:ignore="GoogleAppIndexingWarning">
     <uses-permission android:name="android.permission.INTERNET" />
-<<<<<<< HEAD
     <uses-permission android:name="android.permission.CALL_PHONE" />
-=======
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
->>>>>>> 54ed187151a186df5b29c69b2474183964e6cf3b
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
