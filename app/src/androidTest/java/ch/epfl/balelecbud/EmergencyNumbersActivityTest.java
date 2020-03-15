@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud;
 
-
-
 import androidx.test.rule.ActivityTestRule;
 import android.view.View;
 import org.junit.Rule;
@@ -33,6 +31,6 @@ public class EmergencyNumbersActivityTest {
     public void testListViewIsDisplayed() {
         onView(withId(R.id.numbersListView)).check(matches(isDisplayed()));
     }
-    
+
 }
 

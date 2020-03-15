@@ -67,36 +67,33 @@ public class EmergencyNumbersActivity extends BasicActivity {
                     EmergencyNumbers number = documentSnapshot.toObject(EmergencyNumbers.class);
                     repertoryMap.put(number.getName(), number.getNumber());
                 }
-                upddateListView();
-            }
-        });
-    }
 
+                List<String> numberList = new ArrayList<String>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
+                arrayAdapter = new ArrayAdapter(EmergencyNumbersActivity.this, android.R.layout.simple_list_item_1, numberList);
+                numbersListView.setAdapter(arrayAdapter);
 
-    private void upddateListView() {
-        List<String> numberList = new ArrayList<String>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, numberList);
-        numbersListView.setAdapter(arrayAdapter);
+                numbersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position,
+                                            long id) {
+                        String entry = (String) parent.getAdapter().getItem(position);
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + repertoryMap.get(entry)));
 
-        numbersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                String entry = (String) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + repertoryMap.get(entry)));
+                        String permissions[] = {Manifest.permission.CALL_PHONE};
+                        int PERMISSION_TO_CALL = 0;
 
-                String permissions[] = {Manifest.permission.CALL_PHONE};
-                int PERMISSION_TO_CALL = 0;
+                        while (ActivityCompat.checkSelfPermission(EmergencyNumbersActivity.this,
+                                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(EmergencyNumbersActivity.this,
+                                    permissions,
+                                    PERMISSION_TO_CALL);
+                        }
 
-                while (ActivityCompat.checkSelfPermission(EmergencyNumbersActivity.this,
-                        Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(EmergencyNumbersActivity.this,
-                            permissions,
-                            PERMISSION_TO_CALL);
-                }
+                        startActivity(intent);
 
-                startActivity(intent);
+                    }
+                });
 
             }
         });
