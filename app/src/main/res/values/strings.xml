@@ -32,4 +32,10 @@
     <string name="location">Location</string>
 
     <string name="festival_information">Festival Information</string>
+
+    <string name="emergency_tile">Case: </string>
+    <string name="emergency_solution">What to do: </string>
+
+
+
 </resources>

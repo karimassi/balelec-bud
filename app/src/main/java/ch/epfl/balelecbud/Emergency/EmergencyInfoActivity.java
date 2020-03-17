@@ -32,6 +32,9 @@ public class EmergencyInfoActivity extends BasicActivity {
     @Override
     protected void onStart(){
         super.onStart();
+        final String emergency_title = getResources().getString(R.string.emergency_tile);
+        final String emergency_solution = getResources().getString(R.string.emergency_solution);
+
         emergencyInfoRef.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
@@ -42,7 +45,7 @@ public class EmergencyInfoActivity extends BasicActivity {
                 StringBuilder text = new StringBuilder();
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     EmergencyInfo info = documentSnapshot.toObject(EmergencyInfo.class);
-                    text.append("Case: "+ info.getName()+"\nWhat to do: "+info.getInstruction()+"\n\n");
+                    text.append(emergency_title+ info.getName()+"\n"+emergency_solution+info.getInstruction()+"\n\n");
                 }
 
                 textViewEmergencyInfo.setText(text);
