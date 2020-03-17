@@ -7,7 +7,7 @@ public class User {
     private GeoPoint location;
     private String name;
     private String surname;
-    private String userToken
+    private String userToken;
 
 
     public User() {}
