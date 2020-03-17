@@ -15,6 +15,9 @@ import java.util.List;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import ch.epfl.balelecbud.transport.objects.Transport;
 import ch.epfl.balelecbud.transport.objects.TransportType;

@@ -10,6 +10,9 @@ import androidx.test.uiautomator.UiDevice;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
