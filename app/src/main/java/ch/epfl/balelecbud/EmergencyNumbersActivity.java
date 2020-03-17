@@ -35,7 +35,8 @@ import ch.epfl.balelecbud.Emergency.EmergencyInfo;
 import ch.epfl.balelecbud.Emergency.EmergencyNumbers;
 
 public class EmergencyNumbersActivity extends BasicActivity {
-
+    public static final int PERMISSION_TO_CALL_CODE = 991;
+    private boolean callPermissionGranted;
     private ListView numbersListView;
     private ArrayAdapter arrayAdapter;
     private Map<String, String> repertoryMap = new HashMap<String, String>();
@@ -83,22 +84,45 @@ public class EmergencyNumbersActivity extends BasicActivity {
                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + repertoryMap.get(entry)));
 
                         String permissions[] = {Manifest.permission.CALL_PHONE};
-                        int PERMISSION_TO_CALL = 0;
 
-                        while (ActivityCompat.checkSelfPermission(EmergencyNumbersActivity.this,
+                        if(ActivityCompat.checkSelfPermission(EmergencyNumbersActivity.this,
                                 Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            callPermissionGranted = false;
                             ActivityCompat.requestPermissions(EmergencyNumbersActivity.this,
                                     permissions,
-                                    PERMISSION_TO_CALL);
+                                    PERMISSION_TO_CALL_CODE);
+                            if(callPermissionGranted){
+                                startActivity(intent);
+                            }
+                        }else{
+                            startActivity(intent);
                         }
-
-                        startActivity(intent);
 
                     }
                 });
 
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_TO_CALL_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    callPermissionGranted = true;
+                    Log.w("Call permission", "allowed");
+                } else {
+                    callPermissionGranted = false;
+                    Log.w("Call permission", "denied");
+                }
+                return;
+            }
+
+        }
     }
 
 
