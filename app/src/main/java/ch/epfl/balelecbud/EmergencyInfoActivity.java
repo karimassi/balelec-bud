@@ -38,10 +38,10 @@ public class EmergencyInfoActivity extends BasicActivity {
                     Log.w("EmergencyInfo DB","empty collection");
                     return;
                 }
-                String text = "";
+                StringBuilder text = new StringBuilder();
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     EmergencyInfo info = documentSnapshot.toObject(EmergencyInfo.class);
-                    text += "Case: "+ info.getName()+"\nWhat to do: "+info.getInstruction()+"\n\n";
+                    text.append("Case: "+ info.getName()+"\nWhat to do: "+info.getInstruction()+"\n\n");
                 }
 
                 textViewEmergencyInfo.setText(text);
