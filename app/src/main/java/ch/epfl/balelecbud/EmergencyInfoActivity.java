@@ -35,6 +35,7 @@ public class EmergencyInfoActivity extends BasicActivity {
             @Override
             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                 if (e != null) {
+                    Log.w("EmergencyInfo DB","empty collection");
                     return;
                 }
                 String text = "";

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,6 +62,7 @@ public class EmergencyNumbersActivity extends BasicActivity {
             @Override
             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                 if (e != null) {
+                    Log.w("EmergencyNumbers DB","empty collection");
                     return;
                 }
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
