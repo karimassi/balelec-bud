@@ -17,7 +17,13 @@
         <activity android:name=".RegisterUserActivity" />
         <activity android:name=".schedule.ScheduleActivity" />
         <activity android:name=".FestivalInformationActivity" />
+<<<<<<< HEAD
         <activity android:name=".TransportActivity" />
+=======
+        <activity android:name=".RegisterUserActivity"></activity>
+        <activity android:name=".TransportActivity"></activity>
+        <activity android:name=".ScheduleActivity"></activity>
+>>>>>>> Refactored the database structure. Rendered all service providers generic
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
