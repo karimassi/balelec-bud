@@ -8,7 +8,7 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 public interface ConcertDatabaseInterface {
     void addNotificationScheduler(NotificationSchedulerInterface scheduler);
 
-    List<Slot> getAllConcert();
+    List<Slot> getAllScheduledConcert();
 
-    void addNewConcert(Slot newSlot);
+    void scheduleNewConcert(Slot newSlot);
 }
