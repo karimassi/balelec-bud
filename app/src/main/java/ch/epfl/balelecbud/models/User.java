@@ -7,6 +7,7 @@ public class User {
     private GeoPoint location;
     private String name;
     private String surname;
+    private String userToken
 
 
     public User() {}
@@ -26,4 +27,6 @@ public class User {
     public String getSurname() {
         return surname;
     }
+
+    public String getUserToken() {return userToken;}
 }
