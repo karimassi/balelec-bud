@@ -7,11 +7,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
-import ch.epfl.balelecbud.schedule.ScheduleActivity;
-
 public class WelcomeActivity extends BasicActivity {
 
     @Override
@@ -95,7 +90,7 @@ public class WelcomeActivity extends BasicActivity {
 
     /** Called when the user clicks the Schedule button */
     public void openTransportActivity(){
-//        Intent intent = new Intent(this, TransportActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, TransportActivity.class);
+        startActivity(intent);
     }
 }

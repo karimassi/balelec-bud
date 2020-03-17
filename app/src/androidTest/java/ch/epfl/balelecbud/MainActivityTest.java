@@ -1,8 +1,12 @@
 
 package ch.epfl.balelecbud;
 
+import androidx.annotation.NonNull;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +24,7 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 public class MainActivityTest {
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
         activityScenario.onActivity(new ActivityScenario.ActivityAction<MainActivity>() {
             @Override
@@ -28,6 +32,10 @@ public class MainActivityTest {
                 activity.setAuthenticator(MockAuthenticator.getInstance());
             }
         });
+    }
+
+    @Test
+    public void testLoggedOutGoesToLoginActivity() throws Throwable {
         Runnable myRunnable = new Runnable(){
             @Override
             public void run() {
@@ -37,11 +45,8 @@ public class MainActivityTest {
         runOnUiThread(myRunnable);
         synchronized (myRunnable){
             myRunnable.wait(1000);
+            ActivityScenario.launch(MainActivity.class);
         }
-    }
-
-    @Test
-    public void testLoggedOutGoesToLoginActivity() {
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 }

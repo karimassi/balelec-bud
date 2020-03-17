@@ -11,6 +11,11 @@ import android.widget.TextView;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.Transport.Object.Transport;
 import ch.epfl.balelecbud.Transport.TransportListFragment.OnListFragmentInteractionListener;
+import ch.epfl.balelecbud.festivalInformation.FestivalInformation;
+import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,20 +24,20 @@ import java.util.List;
 public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTransportRecyclerViewAdapter.ViewHolder> {
 
     //default implementation is Firebase
-    static private TransportDatabase databaseImplementation= new FirebaseTransportDatabase();
+    static private DatabaseWrapper database = new FirestoreDatabaseWrapper();
 
     //Used to insert mocks
     @VisibleForTesting
-    public static void setTransportDatabase(TransportDatabase databaseImp){
-        databaseImplementation = databaseImp;
+    public static void setTransportDatabase(DatabaseWrapper databaseWrapper){
+        database = databaseWrapper;
     }
 
     private final List<Transport> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyTransportRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
+    public MyTransportRecyclerViewAdapter(OnListFragmentInteractionListener fragmentInteractionListenerl) {
         mValues = new LinkedList<>();
-        TransportAdapterFacade facade = new TransportAdapterFacade() {
+        RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
             @Override
             public void notifyItemInserted(int position) {
                 MyTransportRecyclerViewAdapter.this.notifyItemInserted(position);
@@ -48,8 +53,9 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
                 MyTransportRecyclerViewAdapter.this.notifyItemRemoved(position);
             }
         };
-        databaseImplementation.getTransportListener(facade, mValues);
-        mListener = listener;
+        DatabaseListener<Transport> listener = new DatabaseListener(facade, mValues, Transport.class);
+        database.listen(DatabaseWrapper.TRANSPORT_PATH, listener);
+        mListener = fragmentInteractionListenerl;
     }
 
     @Override

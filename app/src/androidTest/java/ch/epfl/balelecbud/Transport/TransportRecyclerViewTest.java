@@ -25,6 +25,9 @@ import ch.epfl.balelecbud.Transport.Object.Transport;
 import ch.epfl.balelecbud.Transport.Object.TransportType;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 @RunWith(AndroidJUnit4.class)
 public class TransportRecyclerViewTest {
@@ -33,34 +36,13 @@ public class TransportRecyclerViewTest {
     final Transport transport2 = new Transport(TransportType.METRO, 12, "EPFL", null, Timestamp.now());
     final Transport transport3 = new Transport(TransportType.BUS, 122, "La lune", null, Timestamp.now());
 
-    TransportListener myListener;
+    MockDatabaseWrapper mock;
 
-    /*
-    @Rule
-    public final ActivityTestRule<TransportActivity> mActivityRule =
-            new ActivityTestRule<>(TransportActivity.class);
-    */
     @Before
     public void setUp() {
-        TransportDatabase mock = new TransportDatabase() {
-            @Override
-            public TransportListener getTransportListener(TransportAdapterFacade adapter, List<Transport> transports) {
-                myListener = new TransportListener(adapter, transports, new WrappedListener() {
-                    @Override
-                    public void remove() {
-                        //nothing
-                    }
-
-                    @Override
-                    public void registerOuterListener(TransportListener outerListener) {
-                        //nothing
-                    }
-                });
-                return myListener;
-            }
-        };
+        mock = new MockDatabaseWrapper();
         MyTransportRecyclerViewAdapter.setTransportDatabase(mock);
-        ActivityScenario activityScenario = ActivityScenario.launch(TransportActivity.class);
+        ActivityScenario.launch(TransportActivity.class);
 
     }
     private void compareViewAndItem(ViewInteraction viewInt, Transport transport){
@@ -70,11 +52,11 @@ public class TransportRecyclerViewTest {
         viewInt.check(matches(hasDescendant(withText(transport.getTimeString()))));
     }
 
-    private void addItem(final Transport t, final int index) throws Throwable {
+    private void addItem(final Transport t) throws Throwable {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                myListener.addTransport(t, index);
+                mock.addItem(t);
             }
         };
 
@@ -88,7 +70,7 @@ public class TransportRecyclerViewTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                myListener.modifyTransport(t, index);
+                mock.changeItem(t, index);
             }
         };
 
@@ -99,12 +81,12 @@ public class TransportRecyclerViewTest {
 
 
     }
-    private void removeItem(final int index) throws Throwable {
+    private void removeItem(final Transport t, final int index) throws Throwable {
 
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                myListener.removeTransport(index);
+                mock.removeItem(t, index);
             }
         };
 
@@ -121,18 +103,18 @@ public class TransportRecyclerViewTest {
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
 
-        addItem(transport1, 0);
+        addItem(transport1);
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(1)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
         onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)).perform(click());
 
-        addItem(transport2, 1);
+        addItem(transport2);
         onView(withId(R.id.fragment)).check(matches(hasChildCount(2)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(1)), transport2);
 
-        addItem(transport3, 2);
+        addItem(transport3);
         onView(withId(R.id.fragment)).check(matches(hasChildCount(3)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(1)), transport2);
@@ -144,7 +126,7 @@ public class TransportRecyclerViewTest {
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
 
-        addItem(transport1, 0);
+        addItem(transport1);
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(1)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
@@ -158,12 +140,12 @@ public class TransportRecyclerViewTest {
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
 
-        addItem(transport1, 0);
+        addItem(transport1);
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(1)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
 
-        removeItem(0);
+        removeItem(transport1, 0);
 
         onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
     }
