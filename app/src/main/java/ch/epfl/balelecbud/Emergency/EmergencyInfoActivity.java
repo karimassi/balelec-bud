@@ -1,18 +1,19 @@
-package ch.epfl.balelecbud;
+package ch.epfl.balelecbud.Emergency;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import ch.epfl.balelecbud.Emergency.EmergencyInfo;
+
+import ch.epfl.balelecbud.BasicActivity;
+import ch.epfl.balelecbud.Emergency.models.EmergencyInfo;
+import ch.epfl.balelecbud.R;
 
 public class EmergencyInfoActivity extends BasicActivity {
 

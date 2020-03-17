@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud;
+package ch.epfl.balelecbud.Emergency;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,12 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,15 +21,15 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.balelecbud.Emergency.EmergencyInfo;
-import ch.epfl.balelecbud.Emergency.EmergencyNumbers;
+import ch.epfl.balelecbud.BasicActivity;
+import ch.epfl.balelecbud.Emergency.models.EmergencyNumbers;
+import ch.epfl.balelecbud.R;
 
 public class EmergencyNumbersActivity extends BasicActivity {
     public static final int PERMISSION_TO_CALL_CODE = 991;

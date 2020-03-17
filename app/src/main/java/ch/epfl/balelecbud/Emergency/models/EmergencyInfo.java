@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Emergency;
+package ch.epfl.balelecbud.Emergency.models;
 
 public class EmergencyInfo {
     private String instruction;
