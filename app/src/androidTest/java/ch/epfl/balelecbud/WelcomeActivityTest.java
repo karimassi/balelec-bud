@@ -104,10 +104,10 @@ public class WelcomeActivityTest {
 
     @Test
     public void testTransportIsDisplayed() {
-        //onView(withId(R.id.transportButton)).perform(click());
-        //onView(withId(R.id.transportLinearLayout)).check(matches(isDisplayed()));
-        //onView(withId(R.id.map)).check(matches(isDisplayed()));
-        //onView(withId((R.id.transportButton))).check(doesNotExist());
+        onView(withId(R.id.transportButton)).perform(click());
+        onView(withId(R.id.transportLinearLayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.fragmentTransportList)).check(matches(isDisplayed()));
+        onView(withId((R.id.transportButton))).check(doesNotExist());
     }
 
     @Test

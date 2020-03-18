@@ -22,37 +22,19 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
-
-    public void grantPermission() {
-        UiDevice device = UiDevice.getInstance(getInstrumentation());
-        if (device.hasObject(By.text("ALLOW"))) {
-            device.findObject(By.text("ALLOW")).click();
-            device.waitForWindowUpdate(null, 1000);
-        }
-    }
+public class MainActivityTest extends BasicAuthenticationTest{
 
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
-    public void setUp() {
+    public void setUp() throws Throwable {
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        logout();
     }
 
     @Test
-    public void testLoggedOutGoesToLoginActivity() throws Throwable {
-        Runnable myRunnable = new Runnable(){
-            @Override
-            public void run() {
-                MockAuthenticator.getInstance().signOut();
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable){
-            myRunnable.wait(1000);
-            ActivityScenario.launch(MainActivity.class);
-        }
+    public void testLoggedOutGoesToLoginActivity() {
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 }
