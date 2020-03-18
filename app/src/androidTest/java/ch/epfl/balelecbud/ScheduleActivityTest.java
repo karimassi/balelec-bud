@@ -6,14 +6,19 @@ import android.view.ViewGroup;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.google.firebase.Timestamp;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
@@ -32,6 +37,26 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 public class ScheduleActivityTest {
 
     MockDatabaseWrapper mock;
+
+
+
+    static private Slot slot1;
+    static private Slot slot2;
+    static private Slot slot3;
+
+    @BeforeClass
+    public static void setUpSlots(){
+        List<Timestamp> timestamps = new LinkedList<>();
+        for(int i = 0; i < 6; ++i){
+            Calendar c = Calendar.getInstance();
+            c.set(2020,11,11,10 + i, i % 2 == 0 ? 15 : 0);
+            Date date = c.getTime();
+            timestamps.add(i, new Timestamp(date));
+        }
+        slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
+        slot2 = new Slot("Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
+        slot3 = new Slot("Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
+    }
 
     @Before
     public void setUp(){
@@ -89,22 +114,19 @@ public class ScheduleActivityTest {
 
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(0)));
 
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h") ;
         addItem(slot1);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(1)));
 
-        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h") ;
         addItem(slot2);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(2)));
 
-        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h") ;
         addItem(slot3);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(3)));
 
         modifyItem(slot3, 0);
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText("Upset")));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText("Scène Sat'")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText(slot3.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText(slot3.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText(slot3.getSceneName())));
 
         removeItem(slot3, 0);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(2)));
@@ -118,25 +140,22 @@ public class ScheduleActivityTest {
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h") ;
-        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h") ;
-        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h") ;
 
         addItem(slot1);
         addItem(slot2);
         addItem(slot3);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText("Mr Oizo")));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText("Grande scène")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText(slot1.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText(slot1.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText(slot1.getSceneName())));
 
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 0)).check(matches(withText("20h - 21h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 1)).check(matches(withText("Walking Furret")));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 2)).check(matches(withText("Les Azimutes")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 0)).check(matches(withText(slot2.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 1)).check(matches(withText(slot2.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 2)).check(matches(withText(slot2.getSceneName())));
 
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 1)).check(matches(withText("Upset")));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 2)).check(matches(withText("Scène Sat'")));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 0)).check(matches(withText(slot3.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 1)).check(matches(withText(slot3.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 2)).check(matches(withText(slot3.getSceneName())));
     }
 
     public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
