@@ -14,14 +14,18 @@ import java.util.List;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
-    private static ScheduleDatabase databaseImplementation = new FirebaseScheduleDatabase();
+    private static DatabaseWrapper database = new FirestoreDatabaseWrapper();
 
     @VisibleForTesting
-    public static void setDatabaseImplementation(ScheduleDatabase dbImplementation){
-        databaseImplementation = dbImplementation;
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
+        database = databaseWrapper;
     }
 
     private List<Slot> slots;
@@ -41,7 +45,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     public ScheduleAdapter() {
         slots = new ArrayList<>();
-        ScheduleAdapterFacade facade = new ScheduleAdapterFacade() {
+        RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
             @Override
             public void notifyItemInserted(int position) {
                 ScheduleAdapter.this.notifyItemInserted(position);
@@ -57,7 +61,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 ScheduleAdapter.this.notifyItemRemoved(position);
             }
         };
-        databaseImplementation.getSlotListener(facade, slots);
+        DatabaseListener<Slot> listener = new DatabaseListener(facade, slots, Slot.class);
+        database.listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
     }
 
     @NonNull

@@ -10,18 +10,15 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import ch.epfl.balelecbud.schedule.ScheduleActivity;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
-import ch.epfl.balelecbud.schedule.ScheduleAdapterFacade;
-import ch.epfl.balelecbud.schedule.ScheduleDatabase;
-import ch.epfl.balelecbud.schedule.SlotListener;
-import ch.epfl.balelecbud.schedule.WrappedListener;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -31,39 +28,23 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
-
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
-    SlotListener listener;
+
+    MockDatabaseWrapper mock;
 
     @Before
     public void setUp(){
-        ScheduleDatabase mockDB = new ScheduleDatabase() {
-            @Override
-            public SlotListener getSlotListener(ScheduleAdapterFacade adapter, List<Slot> slots) {
-                listener = new SlotListener(adapter, slots, new WrappedListener() {
-                    @Override
-                    public void remove() {
-
-                    }
-
-                    @Override
-                    public void registerOuterListener(SlotListener outerListener) {
-
-                    }
-                });
-                return listener;
-            }
-        };
-        ScheduleAdapter.setDatabaseImplementation(mockDB);
+        mock = new MockDatabaseWrapper();
+        ScheduleAdapter.setDatabaseImplementation(mock);
         ActivityScenario.launch(ScheduleActivity.class);
     }
 
-    private void addItem(final Slot slot, final String id) throws Throwable{
+    private void addItem(final Slot slot) throws Throwable{
         Runnable myRunnable = new Runnable(){
             @Override
             public void run() {
-                listener.slotAdded(slot, id);
+                mock.addItem(slot);
             }
         };
         runOnUiThread(myRunnable);
@@ -72,11 +53,11 @@ public class ScheduleActivityTest {
         }
     }
 
-    private void modifyItem(final Slot slot, final String id) throws Throwable{
+    private void modifyItem(final Slot slot, final int index) throws Throwable{
         Runnable myRunnable = new Runnable(){
             @Override
             public void run() {
-                listener.slotChanged(slot, id);
+                mock.changeItem(slot, index);
             }
         };
         runOnUiThread(myRunnable);
@@ -85,11 +66,11 @@ public class ScheduleActivityTest {
         }
     }
 
-    private void removeItem(final String id) throws Throwable{
-        Runnable myRunnable = new Runnable(){
+    private void removeItem(final Slot slot, final int index) throws Throwable {
+        Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                listener.slotRemoved(id);
+                mock.removeItem(slot, index);
             }
         };
         runOnUiThread(myRunnable);
@@ -108,50 +89,42 @@ public class ScheduleActivityTest {
 
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(0)));
 
-        Slot slot1 = new Slot("Mr Oizo", "19h - 20h", "Grande scène") ;
-        String id1 = "oui";
-        addItem(slot1, id1);
+        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h") ;
+        addItem(slot1);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(1)));
 
-        Slot slot2 = new Slot("Walking Furret", "20h - 21h", "Les Azimutes") ;
-        String id2 = "ouioui";
-        addItem(slot2, id2);
+        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h") ;
+        addItem(slot2);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(2)));
 
-
-        Slot slot3 = new Slot("Upset", "19h - 20h", "Scène Sat'") ;
-        String id3 = "ouiouioui";
-        addItem(slot3, id3);
+        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h") ;
+        addItem(slot3);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(3)));
 
-        modifyItem(slot3, id1);
+        modifyItem(slot3, 0);
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText("19h - 20h")));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText("Upset")));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText("Scène Sat'")));
 
-        removeItem(id1);
+        removeItem(slot3, 0);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(2)));
 
-        removeItem(id2);
+        removeItem(slot2, 0);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(1)));
 
-        removeItem(id3);
+        removeItem(slot3, 0);
         onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(0)));
     }
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-        Slot slot1 = new Slot("Mr Oizo", "19h - 20h", "Grande scène") ;
-        Slot slot2 = new Slot("Walking Furret", "20h - 21h", "Les Azimutes") ;
-        Slot slot3 = new Slot("Upset", "19h - 20h", "Scène Sat'") ;
+        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h") ;
+        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h") ;
+        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h") ;
 
-        String id1 = "oui";
-        String id2 = "ouioui";
-        String id3 = "ouiouioui";
-
-        addItem(slot1, id1);
-        addItem(slot2, id2);
-        addItem(slot3, id3);
+        addItem(slot1);
+        addItem(slot2);
+        addItem(slot3);
 
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText("19h - 20h")));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText("Mr Oizo")));
