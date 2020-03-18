@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.schedule;
+package ch.epfl.balelecbud;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 
 public class ScheduleActivity extends AppCompatActivity{
 

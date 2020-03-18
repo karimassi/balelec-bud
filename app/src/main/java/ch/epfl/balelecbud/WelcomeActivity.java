@@ -21,7 +21,6 @@ import com.google.android.gms.location.LocationRequest;
 import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationService;
-import ch.epfl.balelecbud.schedule.ScheduleActivity;
 
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
@@ -271,7 +270,7 @@ public class WelcomeActivity extends BasicActivity {
 
     /** Called when the user clicks the Schedule button */
     public void openTransportActivity(){
-//        Intent intent = new Intent(this, TransportActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, TransportActivity.class);
+        startActivity(intent);
     }
 }

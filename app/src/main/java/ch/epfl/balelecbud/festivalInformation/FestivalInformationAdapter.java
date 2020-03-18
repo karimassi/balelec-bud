@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.festivalInformation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,27 +14,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInformationAdapter.FestivalInformationHolder> {
 
     private List<FestivalInformation> informationData;
-    private static BasicDatabase database = new FestivalInformationDatabase();
+    private static DatabaseWrapper database = new FirestoreDatabaseWrapper();
 
     @VisibleForTesting
-    public static void setDatabaseImplementation(BasicDatabase basicDatabase){
-        database = basicDatabase;
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
+        database = databaseWrapper;
     }
 
     public FestivalInformationAdapter() {
         this.informationData = new ArrayList<>();
-        FestivalInformationAdapterFacade facade = new FestivalInformationAdapterFacade() {
+        RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
             @Override
             public void notifyItemInserted(int position) {
                 FestivalInformationAdapter.this.notifyItemInserted(position);
             }
 
             @Override
-            public void notifyItemModified(int position) {
+            public void notifyItemChanged(int position) {
                 FestivalInformationAdapter.this.notifyItemChanged(position);
             }
 
@@ -42,8 +47,8 @@ public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInf
                 FestivalInformationAdapter.this.notifyItemRemoved(position);
             }
         };
-        FestivalInformationListener listener = new FestivalInformationListener(facade, informationData);
-        new FestivalInformationProvider().subscribe(listener, database);
+        DatabaseListener<FestivalInformation> listener = new DatabaseListener(facade, informationData, FestivalInformation.class);
+        database.listen(DatabaseWrapper.FESITVAL_INFORMATION_PATH, listener);
     }
 
     @Override

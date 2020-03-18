@@ -1,40 +1,30 @@
 package ch.epfl.balelecbud;
 
-import android.view.View;
-
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import com.google.protobuf.NullValue;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.festivalInformation.BasicDatabase;
 import ch.epfl.balelecbud.festivalInformation.FestivalInformation;
 import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
-import ch.epfl.balelecbud.festivalInformation.FestivalInformationListener;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
+import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class FestivalInformationActivityTest {
 
-    FestivalInformationListener festivalInfoListener;
+    MockDatabaseWrapper mock;
 
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {
         viewInteraction.check(matches(hasDescendant(withText(information.getTitle()))));
@@ -43,22 +33,9 @@ public class FestivalInformationActivityTest {
 
     @Before
     public void setUp() {
-        BasicDatabase mockDatabase = new BasicDatabase() {
-            @Override
-            public void registerListener(FestivalInformationListener listener) {
-                festivalInfoListener = listener;
-            }
-
-            @Override
-            public void unregisterListener() {
-            }
-
-            @Override
-            public void listen() {
-            }
-        };
-        FestivalInformationAdapter.setDatabaseImplementation(mockDatabase);
-        ActivityScenario activityScenario = ActivityScenario.launch(FestivalInformationActivity.class);
+        mock = new MockDatabaseWrapper();
+        FestivalInformationAdapter.setDatabaseImplementation(mock);
+        ActivityScenario.launch(FestivalInformationActivity.class);
     }
 
     @Test
@@ -73,7 +50,7 @@ public class FestivalInformationActivityTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FestivalInformationListener.addInformation(info);
+                mock.addItem(info);
             }
         };
 
@@ -93,8 +70,8 @@ public class FestivalInformationActivityTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FestivalInformationListener.addInformation(info);
-                FestivalInformationListener.modifyInformation(infoModified, 0);
+                mock.addItem(info);
+                mock.changeItem(infoModified, 0);
             }
         };
 
@@ -114,8 +91,8 @@ public class FestivalInformationActivityTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FestivalInformationListener.addInformation(info);
-                FestivalInformationListener.modifyInformation(infoModified, 2);
+                mock.addItem(info);
+                mock.changeItem(infoModified, 2);
             }
         };
 
@@ -134,9 +111,9 @@ public class FestivalInformationActivityTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FestivalInformationListener.addInformation(info);
-                FestivalInformationListener.addInformation(info);
-                FestivalInformationListener.removeInformation(info, 1);
+                mock.addItem(info);
+                mock.addItem(info);
+                mock.removeItem(info, 0);
             }
         };
 
@@ -155,7 +132,7 @@ public class FestivalInformationActivityTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FestivalInformationListener.removeInformation(info, 0);
+                mock.removeItem(info, 0);
             }
         };
 
