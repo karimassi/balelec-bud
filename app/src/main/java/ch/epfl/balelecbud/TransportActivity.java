@@ -7,7 +7,6 @@ import android.os.Bundle;
 import ch.epfl.balelecbud.transport.objects.Transport;
 import ch.epfl.balelecbud.transport.TransportListFragment;
 
-
 public class TransportActivity extends FragmentActivity implements TransportListFragment.OnListFragmentInteractionListener {
 
     @Override

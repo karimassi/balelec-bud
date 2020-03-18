@@ -1,14 +1,12 @@
 package ch.epfl.balelecbud.util.database;
 
-import android.util.Log;
-
 import java.util.List;
 
 import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
 
 public class DatabaseListener<T> {
 
-    private RecyclerViewAdapterFacade facade; // chnage type later
+    private RecyclerViewAdapterFacade facade; // change type later
     private List<T> dataList;
     private Class<T> type;
 

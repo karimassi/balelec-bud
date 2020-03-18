@@ -61,7 +61,7 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.transport_item, parent, false);
+                .inflate(R.layout.item_transport, parent, false);
         return new ViewHolder(view);
     }
 
@@ -101,10 +101,10 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            typeView = (TextView) view.findViewById(R.id.type);
-            lineView = (TextView) view.findViewById(R.id.line);
-            directionView = (TextView) view.findViewById(R.id.direction);
-            timeView = (TextView) view.findViewById(R.id.time);
+            typeView = (TextView) view.findViewById(R.id.transportType);
+            lineView = (TextView) view.findViewById(R.id.transportLine);
+            directionView = (TextView) view.findViewById(R.id.transportDirection);
+            timeView = (TextView) view.findViewById(R.id.transportTime);
         }
 
     }

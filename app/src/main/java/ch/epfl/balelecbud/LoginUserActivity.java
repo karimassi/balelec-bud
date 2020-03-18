@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-
 public class LoginUserActivity extends BasicActivity {
 
     private EditText emailField;

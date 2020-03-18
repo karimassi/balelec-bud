@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.festivalInformation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

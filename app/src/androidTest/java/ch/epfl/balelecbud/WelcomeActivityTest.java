@@ -113,7 +113,7 @@ public class WelcomeActivityTest {
     @Test
     public void testScheduleIsDisplayed(){
         onView(withId(R.id.scheduleButton)).perform(click());
-        onView(withId(R.id.rvSchedule)).check(matches(isDisplayed()));
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
         onView(withId((R.id.scheduleButton))).check(doesNotExist());
     }
 

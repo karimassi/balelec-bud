@@ -88,8 +88,8 @@ public class WelcomeActivity extends BasicActivity {
             }
         });
 
-        final Button signoutButton = findViewById(R.id.buttonSignOut);
-        signoutButton.setOnClickListener(new View.OnClickListener() {
+        final Button signOutButton = findViewById(R.id.buttonSignOut);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signOut();
@@ -109,7 +109,6 @@ public class WelcomeActivity extends BasicActivity {
         if (checkPermissions()) {
             this.locationSwitch.setClickable(true);
         }
-
 
         this.locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
