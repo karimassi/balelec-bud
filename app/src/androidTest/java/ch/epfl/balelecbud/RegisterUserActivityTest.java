@@ -23,18 +23,19 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
-public class RegisterUserActivityTest {
+public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Rule
     public final ActivityTestRule<RegisterUserActivity> mActivityRule = new ActivityTestRule<>(RegisterUserActivity.class);
 
     @Before
-    public void setUp() {
-        MockAuthenticator.getInstance().signOut();
+    public void setUp() throws Throwable {
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        logout();
     }
 
     @After

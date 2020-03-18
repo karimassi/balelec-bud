@@ -10,13 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
-
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
-import ch.epfl.balelecbud.util.database.DatabaseListener;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import ch.epfl.balelecbud.transport.objects.Transport;
@@ -30,7 +26,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 @RunWith(AndroidJUnit4.class)
 public class TransportRecyclerViewTest {
@@ -105,53 +100,53 @@ public class TransportRecyclerViewTest {
     @Test
     public void displayIsUpdatedWhenItemsAdded() throws Throwable {
 
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
         addItem(transport1);
 
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(1)));
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
-        onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)).perform(click());
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(1)));
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
+        onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)).perform(click());
 
         addItem(transport2);
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(2)));
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(1)), transport2);
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(2)));
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(1)), transport2);
 
         addItem(transport3);
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(3)));
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(1)), transport2);
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(2)), transport3);
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(3)));
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(1)), transport2);
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(2)), transport3);
     }
 
     @Test
     public void displayIsUpdatedWhenItemsModified() throws Throwable {
 
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
         addItem(transport1);
 
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(1)));
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(1)));
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
 
         modifyItem(transport2, 0);
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport2);
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport2);
     }
 
     @Test
     public void displayIsUpdatedWhenItemsRemoved() throws Throwable {
 
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
         addItem(transport1);
 
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(1)));
-        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragment).atPosition(0)), transport1);
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(1)));
+        compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
 
         removeItem(transport1, 0);
 
-        onView(withId(R.id.fragment)).check(matches(hasChildCount(0)));
+        onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
     }
 
     @Test

@@ -23,7 +23,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class LoginUserActivityTest {
+public class LoginUserActivityTest extends BasicAuthenticationTest{
 
     @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
@@ -34,9 +34,9 @@ public class LoginUserActivityTest {
     public final ActivityTestRule<LoginUserActivity> mActivityRule = new ActivityTestRule<>(LoginUserActivity.class);
 
     @Before
-    public void setUp() {
-        MockAuthenticator.getInstance().signOut();
+    public void setUp() throws Throwable{
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        logout();
     }
 
     @Test
