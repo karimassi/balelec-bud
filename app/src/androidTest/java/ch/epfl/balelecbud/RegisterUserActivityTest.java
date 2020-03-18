@@ -1,12 +1,13 @@
 package ch.epfl.balelecbud;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,16 +28,13 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest {
 
+    @Rule
+    public final ActivityTestRule<RegisterUserActivity> mActivityRule = new ActivityTestRule<>(RegisterUserActivity.class);
+
     @Before
     public void setUp() {
-        ActivityScenario activityScenario = ActivityScenario.launch(RegisterUserActivity.class);
-        activityScenario.onActivity(new ActivityScenario.ActivityAction<RegisterUserActivity>() {
-            @Override
-            public void perform(RegisterUserActivity activity) {
-                activity.setAuthenticator(MockAuthenticator.getInstance());
-            }
-        });
         MockAuthenticator.getInstance().signOut();
+        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
     }
 
     @After

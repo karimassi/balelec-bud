@@ -1,19 +1,14 @@
 
 package ch.epfl.balelecbud;
 
-import androidx.annotation.NonNull;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,6 +23,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
+
     public void grantPermission() {
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         if (device.hasObject(By.text("ALLOW"))) {
@@ -36,15 +32,12 @@ public class MainActivityTest {
         }
     }
 
+    @Rule
+    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+
     @Before
     public void setUp() {
-        ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
-        activityScenario.onActivity(new ActivityScenario.ActivityAction<MainActivity>() {
-            @Override
-            public void perform(MainActivity activity) {
-                activity.setAuthenticator(MockAuthenticator.getInstance());
-            }
-        });
+        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
     }
 
     @Test
