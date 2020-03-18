@@ -2,8 +2,8 @@ package ch.epfl.balelecbud;
 
 import android.Manifest;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
@@ -30,16 +30,13 @@ public class LoginUserActivityTest {
         Manifest.permission.ACCESS_FINE_LOCATION
     );
 
+    @Rule
+    public final ActivityTestRule<LoginUserActivity> mActivityRule = new ActivityTestRule<>(LoginUserActivity.class);
+
     @Before
     public void setUp() {
-        ActivityScenario activityScenario = ActivityScenario.launch(LoginUserActivity.class);
-        activityScenario.onActivity(new ActivityScenario.ActivityAction<LoginUserActivity>() {
-            @Override
-            public void perform(LoginUserActivity activity) {
-                activity.setAuthenticator(MockAuthenticator.getInstance());
-            }
-        });
         MockAuthenticator.getInstance().signOut();
+        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
     }
 
     @Test
