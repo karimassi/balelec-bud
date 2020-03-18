@@ -204,7 +204,6 @@ public class WelcomeActivity extends BasicActivity {
                         grantResults[1] == PackageManager.PERMISSION_GRANTED);
     }
 
-
     private void onPermissionCanceled() {
         Log.i(TAG, "onRequestPermissionsResult: Permission request canceled");
         this.locationSwitch.setClickable(false);
@@ -256,19 +255,19 @@ public class WelcomeActivity extends BasicActivity {
     }
 
     /** Called when the user clicks the Schedule button */
-    public void openScheduleActivity(){
+    private void openScheduleActivity(){
         Intent intent = new Intent(this, ScheduleActivity.class);
         startActivity(intent);
     }
 
     /** Called when the user clicks the Info button */
-    public void openInfoActivity(){
+    private void openInfoActivity(){
         Intent intent = new Intent(this, FestivalInformationActivity.class);
         startActivity(intent);
     }
 
     /** Called when the user clicks the Transport button */
-    public void openTransportActivity(){
+    private void openTransportActivity(){
         Intent intent = new Intent(this, TransportActivity.class);
         startActivity(intent);
     }

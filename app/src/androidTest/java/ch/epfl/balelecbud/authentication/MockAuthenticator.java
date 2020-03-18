@@ -51,7 +51,6 @@ public class MockAuthenticator implements Authenticator {
 
             @Override
             public boolean isSuccessful() {
-
                 return users.containsKey(email) && users.get(email).equals(password);
             }
 
