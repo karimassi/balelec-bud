@@ -90,7 +90,7 @@ public class WelcomeActivityTest {
     @Test
     public void testMapIsDisplayed() {
         onView(withId(R.id.mapButton)).perform(click());
-        onView(withId(R.id.maplinearlayout)).check(matches(isDisplayed()));
+        onView(withId(R.id.mapLinearLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.map)).check(matches(isDisplayed()));
         onView(withId((R.id.mapButton))).check(doesNotExist());
     }
@@ -105,7 +105,7 @@ public class WelcomeActivityTest {
     @Test
     public void testTransportIsDisplayed() {
         //onView(withId(R.id.transportButton)).perform(click());
-        //onView(withId(R.id.maplinearlayout)).check(matches(isDisplayed()));
+        //onView(withId(R.id.transportLinearLayout)).check(matches(isDisplayed()));
         //onView(withId(R.id.map)).check(matches(isDisplayed()));
         //onView(withId((R.id.transportButton))).check(doesNotExist());
     }
