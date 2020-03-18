@@ -12,6 +12,14 @@ public class User {
 
     public User() {}
 
+    public User(String email, GeoPoint location, String name, String surname, String userToken) {
+        this.email=email;
+        this.location = location;
+        this.name= name;
+        this.surname = surname;
+        this.userToken=userToken;
+    }
+
     public String getEmail() {
         return email;
     }
