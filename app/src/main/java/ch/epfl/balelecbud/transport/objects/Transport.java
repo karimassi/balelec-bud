@@ -10,14 +10,6 @@ import java.util.List;
 
 public class Transport {
 
-    public static List<Transport> DUMMY_TRANSPORTS = new LinkedList<>();
-    static {
-        DUMMY_TRANSPORTS.add(new Transport(TransportType.BUS, 10, "Nyon", null, Timestamp.now()));
-        DUMMY_TRANSPORTS.add(new Transport(TransportType.METRO, 11, "Lausanne", null, Timestamp.now()));
-        DUMMY_TRANSPORTS.add(new Transport(TransportType.BUS, 12, "La lune", null, Timestamp.now()));
-        DUMMY_TRANSPORTS.add(new Transport(TransportType.METRO, 13, "Chine", null, Timestamp.now()));
-    }
-
     private TransportType type;
     private int line;
     private String direction;
