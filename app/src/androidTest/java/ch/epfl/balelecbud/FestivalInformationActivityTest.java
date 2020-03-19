@@ -19,7 +19,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class FestivalInformationActivityTest {
@@ -35,45 +34,6 @@ public class FestivalInformationActivityTest {
         }
     };
 
-    private void addItem(final FestivalInformation information) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.addItem(information);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-    }
-
-    private void modifyItem(final FestivalInformation information, final int index) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.changeItem(information, index);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-    }
-
-    private void removeItem(final FestivalInformation information, final int index) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.removeItem(information, index);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-    }
-
     @Test
     public void testFestivalInfoRecyclerViewIsDisplayed() {
         onView(withId(R.id.festivalInfoRecyclerView)).check(matches(isDisplayed()));
@@ -82,7 +42,7 @@ public class FestivalInformationActivityTest {
     @Test
     public void testCanAddInfoToDatabase() throws Throwable {
         final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
-        addItem(info);
+        mock.addItem(info);
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
     }
 
@@ -91,8 +51,8 @@ public class FestivalInformationActivityTest {
         final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
         final FestivalInformation infoModified = new FestivalInformation("Modified", "Hello it's a me, new");
 
-        addItem(info);
-        modifyItem(infoModified, 0);
+        mock.addItem(info);
+        mock.modifyItem(infoModified, 0);
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), infoModified);
     }
@@ -102,8 +62,8 @@ public class FestivalInformationActivityTest {
         final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
         final FestivalInformation infoModified = new FestivalInformation();
 
-        addItem(info);
-        modifyItem(infoModified, 2);
+        mock.addItem(info);
+        mock.modifyItem(infoModified, 2);
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
     }
@@ -112,9 +72,9 @@ public class FestivalInformationActivityTest {
     public void testCanDeleteInfoFromDatabase() throws Throwable {
         final FestivalInformation info = new FestivalInformation("Bad", "Hello it's a me, bad");
 
-        addItem(info);
-        addItem(info);
-        removeItem(info, 0);
+        mock.addItem(info);
+        mock.addItem(info);
+        mock.removeItem(info, 0);
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
     }
@@ -122,7 +82,7 @@ public class FestivalInformationActivityTest {
     @Test
     public void testCantDeleteInfoFromEmptyDatabase() throws Throwable {
         final FestivalInformation info = new FestivalInformation();
-        removeItem(info, 0);
+        mock.removeItem(info, 0);
     }
 
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {

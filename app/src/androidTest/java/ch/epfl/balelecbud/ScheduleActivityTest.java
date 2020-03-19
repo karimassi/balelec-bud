@@ -23,7 +23,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
@@ -37,45 +36,6 @@ public class ScheduleActivityTest {
         ActivityScenario.launch(ScheduleActivity.class);
     }
 
-    private void addItem(final Slot slot) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.addItem(slot);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-    }
-
-    private void modifyItem(final Slot slot, final int index) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.changeItem(slot, index);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-    }
-
-    private void removeItem(final Slot slot, final int index) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.removeItem(slot, index);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-    }
-
     @Test
     public void testRecyclerViewVisible() {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
@@ -87,29 +47,29 @@ public class ScheduleActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
         Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h");
-        addItem(slot1);
+        mock.addItem(slot1);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
         Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h");
-        addItem(slot2);
+        mock.addItem(slot2);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
         Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h");
-        addItem(slot3);
+        mock.addItem(slot3);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
 
-        modifyItem(slot3, 0);
+        mock.modifyItem(slot3, 0);
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText("19h - 20h")));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText("Upset")));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText("Scène Sat'")));
 
-        removeItem(slot3, 0);
+        mock.removeItem(slot3, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-        removeItem(slot2, 0);
+        mock.removeItem(slot2, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        removeItem(slot3, 0);
+        mock.removeItem(slot3, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
@@ -119,9 +79,9 @@ public class ScheduleActivityTest {
         Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h");
         Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h");
 
-        addItem(slot1);
-        addItem(slot2);
-        addItem(slot3);
+        mock.addItem(slot1);
+        mock.addItem(slot2);
+        mock.addItem(slot3);
 
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText("19h - 20h")));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText("Mr Oizo")));

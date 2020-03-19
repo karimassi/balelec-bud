@@ -27,7 +27,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class TransportRecyclerViewTest {
@@ -56,71 +55,23 @@ public class TransportRecyclerViewTest {
         viewInt.check(matches(hasDescendant(withText(transport.getTimeString()))));
     }
 
-    private void addItem(final Transport t) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.addItem(t);
-            }
-        };
-
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-    }
-
-    private void modifyItem(final Transport t, final int index) throws Throwable {
-
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.changeItem(t, index);
-            }
-        };
-
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-
-
-    }
-
-    private void removeItem(final Transport t, final int index) throws Throwable {
-
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.removeItem(t, index);
-            }
-        };
-
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
-
-
-    }
-
     @Test
     public void displayIsUpdatedWhenItemsAdded() throws Throwable {
 
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
-        addItem(transport1);
+        mock.addItem(transport1);
 
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(1)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
         onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)).perform(click());
 
-        addItem(transport2);
+        mock.addItem(transport2);
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(2)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(1)), transport2);
 
-        addItem(transport3);
+        mock.addItem(transport3);
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(3)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(1)), transport2);
@@ -132,12 +83,12 @@ public class TransportRecyclerViewTest {
 
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
-        addItem(transport1);
+        mock.addItem(transport1);
 
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(1)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
 
-        modifyItem(transport2, 0);
+        mock.modifyItem(transport2, 0);
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport2);
     }
 
@@ -146,12 +97,12 @@ public class TransportRecyclerViewTest {
 
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
-        addItem(transport1);
+        mock.addItem(transport1);
 
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(1)));
         compareViewAndItem(onView(new RecyclerViewMatcher(R.id.fragmentTransportList).atPosition(0)), transport1);
 
-        removeItem(transport1, 0);
+        mock.removeItem(transport1, 0);
 
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
     }
