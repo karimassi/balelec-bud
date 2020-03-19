@@ -18,7 +18,7 @@ public class DatabaseListener<T> {
 
     public void onItemAdded(T data) {
         dataList.add(data);
-        facade.notifyItemInserted(dataList.size()-1);
+        facade.notifyItemInserted(dataList.size() - 1);
     }
 
     public void onItemChanged(T data, int index) {

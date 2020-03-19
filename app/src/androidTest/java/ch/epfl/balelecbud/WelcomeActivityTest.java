@@ -70,19 +70,19 @@ public class WelcomeActivityTest {
     }
 
     @Test
-    public void testScheduleButtonIsDisplayed(){
+    public void testScheduleButtonIsDisplayed() {
         onView(withId(R.id.scheduleButton)).check(matches(isDisplayed()));
         onView(withId(R.id.scheduleButton)).perform(click());
     }
 
     @Test
-    public void testSignOutIsDisplayed(){
+    public void testSignOutIsDisplayed() {
         onView(withId(R.id.buttonSignOut)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonSignOut)).perform(click());
     }
 
     @Test
-    public void testToggleLocationIsDisplayed(){
+    public void testToggleLocationIsDisplayed() {
         onView(withId(R.id.locationSwitch)).check(matches(isDisplayed()));
         onView(withId(R.id.locationSwitch)).perform(click());
     }
@@ -111,14 +111,14 @@ public class WelcomeActivityTest {
     }
 
     @Test
-    public void testScheduleIsDisplayed(){
+    public void testScheduleIsDisplayed() {
         onView(withId(R.id.scheduleButton)).perform(click());
         onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
         onView(withId((R.id.scheduleButton))).check(doesNotExist());
     }
 
     @Test
-    public void testLoginScreenDisplayed(){
+    public void testLoginScreenDisplayed() {
         onView(withId(R.id.buttonSignOut)).perform(click());
         onView(withId(R.id.loginLinearLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));

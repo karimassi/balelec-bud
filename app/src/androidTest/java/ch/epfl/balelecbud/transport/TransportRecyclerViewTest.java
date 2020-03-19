@@ -16,10 +16,9 @@ import ch.epfl.balelecbud.FestivalInformationActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
-
 import ch.epfl.balelecbud.transport.objects.Transport;
 import ch.epfl.balelecbud.transport.objects.TransportType;
+import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -49,7 +48,8 @@ public class TransportRecyclerViewTest {
         ActivityScenario.launch(TransportActivity.class);
 
     }
-    private void compareViewAndItem(ViewInteraction viewInt, Transport transport){
+
+    private void compareViewAndItem(ViewInteraction viewInt, Transport transport) {
         viewInt.check(matches(hasDescendant(withText(transport.getTypeString()))));
         viewInt.check(matches(hasDescendant(withText(transport.getLineString()))));
         viewInt.check(matches(hasDescendant(withText(transport.getDirection()))));
@@ -65,10 +65,11 @@ public class TransportRecyclerViewTest {
         };
 
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
+
     private void modifyItem(final Transport t, final int index) throws Throwable {
 
         Runnable myRunnable = new Runnable() {
@@ -79,12 +80,13 @@ public class TransportRecyclerViewTest {
         };
 
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
 
 
     }
+
     private void removeItem(final Transport t, final int index) throws Throwable {
 
         Runnable myRunnable = new Runnable() {
@@ -95,7 +97,7 @@ public class TransportRecyclerViewTest {
         };
 
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
 

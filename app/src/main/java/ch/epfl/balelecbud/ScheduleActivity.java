@@ -1,14 +1,13 @@
 package ch.epfl.balelecbud;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 
-public class ScheduleActivity extends BasicActivity{
+public class ScheduleActivity extends BasicActivity {
 
     private ScheduleAdapter mAdapter;
     private RecyclerView rvSchedule;

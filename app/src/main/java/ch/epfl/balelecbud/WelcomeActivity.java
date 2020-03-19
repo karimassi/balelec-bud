@@ -118,7 +118,7 @@ public class WelcomeActivity extends BasicActivity {
                     requestLocationUpdates();
                 } else {
                     // The location is disabled
-                    Log.d(TAG,"Location switched: OFF");
+                    Log.d(TAG, "Location switched: OFF");
                     removeLocationUpdates();
                 }
             }
@@ -138,6 +138,7 @@ public class WelcomeActivity extends BasicActivity {
 
     /**
      * Check the permission required for the location service
+     *
      * @return true if the application has the required permission
      */
     private boolean checkPermissions() {
@@ -248,26 +249,34 @@ public class WelcomeActivity extends BasicActivity {
         finish();
     }
 
-    /** Called when the user clicks the Map button */
-    private void openMapActivity () {
+    /**
+     * Called when the user clicks the Map button
+     */
+    private void openMapActivity() {
         Intent intent = new Intent(this, MapViewActivity.class);
         startActivity(intent);
     }
 
-    /** Called when the user clicks the Schedule button */
-    private void openScheduleActivity(){
+    /**
+     * Called when the user clicks the Schedule button
+     */
+    private void openScheduleActivity() {
         Intent intent = new Intent(this, ScheduleActivity.class);
         startActivity(intent);
     }
 
-    /** Called when the user clicks the Info button */
-    private void openInfoActivity(){
+    /**
+     * Called when the user clicks the Info button
+     */
+    private void openInfoActivity() {
         Intent intent = new Intent(this, FestivalInformationActivity.class);
         startActivity(intent);
     }
 
-    /** Called when the user clicks the Transport button */
-    private void openTransportActivity(){
+    /**
+     * Called when the user clicks the Transport button
+     */
+    private void openTransportActivity() {
         Intent intent = new Intent(this, TransportActivity.class);
         startActivity(intent);
     }

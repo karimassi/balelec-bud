@@ -9,7 +9,7 @@ public enum TransportType {
         public String toString() {
             return "Metro";
         }
-    },BUS{
+    }, BUS {
         @NonNull
         @Override
         public String toString() {

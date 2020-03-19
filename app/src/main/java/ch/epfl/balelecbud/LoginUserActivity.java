@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import ch.epfl.balelecbud.util.Callback;
 
 public class LoginUserActivity extends BasicActivity {
@@ -32,6 +33,7 @@ public class LoginUserActivity extends BasicActivity {
             public void onSuccess() {
                 onAuthComplete();
             }
+
             @Override
             public void onFailure(String message) {
                 Toast.makeText(LoginUserActivity.this, message,
@@ -47,7 +49,7 @@ public class LoginUserActivity extends BasicActivity {
         if (TextUtils.isEmpty(email)) {
             emailField.setError(getString(R.string.require_email));
             valid = false;
-        } else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailField.setError(getString(R.string.invalid_email));
             valid = false;
         }

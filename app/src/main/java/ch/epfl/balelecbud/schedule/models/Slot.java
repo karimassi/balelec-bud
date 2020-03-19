@@ -14,7 +14,7 @@ public class Slot {
         this.sceneName = sceneName;
     }
 
-    public Slot(){
+    public Slot() {
 
     }
 
@@ -33,7 +33,7 @@ public class Slot {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof Slot)
-                && ((Slot)obj).getArtistName() == artistName
+                && ((Slot) obj).getArtistName() == artistName
                 && ((Slot) obj).getTimeSlot() == timeSlot
                 && ((Slot) obj).getSceneName() == sceneName;
     }
