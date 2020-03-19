@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">BalelecBud</string>
-    <string name="title_activity_greeting">GreetingActivity</string>
     <string name="title_activity_authentication">Sign in</string>
 
     <string name="title_activity_map">MapActivity</string>
@@ -17,11 +16,10 @@
     <string name="action_existing_account">Already have an account? Sign in!</string>
     <string name="action_sign_out">Sign Out</string>
 
-
-    <string name="welcome">"Welcome!"</string>
+    <string name="welcome">Welcome!</string>
     <string name="invalid_username">Not a valid username</string>
-    <string name="login_failed">"Login failed..."</string>
-    <string name="registration_failed">Registration failed...</string>
+    <string name="login_failed">Login failed…</string>
+    <string name="registration_failed">Registration failed…</string>
 
     <string name="require_email">Email required!</string>
     <string name="invalid_email">Enter a valid email!</string>
@@ -32,4 +30,8 @@
     <string name="location">Location</string>
 
     <string name="festival_information">Festival Information</string>
+    <string name="festival_info_view">Informations</string>
+    <string name="transport_view">Transport</string>
+    <string name="toggle_location_view">Toggle Location</string>
+    <string name="schedule_view">Schedule</string>
 </resources>

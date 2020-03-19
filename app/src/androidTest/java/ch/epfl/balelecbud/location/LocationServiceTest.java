@@ -36,7 +36,7 @@ public class LocationServiceTest {
     private final LocationFirestore emptyLf = new LocationFirestore() {
         @Override
         public void handleGeoPoint(GeoPoint gp, OnCompleteListener<Void> callback) {
-           Assert.fail();
+            Assert.fail();
         }
     };
     private final OnCompleteListener<Void> emptyOncl = new OnCompleteListener<Void>() {

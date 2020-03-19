@@ -51,6 +51,7 @@ public class SlotTest {
     public void testEqualsTwoEqualSlots() {
         Assert.assertEquals(slot1, sameAsSlot1);
     }
+
     @Test
     public void testEqualsTwoNonEqualSlots() {
         Assert.assertNotEquals(slot1, slot2);
