@@ -1,5 +1,8 @@
 package ch.epfl.balelecbud;
 
+import androidx.test.espresso.intent.Intents;
+
+import org.junit.After;
 import org.junit.Before;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -19,5 +22,10 @@ public class BasicAuthenticationTest {
         synchronized (myRunnable){
             myRunnable.wait(1000);
         }
+    }
+
+    @After
+    public void tearDown() {
+        Intents.release();
     }
 }

@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import ch.epfl.balelecbud.util.Callback;
+
 public class RegisterUserActivity extends BasicActivity {
 
     private EditText emailField;
@@ -32,15 +34,16 @@ public class RegisterUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        getAuthenticator().createAccount(email, password, new OnCompleteListener() {
+        getAuthenticator().createAccount(email, password, new Callback() {
             @Override
-            public void onComplete(@NonNull Task task) {
-                if (task.isSuccessful()) {
-                    onAuthComplete();
-                } else {
-                    Toast.makeText(RegisterUserActivity.this, getString(R.string.registration_failed),
-                            Toast.LENGTH_SHORT).show();
-                }
+            public void onSuccess() {
+                onAuthComplete();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(RegisterUserActivity.this, message,
+                        Toast.LENGTH_SHORT).show();
             }
         });
 

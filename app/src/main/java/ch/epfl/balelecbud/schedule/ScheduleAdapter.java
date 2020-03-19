@@ -14,7 +14,7 @@ import java.util.List;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;

@@ -1,12 +1,9 @@
 
 package ch.epfl.balelecbud;
 
-import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.UiDevice;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,8 +15,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest extends BasicAuthenticationTest{
@@ -30,6 +27,7 @@ public class MainActivityTest extends BasicAuthenticationTest{
     @Before
     public void setUp() throws Throwable {
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        Intents.init();
         logout();
     }
 

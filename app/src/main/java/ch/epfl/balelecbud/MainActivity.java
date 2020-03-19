@@ -21,5 +21,6 @@ public class MainActivity extends BasicActivity {
         }
         Intent intent = new Intent(this, activityClass);
         startActivity(intent);
+        finish();
     }
 }

@@ -1,9 +1,11 @@
 package ch.epfl.balelecbud;
 
+import android.Manifest;
+
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.UiDevice;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,8 +25,10 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+
+
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest extends BasicAuthenticationTest {
@@ -32,23 +36,16 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     @Rule
     public final ActivityTestRule<RegisterUserActivity> mActivityRule = new ActivityTestRule<>(RegisterUserActivity.class);
 
+    @Rule
+    public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
+            Manifest.permission.ACCESS_FINE_LOCATION
+    );
+
     @Before
     public void setUp() throws Throwable {
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        Intents.init();
         logout();
-    }
-
-    @After
-    public void teardown() {
-        UiDevice device = UiDevice.getInstance(getInstrumentation());
-        if (device.hasObject(By.text("ALLOW"))) {
-            device.findObject(By.text("ALLOW")).click();
-            device.waitForWindowUpdate(null, 1000);
-        }
-        if (device.hasObject(By.text("OK"))) {
-            device.findObject(By.text("OK")).click();
-            device.waitForWindowUpdate(null, 1000);
-        }
     }
 
     @Test
@@ -129,7 +126,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     @Test
     public void testGoToLogin() {
         onView(withId(R.id.buttonRegisterToLogin)).perform(click());
-        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
+        intended(hasComponent(LoginUserActivity.class.getName()));
     }
 
     @Test
@@ -138,7 +135,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         enterPassword("123123");
         repeatPassword("123123");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.greetingTextView)).check(matches(isDisplayed()));
+        intended(hasComponent(WelcomeActivity.class.getName()));
     }
 
     private void enterEmail(String email) {

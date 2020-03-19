@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.util.adapters;
+package ch.epfl.balelecbud.util.facades;
 
 public interface RecyclerViewAdapterFacade {
 
