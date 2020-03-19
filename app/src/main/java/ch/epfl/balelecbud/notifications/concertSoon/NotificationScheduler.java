@@ -51,8 +51,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
                 .setContentTitle(context.getString(R.string.concert_soon_notification_title))
                 .setContentText(slot.getArtistName() + " starts in 15 minutes on " + slot.getSceneName())
                 .setAutoCancel(true)
-                //TODO change when we have graphics
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.my_notification_icone)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
         //what should be launched when notification clicked
