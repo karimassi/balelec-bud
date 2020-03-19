@@ -7,11 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
+import ch.epfl.balelecbud.util.Callback;
 
 public class LoginUserActivity extends BasicActivity {
 
@@ -32,19 +28,16 @@ public class LoginUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        getAuthenticator().signIn(email, password, new OnCompleteListener() {
+        getAuthenticator().signIn(email, password, new Callback() {
             @Override
-            public void onComplete(@NonNull Task task) {
-                if (task.isSuccessful()) {
-                    onAuthComplete();
-                    System.out.println("Login successful with email " + email);
-                }
-                else {
-                    Toast.makeText(LoginUserActivity.this, getString(R.string.login_failed),
-                            Toast.LENGTH_SHORT).show();
-                    System.out.println("Login failed with email " + email + " : " + task.getException().toString());
+            public void onSuccess() {
+                onAuthComplete();
+            }
 
-                }
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(LoginUserActivity.this, message,
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -56,7 +49,7 @@ public class LoginUserActivity extends BasicActivity {
         if (TextUtils.isEmpty(email)) {
             emailField.setError(getString(R.string.require_email));
             valid = false;
-        } else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailField.setError(getString(R.string.invalid_email));
             valid = false;
         }

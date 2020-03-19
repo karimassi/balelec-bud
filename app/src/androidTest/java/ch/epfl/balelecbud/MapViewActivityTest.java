@@ -45,7 +45,7 @@ public class MapViewActivityTest {
 
     @Test
     public void testNewPositionIsSet() {
-        LatLng newPosition = new LatLng(30,8);
+        LatLng newPosition = new LatLng(30, 8);
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPosition(newPosition);
         assertThat(mActivity.getPosition(), is(newPosition));

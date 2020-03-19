@@ -1,14 +1,12 @@
 package ch.epfl.balelecbud.util.database;
 
-import android.util.Log;
-
 import java.util.List;
 
-import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class DatabaseListener<T> {
 
-    private RecyclerViewAdapterFacade facade; // chnage type later
+    private RecyclerViewAdapterFacade facade; // change type later
     private List<T> dataList;
     private Class<T> type;
 
@@ -20,7 +18,7 @@ public class DatabaseListener<T> {
 
     public void onItemAdded(T data) {
         dataList.add(data);
-        facade.notifyItemInserted(dataList.size()-1);
+        facade.notifyItemInserted(dataList.size() - 1);
     }
 
     public void onItemChanged(T data, int index) {

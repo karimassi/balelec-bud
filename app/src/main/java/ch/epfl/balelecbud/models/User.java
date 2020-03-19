@@ -10,14 +10,15 @@ public class User {
     private String userToken;
 
 
-    public User() {}
+    public User() {
+    }
 
     public User(String email, GeoPoint location, String name, String surname, String userToken) {
-        this.email=email;
+        this.email = email;
         this.location = location;
-        this.name= name;
+        this.name = name;
         this.surname = surname;
-        this.userToken=userToken;
+        this.userToken = userToken;
     }
 
     public String getEmail() {
@@ -36,5 +37,7 @@ public class User {
         return surname;
     }
 
-    public String getUserToken() {return userToken;}
+    public String getUserToken() {
+        return userToken;
+    }
 }

@@ -11,10 +11,11 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 /**
- *  Found on https://github.com/dannyroa/espresso-samples.git
- *  the repo uses the license Apache 2.0 so should be fine
- *  however need to check with the coaching team ASAP
+ * Found on https://github.com/dannyroa/espresso-samples.git
+ * the repo uses the license Apache 2.0 so should be fine
+ * however need to check with the coaching team ASAP
  */
+
 /**
  * Created by dannyroa on 5/10/15.
  */
@@ -42,8 +43,8 @@ public class RecyclerViewMatcher {
                         idDescription = this.resources.getResourceName(recyclerViewId);
                     } catch (Resources.NotFoundException var4) {
                         idDescription = String.format("%s (resource name not found)",
-                                new Object[] { Integer.valueOf
-                                        (recyclerViewId) });
+                                new Object[]{Integer.valueOf
+                                        (recyclerViewId)});
                     }
                 }
                 description.appendText("with id: " + idDescription);
@@ -56,8 +57,7 @@ public class RecyclerViewMatcher {
                             (RecyclerView) view.getRootView().findViewById(recyclerViewId);
                     if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
                         childView = recyclerView.findViewHolderForAdapterPosition(position).itemView;
-                    }
-                    else {
+                    } else {
                         return false;
                     }
                 }

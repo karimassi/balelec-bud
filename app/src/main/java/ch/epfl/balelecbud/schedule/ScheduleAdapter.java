@@ -9,22 +9,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
-    private static DatabaseWrapper database = new FirestoreDatabaseWrapper();
+    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     @VisibleForTesting
-    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
         database = databaseWrapper;
     }
 
@@ -37,9 +38,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
         public ScheduleViewHolder(View itemView) {
             super(itemView);
-            timeSlotView = itemView.findViewById(R.id.time_slot);
-            artistNameView = itemView.findViewById(R.id.artist_name);
-            sceneNameView = itemView.findViewById(R.id.scene_name);
+            timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);
+            artistNameView = itemView.findViewById(R.id.ScheduleArtistName);
+            sceneNameView = itemView.findViewById(R.id.ScheduleSceneName);
         }
     }
 
