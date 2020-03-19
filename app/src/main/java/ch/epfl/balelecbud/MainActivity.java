@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,5 +20,6 @@ public class MainActivity extends BasicActivity {
         }
         Intent intent = new Intent(this, activityClass);
         startActivity(intent);
+        finish();
     }
 }

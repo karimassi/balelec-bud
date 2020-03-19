@@ -5,8 +5,6 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 import ch.epfl.balelecbud.util.StringUtils;
 
@@ -26,19 +24,24 @@ public class Transport {
         this.time = time;
     }
 
-    public Transport() {}
+    public Transport() {
+    }
 
     public TransportType getType() {
         return type;
     }
 
-    public String getTypeString() { return type.toString(); }
+    public String getTypeString() {
+        return type.toString();
+    }
 
     public int getLine() {
         return line;
     }
 
-    public String getLineString() { return Integer.toString(line); }
+    public String getLineString() {
+        return Integer.toString(line);
+    }
 
     public String getDirection() {
         return direction;

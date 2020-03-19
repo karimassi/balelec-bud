@@ -1,12 +1,11 @@
 package ch.epfl.balelecbud;
 
-import androidx.fragment.app.FragmentActivity;
-
 import android.os.Bundle;
 
-import ch.epfl.balelecbud.transport.objects.Transport;
-import ch.epfl.balelecbud.transport.TransportListFragment;
+import androidx.fragment.app.FragmentActivity;
 
+import ch.epfl.balelecbud.transport.TransportListFragment;
+import ch.epfl.balelecbud.transport.objects.Transport;
 
 public class TransportActivity extends FragmentActivity implements TransportListFragment.OnListFragmentInteractionListener {
 

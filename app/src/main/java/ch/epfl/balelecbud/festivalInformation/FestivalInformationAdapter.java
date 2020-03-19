@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.festivalInformation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInformationAdapter.FestivalInformationHolder> {
 
     private List<FestivalInformation> informationData;
-    private static DatabaseWrapper database = new FirestoreDatabaseWrapper();
+    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     @VisibleForTesting
-    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
         database = databaseWrapper;
     }
 

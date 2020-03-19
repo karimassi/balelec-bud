@@ -20,7 +20,7 @@ public class Slot {
         this.endTime = endTime;
     }
 
-    public Slot(){
+    public Slot() {
 
     }
 

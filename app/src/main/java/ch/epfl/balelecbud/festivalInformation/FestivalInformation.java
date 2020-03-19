@@ -27,7 +27,7 @@ public class FestivalInformation {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof FestivalInformation)
-                && ((FestivalInformation)obj).getInformation() == information
+                && ((FestivalInformation) obj).getInformation() == information
                 && ((FestivalInformation) obj).getTitle() == title;
     }
 }
