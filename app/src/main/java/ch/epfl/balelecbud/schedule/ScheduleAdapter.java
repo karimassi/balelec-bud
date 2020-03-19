@@ -37,9 +37,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
         public ScheduleViewHolder(View itemView) {
             super(itemView);
-            timeSlotView = itemView.findViewById(R.id.time_slot);
-            artistNameView = itemView.findViewById(R.id.artist_name);
-            sceneNameView = itemView.findViewById(R.id.scene_name);
+            timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);
+            artistNameView = itemView.findViewById(R.id.ScheduleArtistName);
+            sceneNameView = itemView.findViewById(R.id.ScheduleSceneName);
         }
     }
 

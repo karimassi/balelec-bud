@@ -6,14 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
 import ch.epfl.balelecbud.util.Callback;
-
 
 public class LoginUserActivity extends BasicActivity {
 

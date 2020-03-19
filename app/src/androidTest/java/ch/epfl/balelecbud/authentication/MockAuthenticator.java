@@ -50,7 +50,6 @@ public class MockAuthenticator implements Authenticator {
         } else {
             callback.onFailure("Login failed");
         }
-
     }
 
     @Override

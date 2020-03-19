@@ -27,26 +27,26 @@
         android:id="@+id/scheduleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Schedule" />
+        android:text="@string/schedule_view" />
 
     <Button
         android:id="@+id/infoButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick"
-        android:text="Informations" />
+        android:text="@string/festival_info_view" />
 
     <Button
         android:id="@+id/transportButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick"
-        android:text="Transport" />
+        android:text="@string/transport_view" />
 
     <Switch
         android:id="@+id/locationSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="false"
-        android:text="Toggle Location"/>
+        android:text="@string/toggle_location_view"/>
 </LinearLayout>

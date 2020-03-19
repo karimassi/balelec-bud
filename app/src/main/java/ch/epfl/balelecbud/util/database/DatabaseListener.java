@@ -6,7 +6,7 @@ import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class DatabaseListener<T> {
 
-    private RecyclerViewAdapterFacade facade; // chnage type later
+    private RecyclerViewAdapterFacade facade; // change type later
     private List<T> dataList;
     private Class<T> type;
 

@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import ch.epfl.balelecbud.R;
+
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 
 public class ScheduleActivity extends AppCompatActivity{
@@ -18,7 +18,7 @@ public class ScheduleActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-        rvSchedule = findViewById(R.id.rvSchedule);
+        rvSchedule = findViewById(R.id.scheduleRecyclerView);
         mAdapter = new ScheduleAdapter();
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
