@@ -23,8 +23,4 @@ public class BasicAuthenticationTest {
         }
     }
 
-    @After
-    public void tearDown() {
-        Intents.release();
-    }
 }

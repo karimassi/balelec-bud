@@ -32,17 +32,26 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Rule
-    public final ActivityTestRule<RegisterUserActivity> mActivityRule = new ActivityTestRule<>(RegisterUserActivity.class);
-
-    @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
             Manifest.permission.ACCESS_FINE_LOCATION
     );
 
+    @Rule
+    public final ActivityTestRule<RegisterUserActivity> mActivityRule = new ActivityTestRule<RegisterUserActivity>(RegisterUserActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            Intents.init();
+        }
+
+        @Override
+        protected void afterActivityFinished() {
+            Intents.release();
+        }
+    };
+
     @Before
     public void setUp() throws Throwable {
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
-        Intents.init();
         logout();
     }
 

@@ -17,17 +17,29 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest extends BasicAuthenticationTest {
+public class MainActivityTest {
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            MockAuthenticator.getInstance().signOut();
+            Intents.init();
+        }
+
+        @Override
+        protected void afterActivityFinished() {
+            Intents.release();
+        }
+    };
+
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() {
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
-        Intents.init();
-        logout();
     }
+
+    @Before
 
     @Test
     public void testLoggedOutGoesToLoginActivity() {
