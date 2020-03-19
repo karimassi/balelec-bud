@@ -5,14 +5,17 @@ import android.view.ViewGroup;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -30,12 +33,14 @@ public class ScheduleActivityTest {
 
     MockDatabaseWrapper mock;
 
-    @Before
-    public void setUp(){
-        mock = new MockDatabaseWrapper();
-        ScheduleAdapter.setDatabaseImplementation(mock);
-        ActivityScenario.launch(ScheduleActivity.class);
-    }
+    @Rule
+    public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            mock = new MockDatabaseWrapper();
+            ScheduleAdapter.setDatabaseImplementation(mock);
+        }
+    };
 
     private void addItem(final Slot slot) throws Throwable{
         Runnable myRunnable = new Runnable(){

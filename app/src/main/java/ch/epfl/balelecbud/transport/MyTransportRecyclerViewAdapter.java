@@ -28,7 +28,7 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
 
     //Used to insert mocks
     @VisibleForTesting
-    public static void setTransportDatabase(DatabaseWrapper databaseWrapper){
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
         database = databaseWrapper;
     }
 

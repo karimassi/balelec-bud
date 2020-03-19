@@ -16,6 +16,7 @@ import ch.epfl.balelecbud.FestivalInformationActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
+import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import ch.epfl.balelecbud.transport.objects.Transport;
@@ -40,15 +41,14 @@ public class TransportRecyclerViewTest {
     MockDatabaseWrapper mock;
 
     @Rule
-    public final ActivityTestRule<FestivalInformationActivity> mActivityRule = new ActivityTestRule<>(FestivalInformationActivity.class);
+    public final ActivityTestRule<TransportActivity> mActivityRule = new ActivityTestRule<TransportActivity>(TransportActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            mock = new MockDatabaseWrapper();
+            MyTransportRecyclerViewAdapter.setDatabaseImplementation(mock);
+        }
+    };
 
-    @Before
-    public void setUp() {
-        mock = new MockDatabaseWrapper();
-        MyTransportRecyclerViewAdapter.setTransportDatabase(mock);
-        ActivityScenario.launch(TransportActivity.class);
-
-    }
     private void compareViewAndItem(ViewInteraction viewInt, Transport transport){
         viewInt.check(matches(hasDescendant(withText(transport.getTypeString()))));
         viewInt.check(matches(hasDescendant(withText(transport.getLineString()))));

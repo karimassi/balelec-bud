@@ -20,13 +20,18 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 public class MainActivityTest extends BasicAuthenticationTest{
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            MockAuthenticator.getInstance().signOut();
+        }
+    };
+
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() {
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
         Intents.init();
-        logout();
     }
 
     @Test
