@@ -10,6 +10,8 @@ import static org.hamcrest.core.Is.is;
 public class UserTest {
     private User u1 = new User("test@email.com", new GeoPoint(24, 42), "name", "surname", "a token");
 
+    @Test
+    public void testEmptyConstructor() { new User(); }
 
     @Test
     public void testGetEmail() { Assert.assertThat(u1.getEmail(), is("test@email.com")); }

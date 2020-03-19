@@ -21,7 +21,7 @@ import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInformationAdapter.FestivalInformationHolder> {
 
     private List<FestivalInformation> informationData;
-    private static DatabaseWrapper database = new FirestoreDatabaseWrapper();
+    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     @VisibleForTesting
     public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){

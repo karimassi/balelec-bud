@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.transport.objects.Transport;
 

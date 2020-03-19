@@ -24,7 +24,7 @@ import java.util.List;
 public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTransportRecyclerViewAdapter.ViewHolder> {
 
     //default implementation is Firebase
-    static private DatabaseWrapper database = new FirestoreDatabaseWrapper();
+    static private DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     //Used to insert mocks
     @VisibleForTesting

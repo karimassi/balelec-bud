@@ -12,11 +12,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.epfl.balelecbud.authentication.Authenticator;
+
 public class FirestoreDatabaseWrapper implements DatabaseWrapper {
 
     private Map<DatabaseListener, ListenerRegistration> registrationMap;
 
-    public FirestoreDatabaseWrapper() {
+    private static final DatabaseWrapper instance = new FirestoreDatabaseWrapper();
+
+    private FirestoreDatabaseWrapper() {
         registrationMap = new HashMap<>();
     }
 
@@ -47,5 +51,9 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
             }
         });
         registrationMap.put(listener, lr);
+    }
+
+    public static DatabaseWrapper getInstance(){
+        return instance;
     }
 }

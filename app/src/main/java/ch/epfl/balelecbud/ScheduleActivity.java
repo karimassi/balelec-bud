@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 
-public class ScheduleActivity extends AppCompatActivity{
+public class ScheduleActivity extends BasicActivity{
 
     private ScheduleAdapter mAdapter;
     private RecyclerView rvSchedule;

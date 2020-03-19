@@ -3,13 +3,16 @@ package ch.epfl.balelecbud.transport;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.Timestamp;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.FestivalInformationActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
@@ -34,8 +37,10 @@ public class TransportRecyclerViewTest {
     final Transport transport2 = new Transport(TransportType.METRO, 12, "EPFL", null, Timestamp.now());
     final Transport transport3 = new Transport(TransportType.BUS, 122, "La lune", null, Timestamp.now());
 
-
     MockDatabaseWrapper mock;
+
+    @Rule
+    public final ActivityTestRule<FestivalInformationActivity> mActivityRule = new ActivityTestRule<>(FestivalInformationActivity.class);
 
     @Before
     public void setUp() {

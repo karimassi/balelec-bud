@@ -21,7 +21,7 @@ import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
-    private static DatabaseWrapper database = new FirestoreDatabaseWrapper();
+    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     @VisibleForTesting
     public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
