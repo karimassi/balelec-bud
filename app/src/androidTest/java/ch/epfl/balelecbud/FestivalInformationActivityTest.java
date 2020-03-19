@@ -129,6 +129,4 @@ public class FestivalInformationActivityTest {
         viewInteraction.check(matches(hasDescendant(withText(information.getTitle()))));
         viewInteraction.check(matches(hasDescendant(withText(information.getInformation()))));
     }
-
-
 }
