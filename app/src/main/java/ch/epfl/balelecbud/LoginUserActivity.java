@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.Callback;
 
 public class LoginUserActivity extends BasicActivity {
@@ -28,9 +29,10 @@ public class LoginUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        getAuthenticator().signIn(email, password, new Callback() {
+        getAuthenticator().signIn(email, password, new Callback<User>() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(User user) {
+                getAuthenticator().setCurrentUser(user);
                 onAuthComplete();
             }
 

@@ -17,7 +17,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class MainActivityTest extends BasicAuthenticationTest {
 
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
@@ -35,7 +35,7 @@ public class MainActivityTest {
 
 
     @Before
-    public void setUp() {
+    public void setUp() throws Throwable {
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
     }
 

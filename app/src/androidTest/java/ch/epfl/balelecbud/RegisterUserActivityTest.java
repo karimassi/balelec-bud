@@ -27,7 +27,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest extends BasicAuthenticationTest {
 

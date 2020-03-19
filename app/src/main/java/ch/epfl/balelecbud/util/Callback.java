@@ -1,8 +1,8 @@
 package ch.epfl.balelecbud.util;
 
-public interface Callback {
+public interface Callback<T> {
 
-    void onSuccess();
+    void onSuccess(T data);
 
     void onFailure(String message);
 

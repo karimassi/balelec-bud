@@ -1,7 +1,16 @@
 package ch.epfl.balelecbud.util.database;
 
+import android.telecom.Call;
+
+import androidx.test.espresso.intent.Intents;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.Callback;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
@@ -9,10 +18,23 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     private List<DatabaseListener> listeners;
 
-    public MockDatabaseWrapper() {
+    private Map<String, Object> db = new HashMap<String, Object>() {
+        {
+            put("users", new ArrayList<User>());
+        }
+    };
+
+    private MockDatabaseWrapper() {
         listeners = new ArrayList<>();
+        ((ArrayList<User>) db.get("users")).add(new User("karim@epfl.ch", null, "karim@epfl.ch", "0"));
+
     }
 
+    private static final DatabaseWrapper instance = new MockDatabaseWrapper();
+
+    public static DatabaseWrapper getInstance() {
+        return instance;
+    }
 
     @Override
     public void unregisterListener(DatabaseListener listener) {
@@ -79,5 +101,27 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         for (DatabaseListener l : listeners) {
             l.onItemRemoved(item, position);
         }
+    }
+
+    @Override
+    public <T> void getDocument(String collectionName, String documentID, Class type, Callback<T> callback) {
+        int index = Integer.parseInt(documentID);
+        if (((ArrayList<T>) db.get(collectionName)).size() < index) {
+            callback.onFailure("No such item in DB");
+        }
+        else {
+            callback.onSuccess(((ArrayList<T>) db.get(collectionName)).get(index) );
+        }
+    }
+
+    @Override
+    public <T> void storeDocument(String collectionName, T document, Callback<T> callback) {
+        ((ArrayList<T>) db.get(collectionName)).add(document);
+        callback.onSuccess(document);
+    }
+
+    @Override
+    public <T> void storeDocumentWithID(String collectionName, String documentID, T document, Callback<T> callback) {
+        storeDocument(collectionName, document, callback);
     }
 }

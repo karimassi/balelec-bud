@@ -38,7 +38,7 @@ public class TransportRecyclerViewTest {
     public final ActivityTestRule<TransportActivity> mActivityRule = new ActivityTestRule<TransportActivity>(TransportActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = new MockDatabaseWrapper();
+            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
             MyTransportRecyclerViewAdapter.setDatabaseImplementation(mock);
         }
     };

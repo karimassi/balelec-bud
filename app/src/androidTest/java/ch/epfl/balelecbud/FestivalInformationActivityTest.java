@@ -4,6 +4,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class FestivalInformationActivityTest {
     public final ActivityTestRule<FestivalInformationActivity> mActivityRule = new ActivityTestRule<FestivalInformationActivity>(FestivalInformationActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = new MockDatabaseWrapper();
+            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
             FestivalInformationAdapter.setDatabaseImplementation(mock);
         }
     };
