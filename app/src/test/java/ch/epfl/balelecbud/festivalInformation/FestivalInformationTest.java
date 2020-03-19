@@ -23,6 +23,7 @@ public class FestivalInformationTest {
         FestivalInformation second = new FestivalInformation("title", "info");
         Assert.assertEquals(true, first.equals(second));
     }
+
     @Test
     public void testEqualsTwoNonEqualFestivalInfo() {
         FestivalInformation first = new FestivalInformation("title", "info2");

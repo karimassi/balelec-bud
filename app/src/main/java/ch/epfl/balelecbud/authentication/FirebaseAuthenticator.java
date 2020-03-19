@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import ch.epfl.balelecbud.util.Callback;
 
 
@@ -15,7 +16,8 @@ public class FirebaseAuthenticator implements Authenticator {
     private static final Authenticator instance = new FirebaseAuthenticator();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-    private FirebaseAuthenticator() {}
+    private FirebaseAuthenticator() {
+    }
 
     @Override
     public void signIn(String email, String password, final Callback callback) {
@@ -41,7 +43,7 @@ public class FirebaseAuthenticator implements Authenticator {
         return mAuth.getCurrentUser();
     }
 
-    public static Authenticator getInstance(){
+    public static Authenticator getInstance() {
         return instance;
     }
 

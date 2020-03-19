@@ -9,22 +9,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     @VisibleForTesting
-    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
         database = databaseWrapper;
     }
 

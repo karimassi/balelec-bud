@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,12 +34,21 @@ public class LoginUserActivityTest extends BasicAuthenticationTest{
     );
 
     @Rule
-    public final ActivityTestRule<LoginUserActivity> mActivityRule = new ActivityTestRule<>(LoginUserActivity.class);
+    public final ActivityTestRule<LoginUserActivity> mActivityRule = new ActivityTestRule<LoginUserActivity>(LoginUserActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            Intents.init();
+        }
+
+        @Override
+        protected void afterActivityFinished() {
+            Intents.release();
+        }
+    };
 
     @Before
     public void setUp() throws Throwable{
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
-        Intents.init();
         logout();
     }
 

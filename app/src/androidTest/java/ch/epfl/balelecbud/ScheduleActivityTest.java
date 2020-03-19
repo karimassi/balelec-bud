@@ -3,19 +3,16 @@ package ch.epfl.balelecbud;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -42,28 +39,28 @@ public class ScheduleActivityTest {
         }
     };
 
-    private void addItem(final Slot slot) throws Throwable{
-        Runnable myRunnable = new Runnable(){
+    private void addItem(final Slot slot) throws Throwable {
+        Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
                 mock.addItem(slot);
             }
         };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
 
-    private void modifyItem(final Slot slot, final int index) throws Throwable{
-        Runnable myRunnable = new Runnable(){
+    private void modifyItem(final Slot slot, final int index) throws Throwable {
+        Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
                 mock.changeItem(slot, index);
             }
         };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
@@ -76,7 +73,7 @@ public class ScheduleActivityTest {
             }
         };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
@@ -87,19 +84,19 @@ public class ScheduleActivityTest {
     }
 
     @Test
-    public void testItemModification() throws Throwable{
+    public void testItemModification() throws Throwable {
 
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h") ;
+        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h");
         addItem(slot1);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h") ;
+        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h");
         addItem(slot2);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h") ;
+        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h");
         addItem(slot3);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
 
@@ -120,9 +117,9 @@ public class ScheduleActivityTest {
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h") ;
-        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h") ;
-        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h") ;
+        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h");
+        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h");
+        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h");
 
         addItem(slot1);
         addItem(slot2);
@@ -145,7 +142,7 @@ public class ScheduleActivityTest {
         return new TypeSafeMatcher<View>() {
             @Override
             public void describeTo(Description description) {
-                description.appendText("with "+childPosition+" child view of type parentMatcher");
+                description.appendText("with " + childPosition + " child view of type parentMatcher");
             }
 
             @Override

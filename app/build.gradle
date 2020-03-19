@@ -26,7 +26,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    testOptions{
+    testOptions {
         unitTests.returnDefaultValues = true
         unitTests.all {
             jacoco {
@@ -60,7 +60,7 @@ dependencies {
     androidTestImplementation 'org.hamcrest:hamcrest-integration:1.3'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation ('com.android.support.test.espresso:espresso-contrib:2.0') {
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.0') {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'

@@ -1,25 +1,23 @@
 package ch.epfl.balelecbud.transport;
 
-import androidx.annotation.VisibleForTesting;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.transport.objects.Transport;
-import ch.epfl.balelecbud.transport.TransportListFragment.OnListFragmentInteractionListener;
-
-import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
-import ch.epfl.balelecbud.util.database.DatabaseListener;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import androidx.annotation.VisibleForTesting;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.transport.TransportListFragment.OnListFragmentInteractionListener;
+import ch.epfl.balelecbud.transport.objects.Transport;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTransportRecyclerViewAdapter.ViewHolder> {
 

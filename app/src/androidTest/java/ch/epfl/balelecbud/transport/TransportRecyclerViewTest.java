@@ -12,13 +12,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.FestivalInformationActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
-import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
-
 import ch.epfl.balelecbud.transport.objects.Transport;
 import ch.epfl.balelecbud.transport.objects.TransportType;
 
@@ -65,10 +62,11 @@ public class TransportRecyclerViewTest {
         };
 
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
+
     private void modifyItem(final Transport t, final int index) throws Throwable {
 
         Runnable myRunnable = new Runnable() {
@@ -79,12 +77,13 @@ public class TransportRecyclerViewTest {
         };
 
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
 
 
     }
+
     private void removeItem(final Transport t, final int index) throws Throwable {
 
         Runnable myRunnable = new Runnable() {
@@ -95,7 +94,7 @@ public class TransportRecyclerViewTest {
         };
 
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
 

@@ -7,11 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
 import ch.epfl.balelecbud.util.Callback;
 
 public class RegisterUserActivity extends BasicActivity {
@@ -56,7 +51,7 @@ public class RegisterUserActivity extends BasicActivity {
         if (TextUtils.isEmpty(email)) {
             emailField.setError(getString(R.string.require_email));
             valid = false;
-        } else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailField.setError(getString(R.string.invalid_email));
             valid = false;
         }
@@ -82,7 +77,7 @@ public class RegisterUserActivity extends BasicActivity {
             valid = false;
         }
 
-        return valid ;
+        return valid;
     }
 
     private void onAuthComplete() {
@@ -95,7 +90,7 @@ public class RegisterUserActivity extends BasicActivity {
         if (view.getId() == R.id.buttonRegister) {
             register(emailField.getText().toString(), passwordField.getText().toString());
         }
-        if (view.getId() == R.id.buttonRegisterToLogin){
+        if (view.getId() == R.id.buttonRegisterToLogin) {
             Intent intent = new Intent(RegisterUserActivity.this, LoginUserActivity.class);
             startActivity(intent);
             finish();

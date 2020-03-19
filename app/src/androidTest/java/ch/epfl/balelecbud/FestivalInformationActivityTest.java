@@ -1,11 +1,9 @@
 package ch.epfl.balelecbud;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +11,6 @@ import org.junit.runner.RunWith;
 import ch.epfl.balelecbud.festivalInformation.FestivalInformation;
 import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
-import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -38,28 +35,28 @@ public class FestivalInformationActivityTest {
         }
     };
 
-    private void addItem(final FestivalInformation information) throws Throwable{
-        Runnable myRunnable = new Runnable(){
+    private void addItem(final FestivalInformation information) throws Throwable {
+        Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
                 mock.addItem(information);
             }
         };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
 
-    private void modifyItem(final FestivalInformation information, final int index) throws Throwable{
-        Runnable myRunnable = new Runnable(){
+    private void modifyItem(final FestivalInformation information, final int index) throws Throwable {
+        Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
                 mock.changeItem(information, index);
             }
         };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
@@ -72,7 +69,7 @@ public class FestivalInformationActivityTest {
             }
         };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable){
+        synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
@@ -132,6 +129,4 @@ public class FestivalInformationActivityTest {
         viewInteraction.check(matches(hasDescendant(withText(information.getTitle()))));
         viewInteraction.check(matches(hasDescendant(withText(information.getInformation()))));
     }
-
-
 }

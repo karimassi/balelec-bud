@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.authentication;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Parcel;
 
@@ -8,10 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.internal.firebase_auth.zzff;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
@@ -22,7 +17,6 @@ import com.google.firebase.auth.zzz;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 import ch.epfl.balelecbud.util.Callback;
 
@@ -207,7 +201,7 @@ public class MockAuthenticator implements Authenticator {
         loggedIn = state;
     }
 
-    public static Authenticator getInstance(){
+    public static Authenticator getInstance() {
         return instance;
     }
 

@@ -12,8 +12,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.epfl.balelecbud.authentication.Authenticator;
-
 public class FirestoreDatabaseWrapper implements DatabaseWrapper {
 
     private Map<DatabaseListener, ListenerRegistration> registrationMap;
@@ -34,7 +32,7 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
         ListenerRegistration lr = FirebaseFirestore.getInstance().collection(collectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e!= null | listener == null) return;
+                if (e != null | listener == null) return;
                 for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {
                         case ADDED:
@@ -53,7 +51,7 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
         registrationMap.put(listener, lr);
     }
 
-    public static DatabaseWrapper getInstance(){
+    public static DatabaseWrapper getInstance() {
         return instance;
     }
 }

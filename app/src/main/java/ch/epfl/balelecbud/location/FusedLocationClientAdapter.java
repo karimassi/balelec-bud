@@ -9,6 +9,7 @@ import com.google.android.gms.location.LocationServices;
 
 public class FusedLocationClientAdapter implements LocationClient {
     private FusedLocationProviderClient client;
+
     public FusedLocationClientAdapter(Activity activity) {
         this.client = LocationServices.getFusedLocationProviderClient(activity);
     }

@@ -20,7 +20,7 @@ public class LocationService extends IntentService {
     private static final String TAG = LocationService.class.getSimpleName();
 
     private final LocationFirestore locationFirestore;
-    private OnCompleteListener<Void> callback  = new OnCompleteListener<Void>() {
+    private OnCompleteListener<Void> callback = new OnCompleteListener<Void>() {
         @Override
         public void onComplete(@NonNull Task<Void> task) {
             if (task.isSuccessful()) {
@@ -44,7 +44,7 @@ public class LocationService extends IntentService {
 
     private GeoPoint transformToGeoPoint(Location l) {
         if (l == null)
-            return new GeoPoint(0,0);
+            return new GeoPoint(0, 0);
         return new GeoPoint(l.getLatitude(), l.getLongitude());
     }
 
