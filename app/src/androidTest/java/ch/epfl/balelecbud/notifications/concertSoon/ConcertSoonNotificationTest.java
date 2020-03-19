@@ -31,6 +31,7 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class ConcertSoonNotificationTest {
@@ -73,12 +74,50 @@ public class ConcertSoonNotificationTest {
 
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         device.openNotification();
-        device.wait(Until.hasObject(By.textStartsWith(appName)), 20_000);
+        device.wait(Until.hasObject(By.textStartsWith(expectedTitle)), 30_000);
 
         UiObject2 title = device.findObject(By.text(expectedTitle));
         assertEquals(title.getText(), expectedTitle);
         UiObject2 text = device.findObject(By.text(expectedText));
         assertEquals(text.getText(), expectedText);
+        title.click();
     }
 
+    @Test
+    public void cancelNotificationWorksCorrectly(){
+        String appName = mActivityRule.getActivity().getString(R.string.app_name);
+        String expectedTitle = mActivityRule.getActivity().getString(R.string.concert_soon_notification_title);
+
+        Context ctx = mActivityRule.getActivity().getApplicationContext();
+        Slot s = new Slot("Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+
+        NotificationScheduler ns = NotificationScheduler.getInstance();
+        ns.scheduleNotification(ctx, s);
+        ns.cancelNotification(ctx, s);
+
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        device.openNotification();
+        device.wait(Until.hasObject(By.text(expectedTitle)), 10_000);
+
+        UiObject2 title = device.findObject(By.text(expectedTitle));
+        assertNull(title);
+        //hide notifications
+        device.pressBack();
+
+        device.waitForIdle();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void onPushedWhenNotTrackedThrows(){
+        Context ctx = mActivityRule.getActivity().getApplicationContext();
+        Slot s = new Slot("Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+        NotificationScheduler.getInstance().onNotificationPushed(s.hashCode());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cancelWhenNotTrackedThrows(){
+        Context ctx = mActivityRule.getActivity().getApplicationContext();
+        Slot s = new Slot("Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+        NotificationScheduler.getInstance().cancelNotification(ctx, s);
+    }
 }

@@ -78,7 +78,6 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
         long timeToWakeUp = cal.getTimeInMillis();
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        assert alarmManager != null;
         alarmManager.set(AlarmManager.RTC_WAKEUP, timeToWakeUp, pendingIntent);
     }
 
@@ -87,11 +86,10 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
         int hash = slot.hashCode();
         if(pendingIntents.containsKey(hash)){
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            assert alarmManager != null;
             alarmManager.cancel(pendingIntents.get(hash));
             pendingIntents.remove(hash);
         }else {
-            Log.w(TAG, "Notification cancelled but wasn't planned to start with");
+            throw new IllegalArgumentException("Notification cancelled but wasn't planned to start with");
         }
     }
 
@@ -100,7 +98,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
         if(pendingIntents.containsKey(id)){
             pendingIntents.remove(id);
         }else{
-            throw new IllegalStateException("Notification pushed was not tracked");
+            throw new IllegalArgumentException("Notification pushed was not tracked");
         }
     }
 
@@ -114,7 +112,6 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
             NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
-            assert notificationManager != null;
             notificationManager.createNotificationChannel(channel);
         }
 
