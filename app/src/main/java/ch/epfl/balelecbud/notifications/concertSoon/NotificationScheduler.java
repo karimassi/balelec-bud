@@ -32,12 +32,12 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
     private final Map<Integer, PendingIntent> pendingIntents = new HashMap<>();
 
     //private constructor to ensure singleton
-    private NotificationScheduler(){
+    private NotificationScheduler() {
 
     }
 
-    public static NotificationScheduler getInstance(){
-        if(single_instance == null){
+    public static NotificationScheduler getInstance() {
+        if (single_instance == null) {
             single_instance = new NotificationScheduler();
         }
         return single_instance;
@@ -45,7 +45,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
 
 
     @Override
-    public void scheduleNotification(Context context, Slot slot){
+    public void scheduleNotification(Context context, Slot slot) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(context.getString(R.string.concert_soon_notification_title))
                 .setContentText(slot.getArtistName() + " starts in 15 minutes on " + slot.getSceneName())
@@ -80,27 +80,27 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
     }
 
     @Override
-    public void cancelNotification(Context context, Slot slot){
+    public void cancelNotification(Context context, Slot slot) {
         int hash = slot.hashCode();
-        if(pendingIntents.containsKey(hash)){
+        if (pendingIntents.containsKey(hash)) {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             alarmManager.cancel(pendingIntents.get(hash));
             pendingIntents.remove(hash);
-        }else {
+        } else {
             throw new IllegalArgumentException("Notification cancelled but wasn't planned to start with");
         }
     }
 
     @Override
-    public void onNotificationPushed(int id){
-        if(pendingIntents.containsKey(id)){
+    public void onNotificationPushed(int id) {
+        if (pendingIntents.containsKey(id)) {
             pendingIntents.remove(id);
-        }else{
+        } else {
             throw new IllegalArgumentException("Notification pushed was not tracked");
         }
     }
 
-    public void createNotificationChannel(Context ctx){
+    public void createNotificationChannel(Context ctx) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

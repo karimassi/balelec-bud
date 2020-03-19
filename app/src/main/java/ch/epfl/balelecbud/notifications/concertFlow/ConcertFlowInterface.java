@@ -13,4 +13,6 @@ public interface ConcertFlowInterface {
     void scheduleNewConcert(Slot newSlot);
 
     void removeConcert(Slot slot);
+
+    void close();
 }
