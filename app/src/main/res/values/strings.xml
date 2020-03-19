@@ -32,4 +32,5 @@
     <string name="location">Location</string>
 
     <string name="festival_information">Festival Information</string>
+    <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it !</string>
 </resources>
