@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.balelecbud.schedule.models.Slot;
-
 public class SlotTest {
 
     static private List<Timestamp> timestamps;
@@ -21,16 +19,16 @@ public class SlotTest {
     static private Slot sameAsSlot1;
 
     @BeforeClass
-    public static void setUpSlots(){
+    public static void setUpSlots() {
         timestamps = new LinkedList<>();
-        for(int i = 0; i < 6; ++i){
+        for (int i = 0; i < 6; ++i) {
             Calendar c = Calendar.getInstance();
-            c.set(2020,11,11,10 + i, i % 2 == 0 ? 15 : 0);
+            c.set(2020, 11, 11, 10 + i, i % 2 == 0 ? 15 : 0);
             Date date = c.getTime();
             timestamps.add(i, new Timestamp(date));
         }
         slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
-        slot2 = new Slot("Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
+        slot2 = new Slot("Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3));
         sameAsSlot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
     }
 
@@ -51,6 +49,7 @@ public class SlotTest {
     public void testEqualsTwoEqualSlots() {
         Assert.assertEquals(slot1, sameAsSlot1);
     }
+
     @Test
     public void testEqualsTwoNonEqualSlots() {
         Assert.assertNotEquals(slot1, slot2);
@@ -58,30 +57,28 @@ public class SlotTest {
 
     @Test
     public void testEqualsTwoNonEqualSceneName() {
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1)) ;
-        Slot slot2 = new Slot("Mr Oizo", "Petite scène", timestamps.get(0), timestamps.get(1)) ;
+        Slot slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
+        Slot slot2 = new Slot("Mr Oizo", "Petite scène", timestamps.get(0), timestamps.get(1));
         Assert.assertNotEquals(slot1, slot2);
     }
 
     @Test
     public void testEqualsTwoNonEqualStartTime() {
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(2)) ;
-        Slot slot2 = new Slot("Mr Oizo", "Grande scène", timestamps.get(1), timestamps.get(2)) ;
+        Slot slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(2));
+        Slot slot2 = new Slot("Mr Oizo", "Grande scène", timestamps.get(1), timestamps.get(2));
         Assert.assertNotEquals(slot1, slot2);
     }
 
     @Test
     public void testEqualsTwoNonEqualEndTime() {
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1)) ;
-        Slot slot2 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(2)) ;
+        Slot slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
+        Slot slot2 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(2));
         Assert.assertNotEquals(slot1, slot2);
     }
 
     @Test
     public void testEqualsTwoDifferentObjects() {
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1)) ;
-        Assert.assertEquals(false, slot1.equals(new Object()));
+        Slot slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
+        Assert.assertNotEquals(slot1, new Object());
     }
-
-
 }

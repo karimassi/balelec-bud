@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_schedule"
+    android:id="@+id/itemSchedule"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -8,19 +8,19 @@
     android:paddingBottom="10dp">
 
     <TextView
-        android:id="@+id/time_slot"
+        android:id="@+id/ScheduleTimeSlot"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/artist_name"
+        android:id="@+id/ScheduleArtistName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/scene_name"
+        android:id="@+id/ScheduleSceneName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />

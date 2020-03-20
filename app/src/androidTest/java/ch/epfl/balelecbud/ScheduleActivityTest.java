@@ -3,16 +3,16 @@ package ch.epfl.balelecbud;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.Timestamp;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,14 +31,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
 
     MockDatabaseWrapper mock;
-
-
 
     static private Slot slot1;
     static private Slot slot2;
@@ -57,95 +54,65 @@ public class ScheduleActivityTest {
         slot2 = new Slot("Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
         slot3 = new Slot("Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
     }
-
-    @Before
-    public void setUp(){
-        mock = new MockDatabaseWrapper();
-        ScheduleAdapter.setDatabaseImplementation(mock);
-        ActivityScenario.launch(ScheduleActivity.class);
-    }
-
-    private void addItem(final Slot slot) throws Throwable{
-        Runnable myRunnable = new Runnable(){
-            @Override
-            public void run() {
-                mock.addItem(slot);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable){
-            myRunnable.wait(1000);
+    @Rule
+    public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            mock = new MockDatabaseWrapper();
+            ScheduleAdapter.setDatabaseImplementation(mock);
         }
-    }
-
-    private void modifyItem(final Slot slot, final int index) throws Throwable{
-        Runnable myRunnable = new Runnable(){
-            @Override
-            public void run() {
-                mock.changeItem(slot, index);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable){
-            myRunnable.wait(1000);
-        }
-    }
-
-    private void removeItem(final Slot slot, final int index) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mock.removeItem(slot, index);
-            }
-        };
-        runOnUiThread(myRunnable);
-        synchronized (myRunnable){
-            myRunnable.wait(1000);
-        }
-    }
+    };
 
     @Test
     public void testRecyclerViewVisible() {
-        onView(withId(R.id.rvSchedule)).check(matches(isDisplayed()));
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testItemModification() throws Throwable{
+    public void testItemModification() throws Throwable {
 
-        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(0)));
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
-        addItem(slot1);
-        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(1)));
+        mock.addItem(slot1);
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        addItem(slot2);
-        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(2)));
+        mock.addItem(slot2);
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-        addItem(slot3);
-        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(3)));
+        mock.addItem(slot3);
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
 
+<<<<<<< HEAD
         modifyItem(slot3, 0);
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText(slot3.getTimeSlot())));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText(slot3.getArtistName())));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText(slot3.getSceneName())));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 3)).check(matches(isDisplayed()));
+=======
+        mock.modifyItem(slot3, 0);
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot3.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot3.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot3.getSceneName())));
+>>>>>>> c48e36e233bfa3dd77b24bc30bb1ef28db742b4d
 
-        removeItem(slot3, 0);
-        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(2)));
+        mock.removeItem(slot3, 0);
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-        removeItem(slot2, 0);
-        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(1)));
+        mock.removeItem(slot2, 0);
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        removeItem(slot3, 0);
-        onView(withId(R.id.rvSchedule)).check(matches(hasChildCount(0)));
+        mock.removeItem(slot3, 0);
+        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
 
-        addItem(slot1);
-        addItem(slot2);
-        addItem(slot3);
+        mock.addItem(slot1);
+        mock.addItem(slot2);
+        mock.addItem(slot3);
 
+<<<<<<< HEAD
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText(slot1.getTimeSlot())));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText(slot1.getArtistName())));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText(slot1.getSceneName())));
@@ -161,13 +128,26 @@ public class ScheduleActivityTest {
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 2)).check(matches(withText(slot3.getSceneName())));
         onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 3)).check(matches(isDisplayed()));
 
+=======
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot1.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot1.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot1.getSceneName())));
+
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 0)).check(matches(withText(slot2.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1)).check(matches(withText(slot2.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 2)).check(matches(withText(slot2.getSceneName())));
+
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 0)).check(matches(withText(slot3.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 1)).check(matches(withText(slot3.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 2)).check(matches(withText(slot3.getSceneName())));
+>>>>>>> c48e36e233bfa3dd77b24bc30bb1ef28db742b4d
     }
 
     public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
         return new TypeSafeMatcher<View>() {
             @Override
             public void describeTo(Description description) {
-                description.appendText("with "+childPosition+" child view of type parentMatcher");
+                description.appendText("with " + childPosition + " child view of type parentMatcher");
             }
 
             @Override

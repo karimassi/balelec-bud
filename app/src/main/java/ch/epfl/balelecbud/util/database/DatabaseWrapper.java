@@ -7,6 +7,7 @@ public interface DatabaseWrapper {
     String CONCERT_SLOTS_PATH = "concertSlots";
 
     void unregisterListener(DatabaseListener listener);
+
     void listen(String collectionName, DatabaseListener listener);
 
 }

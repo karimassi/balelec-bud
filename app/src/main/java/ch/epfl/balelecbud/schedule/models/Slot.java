@@ -1,27 +1,50 @@
 package ch.epfl.balelecbud.schedule.models;
 
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 
 import ch.epfl.balelecbud.util.StringUtils;
 
+@Entity
 public class Slot {
+    private static int lastId = 0;
+    @PrimaryKey
+    private int id;
 
     private String artistName;
     private String sceneName;
     private Timestamp startTime;
     private Timestamp endTime;
 
-    public Slot(String artistName, String sceneName, Timestamp startTime, Timestamp endTime) {
+    public Slot(int id, String artistName, String sceneName, Timestamp startTime, Timestamp endTime) {
+        this.id = id;
         this.artistName = artistName;
         this.sceneName = sceneName;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public Slot(){
+    @Ignore
+    public Slot(String artistName, String sceneName, Timestamp startTime, Timestamp endTime) {
+        this();
+        this.artistName = artistName;
+        this.sceneName = sceneName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 
+    @Ignore
+    public Slot() {
+        id = lastId;
+        ++lastId;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getArtistName() {
@@ -44,9 +67,9 @@ public class Slot {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof Slot)
-                && ((Slot)obj).getArtistName() == artistName
-                && ((Slot) obj).getStartTime() == startTime
-                && ((Slot) obj).getEndTime() == endTime
-                && ((Slot) obj).getSceneName() == sceneName;
+                && ((Slot)obj).getArtistName().equals(artistName)
+                && ((Slot) obj).getStartTime().equals(startTime)
+                && ((Slot) obj).getEndTime().equals(endTime)
+                && ((Slot) obj).getSceneName().equals(sceneName);
     }
 }

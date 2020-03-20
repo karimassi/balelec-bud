@@ -12,26 +12,27 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.notifications.concertDataBase.ConcertDatabaseInterface;
+import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlowInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.util.adapters.RecyclerViewAdapterFacade;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
-    private static DatabaseWrapper database = new FirestoreDatabaseWrapper();
-    private static ConcertDatabaseInterface notifDB;
+    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
+    private static ConcertFlowInterface notifDB;
 
     @VisibleForTesting
-    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
         database = databaseWrapper;
     }
 
@@ -45,9 +46,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
         public ScheduleViewHolder(View itemView) {
             super(itemView);
-            timeSlotView = itemView.findViewById(R.id.time_slot);
-            artistNameView = itemView.findViewById(R.id.artist_name);
-            sceneNameView = itemView.findViewById(R.id.scene_name);
+
+            timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);
+            artistNameView = itemView.findViewById(R.id.ScheduleArtistName);
+            sceneNameView = itemView.findViewById(R.id.ScheduleSceneName);
             subscribeSwitch = itemView.findViewById(R.id.subscribe_switch);
         }
     }
@@ -91,19 +93,17 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
 
-        /**subscribeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        viewHolder.subscribeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    // The location is enabled
-                    Log.d(TAG, "Location switched: ON");
+                    Log.d(TAG, "Notification switched: ON");
                     notifDB.scheduleNewConcert(slot);
                 } else {
-                    // The location is disabled
-                    Log.d(TAG,"Location switched: OFF");
+                    Log.d(TAG,"Notification switched: OFF");
                     notifDB.removeConcert(slot);
                 }
             }
-        });**/
+        });
     }
 
     public int getItemCount() {
