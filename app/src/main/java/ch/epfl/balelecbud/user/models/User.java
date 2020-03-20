@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.models;
+package ch.epfl.balelecbud.user.models;
 
 import com.google.firebase.firestore.GeoPoint;
 
