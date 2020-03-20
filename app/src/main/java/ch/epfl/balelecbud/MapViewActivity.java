@@ -102,6 +102,10 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     public LatLng getPosition() {
-        return this.position;
+        return position;
+    }
+
+    public GoogleMap getGoogleMap() {
+        return googleMap;
     }
 }
