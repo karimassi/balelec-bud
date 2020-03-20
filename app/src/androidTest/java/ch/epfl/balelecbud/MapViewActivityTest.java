@@ -1,11 +1,16 @@
 package ch.epfl.balelecbud;
 
+import android.location.Location;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,6 +61,25 @@ public class MapViewActivityTest {
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPosition(null);
         assertThat(mActivity.getPosition(), is(notNullValue()));
+    }
+
+    @Test
+    public void testNewPositionFromLocationIsSet() {
+        final MapViewActivity mActivity = mActivityRule.getActivity();
+
+        Task<Location> locationResult = LocationServices.getFusedLocationProviderClient(mActivity).getLastLocation();
+        locationResult.addOnCompleteListener(mActivity, new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if (task.isSuccessful()) {
+                    Location newLocation = task.getResult();
+                    LatLng newPosition = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
+                    mActivity.setPositionFrom(task.getResult());
+                    assertThat(mActivity.getPosition(), is(newPosition));
+                }
+            }
+        });
+
     }
 
     @Test
