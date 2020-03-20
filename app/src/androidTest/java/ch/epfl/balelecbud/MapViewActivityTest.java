@@ -3,14 +3,12 @@ package ch.epfl.balelecbud;
 import android.location.Location;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,9 +19,11 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewActivityTest {
@@ -64,9 +64,42 @@ public class MapViewActivityTest {
     }
 
     @Test
+    public void testNewPositionFromLocationIsSet() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        double latitude = -12.12;
+        double longitude = -77.03;
+        LatLng newPosition = new LatLng(latitude, longitude);
+        Location location = new Location("Test location");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        mActivity.setPositionFrom(location);
+        assertThat(mActivity.getPosition(), is(newPosition));
+    }
+
+    @Test
     public void testNullLocationIsNotSet() {
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPositionFrom(null);
         assertThat(mActivity.getPosition(), is(notNullValue()));
+    }
+
+    @Test
+    public void testUpdateLocationUI() throws Throwable {
+        runOnUiThread( new Runnable() {
+            @Override
+            public void run() {
+                MapViewActivity mActivity = mActivityRule.getActivity();
+                GoogleMap googleMap = mActivity.getGoogleMap();
+                assertThat(googleMap.isMyLocationEnabled(), is(WelcomeActivity.isLocationActive()));
+                assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(), is(WelcomeActivity.isLocationActive()));
+            }
+        });
+    }
+
+    @Test
+    public void testCanGetGoogleMap() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        GoogleMap googleMap = mActivity.getGoogleMap();
+        assertThat(googleMap, is(notNullValue()));
     }
 }
