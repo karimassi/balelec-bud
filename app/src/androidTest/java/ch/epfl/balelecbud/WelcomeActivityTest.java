@@ -54,32 +54,27 @@ public class WelcomeActivityTest {
 
     @Test
     public void testMapButtonIsDisplayed() {
-        onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.mapButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.mapButton)));
     }
 
     @Test
     public void testInfoButtonIsDisplayed() {
-        onView(withId(R.id.infoButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.infoButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.infoButton)));
     }
 
     @Test
     public void testTransportButtonIsDisplayed() {
-        onView(withId(R.id.transportButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.transportButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.transportButton)));
     }
 
     @Test
     public void testScheduleButtonIsDisplayed() {
-        onView(withId(R.id.scheduleButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.scheduleButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.scheduleButton)));
     }
 
     @Test
     public void testSignOutIsDisplayed() {
-        onView(withId(R.id.buttonSignOut)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonSignOut)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.buttonSignOut)));
     }
 
     @Test
@@ -117,6 +112,11 @@ public class WelcomeActivityTest {
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
+    }
+
+    private void testButtonIsDisplayed(ViewInteraction button) {
+        button.check(matches(isDisplayed()));
+        button.perform(click());
     }
 
     private void testFeatureIsDisplayed(ViewInteraction button, ViewInteraction feature) {
