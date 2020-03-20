@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.Task;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private final float DEFAULT_ZOOM = 15;
+    private final float DEFAULT_ZOOM = 17;
 
     private LatLng position;
     private GoogleMap googleMap;
@@ -46,6 +46,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap map) {
         googleMap = map;
 
+        googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
 
         setLocalizationPermission();
@@ -58,14 +59,8 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     private void updateLocationUI() {
-        if (localizationActive) {
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        } else {
-            googleMap.setMyLocationEnabled(false);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            setLocalizationPermission();
-        }
+        googleMap.setMyLocationEnabled(localizationActive);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(localizationActive);
     }
 
     private void getDeviceLocation() {
@@ -103,9 +98,5 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     public LatLng getPosition() {
         return position;
-    }
-
-    public GoogleMap getGoogleMap() {
-        return googleMap;
     }
 }

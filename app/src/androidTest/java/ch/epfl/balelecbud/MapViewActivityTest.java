@@ -6,9 +6,7 @@ import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,11 +17,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewActivityTest {
@@ -81,25 +77,5 @@ public class MapViewActivityTest {
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPositionFrom(null);
         assertThat(mActivity.getPosition(), is(notNullValue()));
-    }
-
-    @Test
-    public void testUpdateLocationUI() throws Throwable {
-        runOnUiThread( new Runnable() {
-            @Override
-            public void run() {
-                MapViewActivity mActivity = mActivityRule.getActivity();
-                GoogleMap googleMap = mActivity.getGoogleMap();
-                assertThat(googleMap.isMyLocationEnabled(), is(WelcomeActivity.isLocationActive()));
-                assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(), is(WelcomeActivity.isLocationActive()));
-            }
-        });
-    }
-
-    @Test
-    public void testCanGetGoogleMap() {
-        MapViewActivity mActivity = mActivityRule.getActivity();
-        GoogleMap googleMap = mActivity.getGoogleMap();
-        assertThat(googleMap, is(notNullValue()));
     }
 }
