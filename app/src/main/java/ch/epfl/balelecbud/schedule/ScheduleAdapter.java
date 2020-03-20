@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -23,6 +25,7 @@ import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
+    private static ConcertFlow notifDB;
 
     @VisibleForTesting
     public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
@@ -35,12 +38,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         public TextView timeSlotView;
         public TextView artistNameView;
         public TextView sceneNameView;
+        public Switch subscribeSwitch;
 
         public ScheduleViewHolder(View itemView) {
             super(itemView);
             timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);
             artistNameView = itemView.findViewById(R.id.ScheduleArtistName);
             sceneNameView = itemView.findViewById(R.id.ScheduleSceneName);
+            subscribeSwitch = itemView.findViewById(R.id.ScheduleSubscribeSwitch);
         }
     }
 
@@ -78,10 +83,24 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     @Override
     public void onBindViewHolder(ScheduleAdapter.ScheduleViewHolder viewHolder, int position) {
-        Slot slot = slots.get(position);
+        final Slot slot = slots.get(position);
         viewHolder.timeSlotView.setText(slot.getTimeSlot());
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
+
+        /**subscribeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The location is enabled
+                    Log.d(TAG, "Location switched: ON");
+                    notifDB.scheduleNewConcert(slot);
+                } else {
+                    // The location is disabled
+                    Log.d(TAG,"Location switched: OFF");
+                    notifDB.removeConcert(slot);
+                }
+            }
+        });**/
     }
 
     public int getItemCount() {

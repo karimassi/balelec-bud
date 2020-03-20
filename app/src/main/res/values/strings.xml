@@ -38,4 +38,5 @@
     <string name="concert_soon_channel_name">Concert Soon Channel</string>
     <string name="concert_soon_notification_title">A concert is starting soon</string>
     <string name="concert_soon_channel_description">A channel to convey information about concerts starting soon</string>
+    <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it !</string>
 </resources>
