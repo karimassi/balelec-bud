@@ -112,5 +112,9 @@ public class MockAuthenticator implements Authenticator {
         return instance;
     }
 
+    public void debugSetUser(User user) {
+        currentUser = user;
+    }
+
 
 }

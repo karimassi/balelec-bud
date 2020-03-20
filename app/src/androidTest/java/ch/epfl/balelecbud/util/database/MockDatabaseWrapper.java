@@ -4,6 +4,7 @@ import android.telecom.Call;
 
 import androidx.test.espresso.intent.Intents;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +22,17 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private Map<String, Object> db = new HashMap<String, Object>() {
         {
             put("users", new ArrayList<User>());
+            put("friendships", new ArrayList<ArrayList<String>>());
+            put("friendRequests", new ArrayList<User>());
         }
     };
 
     private MockDatabaseWrapper() {
         listeners = new ArrayList<>();
         ((ArrayList<User>) db.get("users")).add(new User("karim@epfl.ch", null, "karim@epfl.ch", "0"));
-
+        ((ArrayList<User>) db.get("users")).add(new User("celine@epfl.ch", null, "celine@epfl.ch", "0"));
+        ((ArrayList<ArrayList<String>>) db.get("friendships")).add(new ArrayList<String>());
+        ((ArrayList<ArrayList<String>>) db.get("friendships")).add(new ArrayList<String>());
     }
 
     private static final DatabaseWrapper instance = new MockDatabaseWrapper();
@@ -123,5 +128,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public <T> void storeDocumentWithID(String collectionName, String documentID, T document, Callback<T> callback) {
         storeDocument(collectionName, document, callback);
+    }
+
+    @Override
+    public <T> void updateArrayElements(String collectionName, String documentID, String arrayName, T document) {
+        ((ArrayList<ArrayList<T>>) db.get(collectionName)).get(Integer.parseInt(documentID)).add(document);
     }
 }

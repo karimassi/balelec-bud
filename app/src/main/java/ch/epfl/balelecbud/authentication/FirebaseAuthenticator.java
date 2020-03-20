@@ -41,17 +41,14 @@ public class FirebaseAuthenticator implements Authenticator {
                                 .getDocument(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), User.class, new Callback<User>() {
                                     @Override
                                     public void onSuccess(User data) {
-                                        if (data != null) {
-                                            callback.onSuccess(data);
-                                            Log.d("FirebaseAuthenticator", "Successfully retrieved user from DB");
-                                        }
+                                        callback.onSuccess(data);
+                                        Log.d("FirebaseAuthenticator", "Successfully retrieved user from DB");
                                     }
 
                                     @Override
                                     public void onFailure(String message) {
                                         callback.onFailure(message);
                                         Log.d("FirebaseAuthenticator", message);
-
                                     }
                                 });
                     }

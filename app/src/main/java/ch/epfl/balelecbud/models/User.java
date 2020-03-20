@@ -21,13 +21,6 @@ public class User {
         this.userToken = userToken;
     }
 
-    public User(User another) {
-        this.email = another.email;
-        this.location = another.location;
-        this.displayName = another.displayName;
-        this.userToken = another.userToken;
-    }
-
     public String getEmail() {
         return email;
     }

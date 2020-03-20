@@ -12,6 +12,8 @@ public interface DatabaseWrapper {
     String TRANSPORT_PATH = "transports";
     String CONCERT_SLOTS_PATH = "concertSlots";
     String USERS = "users";
+    String FRIEND_REQUESTS = "friendRequests";
+    String FRIENDSHIPS = "friendships";
 
     void unregisterListener(DatabaseListener listener);
 
@@ -22,5 +24,7 @@ public interface DatabaseWrapper {
     <T> void storeDocument(String collectionName, T document, Callback<T> callback);
 
     <T> void storeDocumentWithID(String collectionName, String documentID, T document, Callback<T> callback);
+
+    <T> void updateArrayElements(String collectionName, String documentID, String arrayName, T document);
 
 }
