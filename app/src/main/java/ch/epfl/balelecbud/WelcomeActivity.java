@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,10 +17,6 @@ import androidx.annotation.VisibleForTesting;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.Task;
 
 import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
 import ch.epfl.balelecbud.location.LocationClient;
