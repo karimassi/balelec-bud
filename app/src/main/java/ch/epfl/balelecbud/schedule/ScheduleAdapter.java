@@ -29,7 +29,13 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
-    private static ConcertFlowInterface notifDB;
+
+    private static ConcertFlowInterface notifFlow = null;
+
+    @VisibleForTesting
+    public static void setConcertFlowInterface(ConcertFlowInterface flow) {
+        notifFlow = flow;
+    }
 
     @VisibleForTesting
     public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
@@ -50,11 +56,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);
             artistNameView = itemView.findViewById(R.id.ScheduleArtistName);
             sceneNameView = itemView.findViewById(R.id.ScheduleSceneName);
-            subscribeSwitch = itemView.findViewById(R.id.subscribe_switch);
+            subscribeSwitch = itemView.findViewById(R.id.ScheduleSubscribeSwitch);
         }
     }
 
-    public ScheduleAdapter() {
+    public ScheduleAdapter(ConcertFlowInterface notifFlow) {
         slots = new ArrayList<>();
         RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
             @Override
@@ -72,8 +78,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 ScheduleAdapter.this.notifyItemRemoved(position);
             }
         };
-        DatabaseListener<Slot> listener = new DatabaseListener(facade, slots, Slot.class);
+        DatabaseListener<Slot> listener = new DatabaseListener<>(facade, slots, Slot.class);
         database.listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
+        if (ScheduleAdapter.notifFlow == null)
+            ScheduleAdapter.notifFlow = notifFlow;
     }
 
     @NonNull
@@ -82,28 +90,30 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View scheduleView = inflater.inflate(R.layout.item_schedule, parent, false);
-        ScheduleViewHolder viewHolder = new ScheduleViewHolder(scheduleView);
-        return viewHolder;
+        return new ScheduleViewHolder(scheduleView);
     }
 
     @Override
-    public void onBindViewHolder(ScheduleAdapter.ScheduleViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ScheduleAdapter.ScheduleViewHolder viewHolder, int position) {
         final Slot slot = slots.get(position);
         viewHolder.timeSlotView.setText(slot.getTimeSlot());
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
 
         viewHolder.subscribeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
                     Log.d(TAG, "Notification switched: ON");
-                    notifDB.scheduleNewConcert(slot);
+                    notifFlow.scheduleNewConcert(slot);
                 } else {
-                    Log.d(TAG,"Notification switched: OFF");
-                    notifDB.removeConcert(slot);
+                    Log.d(TAG, "Notification switched: ON");
+                    notifFlow.removeConcert(slot);
                 }
             }
         });
+        if (notifFlow.getAllScheduledConcert().contains(slot)) {
+            viewHolder.subscribeSwitch.setChecked(true);
+        }
     }
 
     public int getItemCount() {

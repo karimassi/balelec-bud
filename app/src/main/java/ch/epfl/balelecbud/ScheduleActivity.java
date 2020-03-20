@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 
 public class ScheduleActivity extends BasicActivity {
@@ -18,7 +19,7 @@ public class ScheduleActivity extends BasicActivity {
         setContentView(R.layout.activity_schedule);
 
         rvSchedule = findViewById(R.id.scheduleRecyclerView);
-        mAdapter = new ScheduleAdapter();
+        mAdapter = new ScheduleAdapter(new ConcertFlow(this));
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
     }
