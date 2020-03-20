@@ -1,33 +1,48 @@
 package ch.epfl.balelecbud;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private double defaultLat;
-    private double defaultLng;
+    private final float DEFAULT_ZOOM = 15;
 
     private LatLng position;
+    private GoogleMap googleMap;
+    private boolean localizationActive;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        defaultLat = Double.parseDouble(getString(R.string.default_lat));
-        defaultLng = Double.parseDouble(getString(R.string.default_lng));
-        LatLng default_location = new LatLng(defaultLat, defaultLng);
+        final double defaultLat = Double.parseDouble(getString(R.string.default_lat));
+        final double defaultLng = Double.parseDouble(getString(R.string.default_lng));
+        final LatLng defaultLocation = new LatLng(defaultLat, defaultLng);
 
-        setPosition(default_location);
+        setPosition(defaultLocation);
+
+        localizationActive = false;
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -36,13 +51,59 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(position).title("defaultPosition"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(position));
+        googleMap = map;
+
+        googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
+
+        setLocalizationPermission();
+        updateLocationUI();
+        getDeviceLocation();
+    }
+
+    // TODO: find why this is always true, even when the location toggle is unchecked
+    private void setLocalizationPermission() {
+        localizationActive = (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void updateLocationUI() {
+        if (localizationActive) {
+            googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        } else {
+            googleMap.setMyLocationEnabled(false);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+    }
+
+    private void getDeviceLocation() {
+        if (localizationActive) {
+            Task<Location> locationResult = LocationServices.getFusedLocationProviderClient(this).getLastLocation();
+            locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful()) {
+                        setPosition(task.getResult());
+                    } else {
+                        googleMap.setMyLocationEnabled(false);
+                        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    }
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
+                }
+            });
+        }
     }
 
     public void setPosition(LatLng position) {
         if (position != null) {
             this.position = position;
+        }
+    }
+
+    public void setPosition(Location location) {
+        if (location != null) {
+            position = new LatLng(location.getLatitude(), location.getLongitude());
         }
     }
 

@@ -21,7 +21,6 @@ public class LoginUserActivity extends BasicActivity {
 
         emailField = findViewById(R.id.editTextEmailLogin);
         passwordField = findViewById(R.id.editTextPasswordLogin);
-
     }
 
     private void login(final String email, String password) {

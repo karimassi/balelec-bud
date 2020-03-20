@@ -49,4 +49,5 @@
         android:layout_height="wrap_content"
         android:checked="false"
         android:text="@string/toggle_location_view" />
+
 </LinearLayout>

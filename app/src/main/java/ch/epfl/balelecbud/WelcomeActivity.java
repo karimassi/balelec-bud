@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,10 @@ import androidx.annotation.VisibleForTesting;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Task;
 
 import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
 import ch.epfl.balelecbud.location.LocationClient;
@@ -99,6 +104,45 @@ public class WelcomeActivity extends BasicActivity {
         setUpLocation();
     }
 
+    /**
+     * Called when the user clicks the Info button
+     */
+    private void openInfoActivity() {
+        Intent intent = new Intent(this, FestivalInformationActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Called when the user clicks the Schedule button
+     */
+    private void openScheduleActivity() {
+        Intent intent = new Intent(this, ScheduleActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Called when the user clicks the Map button
+     */
+    private void openMapActivity() {
+        Intent intent = new Intent(this, MapViewActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Called when the user clicks the Transport button
+     */
+    private void openTransportActivity() {
+        Intent intent = new Intent(this, TransportActivity.class);
+        startActivity(intent);
+    }
+
+    private void signOut() {
+        getAuthenticator().signOut();
+        Intent intent = new Intent(this, LoginUserActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void setUpLocation() {
         this.isLocalizationActive = false;
 
@@ -116,7 +160,8 @@ public class WelcomeActivity extends BasicActivity {
                     // The location is enabled
                     Log.d(TAG, "Location switched: ON");
                     requestLocationUpdates();
-                } else {
+                }
+                else {
                     // The location is disabled
                     Log.d(TAG, "Location switched: OFF");
                     removeLocationUpdates();
@@ -130,10 +175,22 @@ public class WelcomeActivity extends BasicActivity {
         createLocationRequest();
     }
 
-    private PendingIntent getPendingIntent() {
-        Intent intent = new Intent(this, LocationService.class);
-        intent.setAction(LocationService.ACTION_PROCESS_UPDATES);
-        return PendingIntent.getService(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    /**
+     * Request the location permission
+     */
+    private void requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
     }
 
     /**
@@ -155,6 +212,34 @@ public class WelcomeActivity extends BasicActivity {
                 (backgroundLocationPermissionState == PackageManager.PERMISSION_GRANTED);
     }
 
+    /**
+     * Handles the Request Updates button and requests start of location updates.
+     */
+    private void requestLocationUpdates() {
+        try {
+            Log.i(TAG, "Starting location updates");
+            client.requestLocationUpdates(locationRequest, getPendingIntent());
+            this.isLocalizationActive = true;
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handles the Remove Updates button, and requests removal of location updates.
+     */
+    private void removeLocationUpdates() {
+        Log.i(TAG, "Removing location updates");
+        client.removeLocationUpdates(getPendingIntent());
+        this.isLocalizationActive = false;
+    }
+
+    private PendingIntent getPendingIntent() {
+        Intent intent = new Intent(this, LocationService.class);
+        intent.setAction(LocationService.ACTION_PROCESS_UPDATES);
+        return PendingIntent.getService(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     private void createLocationRequest() {
         locationRequest = new LocationRequest();
 
@@ -162,24 +247,6 @@ public class WelcomeActivity extends BasicActivity {
         locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setMaxWaitTime(MAX_WAIT_TIME);
-    }
-
-    /**
-     * Request the location permission
-     */
-    private void requestPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
     }
 
     /**
@@ -218,66 +285,5 @@ public class WelcomeActivity extends BasicActivity {
     private void onPermissionGranted() {
         Log.i(TAG, "onRequestPermissionsResult: Permission granted");
         this.locationSwitch.setClickable(true);
-    }
-
-    /**
-     * Handles the Request Updates button and requests start of location updates.
-     */
-    private void requestLocationUpdates() {
-        try {
-            Log.i(TAG, "Starting location updates");
-            client.requestLocationUpdates(locationRequest, getPendingIntent());
-            this.isLocalizationActive = true;
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Handles the Remove Updates button, and requests removal of location updates.
-     */
-    private void removeLocationUpdates() {
-        Log.i(TAG, "Removing location updates");
-        client.removeLocationUpdates(getPendingIntent());
-        this.isLocalizationActive = false;
-    }
-
-    private void signOut() {
-        getAuthenticator().signOut();
-        Intent intent = new Intent(this, LoginUserActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Called when the user clicks the Map button
-     */
-    private void openMapActivity() {
-        Intent intent = new Intent(this, MapViewActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Called when the user clicks the Schedule button
-     */
-    private void openScheduleActivity() {
-        Intent intent = new Intent(this, ScheduleActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Called when the user clicks the Info button
-     */
-    private void openInfoActivity() {
-        Intent intent = new Intent(this, FestivalInformationActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Called when the user clicks the Transport button
-     */
-    private void openTransportActivity() {
-        Intent intent = new Intent(this, TransportActivity.class);
-        startActivity(intent);
     }
 }
