@@ -64,25 +64,6 @@ public class MapViewActivityTest {
     }
 
     @Test
-    public void testNewPositionFromLocationIsSet() {
-        final MapViewActivity mActivity = mActivityRule.getActivity();
-
-        Task<Location> locationResult = LocationServices.getFusedLocationProviderClient(mActivity).getLastLocation();
-        locationResult.addOnCompleteListener(mActivity, new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
-                    Location newLocation = task.getResult();
-                    LatLng newPosition = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
-                    mActivity.setPositionFrom(task.getResult());
-                    assertThat(mActivity.getPosition(), is(newPosition));
-                }
-            }
-        });
-
-    }
-
-    @Test
     public void testNullLocationIsNotSet() {
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPositionFrom(null);
