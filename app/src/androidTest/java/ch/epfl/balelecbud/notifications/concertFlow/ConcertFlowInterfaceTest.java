@@ -203,10 +203,8 @@ public class ConcertFlowInterfaceTest {
         flow.scheduleNewConcert(slot2);
         flow.removeConcert(slot1);
         List<Slot> slots = flow.getAllScheduledConcert();
-        Assert.assertEquals(slots.size(), 1);
-        Assert.assertEquals(slots.get(0), slot2);
-//        Assert.assertFalse(flow.getAllScheduledConcert().contains(slot1));
-//        Assert.assertTrue(flow.getAllScheduledConcert().contains(slot2));
+        Assert.assertFalse(flow.getAllScheduledConcert().contains(slot1));
+        Assert.assertTrue(flow.getAllScheduledConcert().contains(slot2));
     }
 
 }

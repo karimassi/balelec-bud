@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlowInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -25,7 +26,12 @@ import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
-    private static ConcertFlow notifDB;
+    private static ConcertFlowInterface notifFlow = null;
+
+    @VisibleForTesting
+    public static void setConcertFlowInterface(ConcertFlowInterface flow) {
+        notifFlow = flow;
+    }
 
     @VisibleForTesting
     public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
@@ -49,7 +55,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         }
     }
 
-    public ScheduleAdapter() {
+    public ScheduleAdapter(ConcertFlowInterface notifFlow) {
         slots = new ArrayList<>();
         RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
             @Override
@@ -67,8 +73,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 ScheduleAdapter.this.notifyItemRemoved(position);
             }
         };
-        DatabaseListener<Slot> listener = new DatabaseListener(facade, slots, Slot.class);
+        DatabaseListener<Slot> listener = new DatabaseListener<>(facade, slots, Slot.class);
         database.listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
+        if (ScheduleAdapter.notifFlow == null)
+            ScheduleAdapter.notifFlow = notifFlow;
     }
 
     @NonNull
@@ -77,30 +85,29 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View scheduleView = inflater.inflate(R.layout.item_schedule, parent, false);
-        ScheduleViewHolder viewHolder = new ScheduleViewHolder(scheduleView);
-        return viewHolder;
+        return new ScheduleViewHolder(scheduleView);
     }
 
     @Override
-    public void onBindViewHolder(ScheduleAdapter.ScheduleViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ScheduleAdapter.ScheduleViewHolder viewHolder, int position) {
         final Slot slot = slots.get(position);
         viewHolder.timeSlotView.setText(slot.getTimeSlot());
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
 
-        /**subscribeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        viewHolder.subscribeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
-                    // The location is enabled
-                    Log.d(TAG, "Location switched: ON");
-                    notifDB.scheduleNewConcert(slot);
+                    notifFlow.scheduleNewConcert(slot);
                 } else {
-                    // The location is disabled
-                    Log.d(TAG,"Location switched: OFF");
-                    notifDB.removeConcert(slot);
+                    notifFlow.removeConcert(slot);
                 }
             }
-        });**/
+        });
+
+        if (notifFlow.getAllScheduledConcert().contains(slot)) {
+            viewHolder.subscribeSwitch.setChecked(true);
+        }
     }
 
     public int getItemCount() {
