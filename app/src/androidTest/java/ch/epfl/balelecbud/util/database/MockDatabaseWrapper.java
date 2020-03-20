@@ -13,7 +13,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         listeners = new ArrayList<>();
     }
 
-
     @Override
     public void unregisterListener(DatabaseListener listener) {
         listeners.remove(listener);
