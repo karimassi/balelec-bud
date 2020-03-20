@@ -30,7 +30,7 @@ import ch.epfl.balelecbud.location.LocationService;
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
     private Switch locationSwitch;
-    private boolean isLocalizationActive;
+    private static boolean isLocalizationActive; //careful
 
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static final long UPDATE_INTERVAL = 60_000;
@@ -52,7 +52,7 @@ public class WelcomeActivity extends BasicActivity {
         return this.locationSwitch.isClickable();
     }
 
-    public boolean isLocationActive() {
+    public static boolean isLocationActive() { //idem
         return isLocalizationActive;
     }
 

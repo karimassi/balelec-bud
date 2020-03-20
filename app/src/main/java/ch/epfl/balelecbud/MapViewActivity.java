@@ -1,18 +1,13 @@
 package ch.epfl.balelecbud;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,11 +55,8 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         getDeviceLocation();
     }
 
-    // TODO: find why this is always true, even when the location toggle is unchecked
     private void setLocalizationPermission() {
-        localizationActive = (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED);
+        localizationActive = WelcomeActivity.isLocationActive();
     }
 
     private void updateLocationUI() {
@@ -74,6 +66,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         } else {
             googleMap.setMyLocationEnabled(false);
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            setLocalizationPermission();
         }
     }
 
@@ -84,7 +77,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
                     if (task.isSuccessful()) {
-                        setPosition(task.getResult());
+                        setPositionFrom(task.getResult());
                     } else {
                         googleMap.setMyLocationEnabled(false);
                         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -92,6 +85,9 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
                 }
             });
+        }
+        else {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
         }
     }
 
@@ -101,7 +97,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
-    public void setPosition(Location location) {
+    public void setPositionFrom(Location location) {
         if (location != null) {
             position = new LatLng(location.getLatitude(), location.getLongitude());
         }
