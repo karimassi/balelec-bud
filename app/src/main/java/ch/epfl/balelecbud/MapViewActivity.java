@@ -44,11 +44,12 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap map) {
         googleMap = map;
 
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
 
         setLocationPermission();
-        updateLocationUi();
+        updateLocationUi(locationEnabled);
         getDeviceLocation();
     }
 
@@ -56,7 +57,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         locationEnabled = WelcomeActivity.isLocationActive();
     }
 
-    private void updateLocationUi() {
+    private void updateLocationUi(boolean locationEnabled) {
         googleMap.setMyLocationEnabled(locationEnabled);
         googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
     }
@@ -67,7 +68,9 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
             locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
-                    moveCameraTo(task.getResult(), task.isSuccessful());
+                    setPositionFrom(task.getResult(), task.isSuccessful());
+                    updateLocationUi(task.isSuccessful());
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
                 }
             });
         }
@@ -76,26 +79,15 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
-    protected void moveCameraTo(Location location, boolean locationEnabled) {
-        if(locationEnabled) {
-            setPositionFrom(location);
+    protected void setPositionFrom(Location location, boolean locationEnabled) {
+        if(locationEnabled && location!=null) {
+            position = new LatLng(location.getLatitude(), location.getLongitude());
         }
-        else {
-            googleMap.setMyLocationEnabled(false);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        }
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
     }
 
-    public void setPosition(LatLng position) {
+    protected void setPosition(LatLng position) {
         if (position != null) {
             this.position = position;
-        }
-    }
-
-    public void setPositionFrom(Location location) {
-        if (location != null) {
-            position = new LatLng(location.getLatitude(), location.getLongitude());
         }
     }
 
