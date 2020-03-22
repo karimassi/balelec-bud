@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,7 +23,16 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     private LatLng position;
     private GoogleMap googleMap;
-    private boolean locationEnabled;
+    private static boolean locationEnabled;
+
+    private OnCompleteListener<Location> callback = new OnCompleteListener<Location>() {
+        @Override
+        public void onComplete(@NonNull Task<Location> task) {
+            setPositionFrom(task.getResult(), task.isSuccessful());
+            updateLocationUi(task.isSuccessful());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +54,6 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap map) {
         googleMap = map;
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
 
@@ -65,14 +74,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     private void getDeviceLocation() {
         if (locationEnabled) {
             Task<Location> locationResult = LocationServices.getFusedLocationProviderClient(this).getLastLocation();
-            locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    setPositionFrom(task.getResult(), task.isSuccessful());
-                    updateLocationUi(task.isSuccessful());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
-                }
-            });
+            locationResult.addOnCompleteListener(this, callback);
         }
         else {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
@@ -93,5 +95,9 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     public LatLng getPosition() {
         return position;
+    }
+
+    public static boolean getLocationPermission() {
+        return locationEnabled;
     }
 }
