@@ -4,6 +4,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,29 +21,25 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 public class MainActivityTest {
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            MockAuthenticator.getInstance().signOut();
-            Intents.init();
-        }
-
-        @Override
-        protected void afterActivityFinished() {
-            Intents.release();
-        }
-    };
-
+    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setUp() {
+        MockAuthenticator.getInstance().signOut();
+        Intents.init();
         mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
     }
 
-    @Before
+    @After
+    public void teardown() {
+        Intents.release();
+    }
 
     @Test
     public void testLoggedOutGoesToLoginActivity() {
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
+        //onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 }
