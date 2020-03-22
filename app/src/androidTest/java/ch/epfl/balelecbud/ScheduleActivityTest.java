@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 
+import androidx.arch.core.util.Function;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -20,7 +21,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -45,7 +45,7 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
 
-    MockDatabaseWrapper mock;
+    private MockDatabaseWrapper mock;
 
     static private Slot slot1;
     static private Slot slot2;
@@ -60,10 +60,11 @@ public class ScheduleActivityTest {
             Date date = c.getTime();
             timestamps.add(i, new Timestamp(date));
         }
-        slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
-        slot2 = new Slot("Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
-        slot3 = new Slot("Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
+        slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
+        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
+        slot3 = new Slot(2, "Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
     }
+
     @Rule
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
         @Override
@@ -76,8 +77,8 @@ public class ScheduleActivityTest {
                 }
 
                 @Override
-                public List<Slot> getAllScheduledConcert() {
-                    return Collections.emptyList();
+                public void getAllScheduledConcert(Function<List<Slot>, Void> callback) {
+                    callback.apply(Collections.<Slot>emptyList());
                 }
 
                 @Override
@@ -118,25 +119,11 @@ public class ScheduleActivityTest {
         mock.addItem(slot3);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        modifyItem(slot3, 0);
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText(slot3.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText(slot3.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText(slot3.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 3)).check(matches(isDisplayed()));
-=======
-=======
->>>>>>> 21a0a3b833bb81226143420a7126d6a592fbbfe1
         mock.modifyItem(slot3, 0);
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot3.getTimeSlot())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot3.getArtistName())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot3.getSceneName())));
-<<<<<<< HEAD
->>>>>>> c48e36e233bfa3dd77b24bc30bb1ef28db742b4d
-=======
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
->>>>>>> 21a0a3b833bb81226143420a7126d6a592fbbfe1
 
         mock.removeItem(slot3, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
@@ -155,93 +142,21 @@ public class ScheduleActivityTest {
         mock.addItem(slot2);
         mock.addItem(slot3);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 0)).check(matches(withText(slot1.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 1)).check(matches(withText(slot1.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 2)).check(matches(withText(slot1.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 0), 3)).check(matches(isDisplayed()));
-
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 0)).check(matches(withText(slot2.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 1)).check(matches(withText(slot2.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 2)).check(matches(withText(slot2.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 1), 3)).check(matches(isDisplayed()));
-
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 0)).check(matches(withText(slot3.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 1)).check(matches(withText(slot3.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 2)).check(matches(withText(slot3.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.rvSchedule), 2), 3)).check(matches(isDisplayed()));
-
-=======
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot1.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot1.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot1.getSceneName())));
-=======
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot1.getTimeSlot())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot1.getArtistName())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot1.getSceneName())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
->>>>>>> 21a0a3b833bb81226143420a7126d6a592fbbfe1
 
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 0)).check(matches(withText(slot2.getTimeSlot())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1)).check(matches(withText(slot2.getArtistName())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 2)).check(matches(withText(slot2.getSceneName())));
-<<<<<<< HEAD
-=======
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
->>>>>>> 21a0a3b833bb81226143420a7126d6a592fbbfe1
 
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 0)).check(matches(withText(slot3.getTimeSlot())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 1)).check(matches(withText(slot3.getArtistName())));
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 2)).check(matches(withText(slot3.getSceneName())));
-<<<<<<< HEAD
->>>>>>> c48e36e233bfa3dd77b24bc30bb1ef28db742b4d
-=======
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
 
-    }
-
-    @Test
-    public void testUnSubscribeToAConcert() throws Throwable {
-        mock.addItem(slot1);
-
-        final List<Object> sync = new LinkedList<>();
-
-        ScheduleAdapter.setConcertFlowInterface(new ConcertFlowInterface() {
-            @Override
-            public void addNotificationScheduler(NotificationSchedulerInterface scheduler) {
-
-            }
-
-            @Override
-            public List<Slot> getAllScheduledConcert() {
-                return Collections.singletonList(slot1);
-            }
-
-            @Override
-            public void scheduleNewConcert(Slot newSlot) {
-                Assert.fail();
-            }
-
-            @Override
-            public void removeConcert(Slot slot) {
-                Assert.assertEquals(slot, slot1);
-                synchronized (sync) {
-                    sync.add(new Object());
-                    sync.notify();
-                }
-            }
-
-            @Override
-            public void close() {
-
-            }
-        });
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).perform(click());
-        synchronized (sync) {
-            sync.wait(1000);
-        }
-        Assert.assertEquals(sync.size(), 1);
     }
 
     @Test
@@ -256,8 +171,8 @@ public class ScheduleActivityTest {
             }
 
             @Override
-            public List<Slot> getAllScheduledConcert() {
-                return new ArrayList<>();
+            public void getAllScheduledConcert(Function<List<Slot>, Void> callback) {
+                callback.apply(Collections.<Slot>emptyList());
             }
 
             @Override
@@ -282,37 +197,7 @@ public class ScheduleActivityTest {
         synchronized (sync) {
             sync.wait(1000);
         }
-        Assert.assertEquals(sync.size(), 1);
-    }
-
-    @Test
-    public void testSubscribedConcertIsChecked() throws Throwable {
-        mock.addItem(slot1);
-        ScheduleAdapter.setConcertFlowInterface(new ConcertFlowInterface() {
-            @Override
-            public void addNotificationScheduler(NotificationSchedulerInterface scheduler) {
-            }
-
-            @Override
-            public List<Slot> getAllScheduledConcert() {
-                return Collections.singletonList(slot1);
-            }
-
-            @Override
-            public void scheduleNewConcert(Slot newSlot) {
-                Assert.fail();
-            }
-
-            @Override
-            public void removeConcert(Slot slot) {
-                Assert.fail();
-            }
-
-            @Override
-            public void close() {
-            }
-        });
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(true));
+        Assert.assertThat(sync.size(), is(1));
     }
 
     public static ViewAssertion switchChecked(final boolean checked) {
@@ -326,7 +211,6 @@ public class ScheduleActivityTest {
                 Assert.assertThat(((Switch) view).isChecked(), is(checked));
             }
         };
->>>>>>> 21a0a3b833bb81226143420a7126d6a592fbbfe1
     }
 
     public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {

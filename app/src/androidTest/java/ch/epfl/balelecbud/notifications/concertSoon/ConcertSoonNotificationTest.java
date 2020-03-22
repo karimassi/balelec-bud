@@ -1,13 +1,8 @@
 package ch.epfl.balelecbud.notifications.concertSoon;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.media.RingtoneManager;
 
-import androidx.core.app.NotificationCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
@@ -19,7 +14,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.firebase.Timestamp;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,7 +61,7 @@ public class ConcertSoonNotificationTest {
         String expectedTitle = mActivityRule.getActivity().getString(R.string.concert_soon_notification_title);
         String expectedText = "Le nom de mon artiste starts in 15 minutes on Scene 3";
         Context ctx = mActivityRule.getActivity().getApplicationContext();
-        Slot s = new Slot("Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
 
         NotificationScheduler ns = NotificationScheduler.getInstance();
         ns.scheduleNotification(ctx, s);
@@ -89,7 +83,7 @@ public class ConcertSoonNotificationTest {
         String expectedTitle = mActivityRule.getActivity().getString(R.string.concert_soon_notification_title);
 
         Context ctx = mActivityRule.getActivity().getApplicationContext();
-        Slot s = new Slot("Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
 
         NotificationScheduler ns = NotificationScheduler.getInstance();
         ns.scheduleNotification(ctx, s);
@@ -110,14 +104,14 @@ public class ConcertSoonNotificationTest {
     @Test(expected = IllegalArgumentException.class)
     public void onPushedWhenNotTrackedThrows(){
         Context ctx = mActivityRule.getActivity().getApplicationContext();
-        Slot s = new Slot("Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
         NotificationScheduler.getInstance().onNotificationPushed(s.hashCode());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cancelWhenNotTrackedThrows(){
         Context ctx = mActivityRule.getActivity().getApplicationContext();
-        Slot s = new Slot("Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
         NotificationScheduler.getInstance().cancelNotification(ctx, s);
     }
 }

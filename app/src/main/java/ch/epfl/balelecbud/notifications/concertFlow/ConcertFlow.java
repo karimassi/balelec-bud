@@ -1,8 +1,10 @@
 package ch.epfl.balelecbud.notifications.concertFlow;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.arch.core.util.Function;
 import androidx.room.Room;
 
 import java.util.LinkedList;
@@ -27,26 +29,50 @@ public class ConcertFlow implements ConcertFlowInterface {
         this.concertOfInterestDAO = this.db.getConcertOfInterestDAO();
     }
 
+    @VisibleForTesting
+    public void setDb(ConcertOfInterestDatabase concertDb) {
+        this.db.close();
+        this.concertOfInterestDAO = concertDb.getConcertOfInterestDAO();
+    }
+
     @Override
     public void addNotificationScheduler(NotificationSchedulerInterface scheduler) {
         schedulers.add(scheduler);
     }
 
     @Override
-    public List<Slot> getAllScheduledConcert() {
-        return concertOfInterestDAO.getAllConcertOfInterest();
+    public void getAllScheduledConcert(final Function<List<Slot>, Void> callback) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                final List<Slot> res = concertOfInterestDAO.getAllConcertOfInterest();
+                callback.apply(res);
+            }
+        });
     }
 
     @Override
-    public void scheduleNewConcert(Slot newSlot) {
-        concertOfInterestDAO.insertConcert(newSlot);
-        for (NotificationSchedulerInterface notificationScheduler : this.schedulers)
-            notificationScheduler.scheduleNotification(this.context, newSlot);
+    public void scheduleNewConcert(final Slot newSlot) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                if (!concertOfInterestDAO.getAllConcertOfInterest().contains(newSlot)) {
+                    concertOfInterestDAO.insertConcert(newSlot);
+                }
+            }
+        });
+        for (NotificationSchedulerInterface notificationScheduler : ConcertFlow.this.schedulers)
+            notificationScheduler.scheduleNotification(ConcertFlow.this.context, newSlot);
     }
 
     @Override
-    public void removeConcert(Slot slot) {
-        concertOfInterestDAO.removeConcert(slot);
+    public void removeConcert(final Slot slot) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                concertOfInterestDAO.removeConcert(slot);
+            }
+        });
         for (NotificationSchedulerInterface notificationScheduler : this.schedulers)
             notificationScheduler.cancelNotification(this.context, slot);
     }
@@ -57,7 +83,7 @@ public class ConcertFlow implements ConcertFlowInterface {
     }
 
     @VisibleForTesting
-    public void clearNotificationScheduler() {
+    void clearNotificationScheduler() {
         this.schedulers.clear();
     }
 }

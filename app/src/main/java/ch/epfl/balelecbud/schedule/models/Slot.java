@@ -11,7 +11,6 @@ import ch.epfl.balelecbud.util.StringUtils;
 
 @Entity
 public class Slot {
-    private static int lastId = 0;
     @PrimaryKey
     private int id;
 
@@ -29,18 +28,8 @@ public class Slot {
     }
 
     @Ignore
-    public Slot(String artistName, String sceneName, Timestamp startTime, Timestamp endTime) {
-        this();
-        this.artistName = artistName;
-        this.sceneName = sceneName;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
-
-    @Ignore
     public Slot() {
-        id = lastId;
-        ++lastId;
+
     }
 
     public int getId() {
@@ -67,7 +56,8 @@ public class Slot {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof Slot)
-                && ((Slot)obj).getArtistName().equals(artistName)
+                && ((Slot) obj).id == id
+                && ((Slot) obj).getArtistName().equals(artistName)
                 && ((Slot) obj).getStartTime().equals(startTime)
                 && ((Slot) obj).getEndTime().equals(endTime)
                 && ((Slot) obj).getSceneName().equals(sceneName);

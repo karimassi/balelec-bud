@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.notifications.concertFlow;
 
 import android.content.Context;
 
+import androidx.arch.core.util.Function;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -34,6 +35,7 @@ public class ConcertFlowInterfaceTest {
     static private Slot slot3;
 
     private ConcertFlowInterface flow;
+    private ConcertOfInterestDatabase db;
 
     @BeforeClass
     public static void setUpSlots(){
@@ -44,9 +46,9 @@ public class ConcertFlowInterfaceTest {
             Date date = c.getTime();
             timestamps.add(i, new Timestamp(date));
         }
-        slot1 = new Slot("Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
-        slot2 = new Slot("Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
-        slot3 = new Slot("Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
+        slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
+        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
+        slot3 = new Slot(2, "Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
 
         Room.databaseBuilder(ApplicationProvider.getApplicationContext(),
                 ConcertOfInterestDatabase.class, "ConcertsOfInterest")
@@ -56,6 +58,11 @@ public class ConcertFlowInterfaceTest {
     @Before
     public void setup() {
         this.flow = new ConcertFlow(ApplicationProvider.getApplicationContext());
+        this.db =  Room.inMemoryDatabaseBuilder(
+                ApplicationProvider.getApplicationContext(),
+                ConcertOfInterestDatabase.class
+        ).build();
+        ((ConcertFlow) this.flow).setDb(db);
     }
 
     @After
@@ -64,6 +71,7 @@ public class ConcertFlowInterfaceTest {
         flow.removeConcert(slot1);
         flow.removeConcert(slot2);
         flow.removeConcert(slot3);
+        this.db.clearAllTables();
         this.flow.close();
     }
 
@@ -189,22 +197,52 @@ public class ConcertFlowInterfaceTest {
     }
 
     @Test
-    public void addedConcertAreInTheList() {
+    public void addedConcertAreInTheList() throws InterruptedException {
         flow.scheduleNewConcert(slot1);
         flow.scheduleNewConcert(slot2);
-        Assert.assertEquals(flow.getAllScheduledConcert().size(), 2);
-        Assert.assertTrue(flow.getAllScheduledConcert().contains(slot1));
-        Assert.assertTrue(flow.getAllScheduledConcert().contains(slot2));
+        final List<Object> sync = new LinkedList<>();
+        flow.getAllScheduledConcert(new Function<List<Slot>, Void>() {
+            @Override
+            public Void apply(List<Slot> input) {
+                Assert.assertEquals(input.size(), 2);
+                Assert.assertTrue(input.contains(slot1));
+                Assert.assertTrue(input.contains(slot2));
+                synchronized (sync) {
+                    sync.add(new Object());
+                    sync.notify();
+                }
+                return null;
+            }
+        });
+        synchronized (sync) {
+            sync.wait(1000);
+        }
+        Assert.assertThat(sync.size(), is(1));
     }
 
     @Test
-    public void removedConcertAreNotInTheList() {
+    public void removedConcertAreNotInTheList() throws InterruptedException {
         flow.scheduleNewConcert(slot1);
         flow.scheduleNewConcert(slot2);
         flow.removeConcert(slot1);
-        List<Slot> slots = flow.getAllScheduledConcert();
-        Assert.assertFalse(flow.getAllScheduledConcert().contains(slot1));
-        Assert.assertTrue(flow.getAllScheduledConcert().contains(slot2));
+        final List<Object> sync = new LinkedList<>();
+        flow.getAllScheduledConcert(new Function<List<Slot>, Void>() {
+            @Override
+            public Void apply(List<Slot> input) {
+                Assert.assertEquals(input.size(), 1);
+                Assert.assertFalse(input.contains(slot1));
+                Assert.assertTrue(input.contains(slot2));
+                synchronized (sync) {
+                    sync.add(new Object());
+                    sync.notify();
+                }
+                return null;
+            }
+        });
+        synchronized (sync) {
+            sync.wait(1000);
+        }
+        Assert.assertThat(sync.size(), is(1));
     }
 
 }
