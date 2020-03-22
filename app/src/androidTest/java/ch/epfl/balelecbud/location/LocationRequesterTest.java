@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 
+import ch.epfl.balelecbud.MapViewActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 
@@ -129,4 +130,42 @@ public class LocationRequesterTest {
         Assert.assertThat(this.mActivityRule.getActivity().isLocationSwitchClickable(), is(before));
     }
 
+    @Test
+    public void testSwitchOnEnablesLocationInMap() {
+        this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                Assert.assertNotNull(lr);
+                Assert.assertNotNull(intent);
+            }
+
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+                Assert.fail();
+            }
+        });
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.mapButton)).perform(click());
+        Assert.assertTrue(MapViewActivity.getLocationPermission());
+    }
+
+    @Test
+    public void testSwitchOffDisablesLocationInMap() {
+        this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                Assert.assertNotNull(lr);
+                Assert.assertNotNull(intent);
+            }
+
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+                Assert.assertNotNull(intent);
+            }
+        });
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.mapButton)).perform(click());
+        Assert.assertFalse(MapViewActivity.getLocationPermission());
+    }
 }
