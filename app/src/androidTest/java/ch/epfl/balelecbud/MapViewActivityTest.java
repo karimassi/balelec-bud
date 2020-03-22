@@ -17,8 +17,10 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 @RunWith(AndroidJUnit4.class)
@@ -26,6 +28,11 @@ public class MapViewActivityTest {
     @Rule
     public final ActivityTestRule<MapViewActivity> mActivityRule =
             new ActivityTestRule<>(MapViewActivity.class);
+
+    private final double testLatitude = -12.12;
+    private final double testLongitude = -77.03;
+    private LatLng oldMapPosition;
+    private LatLng newMapPosition;
 
     @Test
     public void testMapViewIsNotNull() {
@@ -46,7 +53,7 @@ public class MapViewActivityTest {
 
     @Test
     public void testNewPositionIsSet() {
-        LatLng newPosition = new LatLng(30, 8);
+        LatLng newPosition = new LatLng(testLatitude, testLongitude);
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPosition(newPosition);
         assertThat(mActivity.getPosition(), is(newPosition));
@@ -62,14 +69,9 @@ public class MapViewActivityTest {
     @Test
     public void testNewPositionFromLocationIsSet() {
         MapViewActivity mActivity = mActivityRule.getActivity();
-        double latitude = -12.12;
-        double longitude = -77.03;
-        LatLng newPosition = new LatLng(latitude, longitude);
-        Location location = new Location("Test location");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
+        Location location = newTestLocation();
         mActivity.setPositionFrom(location);
-        assertThat(mActivity.getPosition(), is(newPosition));
+        assertThat(mActivity.getPosition(), is(new LatLng(testLatitude, testLongitude)));
     }
 
     @Test
@@ -77,5 +79,48 @@ public class MapViewActivityTest {
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPositionFrom(null);
         assertThat(mActivity.getPosition(), is(notNullValue()));
+    }
+
+    @Test
+    public void testMoveCameraToNewLocation() throws Throwable {
+        testMoveCamera(newTestLocation(), true);
+        assertThat(newMapPosition, is(new LatLng(testLatitude, testLongitude)));
+    }
+
+    @Test
+    public void testCameraStaysWhenNewLocationNull() throws Throwable {
+        testMoveCamera(null, true);
+        assertThat(newMapPosition, is(oldMapPosition));
+    }
+
+    @Test
+    public void testCameraStaysWhenLocationDisabled() throws Throwable {
+        testMoveCamera(newTestLocation(), false);
+        assertThat(newMapPosition, is(oldMapPosition));
+    }
+
+    @Test
+    public void testCameraStaysWhenLocationDisabledAndNewLocationNull() throws Throwable {
+        testMoveCamera(null, false);
+        assertThat(newMapPosition, is(oldMapPosition));
+    }
+
+    private void testMoveCamera(final Location location, final boolean locationEnabled) throws Throwable {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MapViewActivity mActivity = mActivityRule.getActivity();
+                oldMapPosition = mActivity.getPosition();
+                mActivity.moveCameraTo(location, locationEnabled);
+                newMapPosition = mActivity.getPosition();
+            }
+        });
+    }
+
+    private Location newTestLocation() {
+        Location location = new Location("Test location");
+        location.setLatitude(testLatitude);
+        location.setLongitude(testLongitude);
+        return location;
     }
 }

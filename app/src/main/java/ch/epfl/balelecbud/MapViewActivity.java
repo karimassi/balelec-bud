@@ -22,7 +22,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     private LatLng position;
     private GoogleMap googleMap;
-    private boolean localizationActive;
+    private boolean locationEnabled;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,8 +34,6 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         final LatLng defaultLocation = new LatLng(defaultLat, defaultLng);
 
         setPosition(defaultLocation);
-
-        localizationActive = false;
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -49,39 +47,44 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
 
-        setLocalizationPermission();
-        updateLocationUI();
+        setLocationPermission();
+        updateLocationUi();
         getDeviceLocation();
     }
 
-    private void setLocalizationPermission() {
-        localizationActive = WelcomeActivity.isLocationActive();
+    private void setLocationPermission() {
+        locationEnabled = WelcomeActivity.isLocationActive();
     }
 
-    private void updateLocationUI() {
-        googleMap.setMyLocationEnabled(localizationActive);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(localizationActive);
+    private void updateLocationUi() {
+        googleMap.setMyLocationEnabled(locationEnabled);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
     }
 
     private void getDeviceLocation() {
-        if (localizationActive) {
+        if (locationEnabled) {
             Task<Location> locationResult = LocationServices.getFusedLocationProviderClient(this).getLastLocation();
             locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
-                    if (task.isSuccessful()) {
-                        setPositionFrom(task.getResult());
-                    } else {
-                        googleMap.setMyLocationEnabled(false);
-                        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    }
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
+                    moveCameraTo(task.getResult(), task.isSuccessful());
                 }
             });
         }
         else {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
         }
+    }
+
+    protected void moveCameraTo(Location location, boolean locationEnabled) {
+        if(locationEnabled) {
+            setPositionFrom(location);
+        }
+        else {
+            googleMap.setMyLocationEnabled(false);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
     }
 
     public void setPosition(LatLng position) {
