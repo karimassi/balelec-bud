@@ -28,6 +28,7 @@ import ch.epfl.balelecbud.WelcomeActivity;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.is;
 
@@ -131,7 +132,7 @@ public class LocationRequesterTest {
     }
 
     @Test
-    public void testSwitchOnEnablesLocationInMap() {
+    public void testSwitchOnEnablesLocationInMap() throws Throwable {
         this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -150,7 +151,7 @@ public class LocationRequesterTest {
     }
 
     @Test
-    public void testSwitchOffDisablesLocationInMap() {
+    public void testSwitchOffDisablesLocationInMap() throws Throwable {
         this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {

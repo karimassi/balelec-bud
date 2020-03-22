@@ -25,6 +25,7 @@ import ch.epfl.balelecbud.WelcomeActivity;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.Matchers.is;
 
 @SdkSuppress(maxSdkVersion = Build.VERSION_CODES.N_MR1 - 1)
@@ -114,7 +115,7 @@ public class LocationRequesterTest22 {
     }
 
     @Test
-    public void testSwitchOnEnablesLocationInMap() {
+    public void testSwitchOnEnablesLocationInMap() throws Throwable {
         this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -133,7 +134,7 @@ public class LocationRequesterTest22 {
     }
 
     @Test
-    public void testSwitchOffDisablesLocationInMap() {
+    public void testSwitchOffDisablesLocationInMap() throws Throwable {
         this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {

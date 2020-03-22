@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/prompt_email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:autofillHints="@string/prompt_email" />
 
     <EditText
         android:id="@+id/editTextPasswordLogin"
@@ -19,7 +20,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/prompt_password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:autofillHints="@string/prompt_password" />
 
     <Button
         android:id="@+id/buttonLogin"
