@@ -7,10 +7,7 @@ public class PointOfInterest {
     private String type;
     private String poiToken;
     private GeoPoint location;
-
-
-    public PointOfInterest() {
-    }
+    
 
     public PointOfInterest(GeoPoint location, String name, String type, String poiToken) {
         this.location = location;
