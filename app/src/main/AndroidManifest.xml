@@ -22,8 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Emergency.EmergencyInfoActivity"></activity>
-        <activity android:name=".Emergency.EmergencyNumbersActivity"></activity>
+        <activity android:name=".EmergencyInfoActivity" />
+        <activity android:name=".emergency.EmergencyNumbersActivity" />
         <activity android:name=".LoginUserActivity" />
         <activity android:name=".RegisterUserActivity" />
         <activity android:name=".WelcomeActivity" />

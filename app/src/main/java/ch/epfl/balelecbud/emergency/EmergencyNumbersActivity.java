@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.Emergency;
+package ch.epfl.balelecbud.emergency;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BasicActivity;
-import ch.epfl.balelecbud.Emergency.models.EmergencyNumbers;
+import ch.epfl.balelecbud.emergency.models.EmergencyNumbers;
 import ch.epfl.balelecbud.R;
 
 public class EmergencyNumbersActivity extends BasicActivity {

@@ -4,6 +4,7 @@ public interface DatabaseWrapper {
 
     String FESITVAL_INFORMATION_PATH = "festivalInfo";
     String TRANSPORT_PATH = "transports";
+    String EMERGENCY_INFO_PATH = "emergencyInfo";
     String CONCERT_SLOTS_PATH = "concertSlots";
 
     void unregisterListener(DatabaseListener listener);
