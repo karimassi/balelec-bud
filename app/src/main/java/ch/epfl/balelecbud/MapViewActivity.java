@@ -28,7 +28,6 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         @Override
         public void onComplete(@NonNull Task<Location> task) {
             setPositionFrom(task.getResult(), task.isSuccessful());
-            updateLocationUi(task.isSuccessful());
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
         }
     };
