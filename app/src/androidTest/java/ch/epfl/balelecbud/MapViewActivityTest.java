@@ -7,14 +7,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.Map;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -77,6 +75,22 @@ public class MapViewActivityTest {
         LatLng newPosition = new LatLng(testLatitude, testLongitude);
         MapViewActivity mActivity = mActivityRule.getActivity();
         mActivity.setPosition(newPosition);
+        assertThat(mActivity.getPosition(), is(newPosition));
+    }
+
+    @Test
+    public void testNullGeoPointIsNotSet() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        mActivity.setPositionFrom(null);
+        assertThat(mActivity.getPosition(), is(notNullValue()));
+    }
+
+    @Test
+    public void testNewPositionFromGeoPointIsSet() {
+        LatLng newPosition = new LatLng(testLatitude, testLongitude);
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        GeoPoint geoPoint = new GeoPoint(testLatitude, testLongitude);
+        mActivity.setPositionFrom(geoPoint);
         assertThat(mActivity.getPosition(), is(newPosition));
     }
 
