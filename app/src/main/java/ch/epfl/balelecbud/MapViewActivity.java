@@ -43,6 +43,8 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
         setPosition(defaultLocation);
 
+        locationEnabled = WelcomeActivity.isLocationActive();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -53,31 +55,23 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         googleMap = map;
 
         googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
 
-        setLocationPermission();
-        updateLocationUi(locationEnabled);
-        getDeviceLocation();
-    }
-
-    private void setLocationPermission() {
-        locationEnabled = WelcomeActivity.isLocationActive();
-    }
-
-    private void updateLocationUi(boolean locationEnabled) {
         googleMap.setMyLocationEnabled(locationEnabled);
         googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
+
+        if(locationEnabled) {
+            getDeviceLocation();
+        }
+        else {
+            googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
+        }
     }
 
     private void getDeviceLocation() {
-        if (locationEnabled) {
-            Task<Location> locationResult = LocationServices.
-                    getFusedLocationProviderClient(this).getLastLocation();
-            locationResult.addOnCompleteListener(this, callback);
-        }
-        else {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
-        }
+        Task<Location> locationResult = LocationServices.
+                getFusedLocationProviderClient(this).getLastLocation();
+        locationResult.addOnCompleteListener(this, callback);
     }
 
     protected void setPositionFrom(Location location, boolean locationEnabled) {
