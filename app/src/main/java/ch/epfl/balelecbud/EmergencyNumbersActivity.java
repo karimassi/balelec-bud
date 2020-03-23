@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.emergency;
+package ch.epfl.balelecbud;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -27,9 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.emergency.models.EmergencyNumbers;
-import ch.epfl.balelecbud.R;
 
 public class EmergencyNumbersActivity extends BasicActivity {
     public static final int PERMISSION_TO_CALL_CODE = 991;

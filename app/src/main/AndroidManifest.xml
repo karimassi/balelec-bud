@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EmergencyInfoActivity" />
-        <activity android:name=".emergency.EmergencyNumbersActivity" />
+        <activity android:name=".EmergencyNumbersActivity" />
         <activity android:name=".LoginUserActivity" />
         <activity android:name=".RegisterUserActivity" />
         <activity android:name=".WelcomeActivity" />
