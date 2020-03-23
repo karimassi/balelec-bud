@@ -8,12 +8,7 @@ import static org.hamcrest.core.Is.is;
 public class PointOfInterestTest {
 
     private PointOfInterest p1 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
-
-    @Test
-    public void testEmptyConstructor() {
-        new PointOfInterest();
-    }
-
+    
     @Test
     public void testGetName() {
         Assert.assertThat(p1.getName(), is("credit suisse"));
