@@ -3,6 +3,7 @@ package ch.epfl.balelecbud;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,8 +27,8 @@ public class ScheduleActivity extends BasicActivity {
         rvSchedule.setAdapter(mAdapter);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    @VisibleForTesting
+    public void setServiceInterface(ScheduleAdapter.ServiceInterface serviceInterface) {
+        this.mAdapter.setService(serviceInterface);
     }
 }

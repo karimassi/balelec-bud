@@ -1,10 +1,12 @@
 package ch.epfl.balelecbud;
 
-import androidx.arch.core.util.Function;
+import android.content.Intent;
+
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.Timestamp;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -17,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.balelecbud.notifications.concertFlow.AbstractConcertFlow;
-import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
+import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -27,6 +29,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.balelecbud.ScheduleActivityTest.nthChildOf;
 import static ch.epfl.balelecbud.ScheduleActivityTest.switchChecked;
+import static org.hamcrest.core.Is.is;
 
 public class ScheduleActivityWithSubscribedConcertTest {
     private MockDatabaseWrapper mock;
@@ -53,77 +56,40 @@ public class ScheduleActivityWithSubscribedConcertTest {
         protected void beforeActivityLaunched() {
             mock = new MockDatabaseWrapper();
             ScheduleAdapter.setDatabaseImplementation(mock);
-            ScheduleAdapter.setConcertFlowInterface(new AbstractConcertFlow() {
-                @Override
-                public void addNotificationScheduler(NotificationSchedulerInterface scheduler) {
-
-                }
-
-                @Override
-                public void getAllScheduledConcert(Function<List<Slot>, Void> callback) {
-                    callback.apply(Collections.singletonList(slot1));
-                }
-
-                @Override
-                public void scheduleNewConcert(Slot newSlot) {
-
-                }
-
-                @Override
-                public void removeConcert(Slot slot) {
-                    Assert.fail();
-                }
-
-                @Override
-                public void close() {
-
-                }
-            });
-//            try {
-//                mock.addItem(slot1);
-//                mock.addItem(slot2);
-//            } catch (Throwable throwable) {
-//                throwable.printStackTrace();
-//            }
         }
     };
 
     @Test
     public void testUnSubscribeToAConcert() throws Throwable {
         final List<Object> sync = new LinkedList<>();
-        mock.addItem(slot1);
-        mock.addItem(slot2);
-
-        ScheduleAdapter.setConcertFlowInterface(new AbstractConcertFlow() {
+        mActivityRule.getActivity().setServiceInterface(new ScheduleAdapter.ServiceInterface() {
             @Override
-            public void addNotificationScheduler(NotificationSchedulerInterface scheduler) {
+            public void callService(@NotNull Intent intent) {
+                if (intent.getAction() == null)
+                    Assert.fail();
 
-            }
-
-            @Override
-            public void getAllScheduledConcert(Function<List<Slot>, Void> callback) {
-                callback.apply(Collections.singletonList(slot1));
-            }
-
-            @Override
-            public void scheduleNewConcert(Slot newSlot) {
-
-            }
-
-            @Override
-            public void removeConcert(Slot slot) {
-                Assert.assertEquals(slot, slot1);
-                synchronized (sync) {
-                    sync.add(new Object());
-                    sync.notify();
+                String action = intent.getAction();
+                switch (action) {
+                    case FlowUtil.ACK_CONCERT:
+                        Assert.fail();
+                        break;
+                    case FlowUtil.CANCEL_CONCERT:
+                        synchronized (sync) {
+                            sync.add(new Object());
+                            sync.notify();
+                        }
+                    case FlowUtil.SUBSCRIBE_CONCERT:
+                        Assert.assertThat(FlowUtil.unpackSlotInIntent(intent), is(slot1));
+                        break;
+                    case FlowUtil.GET_ALL_CONCERT:
+                        AbstractConcertFlow.FlowCallback callback = FlowUtil.unpackCallback(intent);
+                        callback.onResult(Collections.singletonList(slot1));
+                        break;
                 }
             }
-
-            @Override
-            public void close() {
-
-            }
         });
+        mock.addItem(slot1);
+        mock.addItem(slot2);
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).perform(click());
         synchronized (sync) {
             sync.wait(1000);

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -38,6 +40,7 @@ public final class FlowUtil {
      * @param id      the id to pack in the Intent
      * @return        the id packed in an Intent
      */
+    @NonNull
     public static Intent packAckIntentWithId(Context context, int id) {
         Intent intent = new Intent(context, ConcertFlow.class);
         intent.setAction(ACK_CONCERT);
@@ -72,6 +75,7 @@ public final class FlowUtil {
      * @param slot    the slot to pack in the Intent
      * @return        the slot packed in an Intent
      */
+    @NonNull
     public static Intent packCancelIntentWithSlot(Context context, Slot slot) {
         Intent intent = new Intent(context, ConcertFlow.class);
         intent.setAction(CANCEL_CONCERT);
@@ -85,6 +89,7 @@ public final class FlowUtil {
      * @param slot    the slot to pack in the Intent
      * @return        the slot packed in an Intent
      */
+    @NonNull
     public static Intent packSubscribeIntentWithSlot(Context context, Slot slot) {
         Intent intent = new Intent(context, ConcertFlow.class);
         intent.setAction(SUBSCRIBE_CONCERT);
@@ -118,6 +123,7 @@ public final class FlowUtil {
      * @param callback the callback function to pack in the Intent
      * @return         the id packed in an Intent
      */
+    @NonNull
     public static Intent packCallback(Context context, AbstractConcertFlow.FlowCallback callback) {
         Intent intent = new Intent(context, ConcertFlow.class);
         intent.setAction(GET_ALL_CONCERT);

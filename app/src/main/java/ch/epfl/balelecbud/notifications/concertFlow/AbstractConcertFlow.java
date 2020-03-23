@@ -27,30 +27,32 @@ public abstract class AbstractConcertFlow extends IntentService {
 
     protected abstract void removeConcertById(int id);
 
-    /**
-     * Handle an Intent that interact with the database
-     *
-     * @param intent
-     */
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null || intent.getAction() == null)
             return;
 
         String action = intent.getAction();
-        if (action.equals(FlowUtil.ACK_CONCERT)) {
-            this.removeConcertById(FlowUtil.unpackIdInIntent(intent));
-        } else if (action.equals(FlowUtil.SUBSCRIBE_CONCERT)) {
-            Slot s = FlowUtil.unpackSlotInIntent(intent);
-            if (s != null)
-                this.scheduleNewConcert(s);
-        } else if (action.equals(FlowUtil.CANCEL_CONCERT)) {
-            Slot s = FlowUtil.unpackSlotInIntent(intent);
-            if (s != null)
-                this.removeConcert(s);
-        } else if (action.equals(FlowUtil.GET_ALL_CONCERT)) {
-            FlowCallback callback = FlowUtil.unpackCallback(intent);
-            this.getAllScheduledConcert(callback);
+        switch (action) {
+            case FlowUtil.ACK_CONCERT:
+                this.removeConcertById(FlowUtil.unpackIdInIntent(intent));
+                break;
+            case FlowUtil.SUBSCRIBE_CONCERT: {
+                Slot s = FlowUtil.unpackSlotInIntent(intent);
+                if (s != null)
+                    this.scheduleNewConcert(s);
+                break;
+            }
+            case FlowUtil.CANCEL_CONCERT: {
+                Slot s = FlowUtil.unpackSlotInIntent(intent);
+                if (s != null)
+                    this.removeConcert(s);
+                break;
+            }
+            case FlowUtil.GET_ALL_CONCERT:
+                FlowCallback callback = FlowUtil.unpackCallback(intent);
+                this.getAllScheduledConcert(callback);
+                break;
         }
     }
 }

@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.schedule;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,17 +28,26 @@ import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
+    public interface ServiceInterface {
+        void callService(@NonNull Intent intent);
+    }
+
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
 
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
-    private static AbstractConcertFlow notifFlow = null;
+    private ServiceInterface service = new ServiceInterface() {
+        @Override
+        public void callService(@NonNull Intent intent) {
+            ScheduleAdapter.this.mainActivity.startService(intent);
+        }
+    };
 
     private final Activity mainActivity;
 
     @VisibleForTesting
-    public static void setConcertFlowInterface(AbstractConcertFlow flow) {
-        notifFlow = flow;
+    public void setService(ServiceInterface service) {
+        this.service = service;
     }
 
     @VisibleForTesting
@@ -47,13 +57,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     private List<Slot> slots;
 
-    public class ScheduleViewHolder extends RecyclerView.ViewHolder {
-        public final TextView timeSlotView;
-        public final TextView artistNameView;
-        public final TextView sceneNameView;
-        public final Switch subscribeSwitch;
+    static class ScheduleViewHolder extends RecyclerView.ViewHolder {
+        final TextView timeSlotView;
+        final TextView artistNameView;
+        final TextView sceneNameView;
+        final Switch subscribeSwitch;
 
-        public ScheduleViewHolder(View itemView) {
+        ScheduleViewHolder(View itemView) {
             super(itemView);
 
             timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);
@@ -106,17 +116,17 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
                     Log.d(TAG, "Notification switched: ON");
-                    ScheduleAdapter.this.mainActivity.startService(
+                    service.callService(
                             FlowUtil.packSubscribeIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
                 } else {
                     Log.d(TAG, "Notification switched: ON");
-                    ScheduleAdapter.this.mainActivity.startService(
+                    service.callService(
                             FlowUtil.packCancelIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
                 }
             }
         });
 
-        mainActivity.startService(FlowUtil.packCallback(mainActivity, new AbstractConcertFlow.FlowCallback() {
+       service.callService(FlowUtil.packCallback(mainActivity, new AbstractConcertFlow.FlowCallback() {
             @Override
             public void onResult(List<Slot> slots) {
                 if (slots.contains(slot)) {
