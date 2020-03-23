@@ -13,4 +13,5 @@ public interface Authenticator {
     void signOut();
 
     FirebaseUser getCurrentUser();
+
 }
