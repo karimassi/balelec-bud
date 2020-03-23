@@ -1,9 +1,5 @@
 package ch.epfl.balelecbud;
 
-import androidx.test.espresso.intent.Intents;
-
-import org.junit.After;
-
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;

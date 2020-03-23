@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -74,7 +73,8 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     private void getDeviceLocation() {
         if (locationEnabled) {
-            Task<Location> locationResult = LocationServices.getFusedLocationProviderClient(this).getLastLocation();
+            Task<Location> locationResult = LocationServices.
+                    getFusedLocationProviderClient(this).getLastLocation();
             locationResult.addOnCompleteListener(this, callback);
         }
         else {
@@ -100,5 +100,9 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     public static boolean getLocationPermission() {
         return locationEnabled;
+    }
+
+    public GoogleMap getGoogleMap() {
+        return googleMap;
     }
 }

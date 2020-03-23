@@ -27,6 +27,8 @@ import ch.epfl.balelecbud.WelcomeActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -132,7 +134,7 @@ public class LocationRequesterTest {
     }
 
     @Test
-    public void testSwitchOnEnablesLocationInMap() throws Throwable {
+    public void testSwitchOnEnablesLocationInMap() {
         this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -148,10 +150,11 @@ public class LocationRequesterTest {
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertTrue(MapViewActivity.getLocationPermission());
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testSwitchOffDisablesLocationInMap() throws Throwable {
+    public void testSwitchOffDisablesLocationInMap() {
         this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -168,5 +171,6 @@ public class LocationRequesterTest {
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertFalse(MapViewActivity.getLocationPermission());
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 }

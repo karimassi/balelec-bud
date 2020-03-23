@@ -21,7 +21,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 public class MainActivityTest {
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setUp() {
@@ -39,7 +40,7 @@ public class MainActivityTest {
     public void testLoggedOutGoesToLoginActivity() {
         onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
-        //onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 }
