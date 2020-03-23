@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.notifications.concertFlow;
 
 import android.content.Context;
 
-import androidx.arch.core.util.Function;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -29,13 +28,13 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(AndroidJUnit4.class)
-public class ConcertFlowInterfaceTest {
+public class ConcertFlowTest {
     static private Slot slot1;
     static private Slot slot2;
     static private Slot slot3;
 
-    private ConcertFlowInterface flow;
     private ConcertOfInterestDatabase db;
+    private ConcertFlow flow;
 
     @BeforeClass
     public static void setUpSlots(){
@@ -57,32 +56,28 @@ public class ConcertFlowInterfaceTest {
 
     @Before
     public void setup() {
-        this.flow = new ConcertFlow(ApplicationProvider.getApplicationContext());
-        this.db =  Room.inMemoryDatabaseBuilder(
+        this.flow = new ConcertFlow();
+        this.db = Room.inMemoryDatabaseBuilder(
                 ApplicationProvider.getApplicationContext(),
                 ConcertOfInterestDatabase.class
         ).build();
-        ((ConcertFlow) this.flow).setDb(db);
+        this.flow.setDb(db);
     }
 
     @After
     public void tearDown() {
-        ((ConcertFlow) flow).clearNotificationScheduler();
-        flow.removeConcert(slot1);
-        flow.removeConcert(slot2);
-        flow.removeConcert(slot3);
-        this.db.clearAllTables();
-        this.flow.close();
+        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(null, 0));
+        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(null, 1));
+        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(null, 2));
     }
 
     @Test
     public void notificationSchedulerIsCalledWhenNewConcertOfInterestAdded() throws InterruptedException {
-        final Slot s = slot1;
         final List<Object> sync = new ArrayList<>();
-        flow.addNotificationScheduler(new NotificationSchedulerInterface() {
+        this.flow.setNotificationScheduler(new NotificationSchedulerInterface() {
             @Override
             public void scheduleNotification(Context context, Slot slot) {
-                Assert.assertEquals(slot, s);
+                Assert.assertEquals(slot, slot1);
                 synchronized (sync) {
                     sync.add(new Object());
                     sync.notify();
@@ -99,7 +94,7 @@ public class ConcertFlowInterfaceTest {
                 Assert.fail();
             }
         });
-        flow.scheduleNewConcert(s);
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -108,17 +103,15 @@ public class ConcertFlowInterfaceTest {
 
     @Test
     public void notificationSchedulerIsCalledWhenMultipleNewConcertOfInterestAdded() throws InterruptedException {
-        final Slot s1 = slot1;
-        final Slot s2 = slot2;
         final List<Object> sync = new ArrayList<>();
-        flow.addNotificationScheduler(new NotificationSchedulerInterface() {
+        flow.setNotificationScheduler(new NotificationSchedulerInterface() {
             private int received = 0;
             @Override
             public void scheduleNotification(Context context, Slot slot) {
                 if (received == 0)
-                    Assert.assertEquals(slot, s1);
+                    Assert.assertEquals(slot, slot1);
                 else
-                    Assert.assertEquals(slot, s2);
+                    Assert.assertEquals(slot, slot2);
                 synchronized (sync) {
                     sync.add(new Object());
                     sync.notify();
@@ -136,11 +129,11 @@ public class ConcertFlowInterfaceTest {
                 Assert.fail();
             }
         });
-        flow.scheduleNewConcert(s1);
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
         synchronized (sync) {
             sync.wait(1000);
         }
-        flow.scheduleNewConcert(s2);
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot2));
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -149,17 +142,15 @@ public class ConcertFlowInterfaceTest {
 
     @Test
     public void notificationsUnscheduledWhenConcertRemoved() throws InterruptedException {
-        final Slot s1 = slot1;
-        final Slot s2 = slot2;
         final List<Object> sync = new ArrayList<>();
-        flow.addNotificationScheduler(new NotificationSchedulerInterface() {
+        flow.setNotificationScheduler(new NotificationSchedulerInterface() {
             private int received = 0;
             @Override
             public void scheduleNotification(Context context, Slot slot) {
                 if (received == 0)
-                    Assert.assertEquals(slot, s1);
+                    Assert.assertEquals(slot, slot1);
                 else
-                    Assert.assertEquals(slot, s2);
+                    Assert.assertEquals(slot, slot2);
                 synchronized (sync) {
                     sync.add(new Object());
                     sync.notify();
@@ -169,7 +160,7 @@ public class ConcertFlowInterfaceTest {
 
             @Override
             public void cancelNotification(Context context, Slot slot) {
-                Assert.assertEquals(slot, s1);
+                Assert.assertEquals(slot, slot1);
                 synchronized (sync) {
                     sync.add(new Object());
                     sync.notify();
@@ -181,15 +172,15 @@ public class ConcertFlowInterfaceTest {
                 Assert.fail();
             }
         });
-        flow.scheduleNewConcert(s1);
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
         synchronized (sync) {
             sync.wait(1000);
         }
-        flow.scheduleNewConcert(s2);
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot2));
         synchronized (sync) {
             sync.wait(1000);
         }
-        flow.removeConcert(s1);
+        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(null, slot1));
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -198,22 +189,21 @@ public class ConcertFlowInterfaceTest {
 
     @Test
     public void addedConcertAreInTheList() throws InterruptedException {
-        flow.scheduleNewConcert(slot1);
-        flow.scheduleNewConcert(slot2);
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot2));
         final List<Object> sync = new LinkedList<>();
-        flow.getAllScheduledConcert(new Function<List<Slot>, Void>() {
+        flow.onHandleIntent(FlowUtil.packCallback(null, new AbstractConcertFlow.FlowCallback() {
             @Override
-            public Void apply(List<Slot> input) {
-                Assert.assertEquals(input.size(), 2);
-                Assert.assertTrue(input.contains(slot1));
-                Assert.assertTrue(input.contains(slot2));
+            public void onResult(List<Slot> slots) {
+                Assert.assertEquals(slots.size(), 2);
+                Assert.assertTrue(slots.contains(slot1));
+                Assert.assertTrue(slots.contains(slot2));
                 synchronized (sync) {
                     sync.add(new Object());
                     sync.notify();
                 }
-                return null;
             }
-        });
+        }));
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -222,23 +212,22 @@ public class ConcertFlowInterfaceTest {
 
     @Test
     public void removedConcertAreNotInTheList() throws InterruptedException {
-        flow.scheduleNewConcert(slot1);
-        flow.scheduleNewConcert(slot2);
-        flow.removeConcert(slot1);
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot2));
+        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(null, slot1));
         final List<Object> sync = new LinkedList<>();
-        flow.getAllScheduledConcert(new Function<List<Slot>, Void>() {
+        flow.onHandleIntent(FlowUtil.packCallback(null, new AbstractConcertFlow.FlowCallback() {
             @Override
-            public Void apply(List<Slot> input) {
-                Assert.assertEquals(input.size(), 1);
-                Assert.assertFalse(input.contains(slot1));
-                Assert.assertTrue(input.contains(slot2));
+            public void onResult(List<Slot> slots) {
+                Assert.assertEquals(slots.size(), 1);
+                Assert.assertFalse(slots.contains(slot1));
+                Assert.assertTrue(slots.contains(slot2));
                 synchronized (sync) {
                     sync.add(new Object());
                     sync.notify();
                 }
-                return null;
             }
-        });
+        }));
         synchronized (sync) {
             sync.wait(1000);
         }

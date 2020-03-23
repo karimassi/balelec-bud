@@ -38,6 +38,8 @@
         <service
             android:name=".location.LocationService"
             android:exported="false" />
+        <service android:name=".notifications.concertFlow.ConcertFlow" />
+
         <receiver android:name=".notifications.concertSoon.NotificationProvider"  android:exported="true">
             <intent-filter>
                 <action android:name="ch.epfl.balelecbud.notifications.concertSoon.ACTION"/>

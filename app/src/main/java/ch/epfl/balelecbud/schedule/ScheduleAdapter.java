@@ -12,15 +12,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.arch.core.util.Function;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlowInterface;
-import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
+import ch.epfl.balelecbud.notifications.concertFlow.AbstractConcertFlow;
+import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -32,12 +31,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
-    private static ConcertFlowInterface notifFlow = null;
+    private static AbstractConcertFlow notifFlow = null;
 
     private final Activity mainActivity;
 
     @VisibleForTesting
-    public static void setConcertFlowInterface(ConcertFlowInterface flow) {
+    public static void setConcertFlowInterface(AbstractConcertFlow flow) {
         notifFlow = flow;
     }
 
@@ -64,7 +63,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         }
     }
 
-    public ScheduleAdapter(Activity activity, ConcertFlowInterface notifFlow) {
+    public ScheduleAdapter(Activity activity) {
         this.mainActivity = activity;
         slots = new ArrayList<>();
         RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
@@ -85,11 +84,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         };
         DatabaseListener<Slot> listener = new DatabaseListener<>(facade, slots, Slot.class);
         database.listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
-        if (ScheduleAdapter.notifFlow == null) {
-            // this means that we are not in mock mode
-            ScheduleAdapter.notifFlow = notifFlow;
-            notifFlow.addNotificationScheduler(NotificationScheduler.getInstance());
-        }
     }
 
     @NonNull
@@ -112,18 +106,20 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
                     Log.d(TAG, "Notification switched: ON");
-                    notifFlow.scheduleNewConcert(slot);
+                    ScheduleAdapter.this.mainActivity.startService(
+                            FlowUtil.packSubscribeIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
                 } else {
                     Log.d(TAG, "Notification switched: ON");
-                    notifFlow.removeConcert(slot);
+                    ScheduleAdapter.this.mainActivity.startService(
+                            FlowUtil.packCancelIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
                 }
             }
         });
 
-        notifFlow.getAllScheduledConcert(new Function<List<Slot>, Void>() {
+        mainActivity.startService(FlowUtil.packCallback(mainActivity, new AbstractConcertFlow.FlowCallback() {
             @Override
-            public Void apply(List<Slot> input) {
-                if (input.contains(slot)) {
+            public void onResult(List<Slot> slots) {
+                if (slots.contains(slot)) {
                     ScheduleAdapter.this.mainActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -131,9 +127,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                         }
                     });
                 }
-                return null;
             }
-        });
+        }));
     }
 
     public int getItemCount() {

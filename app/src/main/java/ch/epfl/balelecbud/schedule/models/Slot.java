@@ -7,10 +7,12 @@ import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 
+import java.io.Serializable;
+
 import ch.epfl.balelecbud.util.StringUtils;
 
 @Entity
-public class Slot {
+public class Slot implements Serializable {
     @PrimaryKey
     private int id;
 

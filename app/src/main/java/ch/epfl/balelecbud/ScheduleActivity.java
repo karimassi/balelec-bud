@@ -6,15 +6,14 @@ import android.util.Log;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
-import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlowInterface;
+import ch.epfl.balelecbud.notifications.concertFlow.AbstractConcertFlow;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 
 public class ScheduleActivity extends BasicActivity {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
     private ScheduleAdapter mAdapter;
     private RecyclerView rvSchedule;
-    private ConcertFlowInterface flow;
+    private AbstractConcertFlow flow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +21,7 @@ public class ScheduleActivity extends BasicActivity {
         setContentView(R.layout.activity_schedule);
         Log.d(TAG, "onCreate: Creation of the activity");
         rvSchedule = findViewById(R.id.scheduleRecyclerView);
-        flow = new ConcertFlow(this);
-        mAdapter = new ScheduleAdapter(this, flow);
+        mAdapter = new ScheduleAdapter(this);
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
     }
@@ -31,6 +29,5 @@ public class ScheduleActivity extends BasicActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        flow.close();
     }
 }

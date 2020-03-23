@@ -19,4 +19,7 @@ public interface ConcertOfInterestDAO {
 
     @Delete
     void removeConcert(Slot concert);
+
+    @Query("DELETE FROM Slot WHERE Slot.id = :id")
+    void removeConcertById(int id);
 }

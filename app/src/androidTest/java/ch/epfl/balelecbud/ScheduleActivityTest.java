@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlowInterface;
+import ch.epfl.balelecbud.notifications.concertFlow.AbstractConcertFlow;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -70,7 +70,7 @@ public class ScheduleActivityTest {
         @Override
         protected void beforeActivityLaunched() {
             mock = new MockDatabaseWrapper();
-            ScheduleAdapter.setConcertFlowInterface(new ConcertFlowInterface() {
+            ScheduleAdapter.setConcertFlowInterface(new AbstractConcertFlow() {
                 @Override
                 public void addNotificationScheduler(NotificationSchedulerInterface scheduler) {
 
@@ -165,7 +165,7 @@ public class ScheduleActivityTest {
 
         final List<Object> sync = new LinkedList<>();
 
-        ScheduleAdapter.setConcertFlowInterface(new ConcertFlowInterface() {
+        ScheduleAdapter.setConcertFlowInterface(new AbstractConcertFlow() {
             @Override
             public void addNotificationScheduler(NotificationSchedulerInterface scheduler) {
             }

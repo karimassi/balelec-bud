@@ -87,7 +87,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
             alarmManager.cancel(pendingIntents.get(hash));
             pendingIntents.remove(hash);
         } else {
-            throw new IllegalArgumentException("Notification cancelled but wasn't planned to start with");
+            //throw new IllegalArgumentException("Notification cancelled but wasn't planned to start with");
         }
     }
 
@@ -96,7 +96,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
         if (pendingIntents.containsKey(id)) {
             pendingIntents.remove(id);
         } else {
-            throw new IllegalArgumentException("Notification pushed was not tracked");
+            //throw new IllegalArgumentException("Notification pushed was not tracked");
         }
     }
 
