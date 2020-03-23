@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.GeoPoint;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -77,6 +78,12 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     protected void setPositionFrom(Location location, boolean locationEnabled) {
         if(locationEnabled && location!=null) {
             position = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+    }
+
+    protected void setPositionFrom(GeoPoint geoPoint) {
+        if(geoPoint != null) {
+            position = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
         }
     }
 
