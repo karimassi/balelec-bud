@@ -4,6 +4,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,9 +34,13 @@ public class MainActivityTest {
                 }
             };
 
+    @Before
+    public void setUp() {
+        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+    }
+
     @Test
     public void testLoggedOutGoesToLoginActivity() {
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
         onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
