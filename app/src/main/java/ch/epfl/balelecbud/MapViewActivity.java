@@ -43,8 +43,6 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
         setPosition(defaultLocation);
 
-        setLocationPermission();
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -57,6 +55,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
 
+        setLocationPermission();
         updateLocationUi(locationEnabled);
         getDeviceLocation();
     }
