@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 
 public class UserTest {
-    private User u1 = new User("test@email.com", new GeoPoint(24, 42), "displayName", "a token");
+    private User u1 = new User("test@email.com", "displayName", "a token");
 
     @Test
     public void testEmptyConstructor() {
@@ -27,13 +27,7 @@ public class UserTest {
 
     @Test
     public void testGetUserToken() {
-        Assert.assertThat(u1.getUserToken(), is("a token"));
+        Assert.assertThat(u1.getUid(), is("a token"));
     }
-
-    @Test
-    public void testGetLocation() {
-        Assert.assertThat(u1.getLocation(), is(new GeoPoint(24, 42)));
-    }
-
 
 }

@@ -1,10 +1,12 @@
 package ch.epfl.balelecbud.util.friendship;
 
-import android.app.DownloadManager;
-import android.telecom.Call;
-import android.util.Log;
-
 import androidx.annotation.VisibleForTesting;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.firebase.firestore.FieldValue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
@@ -29,22 +31,35 @@ public class FriendshipUtils {
         auth = authenticator;
     }
 
-    public static void addFriend(User friend, Callback<FriendRequest> callback) {
-        FriendRequest request = new FriendRequest(auth.getCurrentUser().getUserToken(), friend.getUserToken(), 0);
-        database.storeDocument(DatabaseWrapper.FRIEND_REQUESTS, request, callback);
+    public static void addFriend(User friend, Callback callback) {
+        FriendRequest request = new FriendRequest(auth.getCurrentUser().getUid(), friend.getUid());
+        database.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS, request.getRecipientId(), request, callback);
     }
 
-    public static void removeFriend() {
+    public static void removeFriend(User friend, Callback callback) {
+        Map<String,Object> updates = new HashMap<>();
+        updates.put(friend.getUid(), FieldValue.delete());
+        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, auth.getCurrentUser().getUid(), updates, callback);
+
+        updates = new HashMap<>();
+        updates.put(auth.getCurrentUser().getUid(), FieldValue.delete());
+        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, friend.getUid(), updates, callback);
     }
 
-    public static void acceptRequest(FriendRequest request, Callback<String> callback) {
-        database.updateArrayElements(DatabaseWrapper.FRIENDSHIPS, auth.getCurrentUser().getUserToken(), "friends",request.getRecipientId());
-        database.updateArrayElements(DatabaseWrapper.FRIENDSHIPS, request.getRecipientId(), "friends", auth.getCurrentUser().getUserToken());
-        // TODO: delete the request
+    public static void acceptRequest(FriendRequest request, Callback callback) {
+        Map<String,Boolean> toStore= new HashMap<>();
+        toStore.put(request.getSenderId(), true);
+        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, request.getRecipientId(), toStore, callback);
+
+        toStore = new HashMap<>();
+        toStore.put(request.getRecipientId(), true);
+        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, request.getSenderId(), toStore, callback);
+
+        deleteRequest(request, callback);
     }
 
-    public static void rejectRequest() {
-
+    public static void deleteRequest(FriendRequest request, Callback callback) {
+        database.deleteDocument(DatabaseWrapper.FRIEND_REQUESTS, request.getRecipientId(), callback);
     }
 
 }

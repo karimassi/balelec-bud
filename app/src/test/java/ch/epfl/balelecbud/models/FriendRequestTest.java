@@ -11,7 +11,7 @@ public class FriendRequestTest {
 
     @Before
     public void setup() {
-        request = new FriendRequest("12", "21", 0);
+        request = new FriendRequest("12", "21");
     }
 
 
@@ -22,28 +22,24 @@ public class FriendRequestTest {
     public void testGetters() {
         Assert.assertEquals("12", request.getSenderId());
         Assert.assertEquals("21", request.getRecipientId());
-        Assert.assertEquals(0, request.getStatus());
     }
 
     @Test
     public void testEquals() {
-        FriendRequest otherRequest = new FriendRequest("31", "34", 1);
+        FriendRequest otherRequest = new FriendRequest("31", "34");
         Assert.assertEquals(false, request.equals(otherRequest));
 
-        otherRequest = new FriendRequest("12", "34", 1);
+        otherRequest = new FriendRequest("12", "34");
         Assert.assertEquals(false, request.equals(otherRequest));
 
-        otherRequest = new FriendRequest( "12", "34", 0);
+        otherRequest = new FriendRequest( "12", "34");
         Assert.assertEquals(false, request.equals(otherRequest));
 
-        otherRequest = new FriendRequest( "12", "21", 1);
-        Assert.assertEquals(false, request.equals(otherRequest));
-
-        otherRequest = new FriendRequest( "3", "21", 0);
+        otherRequest = new FriendRequest( "3", "21");
         Assert.assertEquals(false, request.equals(otherRequest));
         Assert.assertNotEquals(otherRequest.hashCode(), request.hashCode());
 
-        otherRequest = new FriendRequest( "12", "21", 0);
+        otherRequest = new FriendRequest( "12", "21");
         Assert.assertEquals(true, request.equals(otherRequest));
         Assert.assertEquals(otherRequest.hashCode(), request.hashCode());
 
@@ -55,7 +51,7 @@ public class FriendRequestTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testSameUsers() {
-        FriendRequest otherRequest = new FriendRequest("31", "31", 0);
+        FriendRequest otherRequest = new FriendRequest("31", "31");
     }
 
 

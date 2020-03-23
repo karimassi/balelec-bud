@@ -9,11 +9,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Currency;
-import java.util.List;
 
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.Callback;
@@ -38,19 +33,7 @@ public class FirebaseAuthenticator implements Authenticator {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         FirestoreDatabaseWrapper.getInstance()
-                                .getDocument(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), User.class, new Callback<User>() {
-                                    @Override
-                                    public void onSuccess(User data) {
-                                        callback.onSuccess(data);
-                                        Log.d("FirebaseAuthenticator", "Successfully retrieved user from DB");
-                                    }
-
-                                    @Override
-                                    public void onFailure(String message) {
-                                        callback.onFailure(message);
-                                        Log.d("FirebaseAuthenticator", message);
-                                    }
-                                });
+                                .getDocument(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), User.class, getUserCallback(callback));
                     }
                 })
                 .addOnFailureListener(getOnFailureListener(callback));
@@ -62,20 +45,9 @@ public class FirebaseAuthenticator implements Authenticator {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        User toStore = new User(email, null, email, mAuth.getCurrentUser().getUid());
+                        User toStore = new User(email, email, mAuth.getCurrentUser().getUid());
                         FirestoreDatabaseWrapper.getInstance()
-                                .storeDocumentWithID(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), toStore, new Callback<User>() {
-                                    @Override
-                                    public void onSuccess(User data) {
-                                        callback.onSuccess(data);
-                                        Log.d("FirebaseAuthenticator", "Successfully stored user in DB");
-                                    }
-
-                                    @Override
-                                    public void onFailure(String message) {
-                                        callback.onFailure(message);
-                                    }
-                            });
+                                .storeDocumentWithID(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), toStore, getUserCallback(callback));
                     }
                 })
                 .addOnFailureListener(getOnFailureListener(callback));
@@ -107,6 +79,22 @@ public class FirebaseAuthenticator implements Authenticator {
             @Override
             public void onFailure(@NonNull Exception e) {
                 callback.onFailure(e.getLocalizedMessage());
+            }
+        };
+    }
+
+    private Callback<User> getUserCallback(final Callback callback) {
+        return new Callback<User>() {
+            @Override
+            public void onSuccess(User data) {
+                callback.onSuccess(data);
+                Log.d("FirebaseAuthenticator", "Store/Load user to/from DB successful");
+            }
+
+            @Override
+            public void onFailure(String message) {
+                callback.onFailure(message);
+                Log.d("FirebaseAuthenticator", message);
             }
         };
     }

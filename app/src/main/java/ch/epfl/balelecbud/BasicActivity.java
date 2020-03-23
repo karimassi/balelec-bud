@@ -8,10 +8,10 @@ import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 
 public class BasicActivity extends AppCompatActivity {
 
-    private Authenticator authenticator = FirebaseAuthenticator.getInstance();
+    private static Authenticator authenticator = FirebaseAuthenticator.getInstance();
 
     @VisibleForTesting
-    public void setAuthenticator(Authenticator auth) {
+    public static void setAuthenticator(Authenticator auth) {
         authenticator = auth;
     }
 

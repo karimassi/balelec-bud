@@ -51,6 +51,7 @@ public class MockAuthenticator implements Authenticator {
                 @Override
                 public void onSuccess(User data) {
                     callback.onSuccess(data);
+                    currentUser = data;
                 }
 
                 @Override
@@ -68,7 +69,7 @@ public class MockAuthenticator implements Authenticator {
         if (!users.containsKey(email)) {
             users.put(email, password);
             setLoggedIn(true);
-            User u = new User(email, null, email, String.valueOf(uid));
+            User u = new User(email, email, String.valueOf(uid));
             uid++;
             MockDatabaseWrapper.getInstance().storeDocument("users", u, new Callback<User>() {
                 @Override

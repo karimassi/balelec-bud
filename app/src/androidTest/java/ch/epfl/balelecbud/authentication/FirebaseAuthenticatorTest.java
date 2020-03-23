@@ -30,24 +30,24 @@ public class FirebaseAuthenticatorTest extends BasicAuthenticationTest {
         }
     };
 
-    private Authenticator authenticator = MockAuthenticator.getInstance();
+    private Authenticator authenticator = FirebaseAuthenticator.getInstance();
 
     @Before
     public void setUp() throws Throwable{
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+//        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
 
     @Test
     public void signOutMakesUserNull() {
         authenticator.signOut();
-        Assert.assertEquals(null, authenticator.getCurrentUser());
+        Assert.assertNull(authenticator.getCurrentUser());
     }
 
     @Test
     public void setUserSetsCorrectly() {
         authenticator.signOut();
-        User user = new User("mail", null, "name", "token");
+        User user = new User("mail", "name", "token");
         authenticator.setCurrentUser(user);
         Assert.assertEquals(user, authenticator.getCurrentUser());
     }
@@ -55,9 +55,9 @@ public class FirebaseAuthenticatorTest extends BasicAuthenticationTest {
     @Test
     public void setUserNoEffectWhenSignedIn() {
         authenticator.signOut();
-        User user = new User("mail1", null, "name", "token");
+        User user = new User("mail1", "name", "token");
         authenticator.setCurrentUser(user);
-        User other = new User("mail2", null, "name", "token");
+        User other = new User("mail2", "name", "token");
         authenticator.setCurrentUser(other);
         Assert.assertEquals(user, authenticator.getCurrentUser());
     }

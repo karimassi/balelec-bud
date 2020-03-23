@@ -1,8 +1,6 @@
 package ch.epfl.balelecbud.util.database;
 
-import android.telecom.Call;
-
-import java.util.List;
+import java.util.Map;
 
 import ch.epfl.balelecbud.util.Callback;
 
@@ -21,10 +19,14 @@ public interface DatabaseWrapper {
 
     <T> void getDocument(String collectionName, String documentID, Class type, Callback<T> callback);
 
-    <T> void storeDocument(String collectionName, T document, Callback<T> callback);
+//    <T> void getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class type, Callback<T> callback);
 
-    <T> void storeDocumentWithID(String collectionName, String documentID, T document, Callback<T> callback);
+    void updateDocument(String collectionName, String documentID, Map<String,Object> updates, Callback callback);
 
-    <T> void updateArrayElements(String collectionName, String documentID, String arrayName, T document);
+    <T> void storeDocument(String collectionName, T document, Callback callback);
+
+    <T> void storeDocumentWithID(String collectionName, String documentID, T document, Callback callback);
+
+    void deleteDocument(String collectionName, String documentID, Callback callback);
 
 }
