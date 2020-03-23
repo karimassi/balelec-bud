@@ -22,22 +22,22 @@ public class MainActivityTest {
 
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule<>(MainActivity.class);
+            new ActivityTestRule<MainActivity>(MainActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    MockAuthenticator.getInstance().signOut();
+                    Intents.init();
+                }
 
-    @Before
-    public void setUp() {
-        MockAuthenticator.getInstance().signOut();
-        Intents.init();
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
-    }
-
-    @After
-    public void teardown() {
-        Intents.release();
-    }
+                @Override
+                protected void afterActivityFinished() {
+                    Intents.release();
+                }
+            };
 
     @Test
     public void testLoggedOutGoesToLoginActivity() {
+        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
         onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));

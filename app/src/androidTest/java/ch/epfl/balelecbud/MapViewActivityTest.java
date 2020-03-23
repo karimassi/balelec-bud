@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -59,10 +60,14 @@ public class MapViewActivityTest {
             @Override
             public void run() {
                 MapViewActivity mActivity = mActivityRule.getActivity();
-                assertThat(mActivity.getGoogleMap().isMyLocationEnabled(),
-                        is(MapViewActivity.getLocationPermission()));
-                assertThat(mActivity.getGoogleMap().getUiSettings().isMyLocationButtonEnabled(),
-                        is(MapViewActivity.getLocationPermission()));
+                GoogleMap googleMap = mActivity.getGoogleMap();
+                if(googleMap != null) {
+                    assertThat(googleMap.isMyLocationEnabled(),
+                            is(MapViewActivity.getLocationPermission()));
+                    assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
+                            is(MapViewActivity.getLocationPermission()));
+                }
+
             }
         });
     }
