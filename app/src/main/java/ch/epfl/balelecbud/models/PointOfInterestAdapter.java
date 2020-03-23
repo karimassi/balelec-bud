@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.pointOfInterest;
+package ch.epfl.balelecbud.models;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +21,7 @@ import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 public class PointOfInterestAdapter extends RecyclerView.Adapter<PointOfInterestAdapter
         .PointOfInterestHolder>{
 
-    private List<String> pointOfInterestData;
+    private List<PointOfInterest> pointOfInterestData;
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     @VisibleForTesting
@@ -47,7 +47,7 @@ public class PointOfInterestAdapter extends RecyclerView.Adapter<PointOfInterest
                 PointOfInterestAdapter.this.notifyItemRemoved(position);
             }
         };
-        DatabaseListener<String> listener = new DatabaseListener(facade, pointOfInterestData, String.class);
+        DatabaseListener<PointOfInterest> listener = new DatabaseListener<>(facade, pointOfInterestData, PointOfInterest.class);
         database.listen(DatabaseWrapper.POINT_OF_INTEREST_PATH, listener);
     }
 
@@ -60,9 +60,10 @@ public class PointOfInterestAdapter extends RecyclerView.Adapter<PointOfInterest
 
     @Override
     public void onBindViewHolder(@NonNull PointOfInterestHolder holder, int position) {
-        holder.nameTextView.setText(pointOfInterestData.get(position));
-        holder.typeTextView.setText(pointOfInterestData.get(position));
-        holder.locationTextView.setText(pointOfInterestData.get(position));
+        holder.nameTextView.setText(pointOfInterestData.get(position).getName());
+        holder.typeTextView.setText(pointOfInterestData.get(position).getType());
+        //TODO: verify
+        holder.locationTextView.setText(pointOfInterestData.get(position).getLocation().toString());
     }
 
     @Override

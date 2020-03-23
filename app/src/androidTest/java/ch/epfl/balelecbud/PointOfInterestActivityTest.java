@@ -4,12 +4,15 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
-import ch.epfl.balelecbud.pointOfInterest.PointOfInterestAdapter;
+import ch.epfl.balelecbud.models.PointOfInterestAdapter;
+import ch.epfl.balelecbud.models.PointOfInterest;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -23,7 +26,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class PointOfInterestActivityTest {
 
     MockDatabaseWrapper mock;
-    private String pointOfInterest = "ATM";
+    private PointOfInterest pointOfInterest = new PointOfInterest(
+            new GeoPoint(4, 20), "Bar IC", "Bar", "FUN101");
 
     @Rule
     public final ActivityTestRule<PointOfInterestActivity> mActivityRule =
@@ -43,27 +47,32 @@ public class PointOfInterestActivityTest {
     @Test
     public void testCanAddPOIToDatabase() throws Throwable {
         mock.addItem(pointOfInterest);
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).atPosition(0)), pointOfInterest);
+        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
+                atPosition(0)), pointOfInterest);
     }
 
     @Test
     public void testCanModifyPOIFromDatabase() throws Throwable {
-        String modified = "Bar IC";
+        PointOfInterest modified = new PointOfInterest(new GeoPoint(6.7, 55),
+                "Bar IC", "Bar", "GOOD101");
 
         mock.addItem(pointOfInterest);
         mock.modifyItem(modified, 0);
 
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).atPosition(0)), modified);
+        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
+                atPosition(0)), modified);
     }
 
     @Test
     public void testCantModifyPOIFromDatabaseThatIsNotThere() throws Throwable {
-        String modified = "Bar";
+        PointOfInterest modified = new PointOfInterest(new GeoPoint(6.7, 55),
+                "Bar IC", "Bar", "BAD101");
 
         mock.addItem(pointOfInterest);
         mock.modifyItem(modified, 2);
 
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).atPosition(0)), pointOfInterest);
+        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
+                atPosition(0)), pointOfInterest);
     }
 
     @Test
@@ -72,17 +81,18 @@ public class PointOfInterestActivityTest {
         mock.addItem(pointOfInterest);
         mock.removeItem(pointOfInterest, 0);
 
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).atPosition(0)), pointOfInterest);
+        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
+                atPosition(0)), pointOfInterest);
     }
 
     @Test
     public void testCantDeletePOIFromEmptyDatabase() throws Throwable {
-        mock.removeItem("", 0);
+        mock.removeItem(pointOfInterest, 0);
     }
 
-    private void testInfoInView(ViewInteraction viewInteraction, String element) {
-        viewInteraction.check(matches(hasDescendant(withText(element)))); //name
-        viewInteraction.check(matches(hasDescendant(withText(element)))); //type
-        viewInteraction.check(matches(hasDescendant(withText(element)))); //geoPoint
+    private void testInfoInView(ViewInteraction viewInteraction, PointOfInterest poi) {
+        viewInteraction.check(matches(hasDescendant(withText(poi.getName()))));
+        viewInteraction.check(matches(hasDescendant(withText(poi.getType()))));
+        viewInteraction.check(matches(hasDescendant(withText(poi.getLocation().toString()))));
     }
 }
