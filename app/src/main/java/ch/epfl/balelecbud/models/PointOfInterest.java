@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.models;
 
+import androidx.annotation.Nullable;
 import com.google.firebase.firestore.GeoPoint;
 
 public class PointOfInterest {
@@ -7,7 +8,9 @@ public class PointOfInterest {
     private String type;
     private String poiToken;
     private GeoPoint location;
-    
+
+    public PointOfInterest(){ }
+
 
     public PointOfInterest(GeoPoint location, String name, String type, String poiToken) {
         this.location = location;
@@ -31,5 +34,15 @@ public class PointOfInterest {
 
     public String getPoiToken() {
         return poiToken;
+    }
+
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return (obj instanceof PointOfInterest)
+                && ((PointOfInterest) obj).getName() == name
+                && ((PointOfInterest) obj).getType() == type
+                && ((PointOfInterest) obj).getLocation().equals(location)
+                && ((PointOfInterest) obj).getPoiToken() == poiToken;
     }
 }

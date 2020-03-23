@@ -10,6 +10,11 @@ public class PointOfInterestTest {
     private PointOfInterest p1 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
 
     @Test
+    public void testEmptyConstructor() {
+        new PointOfInterestTest();
+    }
+
+    @Test
     public void testGetName() {
         Assert.assertThat(p1.getName(), is("credit suisse"));
     }
@@ -25,6 +30,24 @@ public class PointOfInterestTest {
     @Test
     public void testGetLocation() {
         Assert.assertThat(p1.getLocation(), is(new GeoPoint(24, 42)));
+    }
+
+    @Test
+    public void testEqualsTwoEqualPointOfInterest() {
+        PointOfInterest p2 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertEquals(true, p1.equals(p2));
+    }
+
+    @Test
+    public void testEqualsTwoNonEqualPointOfInterest() {
+        PointOfInterest p2 = new PointOfInterest( new GeoPoint(22, 42), "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertEquals(false, p1.equals(p2));
+    }
+
+
+    @Test
+    public void testEqualsTwoDifferentObjects() {
+        Assert.assertEquals(false, p1.equals(new Object()));
     }
 
 
