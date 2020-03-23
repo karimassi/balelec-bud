@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.util.database;
 
-import android.telecom.Call;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -9,10 +7,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -72,36 +68,27 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         callback.onSuccess((T) documentSnapshot.toObject(type));
                     }
-                })
-                .addOnFailureListener(getOnFailureListener(callback));
+                }).addOnFailureListener(getOnFailureListener(callback));
     }
 
     @Override
     public void updateDocument(String collectionName, String documentID, Map<String, Object> updates, final Callback callback) {
-        getCollectionReference(collectionName).document(documentID).update(updates)
-                .addOnSuccessListener(getResultlessOnSuccessListener(callback))
-                .addOnFailureListener(getOnFailureListener(callback));
+        getCollectionReference(collectionName).document(documentID).update(updates).addOnSuccessListener(getResultlessOnSuccessListener(callback)).addOnFailureListener(getOnFailureListener(callback));
     }
 
     @Override
     public <T> void storeDocumentWithID(String collectionName, String documentID, final T document, final Callback callback) {
-        getCollectionReference(collectionName).document(documentID).set(document, SetOptions.merge())
-                .addOnSuccessListener(getResultlessOnSuccessListener(callback))
-                .addOnFailureListener(getOnFailureListener(callback));
+        getCollectionReference(collectionName).document(documentID).set(document, SetOptions.merge()).addOnSuccessListener(getResultlessOnSuccessListener(callback)).addOnFailureListener(getOnFailureListener(callback));
     }
 
     @Override
     public <T> void storeDocument(String collectionName, final T document, final Callback callback) {
-        getCollectionReference(collectionName).add(document)
-                .addOnSuccessListener(getResultlessOnSuccessListener(callback))
-                .addOnFailureListener(getOnFailureListener(callback));
+        getCollectionReference(collectionName).add(document).addOnSuccessListener(getResultlessOnSuccessListener(callback)).addOnFailureListener(getOnFailureListener(callback));
     }
 
     @Override
     public void deleteDocument(String collectionName, String documentID, final Callback callback) {
-        getCollectionReference(collectionName).document(documentID).delete()
-                .addOnSuccessListener(getResultlessOnSuccessListener(callback))
-                .addOnFailureListener(getOnFailureListener(callback));
+        getCollectionReference(collectionName).document(documentID).delete().addOnSuccessListener(getResultlessOnSuccessListener(callback)).addOnFailureListener(getOnFailureListener(callback));
     }
 
     public static DatabaseWrapper getInstance() {

@@ -1,22 +1,6 @@
 package ch.epfl.balelecbud.authentication;
 
-import android.net.Uri;
-import android.os.Parcel;
-import android.telecom.Call;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.internal.firebase_auth.zzff;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.FirebaseUserMetadata;
-import com.google.firebase.auth.UserInfo;
-import com.google.firebase.auth.zzy;
-import com.google.firebase.auth.zzz;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import ch.epfl.balelecbud.models.User;

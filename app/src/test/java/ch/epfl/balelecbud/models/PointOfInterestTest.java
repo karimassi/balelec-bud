@@ -1,8 +1,10 @@
 package ch.epfl.balelecbud.models;
+
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 import static org.hamcrest.core.Is.is;
 
 public class PointOfInterestTest {

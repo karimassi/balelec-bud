@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.authentication;
 
-import android.telecom.Call;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -32,11 +31,9 @@ public class FirebaseAuthenticator implements Authenticator {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        FirestoreDatabaseWrapper.getInstance()
-                                .getDocument(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), User.class, getUserCallback(callback));
+                        FirestoreDatabaseWrapper.getInstance().getDocument(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), User.class, getUserCallback(callback));
                     }
-                })
-                .addOnFailureListener(getOnFailureListener(callback));
+                }).addOnFailureListener(getOnFailureListener(callback));
     }
 
     @Override
@@ -46,11 +43,9 @@ public class FirebaseAuthenticator implements Authenticator {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         User toStore = new User(email, email, mAuth.getCurrentUser().getUid());
-                        FirestoreDatabaseWrapper.getInstance()
-                                .storeDocumentWithID(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), toStore, getUserCallback(callback));
+                        FirestoreDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), toStore, getUserCallback(callback));
                     }
-                })
-                .addOnFailureListener(getOnFailureListener(callback));
+                }).addOnFailureListener(getOnFailureListener(callback));
     }
 
     @Override

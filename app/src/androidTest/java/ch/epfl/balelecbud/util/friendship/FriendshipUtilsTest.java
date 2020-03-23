@@ -5,8 +5,6 @@ import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.common.collect.ImmutableMap;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +21,6 @@ import ch.epfl.balelecbud.models.FriendRequest;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.Callback;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;

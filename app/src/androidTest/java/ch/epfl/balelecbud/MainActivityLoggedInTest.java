@@ -1,7 +1,6 @@
 package ch.epfl.balelecbud;
 
 import android.Manifest;
-import android.util.Log;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;

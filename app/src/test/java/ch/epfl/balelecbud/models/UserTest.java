@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.models;
 
-import com.google.firebase.firestore.GeoPoint;
-
 import org.junit.Assert;
 import org.junit.Test;
 

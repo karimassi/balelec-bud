@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.util.friendship;
 
 import androidx.annotation.VisibleForTesting;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.firebase.firestore.FieldValue;
 
 import java.util.HashMap;
