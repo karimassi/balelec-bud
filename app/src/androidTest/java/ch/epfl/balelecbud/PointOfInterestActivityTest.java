@@ -52,31 +52,28 @@ public class PointOfInterestActivityTest {
     }
 
     @Test
-    public void testCanModifyPOIFromDatabase() throws Throwable {
-        PointOfInterest modified = new PointOfInterest(new GeoPoint(6.7, 55),
-                "Bar IC", "Bar", "GOOD101");
-
-        mock.addItem(pointOfInterest);
-        mock.modifyItem(modified, 0);
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(0)), modified);
+    public void testCanModifyFromDatabase() throws Throwable {
+        modifyAndTest(0, true);
     }
 
     @Test
-    public void testCantModifyPOIFromDatabaseThatIsNotThere() throws Throwable {
+    public void testCantModifyFromDataThatIsNotThere() throws Throwable {
+        modifyAndTest(2, false);
+    }
+
+    private void modifyAndTest(int indexOfMod, boolean pointOfInterestIsModified) throws Throwable {
         PointOfInterest modified = new PointOfInterest(new GeoPoint(6.7, 55),
-                "Bar IC", "Bar", "BAD101");
+                "Bar IC", "Bar", "SAD101");
 
         mock.addItem(pointOfInterest);
-        mock.modifyItem(modified, 2);
+        mock.modifyItem(modified, indexOfMod);
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(0)), pointOfInterest);
+                atPosition(0)), (pointOfInterestIsModified ? modified : pointOfInterest));
     }
 
     @Test
-    public void testCanDeletePOIFromDatabase() throws Throwable {
+    public void testCanDeleteFromDatabase() throws Throwable {
         mock.addItem(pointOfInterest);
         mock.addItem(pointOfInterest);
         mock.removeItem(pointOfInterest, 0);
@@ -86,7 +83,7 @@ public class PointOfInterestActivityTest {
     }
 
     @Test
-    public void testCantDeletePOIFromEmptyDatabase() throws Throwable {
+    public void testCantDeleteFromEmptyDatabase() throws Throwable {
         mock.removeItem(pointOfInterest, 0);
     }
 

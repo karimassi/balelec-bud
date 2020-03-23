@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.GeoPoint;
-
 import java.util.ArrayList;
 import java.util.List;
 

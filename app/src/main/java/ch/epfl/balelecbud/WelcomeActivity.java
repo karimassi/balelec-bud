@@ -19,12 +19,9 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.LocationRequest;
 
-import java.util.Map;
-
 import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationService;
-import ch.epfl.balelecbud.models.PointOfInterest;
 
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
