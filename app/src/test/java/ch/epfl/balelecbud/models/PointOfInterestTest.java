@@ -11,7 +11,7 @@ public class PointOfInterestTest {
 
     @Test
     public void testEmptyConstructor() {
-        new PointOfInterestTest();
+        new PointOfInterest();
     }
 
     @Test
@@ -25,7 +25,9 @@ public class PointOfInterestTest {
     }
 
     @Test
-    public void testGetPoiToken() { Assert.assertThat(p1.getPoiToken(), is("BXnkTQdLsOXoGJmMSeCS"));}
+    public void testGetPoiToken() {
+        Assert.assertThat(p1.getPoiToken(), is("BXnkTQdLsOXoGJmMSeCS"));
+    }
 
     @Test
     public void testGetLocation() {

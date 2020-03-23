@@ -61,18 +61,14 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
 
         if(locationEnabled) {
-            getDeviceLocation();
+            Task<Location> locationResult = LocationServices.
+                    getFusedLocationProviderClient(this).getLastLocation();
+            locationResult.addOnCompleteListener(this, callback);
         }
         else {
             googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
         }
-    }
-
-    private void getDeviceLocation() {
-        Task<Location> locationResult = LocationServices.
-                getFusedLocationProviderClient(this).getLastLocation();
-        locationResult.addOnCompleteListener(this, callback);
     }
 
     protected void setPositionFrom(Location location, boolean locationEnabled) {
