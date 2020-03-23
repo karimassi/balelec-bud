@@ -33,16 +33,9 @@ public class MainActivityTest {
         }
     };
 
-
-    @Before
-    public void setUp() {
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
-    }
-
-    @Before
-
     @Test
     public void testLoggedOutGoesToLoginActivity() {
+        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 }
