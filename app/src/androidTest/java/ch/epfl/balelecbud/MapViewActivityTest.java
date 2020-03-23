@@ -6,17 +6,21 @@ import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Map;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -50,6 +54,20 @@ public class MapViewActivityTest {
     }
 
     @Test
+    public void testUpdateLocationUi() throws Throwable {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MapViewActivity mActivity = mActivityRule.getActivity();
+                assertThat(mActivity.getGoogleMap().isMyLocationEnabled(),
+                        is(MapViewActivity.getLocationPermission()));
+                assertThat(mActivity.getGoogleMap().getUiSettings().isMyLocationButtonEnabled(),
+                        is(MapViewActivity.getLocationPermission()));
+            }
+        });
+    }
+
+    @Test
     public void testNewPositionIsSet() {
         LatLng newPosition = new LatLng(testLatitude, testLongitude);
         MapViewActivity mActivity = mActivityRule.getActivity();
@@ -65,13 +83,13 @@ public class MapViewActivityTest {
     }
 
     @Test
-    public void testNewPositionFromLocationIsSet() throws Throwable {
+    public void testNewPositionFromLocationIsSet() {
         testSetPositionFrom(newTestLocation(), true);
         assertThat(newMapPosition, is(new LatLng(testLatitude, testLongitude)));
     }
 
     @Test
-    public void testNullLocationIsNotSet() throws Throwable {
+    public void testNullLocationIsNotSet() {
         testSetPositionFrom(null, true);
         assertThat(newMapPosition, is(oldMapPosition));
 
@@ -80,12 +98,12 @@ public class MapViewActivityTest {
     }
 
     @Test
-    public void testLocationIsNotSetWhenLocationDisabled() throws Throwable {
+    public void testLocationIsNotSetWhenLocationDisabled() {
         testSetPositionFrom(newTestLocation(), false);
         assertThat(newMapPosition, is(oldMapPosition));
     }
 
-    private void testSetPositionFrom(final Location location, final boolean locationEnabled) throws Throwable {
+    private void testSetPositionFrom(final Location location, final boolean locationEnabled){
         MapViewActivity mActivity = mActivityRule.getActivity();
         oldMapPosition = mActivity.getPosition();
         mActivity.setPositionFrom(location, locationEnabled);

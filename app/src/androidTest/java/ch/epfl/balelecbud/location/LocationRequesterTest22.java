@@ -24,6 +24,8 @@ import ch.epfl.balelecbud.WelcomeActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.Matchers.is;
@@ -131,6 +133,7 @@ public class LocationRequesterTest22 {
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertTrue(MapViewActivity.getLocationPermission());
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -151,6 +154,7 @@ public class LocationRequesterTest22 {
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertFalse(MapViewActivity.getLocationPermission());
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 }
 
