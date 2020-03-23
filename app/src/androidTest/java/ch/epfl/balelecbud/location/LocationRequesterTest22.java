@@ -27,7 +27,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.Matchers.is;
 
 @SdkSuppress(maxSdkVersion = Build.VERSION_CODES.N_MR1 - 1)
@@ -117,7 +116,7 @@ public class LocationRequesterTest22 {
     }
 
     @Test
-    public void testSwitchOnEnablesLocationInMap() throws Throwable {
+    public void testSwitchOnEnablesLocationInMap() {
         this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -137,7 +136,7 @@ public class LocationRequesterTest22 {
     }
 
     @Test
-    public void testSwitchOffDisablesLocationInMap() throws Throwable {
+    public void testSwitchOffDisablesLocationInMap() {
         this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
