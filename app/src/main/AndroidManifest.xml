@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ch.epfl.balelecbud"
     tools:ignore="GoogleAppIndexingWarning">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -14,10 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterUserActivity" />
-        <activity android:name=".schedule.ScheduleActivity" />
-        <activity android:name=".FestivalInformationActivity" />
-        <activity android:name=".TransportActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,15 +25,21 @@
         <activity android:name=".Emergency.EmergencyInfoActivity"></activity>
         <activity android:name=".Emergency.EmergencyNumbersActivity"></activity>
         <activity android:name=".LoginUserActivity" />
+        <activity android:name=".RegisterUserActivity" />
         <activity android:name=".WelcomeActivity" />
-        <service
-            android:name=".location.LocationService"
-            android:exported="false" />
+        <activity android:name=".FestivalInformationActivity" />
+        <activity android:name=".TransportActivity" />
+        <activity android:name=".ScheduleActivity" />
         <activity
             android:name=".MapViewActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".WelcomeActivity" />
+
+        <service
+            android:name=".location.LocationService"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

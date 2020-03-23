@@ -9,19 +9,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
 
-    private static ScheduleDatabase databaseImplementation = new FirebaseScheduleDatabase();
+    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     @VisibleForTesting
-    public static void setDatabaseImplementation(ScheduleDatabase dbImplementation){
-        databaseImplementation = dbImplementation;
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
+        database = databaseWrapper;
     }
 
     private List<Slot> slots;
@@ -33,15 +38,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
         public ScheduleViewHolder(View itemView) {
             super(itemView);
-            timeSlotView = itemView.findViewById(R.id.time_slot);
-            artistNameView = itemView.findViewById(R.id.artist_name);
-            sceneNameView = itemView.findViewById(R.id.scene_name);
+            timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);
+            artistNameView = itemView.findViewById(R.id.ScheduleArtistName);
+            sceneNameView = itemView.findViewById(R.id.ScheduleSceneName);
         }
     }
 
     public ScheduleAdapter() {
         slots = new ArrayList<>();
-        ScheduleAdapterFacade facade = new ScheduleAdapterFacade() {
+        RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
             @Override
             public void notifyItemInserted(int position) {
                 ScheduleAdapter.this.notifyItemInserted(position);
@@ -57,7 +62,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
                 ScheduleAdapter.this.notifyItemRemoved(position);
             }
         };
-        databaseImplementation.getSlotListener(facade, slots);
+        DatabaseListener<Slot> listener = new DatabaseListener(facade, slots, Slot.class);
+        database.listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
     }
 
     @NonNull

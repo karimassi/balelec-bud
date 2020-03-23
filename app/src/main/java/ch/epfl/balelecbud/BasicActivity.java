@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.balelecbud.authentication.Authenticator;
@@ -9,11 +10,12 @@ public class BasicActivity extends AppCompatActivity {
 
     private Authenticator authenticator = FirebaseAuthenticator.getInstance();
 
-    protected void setAuthenticator(Authenticator auth) {
+    @VisibleForTesting
+    public void setAuthenticator(Authenticator auth) {
         authenticator = auth;
     }
 
-    protected Authenticator getAuthenticator() {
+    public Authenticator getAuthenticator() {
         return authenticator;
     }
 

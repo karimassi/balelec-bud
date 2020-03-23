@@ -1,17 +1,20 @@
 package ch.epfl.balelecbud.schedule.models;
 
-public class Slot {
-    private String artistName;
-    private String timeSlot;
-    private String sceneName;
+import androidx.annotation.Nullable;
 
-    public Slot(String artistName, String timeSlot, String sceneName) {
+public class Slot {
+
+    private String artistName;
+    private String sceneName;
+    private String timeSlot;
+
+    public Slot(String artistName, String sceneName, String timeSlot) {
         this.artistName = artistName;
         this.timeSlot = timeSlot;
         this.sceneName = sceneName;
     }
 
-    public Slot(){
+    public Slot() {
 
     }
 
@@ -27,4 +30,11 @@ public class Slot {
         return sceneName;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return (obj instanceof Slot)
+                && ((Slot) obj).getArtistName() == artistName
+                && ((Slot) obj).getTimeSlot() == timeSlot
+                && ((Slot) obj).getSceneName() == sceneName;
+    }
 }

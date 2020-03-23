@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/maplinearlayout"
+    android:id="@+id/mapLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapViewActivity">
 
-    <fragment
-        xmlns:map="http://schemas.android.com/apk/res-auto"
+    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:id="@+id/map"
         android:layout_width="match_parent"
@@ -21,6 +20,6 @@
         map:uiScrollGestures="@bool/ui_scroll_gestures"
         map:uiTiltGestures="@bool/ui_tilt_gestures"
         map:uiZoomControls="@bool/ui_zoom_controls"
-        map:uiZoomGestures="@bool/ui_zoom_gestures"/>
+        map:uiZoomGestures="@bool/ui_zoom_gestures" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

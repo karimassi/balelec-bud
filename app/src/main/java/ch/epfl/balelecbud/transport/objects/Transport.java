@@ -5,18 +5,8 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Transport {
-
-    public static List<Transport> DUMMY_TRANSPORTS = new LinkedList<>();
-    static {
-        DUMMY_TRANSPORTS.add(new Transport(TransportType.BUS, 10, "Nyon", null, Timestamp.now()));
-        DUMMY_TRANSPORTS.add(new Transport(TransportType.METRO, 11, "Lausanne", null, Timestamp.now()));
-        DUMMY_TRANSPORTS.add(new Transport(TransportType.BUS, 12, "La lune", null, Timestamp.now()));
-        DUMMY_TRANSPORTS.add(new Transport(TransportType.METRO, 13, "Chine", null, Timestamp.now()));
-    }
 
     private TransportType type;
     private int line;
@@ -32,19 +22,24 @@ public class Transport {
         this.time = time;
     }
 
-    public Transport() {}
+    public Transport() {
+    }
 
     public TransportType getType() {
         return type;
     }
 
-    public String getTypeString() { return type.toString(); }
+    public String getTypeString() {
+        return type.toString();
+    }
 
     public int getLine() {
         return line;
     }
 
-    public String getLineString() { return Integer.toString(line); }
+    public String getLineString() {
+        return Integer.toString(line);
+    }
 
     public String getDirection() {
         return direction;

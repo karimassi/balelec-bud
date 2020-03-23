@@ -1,38 +1,41 @@
 package ch.epfl.balelecbud.transport;
 
-import androidx.annotation.VisibleForTesting;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.transport.objects.Transport;
-import ch.epfl.balelecbud.transport.TransportListFragment.OnListFragmentInteractionListener;
+import androidx.annotation.VisibleForTesting;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.transport.TransportListFragment.OnListFragmentInteractionListener;
+import ch.epfl.balelecbud.transport.objects.Transport;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTransportRecyclerViewAdapter.ViewHolder> {
 
     //default implementation is Firebase
-    static private TransportDatabase databaseImplementation= new FirebaseTransportDatabase();
+    static private DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     //Used to insert mocks
     @VisibleForTesting
-    public static void setTransportDatabase(TransportDatabase databaseImp){
-        databaseImplementation = databaseImp;
+    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
+        database = databaseWrapper;
     }
 
     private final List<Transport> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyTransportRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
+    public MyTransportRecyclerViewAdapter(OnListFragmentInteractionListener fragmentInteractionListenerl) {
         mValues = new LinkedList<>();
-        TransportAdapterFacade facade = new TransportAdapterFacade() {
+        RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
             @Override
             public void notifyItemInserted(int position) {
                 MyTransportRecyclerViewAdapter.this.notifyItemInserted(position);
@@ -48,14 +51,15 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
                 MyTransportRecyclerViewAdapter.this.notifyItemRemoved(position);
             }
         };
-        databaseImplementation.getTransportListener(facade, mValues);
-        mListener = listener;
+        DatabaseListener<Transport> listener = new DatabaseListener(facade, mValues, Transport.class);
+        database.listen(DatabaseWrapper.TRANSPORT_PATH, listener);
+        mListener = fragmentInteractionListenerl;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.transport_item, parent, false);
+                .inflate(R.layout.item_transport, parent, false);
         return new ViewHolder(view);
     }
 
@@ -95,10 +99,10 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            typeView = (TextView) view.findViewById(R.id.type);
-            lineView = (TextView) view.findViewById(R.id.line);
-            directionView = (TextView) view.findViewById(R.id.direction);
-            timeView = (TextView) view.findViewById(R.id.time);
+            typeView = (TextView) view.findViewById(R.id.transportType);
+            lineView = (TextView) view.findViewById(R.id.transportLine);
+            directionView = (TextView) view.findViewById(R.id.transportDirection);
+            timeView = (TextView) view.findViewById(R.id.transportTime);
         }
 
     }

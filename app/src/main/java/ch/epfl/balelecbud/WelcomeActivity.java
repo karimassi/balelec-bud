@@ -21,7 +21,6 @@ import com.google.android.gms.location.LocationRequest;
 import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationService;
-import ch.epfl.balelecbud.schedule.ScheduleActivity;
 
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
@@ -89,8 +88,8 @@ public class WelcomeActivity extends BasicActivity {
             }
         });
 
-        final Button signoutButton = findViewById(R.id.buttonSignOut);
-        signoutButton.setOnClickListener(new View.OnClickListener() {
+        final Button signOutButton = findViewById(R.id.buttonSignOut);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signOut();
@@ -111,7 +110,6 @@ public class WelcomeActivity extends BasicActivity {
             this.locationSwitch.setClickable(true);
         }
 
-
         this.locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -120,7 +118,7 @@ public class WelcomeActivity extends BasicActivity {
                     requestLocationUpdates();
                 } else {
                     // The location is disabled
-                    Log.d(TAG,"Location switched: OFF");
+                    Log.d(TAG, "Location switched: OFF");
                     removeLocationUpdates();
                 }
             }
@@ -140,6 +138,7 @@ public class WelcomeActivity extends BasicActivity {
 
     /**
      * Check the permission required for the location service
+     *
      * @return true if the application has the required permission
      */
     private boolean checkPermissions() {
@@ -206,7 +205,6 @@ public class WelcomeActivity extends BasicActivity {
                         grantResults[1] == PackageManager.PERMISSION_GRANTED);
     }
 
-
     private void onPermissionCanceled() {
         Log.i(TAG, "onRequestPermissionsResult: Permission request canceled");
         this.locationSwitch.setClickable(false);
@@ -251,27 +249,35 @@ public class WelcomeActivity extends BasicActivity {
         finish();
     }
 
-    /** Called when the user clicks the Map button */
-    private void openMapActivity () {
+    /**
+     * Called when the user clicks the Map button
+     */
+    private void openMapActivity() {
         Intent intent = new Intent(this, MapViewActivity.class);
         startActivity(intent);
     }
 
-    /** Called when the user clicks the Schedule button */
-    public void openScheduleActivity(){
+    /**
+     * Called when the user clicks the Schedule button
+     */
+    private void openScheduleActivity() {
         Intent intent = new Intent(this, ScheduleActivity.class);
         startActivity(intent);
     }
 
-    /** Called when the user clicks the Schedule button */
-    public void openInfoActivity(){
+    /**
+     * Called when the user clicks the Info button
+     */
+    private void openInfoActivity() {
         Intent intent = new Intent(this, FestivalInformationActivity.class);
         startActivity(intent);
     }
 
-    /** Called when the user clicks the Schedule button */
-    public void openTransportActivity(){
-//        Intent intent = new Intent(this, TransportActivity.class);
-//        startActivity(intent);
+    /**
+     * Called when the user clicks the Transport button
+     */
+    private void openTransportActivity() {
+        Intent intent = new Intent(this, TransportActivity.class);
+        startActivity(intent);
     }
 }
