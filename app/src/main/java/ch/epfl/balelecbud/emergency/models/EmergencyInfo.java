@@ -4,7 +4,7 @@ public class EmergencyInfo {
     private String instruction;
     private String name;
 
-    public EmergencyInfo(String instruction, String name){
+    public EmergencyInfo(String name,String instruction){
         this.instruction = instruction;
         this.name=name;
 
