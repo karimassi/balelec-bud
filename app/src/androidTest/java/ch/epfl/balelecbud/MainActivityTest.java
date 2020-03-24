@@ -35,6 +35,7 @@ public class MainActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testLoggedOutGoesToLoginActivity() {
+        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 }

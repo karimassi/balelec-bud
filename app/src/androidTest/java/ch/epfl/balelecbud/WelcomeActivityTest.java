@@ -29,7 +29,8 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityTest {
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule = new ActivityTestRule<>(WelcomeActivity.class);
+    public final ActivityTestRule<WelcomeActivity> mActivityRule =
+            new ActivityTestRule<>(WelcomeActivity.class);
 
     @Before
     public void setup() {
@@ -77,6 +78,12 @@ public class WelcomeActivityTest {
     }
 
     @Test
+    public void testPOIButtonIsDisplayed() {
+        onView(withId(R.id.poiButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.poiButton)).perform(click());
+    }
+
+    @Test
     public void testSignOutIsDisplayed() {
         onView(withId(R.id.buttonSignOut)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonSignOut)).perform(click());
@@ -97,6 +104,11 @@ public class WelcomeActivityTest {
     @Test
     public void testInfoIsDisplayed() {
         testFeatureIsDisplayed(onView(withId(R.id.infoButton)), onView(withId(R.id.festivalInfoRecyclerView)));
+    }
+
+    @Test
+    public void testPOIIsDisplayed() {
+        testFeatureIsDisplayed(onView(withId(R.id.poiButton)), onView(withId(R.id.pointOfInterestRecyclerView)));
     }
 
     @Test

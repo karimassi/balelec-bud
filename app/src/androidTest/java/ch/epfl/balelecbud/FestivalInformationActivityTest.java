@@ -8,7 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.festivalInformation.FestivalInformation;
+import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
 import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
