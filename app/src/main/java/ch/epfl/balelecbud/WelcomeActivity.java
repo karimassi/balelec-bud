@@ -57,11 +57,11 @@ public class WelcomeActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        openActivity(FestivalInformationActivity.class, (Button) findViewById(R.id.infoButton));
-        openActivity(ScheduleActivity.class, (Button) findViewById(R.id.scheduleButton));
-        openActivity(MapViewActivity.class, (Button) findViewById(R.id.mapButton));
-        openActivity(TransportActivity.class, (Button) findViewById(R.id.transportButton));
-        openActivity(PointOfInterestActivity.class, (Button) findViewById(R.id.poiButton));
+        bindActivityToButton(FestivalInformationActivity.class, (Button) findViewById(R.id.infoButton));
+        bindActivityToButton(ScheduleActivity.class, (Button) findViewById(R.id.scheduleButton));
+        bindActivityToButton(MapViewActivity.class, (Button) findViewById(R.id.mapButton));
+        bindActivityToButton(TransportActivity.class, (Button) findViewById(R.id.transportButton));
+        bindActivityToButton(PointOfInterestActivity.class, (Button) findViewById(R.id.poiButton));
 
         final Button signOutButton = findViewById(R.id.buttonSignOut);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,7 @@ public class WelcomeActivity extends BasicActivity {
         setUpLocation();
     }
 
-    private void openActivity(final Class activityToOpen, Button button) {
+    private void bindActivityToButton(final Class activityToOpen, Button button) {
         final Activity thisActivity = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
