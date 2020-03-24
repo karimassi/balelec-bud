@@ -8,9 +8,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.Callback;
+import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
@@ -26,26 +33,30 @@ public class FirebaseAuthenticator implements Authenticator {
     }
 
     @Override
-    public void signIn(String email, String password, final Callback callback) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+    public CompletableFuture<User> signIn(String email, String password) {
+
+        return new TaskToCompletableFutureAdapter<>(mAuth.signInWithEmailAndPassword(email, password))
+                .thenCompose(new Function<AuthResult, CompletionStage<User>>() {
                     @Override
-                    public void onSuccess(AuthResult authResult) {
-                        FirestoreDatabaseWrapper.getInstance().getDocument(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), User.class, getUserCallback(callback));
+                    public CompletionStage<User> apply(AuthResult authResult) {
+                        return FirestoreDatabaseWrapper.getInstance().getDocument(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), User.class);
                     }
-                }).addOnFailureListener(getOnFailureListener(callback));
+        });
     }
 
     @Override
-    public void createAccount(final String email, String password, final Callback callback) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+    public CompletableFuture<Void> createAccount(final String email, String password) {
+
+        return new TaskToCompletableFutureAdapter<>(mAuth.createUserWithEmailAndPassword(email, password))
+                .thenCompose(new Function<AuthResult, CompletionStage<Void>>() {
                     @Override
-                    public void onSuccess(AuthResult authResult) {
+                    public CompletionStage<Void> apply(AuthResult authResult) {
                         User toStore = new User(email, email, mAuth.getCurrentUser().getUid());
-                        FirestoreDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), toStore, getUserCallback(callback));
+                        setCurrentUser(toStore);
+                        FirestoreDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), toStore);
+                        return CompletableFuture.completedFuture(null);
                     }
-                }).addOnFailureListener(getOnFailureListener(callback));
+        });
     }
 
     @Override
@@ -67,31 +78,6 @@ public class FirebaseAuthenticator implements Authenticator {
 
     public static Authenticator getInstance() {
         return instance;
-    }
-
-    private OnFailureListener getOnFailureListener(final Callback callback) {
-        return new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                callback.onFailure(e.getLocalizedMessage());
-            }
-        };
-    }
-
-    private Callback<User> getUserCallback(final Callback callback) {
-        return new Callback<User>() {
-            @Override
-            public void onSuccess(User data) {
-                callback.onSuccess(data);
-                Log.d("FirebaseAuthenticator", "Store/Load user to/from DB successful");
-            }
-
-            @Override
-            public void onFailure(String message) {
-                callback.onFailure(message);
-                Log.d("FirebaseAuthenticator", message);
-            }
-        };
     }
 
 }

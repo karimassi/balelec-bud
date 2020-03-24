@@ -30,35 +30,35 @@ public class FriendshipUtils {
         auth = authenticator;
     }
 
-    public static void addFriend(User friend, Callback callback) {
+    public static void addFriend(User friend) {
         FriendRequest request = new FriendRequest(auth.getCurrentUser().getUid(), friend.getUid());
-        database.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS, request.getRecipientId(), request, callback);
+        database.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS, request.getRecipientId(), request);
     }
 
-    public static void removeFriend(User friend, Callback callback) {
+    public static void removeFriend(User friend) {
         Map<String,Object> updates = new HashMap<>();
         updates.put(friend.getUid(), FieldValue.delete());
-        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, auth.getCurrentUser().getUid(), updates, callback);
+        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, auth.getCurrentUser().getUid(), updates);
 
         updates = new HashMap<>();
         updates.put(auth.getCurrentUser().getUid(), FieldValue.delete());
-        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, friend.getUid(), updates, callback);
+        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, friend.getUid(), updates);
     }
 
-    public static void acceptRequest(FriendRequest request, Callback callback) {
+    public static void acceptRequest(FriendRequest request) {
         Map<String,Boolean> toStore= new HashMap<>();
         toStore.put(request.getSenderId(), true);
-        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, request.getRecipientId(), toStore, callback);
+        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, request.getRecipientId(), toStore);
 
         toStore = new HashMap<>();
         toStore.put(request.getRecipientId(), true);
-        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, request.getSenderId(), toStore, callback);
+        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, request.getSenderId(), toStore);
 
-        deleteRequest(request, callback);
+        deleteRequest(request);
     }
 
-    public static void deleteRequest(FriendRequest request, Callback callback) {
-        database.deleteDocument(DatabaseWrapper.FRIEND_REQUESTS, request.getRecipientId(), callback);
+    public static void deleteRequest(FriendRequest request) {
+        database.deleteDocument(DatabaseWrapper.FRIEND_REQUESTS, request.getRecipientId());
     }
 
 }

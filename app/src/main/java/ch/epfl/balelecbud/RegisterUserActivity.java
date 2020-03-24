@@ -1,11 +1,17 @@
 package ch.epfl.balelecbud;
 
+import android.accounts.OnAccountsUpdateListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+
+import java.util.function.BiConsumer;
 
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.Callback;
@@ -30,17 +36,14 @@ public class RegisterUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        getAuthenticator().createAccount(email, password, new Callback<User>() {
+        getAuthenticator().createAccount(email, password).whenComplete(new BiConsumer<Void, Throwable>() {
             @Override
-            public void onSuccess(User user) {
-                getAuthenticator().setCurrentUser(user);
-                onAuthComplete();
-            }
-
-            @Override
-            public void onFailure(String message) {
-                Toast.makeText(RegisterUserActivity.this, message,
-                        Toast.LENGTH_SHORT).show();
+            public void accept(Void aVoid, Throwable throwable) {
+                if (throwable != null) {
+                    Toast.makeText(RegisterUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
+                } else {
+                    onAuthComplete();
+                }
             }
         });
 

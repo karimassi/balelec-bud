@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.util.database;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -7,6 +9,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,8 +21,11 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 import ch.epfl.balelecbud.util.Callback;
+import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 
 public class FirestoreDatabaseWrapper implements DatabaseWrapper {
 
@@ -61,56 +67,38 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public <T> void getDocument(final String collectionName, final String documentID, final Class type, final Callback<T> callback) {
-        getCollectionReference(collectionName).document(documentID).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        callback.onSuccess((T) documentSnapshot.toObject(type));
-                    }
-                }).addOnFailureListener(getOnFailureListener(callback));
+    public <T> CompletableFuture<T> getDocument(final String collectionName, final String documentID, final Class<T> type) {
+        CompletableFuture<DocumentSnapshot> result = new TaskToCompletableFutureAdapter<>(getCollectionReference(collectionName).document(documentID).get());
+        return result.thenApply(new Function<DocumentSnapshot, T>() {
+            @Override
+            public T apply(DocumentSnapshot documentSnapshot) {
+                return documentSnapshot.toObject(type);
+            }
+        });
     }
 
     @Override
-    public void updateDocument(String collectionName, String documentID, Map<String, Object> updates, final Callback callback) {
-        getCollectionReference(collectionName).document(documentID).update(updates).addOnSuccessListener(getResultlessOnSuccessListener(callback)).addOnFailureListener(getOnFailureListener(callback));
+    public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
+        getCollectionReference(collectionName).document(documentID).update(updates);
     }
 
     @Override
-    public <T> void storeDocumentWithID(String collectionName, String documentID, final T document, final Callback callback) {
-        getCollectionReference(collectionName).document(documentID).set(document, SetOptions.merge()).addOnSuccessListener(getResultlessOnSuccessListener(callback)).addOnFailureListener(getOnFailureListener(callback));
+    public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, final T document) {
+        return new TaskToCompletableFutureAdapter<>(getCollectionReference(collectionName).document(documentID).set(document, SetOptions.merge()));
     }
 
     @Override
-    public <T> void storeDocument(String collectionName, final T document, final Callback callback) {
-        getCollectionReference(collectionName).add(document).addOnSuccessListener(getResultlessOnSuccessListener(callback)).addOnFailureListener(getOnFailureListener(callback));
+    public <T> void storeDocument(String collectionName, final T document) {
+        getCollectionReference(collectionName).add(document);
     }
 
     @Override
-    public void deleteDocument(String collectionName, String documentID, final Callback callback) {
-        getCollectionReference(collectionName).document(documentID).delete().addOnSuccessListener(getResultlessOnSuccessListener(callback)).addOnFailureListener(getOnFailureListener(callback));
+    public void deleteDocument(String collectionName, String documentID) {
+        getCollectionReference(collectionName).document(documentID).delete();
     }
 
     public static DatabaseWrapper getInstance() {
         return instance;
-    }
-
-    private OnFailureListener getOnFailureListener(final Callback callback) {
-        return new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                callback.onFailure(e.getLocalizedMessage());
-            }
-        };
-    }
-
-    private <T> OnSuccessListener getResultlessOnSuccessListener(final Callback callback) {
-        return new OnSuccessListener<T>() {
-            @Override
-            public void onSuccess(T object) {
-                callback.onSuccess(null);
-            }
-        };
     }
 
     private CollectionReference getCollectionReference(String collectionName) { return FirebaseFirestore.getInstance().collection(collectionName);}

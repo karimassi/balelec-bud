@@ -39,6 +39,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     public final ActivityTestRule<RegisterUserActivity> mActivityRule = new ActivityTestRule<RegisterUserActivity>(RegisterUserActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
+            MockAuthenticator.getInstance().signOut();
             Intents.init();
         }
 

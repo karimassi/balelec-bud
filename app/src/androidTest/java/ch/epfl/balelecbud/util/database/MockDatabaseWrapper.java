@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.models.FriendRequest;
 import ch.epfl.balelecbud.models.User;
@@ -112,82 +113,73 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public <T> void getDocument(String collectionName, String documentID, Class type, Callback<T> callback) {
+    public <T> CompletableFuture<T> getDocument(String collectionName, String documentID, Class<T> type) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS:
-                callback.onSuccess((T) users.get(index));
-                break;
+                return CompletableFuture.completedFuture((T)users.get(index));
             case DatabaseWrapper.FRIENDSHIPS:
-                callback.onSuccess((T) friendships.get(index));
-                break;
+                return CompletableFuture.completedFuture((T)friendships.get(index));
             case DatabaseWrapper.FRIEND_REQUESTS:
-                callback.onSuccess((T) friendRequests.get(index));
-                break;
+                return CompletableFuture.completedFuture((T)friendRequests.get(index));
+            default:
+                return CompletableFuture.completedFuture(null);
         }
     }
 
     @Override
-    public <T> void storeDocument(String collectionName, T document, Callback callback) {
+    public <T> void storeDocument(String collectionName, T document) {
         switch (collectionName) {
             case DatabaseWrapper.USERS:
                 users.add((User) document);
-                callback.onSuccess(null);
                 break;
             case DatabaseWrapper.FRIENDSHIPS:
                 friendships.add((Map<String, Boolean>) document);
-                callback.onSuccess(null);
                 break;
             case DatabaseWrapper.FRIEND_REQUESTS:
                 friendRequests.add((FriendRequest) document);
-                callback.onSuccess(null);
                 break;
         }
     }
 
     @Override
-    public <T> void storeDocumentWithID(String collectionName, String documentID, T document, Callback callback) {
+    public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.FRIENDSHIPS:
                 friendships.get(index).putAll((Map<String, Boolean>) document);
-                callback.onSuccess(null);
                 break;
             case DatabaseWrapper.FRIEND_REQUESTS:
                 friendRequests.add(index, (FriendRequest) document);
-                callback.onSuccess(null);
                 break;
             default:
-                storeDocument(collectionName, document, callback);
+                storeDocument(collectionName, document);
         }
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public void updateDocument(String collectionName, String documentID, Map<String, Object> updates, Callback callback) {
+    public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.FRIENDSHIPS:
                 friendships.get(index).clear();
-                callback.onSuccess(null);
                 break;
         }
     }
 
     @Override
-    public void deleteDocument(String collectionName, String documentID, Callback callback) {
+    public void deleteDocument(String collectionName, String documentID) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS:
                 users.remove(index);
-                callback.onSuccess(null);
                 break;
             case DatabaseWrapper.FRIENDSHIPS:
                 friendships.remove(index);
-                callback.onSuccess(null);
                 break;
             case DatabaseWrapper.FRIEND_REQUESTS:
                 friendRequests.remove(index);
-                callback.onSuccess(null);
                 break;
         }
     }

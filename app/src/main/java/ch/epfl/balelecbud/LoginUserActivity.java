@@ -7,8 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.function.BiConsumer;
+
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.Callback;
 
 public class LoginUserActivity extends BasicActivity {
 
@@ -29,17 +30,16 @@ public class LoginUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        getAuthenticator().signIn(email, password, new Callback<User>() {
-            @Override
-            public void onSuccess(User user) {
-                getAuthenticator().setCurrentUser(user);
-                onAuthComplete();
-            }
 
+        getAuthenticator().signIn(email, password).whenComplete(new BiConsumer<User, Throwable>() {
             @Override
-            public void onFailure(String message) {
-                Toast.makeText(LoginUserActivity.this, message,
-                        Toast.LENGTH_SHORT).show();
+            public void accept(User user, Throwable throwable) {
+                if (user != null) {
+                    getAuthenticator().setCurrentUser(user);
+                    onAuthComplete();
+                } else {
+                    Toast.makeText(LoginUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

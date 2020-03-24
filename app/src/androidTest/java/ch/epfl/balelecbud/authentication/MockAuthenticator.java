@@ -2,6 +2,10 @@ package ch.epfl.balelecbud.authentication;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Future;
+import java.util.function.Function;
 
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.Callback;
@@ -28,46 +32,36 @@ public class MockAuthenticator implements Authenticator {
     }
 
     @Override
-    public void signIn(final String email, final String password, final Callback callback) {
+    public CompletableFuture<User> signIn(final String email, final String password) {
         if (users.containsKey(email) && users.get(email).equals(password)) {
             setLoggedIn(true);
-            MockDatabaseWrapper.getInstance().getDocument("users", "0", User.class, new Callback<User>() {
+            return MockDatabaseWrapper.getInstance().getDocument("users", "0", User.class).thenCompose(new Function<User, CompletionStage<User>>() {
                 @Override
-                public void onSuccess(User data) {
-                    callback.onSuccess(data);
-                    currentUser = data;
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    callback.onFailure(message);
+                public CompletionStage<User> apply(User user) {
+                    currentUser = user;
+                    return CompletableFuture.completedFuture(user);
                 }
             });
         } else {
-            callback.onFailure("Login failed");
+            return CompletableFuture.completedFuture(null);
         }
     }
 
     @Override
-    public void createAccount(final String email, final String password, final Callback callback) {
+    public CompletableFuture<Void> createAccount(final String email, final String password) {
         if (!users.containsKey(email)) {
             users.put(email, password);
             setLoggedIn(true);
             User u = new User(email, email, String.valueOf(uid));
             uid++;
-            MockDatabaseWrapper.getInstance().storeDocument("users", u, new Callback<User>() {
+            return MockDatabaseWrapper.getInstance().storeDocumentWithID("users", String.valueOf(uid), u);
+        } else {
+            return new CompletableFuture().thenApply(new Function() {
                 @Override
-                public void onSuccess(User data) {
-                    callback.onSuccess(data);
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    callback.onFailure(message);
+                public Object apply(Object o) {
+                    throw new RuntimeException();
                 }
             });
-        } else {
-            callback.onFailure("Registration failed: account already exists with this email");
         }
     }
 

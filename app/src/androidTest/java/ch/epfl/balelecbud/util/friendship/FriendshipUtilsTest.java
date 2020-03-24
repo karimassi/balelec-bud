@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 import ch.epfl.balelecbud.LoginUserActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
@@ -53,15 +54,7 @@ public class FriendshipUtilsTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FriendshipUtils.addFriend(friend, new Callback() {
-                    @Override
-                    public void onSuccess(Object data) {
-                    }
-                    @Override
-                    public void onFailure(String message) {
-                        Log.d("FriendshipUtils", message);
-                    }
-                });
+                FriendshipUtils.addFriend(friend);
             }
         };
         runOnUiThread(myRunnable);
@@ -73,15 +66,7 @@ public class FriendshipUtilsTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FriendshipUtils.acceptRequest(request, new Callback() {
-                    @Override
-                    public void onSuccess(Object data) {
-                    }
-                    @Override
-                    public void onFailure(String message) {
-                        Log.d("FriendshipUtils", message);
-                    }
-                });
+                FriendshipUtils.acceptRequest(request);
             }
         };
         runOnUiThread(myRunnable);
@@ -93,15 +78,7 @@ public class FriendshipUtilsTest {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FriendshipUtils.removeFriend(user, new Callback() {
-                    @Override
-                    public void onSuccess(Object data) {
-                    }
-                    @Override
-                    public void onFailure(String message) {
-                        Log.d("FriendshipUtils", message);
-                    }
-                });
+                FriendshipUtils.removeFriend(user);
             }
         };
         runOnUiThread(myRunnable);
@@ -120,15 +97,11 @@ public class FriendshipUtilsTest {
 
         addFriend(recipient);
 
-        db.getDocument("friendRequests", recipient.getUid(), FriendRequest.class, new Callback<FriendRequest>() {
+        db.getDocument("friendRequests", recipient.getUid(), FriendRequest.class).whenComplete(new BiConsumer<FriendRequest, Throwable>() {
             @Override
-            public void onSuccess(FriendRequest data) {
-                Assert.assertEquals(sender.getUid(), data.getSenderId());
-                Assert.assertEquals(recipient.getUid(), data.getRecipientId());
-            }
-            @Override
-            public void onFailure(String message) {
-                Assert.fail(message);
+            public void accept(FriendRequest request, Throwable throwable) {
+                Assert.assertEquals(sender.getUid(), request.getSenderId());
+                Assert.assertEquals(recipient.getUid(), request.getRecipientId());
             }
         });
     }
@@ -140,14 +113,10 @@ public class FriendshipUtilsTest {
         result.put(request.getSenderId(), true);
 
         acceptRequest(request);
-        db.getDocument("friendships", request.getRecipientId(), HashMap.class, new Callback<HashMap>() {
+        db.getDocument("friendships", request.getRecipientId(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
             @Override
-            public void onSuccess(HashMap data) {
-                Assert.assertEquals(result, (HashMap<String, Boolean>) data);
-            }
-            @Override
-            public void onFailure(String message) {
-                Assert.fail();
+            public void accept(HashMap hashMap, Throwable throwable) {
+                Assert.assertEquals(result, (HashMap<String, Boolean>) hashMap);
             }
         });
 
@@ -160,14 +129,10 @@ public class FriendshipUtilsTest {
         acceptRequest(request);
         deleteFriend(recipient);
 
-        db.getDocument("friendships", request.getRecipientId(), HashMap.class, new Callback<HashMap>() {
+        db.getDocument("friendships", request.getRecipientId(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
             @Override
-            public void onSuccess(HashMap data) {
-                Assert.assertEquals(new HashMap<String, Boolean>(), data);
-            }
-            @Override
-            public void onFailure(String message) {
-                Assert.fail();
+            public void accept(HashMap hashMap, Throwable throwable) {
+                Assert.assertEquals(new HashMap<String, Boolean>(), hashMap);
             }
         });
     }

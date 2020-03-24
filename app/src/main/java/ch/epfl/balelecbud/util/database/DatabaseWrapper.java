@@ -1,8 +1,7 @@
 package ch.epfl.balelecbud.util.database;
 
 import java.util.Map;
-
-import ch.epfl.balelecbud.util.Callback;
+import java.util.concurrent.CompletableFuture;
 
 public interface DatabaseWrapper {
 
@@ -17,16 +16,16 @@ public interface DatabaseWrapper {
 
     void listen(String collectionName, DatabaseListener listener);
 
-    <T> void getDocument(String collectionName, String documentID, Class type, Callback<T> callback);
+    <T> CompletableFuture<T> getDocument(String collectionName, String documentID, Class<T> type);
 
 //    <T> void getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class type, Callback<T> callback);
 
-    void updateDocument(String collectionName, String documentID, Map<String,Object> updates, Callback callback);
+    void updateDocument(String collectionName, String documentID, Map<String,Object> updates);
 
-    <T> void storeDocument(String collectionName, T document, Callback callback);
+    <T> void storeDocument(String collectionName, T document);
 
-    <T> void storeDocumentWithID(String collectionName, String documentID, T document, Callback callback);
+    <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document);
 
-    void deleteDocument(String collectionName, String documentID, Callback callback);
+    void deleteDocument(String collectionName, String documentID);
 
 }
