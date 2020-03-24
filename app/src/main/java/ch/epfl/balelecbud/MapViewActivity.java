@@ -23,6 +23,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     private LatLng position;
     private GoogleMap googleMap;
+    private Task<Location> locationResult;
     private static boolean locationEnabled;
 
     private OnCompleteListener<Location> callback = new OnCompleteListener<Location>() {
@@ -41,10 +42,10 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         final double defaultLat = Double.parseDouble(getString(R.string.default_lat));
         final double defaultLng = Double.parseDouble(getString(R.string.default_lng));
         final LatLng defaultLocation = new LatLng(defaultLat, defaultLng);
-
         setPosition(defaultLocation);
 
         locationEnabled = WelcomeActivity.isLocationActive();
+        locationResult = getDeviceLocation();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -61,14 +62,16 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
 
         if(locationEnabled) {
-            Task<Location> locationResult = LocationServices.
-                    getFusedLocationProviderClient(this).getLastLocation();
             locationResult.addOnCompleteListener(this, callback);
         }
         else {
             googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
         }
+    }
+
+    protected Task<Location> getDeviceLocation() {
+        return locationEnabled ? LocationServices.getFusedLocationProviderClient(this).getLastLocation() : null;
     }
 
     protected void setPositionFrom(Location location, boolean locationEnabled) {

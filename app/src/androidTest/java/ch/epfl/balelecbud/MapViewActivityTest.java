@@ -9,6 +9,7 @@ import androidx.test.rule.ActivityTestRule;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.protobuf.NullValue;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,6 +24,7 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewActivityTest {
@@ -120,6 +122,17 @@ public class MapViewActivityTest {
     public void testLocationIsNotSetWhenLocationDisabled() {
         testSetPositionFrom(newTestLocation(), false);
         assertThat(newMapPosition, is(oldMapPosition));
+    }
+
+    @Test
+    public void testGetDeviceLocation() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        if(MapViewActivity.getLocationPermission()) {
+            assertThat(mActivity.getDeviceLocation(), is(notNullValue()));
+        }
+        else {
+            assertNull(mActivity.getDeviceLocation());
+        }
     }
 
     private void testSetPositionFrom(final Location location, final boolean locationEnabled){
