@@ -12,7 +12,10 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 @Dao
 public interface ConcertOfInterestDAO {
     @Query("SELECT * FROM Slot")
-    List<Slot> getAllConcertOfInterest();
+    Slot[] getAllConcertOfInterest();
+
+    @Query("SELECT * FROM Slot")
+    List<Slot> getAllConcertOfInterestList();
 
     @Insert
     void insertConcert(Slot concert);

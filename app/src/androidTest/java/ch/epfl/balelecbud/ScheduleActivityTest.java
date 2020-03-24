@@ -25,12 +25,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.balelecbud.notifications.concertFlow.AbstractConcertFlow;
 import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -88,14 +86,11 @@ public class ScheduleActivityTest {
                 String action = intent.getAction();
                 switch (action) {
                     case FlowUtil.ACK_CONCERT:
+                    case FlowUtil.GET_ALL_CONCERT:
                         Assert.fail();
                         break;
                     case FlowUtil.SUBSCRIBE_CONCERT:
                     case FlowUtil.CANCEL_CONCERT:
-                        break;
-                    case FlowUtil.GET_ALL_CONCERT:
-                        AbstractConcertFlow.FlowCallback callback = FlowUtil.unpackCallback(intent);
-                        callback.onResult(Collections.<Slot>emptyList());
                         break;
                 }
             }
@@ -176,6 +171,7 @@ public class ScheduleActivityTest {
                 switch (action) {
                     case FlowUtil.ACK_CONCERT:
                     case FlowUtil.CANCEL_CONCERT:
+                    case FlowUtil.GET_ALL_CONCERT:
                         Assert.fail();
                         break;
                     case FlowUtil.SUBSCRIBE_CONCERT:
@@ -184,10 +180,6 @@ public class ScheduleActivityTest {
                             sync.add(new Object());
                             sync.notify();
                         }
-                        break;
-                    case FlowUtil.GET_ALL_CONCERT:
-                        AbstractConcertFlow.FlowCallback callback = FlowUtil.unpackCallback(intent);
-                        callback.onResult(Collections.<Slot>emptyList());
                         break;
                 }
             }

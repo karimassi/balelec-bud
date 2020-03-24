@@ -1,7 +1,9 @@
 package ch.epfl.balelecbud.notifications.concertFlow;
 
 import android.content.Context;
+import android.content.Intent;
 
+import androidx.annotation.NonNull;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -57,6 +59,7 @@ public class ConcertFlowTest {
     @Before
     public void setup() {
         this.flow = new ConcertFlow();
+//        this.flow.onCreate();
         this.db = Room.inMemoryDatabaseBuilder(
                 ApplicationProvider.getApplicationContext(),
                 ConcertOfInterestDatabase.class
@@ -66,9 +69,11 @@ public class ConcertFlowTest {
 
     @After
     public void tearDown() {
-        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(null, 0));
-        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(null, 1));
-        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(null, 2));
+        this.db.close();
+//        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(ApplicationProvider.getApplicationContext(), 0));
+//        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(ApplicationProvider.getApplicationContext(), 1));
+//        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(ApplicationProvider.getApplicationContext(), 2));
+//        this.flow.onDestroy();
     }
 
     @Test
@@ -94,7 +99,7 @@ public class ConcertFlowTest {
                 Assert.fail();
             }
         });
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -129,11 +134,11 @@ public class ConcertFlowTest {
                 Assert.fail();
             }
         });
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         synchronized (sync) {
             sync.wait(1000);
         }
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot2));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -172,15 +177,15 @@ public class ConcertFlowTest {
                 Assert.fail();
             }
         });
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         synchronized (sync) {
             sync.wait(1000);
         }
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot2));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         synchronized (sync) {
             sync.wait(1000);
         }
-        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(null, slot1));
+        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -188,22 +193,27 @@ public class ConcertFlowTest {
     }
 
     @Test
-    public void addedConcertAreInTheList() throws InterruptedException {
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot2));
+    public void addedConcertsAreInTheList() throws InterruptedException {
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         final List<Object> sync = new LinkedList<>();
-        flow.onHandleIntent(FlowUtil.packCallback(null, new AbstractConcertFlow.FlowCallback() {
+        flow.setLauncher(new ConcertFlow.IntentLauncher() {
             @Override
-            public void onResult(List<Slot> slots) {
-                Assert.assertEquals(slots.size(), 2);
-                Assert.assertTrue(slots.contains(slot1));
-                Assert.assertTrue(slots.contains(slot2));
+            public void launchIntent(@NonNull Intent intent) {
+                List<Slot> res = FlowUtil.unpackCallback(intent);
+                Assert.assertThat(res.size(), is(2));
+                Assert.assertTrue(res.contains(slot1));
+                Assert.assertTrue(res.contains(slot2));
                 synchronized (sync) {
                     sync.add(new Object());
                     sync.notify();
                 }
             }
-        }));
+        });
+        Intent intent = new Intent();
+        intent.setAction(FlowUtil.GET_ALL_CONCERT);
+        intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent());
+        flow.onHandleIntent(intent);
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -212,13 +222,14 @@ public class ConcertFlowTest {
 
     @Test
     public void removedConcertAreNotInTheList() throws InterruptedException {
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot1));
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(null, slot2));
-        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(null, slot1));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
+        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         final List<Object> sync = new LinkedList<>();
-        flow.onHandleIntent(FlowUtil.packCallback(null, new AbstractConcertFlow.FlowCallback() {
+        flow.setLauncher(new ConcertFlow.IntentLauncher() {
             @Override
-            public void onResult(List<Slot> slots) {
+            public void launchIntent(@NonNull Intent intent) {
+                List<Slot> slots = FlowUtil.unpackCallback(intent);
                 Assert.assertEquals(slots.size(), 1);
                 Assert.assertFalse(slots.contains(slot1));
                 Assert.assertTrue(slots.contains(slot2));
@@ -227,7 +238,11 @@ public class ConcertFlowTest {
                     sync.notify();
                 }
             }
-        }));
+        });
+        Intent intent = new Intent();
+        intent.setAction(FlowUtil.GET_ALL_CONCERT);
+        intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent());
+        flow.onHandleIntent(intent);
         synchronized (sync) {
             sync.wait(1000);
         }

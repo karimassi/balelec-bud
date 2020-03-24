@@ -21,6 +21,8 @@ import com.google.android.gms.location.LocationRequest;
 import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationService;
+import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
 
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
@@ -261,8 +263,10 @@ public class WelcomeActivity extends BasicActivity {
      * Called when the user clicks the Schedule button
      */
     private void openScheduleActivity() {
-        Intent intent = new Intent(this, ScheduleActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent(this, ConcertFlow.class);
+        intent.setAction(FlowUtil.GET_ALL_CONCERT);
+        intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(this, ScheduleActivity.class));
+        startService(intent);
     }
 
     /**

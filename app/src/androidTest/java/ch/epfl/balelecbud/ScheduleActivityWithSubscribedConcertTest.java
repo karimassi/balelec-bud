@@ -2,23 +2,26 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.Timestamp;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.balelecbud.notifications.concertFlow.AbstractConcertFlow;
 import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -29,8 +32,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.balelecbud.ScheduleActivityTest.nthChildOf;
 import static ch.epfl.balelecbud.ScheduleActivityTest.switchChecked;
-import static org.hamcrest.core.Is.is;
 
+@RunWith(AndroidJUnit4.class)
 public class ScheduleActivityWithSubscribedConcertTest {
     private MockDatabaseWrapper mock;
 
@@ -40,7 +43,7 @@ public class ScheduleActivityWithSubscribedConcertTest {
     @BeforeClass
     public static void setUpSlots(){
         List<Timestamp> timestamps = new LinkedList<>();
-        for(int i = 0; i < 6; ++i){
+        for(int i = 0; i < 4; ++i){
             Calendar c = Calendar.getInstance();
             c.set(2020,11,11,10 + i, i % 2 == 0 ? 15 : 0);
             Date date = c.getTime();
@@ -57,7 +60,24 @@ public class ScheduleActivityWithSubscribedConcertTest {
             mock = new MockDatabaseWrapper();
             ScheduleAdapter.setDatabaseImplementation(mock);
         }
+
+        @Override
+        protected Intent getActivityIntent() {
+            Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
+            FlowUtil.packCallback(new Slot[] { slot1 }, intent);
+            return intent;
+        }
     };
+
+    @Before
+    public void setUpMockIntentLauncher() {
+        this.mActivityRule.getActivity().setServiceInterface(new ScheduleAdapter.ServiceInterface() {
+            @Override
+            public void callService(@NonNull Intent intent) {
+
+            }
+        });
+    }
 
     @Test
     public void testUnSubscribeToAConcert() throws Throwable {
@@ -71,6 +91,7 @@ public class ScheduleActivityWithSubscribedConcertTest {
                 String action = intent.getAction();
                 switch (action) {
                     case FlowUtil.ACK_CONCERT:
+                    case FlowUtil.GET_ALL_CONCERT:
                         Assert.fail();
                         break;
                     case FlowUtil.CANCEL_CONCERT:
@@ -79,11 +100,6 @@ public class ScheduleActivityWithSubscribedConcertTest {
                             sync.notify();
                         }
                     case FlowUtil.SUBSCRIBE_CONCERT:
-                        Assert.assertThat(FlowUtil.unpackSlotInIntent(intent), is(slot1));
-                        break;
-                    case FlowUtil.GET_ALL_CONCERT:
-                        AbstractConcertFlow.FlowCallback callback = FlowUtil.unpackCallback(intent);
-                        callback.onResult(Collections.singletonList(slot1));
                         break;
                 }
             }

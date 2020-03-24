@@ -2,11 +2,14 @@ package ch.epfl.balelecbud.notifications.concertFlow;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.io.Serializable;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import ch.epfl.balelecbud.schedule.models.Slot;
 
@@ -16,9 +19,11 @@ public final class FlowUtil {
     public static final String SUBSCRIBE_CONCERT =  TAG + ".SUBSCRIBE_CONCERT";
     public static final String ACK_CONCERT = TAG + ".ACK_CONCERT";
     public static final String GET_ALL_CONCERT = TAG + ".GET_ALL_CONCERT";
+    public static final String RECEIVE_ALL_CONCERT = TAG + ".RECEIVE_ALL_CONCERT";
     public static final String ID = TAG + ".ID";
     public static final String SLOT = TAG + ".SLOT";
     public static final String CALLBACK = TAG + ".CALLBACK";
+    public static final String CALLBACK_INTENT = TAG + ".CALLBACK_INTENT";
 
     /**
      * Unpack the given Intent to retrieve the Id stored in it
@@ -27,7 +32,7 @@ public final class FlowUtil {
      * @return the Id stored in the Intent or @code{-1} if the Intent wasn't properly formatted
      */
     public static int unpackIdInIntent(Intent intent) {
-        if (intent != null && intent.getAction() != null && intent.getAction().equals(ACK_CONCERT)) {
+        if (intent != null && ACK_CONCERT.equals(intent.getAction())) {
             return intent.getIntExtra(ID, -1);
         } else {
             return -1;
@@ -44,9 +49,7 @@ public final class FlowUtil {
     public static Intent packAckIntentWithId(Context context, int id) {
         Intent intent = new Intent(context, ConcertFlow.class);
         intent.setAction(ACK_CONCERT);
-        Bundle b = new Bundle();
-        b.putInt(ID, id);
-        intent.putExtras(b);
+        intent.putExtra(ID, id);
         return intent;
     }
 
@@ -59,11 +62,10 @@ public final class FlowUtil {
     public static Slot unpackSlotInIntent(Intent intent) {
         if (intent != null) {
             String action = intent.getAction();
-            if (action != null &&
-                    (action.equals(SUBSCRIBE_CONCERT) || action.equals(CANCEL_CONCERT))) {
-                Serializable s = intent.getSerializableExtra(SLOT);
-                if (s instanceof Slot)
-                    return (Slot) s;
+            if (SUBSCRIBE_CONCERT.equals(action) || CANCEL_CONCERT.equals(action)) {
+                Parcelable p = intent.getParcelableExtra(SLOT);
+                if (p instanceof Slot)
+                    return (Slot) p;
             }
         }
         return null;
@@ -98,36 +100,51 @@ public final class FlowUtil {
     }
 
     /**
-     * Unpack the callback function from an Intent
-     * @param intent the Intent to unpack
-     * @return the callback function stored in the Intent or @code{null} if the Intent wasn't properly formatted
+     * Pack the given list of Slot into the given Intent
+     * @param slots  the slots to pack into the intent
+     * @param intent the intent to store the slots into
+     * @return       the given intent with the slots packed in it
      */
-    public static AbstractConcertFlow.FlowCallback unpackCallback(Intent intent) {
-        if (intent != null) {
-            String action = intent.getAction();
-            if (action != null && action.equals(GET_ALL_CONCERT)) {
-                Bundle bundle = intent.getBundleExtra(CALLBACK);
-                if (bundle != null) {
-                    Object o = bundle.get(CALLBACK);
-                    if (o instanceof Slot)
-                        return (AbstractConcertFlow.FlowCallback) o;
+    @NonNull
+    public static Intent packCallback(Slot[] slots, @NonNull Intent intent) {
+        intent.setAction(RECEIVE_ALL_CONCERT);
+        intent.putExtra(CALLBACK, slots);
+        return intent;
+    }
+
+    /**
+     * Unpack the array of Slot stored in the given Intent
+     * @param intent the intent to retrieve the array from
+     * @return       the array stored in the intent or null if the Intent wasn't properly formatted
+     */
+    public static List<Slot> unpackCallback(Intent intent) {
+        if (intent != null && RECEIVE_ALL_CONCERT.equals(intent.getAction())) {
+            Parcelable[] ps = intent.getParcelableArrayExtra(CALLBACK);
+            if (ps != null) {
+                Log.d("FlowUtil", "unpackCallback: ps = " + Arrays.toString(ps));
+                List<Slot> slots = new LinkedList<>();
+                for (Parcelable p : ps) {
+                    if (p instanceof Slot)
+                        slots.add((Slot) p);
                 }
+                return slots;
             }
         }
         return null;
     }
 
     /**
-     * Pack the given callback function into an Intent formatted for @code{unpackSlotInIntent}
-     * @param context  the context from which the Intent is created
-     * @param callback the callback function to pack in the Intent
-     * @return         the id packed in an Intent
+     * Unpack the given Intent to retrieve the Intent stored in it
+     *
+     * @param intent the Intent to unpack
+     * @return the Intent stored in the given Intent or @code{null} if the Intent wasn't properly formatted
      */
-    @NonNull
-    public static Intent packCallback(Context context, AbstractConcertFlow.FlowCallback callback) {
-        Intent intent = new Intent(context, ConcertFlow.class);
-        intent.setAction(GET_ALL_CONCERT);
-        intent.putExtra(CALLBACK, callback);
-        return intent;
+    public static Intent unpackIntentInIntent(Intent intent) {
+        if (intent != null && GET_ALL_CONCERT.equals(intent.getAction())) {
+            Parcelable p = intent.getParcelableExtra(CALLBACK_INTENT);
+            if (p instanceof Intent)
+                return (Intent) p;
+        }
+        return null;
     }
 }

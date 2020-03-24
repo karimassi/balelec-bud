@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.notifications.concertFlow.AbstractConcertFlow;
 import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
@@ -56,6 +55,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     }
 
     private List<Slot> slots;
+    private List<Slot> subscribedConcertAtLaunch;
 
     static class ScheduleViewHolder extends RecyclerView.ViewHolder {
         final TextView timeSlotView;
@@ -73,7 +73,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         }
     }
 
-    public ScheduleAdapter(Activity activity) {
+    public ScheduleAdapter(Activity activity, List<Slot> subscribedConcertAtLaunch) {
+        Log.d(TAG, "ScheduleAdapter: with concerts = " + subscribedConcertAtLaunch.toString());
+        this.subscribedConcertAtLaunch = subscribedConcertAtLaunch;
         this.mainActivity = activity;
         slots = new ArrayList<>();
         RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
@@ -126,19 +128,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             }
         });
 
-       service.callService(FlowUtil.packCallback(mainActivity, new AbstractConcertFlow.FlowCallback() {
-            @Override
-            public void onResult(List<Slot> slots) {
-                if (slots.contains(slot)) {
-                    ScheduleAdapter.this.mainActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewHolder.subscribeSwitch.setChecked(true);
-                        }
-                    });
-                }
-            }
-        }));
+        if (this.subscribedConcertAtLaunch.contains(slot))
+            viewHolder.subscribeSwitch.setChecked(true);
     }
 
     public int getItemCount() {

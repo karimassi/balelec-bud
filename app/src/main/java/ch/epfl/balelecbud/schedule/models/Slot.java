@@ -1,5 +1,8 @@
 package ch.epfl.balelecbud.schedule.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -7,12 +10,10 @@ import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 
-import java.io.Serializable;
-
 import ch.epfl.balelecbud.util.StringUtils;
 
 @Entity
-public class Slot implements Serializable {
+public class Slot implements Parcelable {
     @PrimaryKey
     private int id;
 
@@ -33,6 +34,26 @@ public class Slot implements Serializable {
     public Slot() {
 
     }
+
+    protected Slot(Parcel in) {
+        id = in.readInt();
+        artistName = in.readString();
+        sceneName = in.readString();
+        startTime = in.readParcelable(Timestamp.class.getClassLoader());
+        endTime = in.readParcelable(Timestamp.class.getClassLoader());
+    }
+
+    public static final Creator<Slot> CREATOR = new Creator<Slot>() {
+        @Override
+        public Slot createFromParcel(Parcel in) {
+            return new Slot(in);
+        }
+
+        @Override
+        public Slot[] newArray(int size) {
+            return new Slot[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -63,5 +84,19 @@ public class Slot implements Serializable {
                 && ((Slot) obj).getStartTime().equals(startTime)
                 && ((Slot) obj).getEndTime().equals(endTime)
                 && ((Slot) obj).getSceneName().equals(sceneName);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(artistName);
+        dest.writeString(sceneName);
+        dest.writeParcelable(startTime, flags);
+        dest.writeParcelable(endTime, flags);
     }
 }

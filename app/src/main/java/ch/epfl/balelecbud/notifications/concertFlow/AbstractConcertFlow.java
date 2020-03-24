@@ -2,24 +2,18 @@ package ch.epfl.balelecbud.notifications.concertFlow;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
-
-import java.io.Serializable;
-import java.util.List;
 
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 public abstract class AbstractConcertFlow extends IntentService {
-    public interface FlowCallback extends Serializable {
-        void onResult(List<Slot> slots);
-    }
-
     public AbstractConcertFlow(String name) {
         super(name);
     }
 
-    protected abstract void getAllScheduledConcert(FlowCallback callback);
+    protected abstract void getAllScheduledConcert(Intent callbackIntent);
 
     protected abstract void scheduleNewConcert(Slot newSlot);
 
@@ -33,6 +27,7 @@ public abstract class AbstractConcertFlow extends IntentService {
             return;
 
         String action = intent.getAction();
+        Log.d("ConcertFlow", "onHandleIntent: action = " + action);
         switch (action) {
             case FlowUtil.ACK_CONCERT:
                 this.removeConcertById(FlowUtil.unpackIdInIntent(intent));
@@ -50,8 +45,9 @@ public abstract class AbstractConcertFlow extends IntentService {
                 break;
             }
             case FlowUtil.GET_ALL_CONCERT:
-                FlowCallback callback = FlowUtil.unpackCallback(intent);
-                this.getAllScheduledConcert(callback);
+                Intent callbackIntent = FlowUtil.unpackIntentInIntent(intent);
+                if (callbackIntent != null)
+                    this.getAllScheduledConcert(callbackIntent);
                 break;
         }
     }
