@@ -3,7 +3,6 @@ package ch.epfl.balelecbud.authentication;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.Callback;
 
 public interface Authenticator {
 

@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.Callback;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 public class MockAuthenticator implements Authenticator {

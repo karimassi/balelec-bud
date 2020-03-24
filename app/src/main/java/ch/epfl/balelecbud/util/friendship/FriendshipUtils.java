@@ -11,7 +11,6 @@ import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.models.FriendRequest;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.Callback;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
