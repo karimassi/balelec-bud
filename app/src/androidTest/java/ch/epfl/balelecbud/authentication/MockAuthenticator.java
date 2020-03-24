@@ -1,5 +1,9 @@
 package ch.epfl.balelecbud.authentication;
 
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -41,7 +45,12 @@ public class MockAuthenticator implements Authenticator {
                 }
             });
         } else {
-            return CompletableFuture.completedFuture(null);
+            return CompletableFuture.completedFuture(null).thenApply(new Function<Object, User>() {
+                @Override
+                public User apply(Object o) {
+                    throw new RuntimeException("Failed login");
+                }
+            });
         }
     }
 
@@ -54,10 +63,10 @@ public class MockAuthenticator implements Authenticator {
             uid++;
             return MockDatabaseWrapper.getInstance().storeDocumentWithID("users", String.valueOf(uid), u);
         } else {
-            return new CompletableFuture().thenApply(new Function() {
+            return CompletableFuture.completedFuture(null).thenApply(new Function<Object, Void>() {
                 @Override
-                public Object apply(Object o) {
-                    throw new RuntimeException();
+                public Void apply(Object o) {
+                    throw new RuntimeException("Failed register");
                 }
             });
         }
