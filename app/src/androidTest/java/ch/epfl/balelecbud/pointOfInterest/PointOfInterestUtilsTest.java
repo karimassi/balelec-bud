@@ -33,7 +33,7 @@ public class PointOfInterestUtilsTest {
     @BeforeClass
     public static void setup(){
         locations = Lists.newArrayList(l1, l2, l3, l4);
-        db = new MockDatabaseWrapper();
+        db = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
         List<Object> objectList = new LinkedList<>();
         objectList.addAll(locations);
         db.setListToQuery(objectList);

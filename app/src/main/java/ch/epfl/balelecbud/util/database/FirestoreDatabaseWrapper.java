@@ -94,14 +94,13 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass){
-        final CompletableFuture<List<T>> compFuture =  new CompletableFuture<>();
-        FirestoreQueryConverter.convert(query).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        CompletableFuture<QuerySnapshot> future = new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
+        return future.thenApply(new Function<QuerySnapshot, List<T>>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                compFuture.complete(queryDocumentSnapshots.toObjects(tClass));
+            public List<T> apply(QuerySnapshot value) {
+                return value.toObjects(tClass);
             }
         });
-        return compFuture;
     }
 
     public static DatabaseWrapper getInstance() {
