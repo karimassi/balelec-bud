@@ -10,5 +10,4 @@ public interface NotificationSchedulerInterface {
 
     void cancelNotification(Context context, Slot slot);
 
-    void onNotificationPushed(int id);
 }

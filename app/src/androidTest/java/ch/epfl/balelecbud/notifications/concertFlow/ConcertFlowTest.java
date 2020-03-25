@@ -94,10 +94,6 @@ public class ConcertFlowTest {
                 Assert.fail();
             }
 
-            @Override
-            public void onNotificationPushed(int id) {
-                Assert.fail();
-            }
         });
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         synchronized (sync) {
@@ -129,10 +125,6 @@ public class ConcertFlowTest {
                 Assert.fail();
             }
 
-            @Override
-            public void onNotificationPushed(int id) {
-                Assert.fail();
-            }
         });
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         synchronized (sync) {
@@ -172,10 +164,6 @@ public class ConcertFlowTest {
                 }
             }
 
-            @Override
-            public void onNotificationPushed(int id) {
-                Assert.fail();
-            }
         });
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         synchronized (sync) {

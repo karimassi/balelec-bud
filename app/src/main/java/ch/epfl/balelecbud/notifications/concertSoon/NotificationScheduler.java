@@ -55,7 +55,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
 
         //what should be launched when notification clicked
         Intent intent = new Intent(context, WelcomeActivity.class);
-        int notificationId = slot.hashCode(); //??
+        int notificationId = slot.getId(); 
         PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(activity);
 
@@ -64,6 +64,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
         Intent notificationIntent = new Intent(context, NotificationProvider.class);
         notificationIntent.putExtra(NotificationProvider.NOTIFICATION_ID, notificationId);
         notificationIntent.putExtra(NotificationProvider.NOTIFICATION, notification);
+        notificationIntent.putExtra(NotificationProvider.SLOT_ID, slot.getId());
         notificationIntent.setAction(CONCERT_SOON_ACTION);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -81,22 +82,11 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
 
     @Override
     public void cancelNotification(Context context, Slot slot) {
-        int hash = slot.hashCode();
-        if (pendingIntents.containsKey(hash)) {
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            alarmManager.cancel(pendingIntents.get(hash));
-            pendingIntents.remove(hash);
-        } else {
-            //throw new IllegalArgumentException("Notification cancelled but wasn't planned to start with");
-        }
-    }
-
-    @Override
-    public void onNotificationPushed(int id) {
+        int id = slot.getId();
         if (pendingIntents.containsKey(id)) {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(pendingIntents.get(id));
             pendingIntents.remove(id);
-        } else {
-            //throw new IllegalArgumentException("Notification pushed was not tracked");
         }
     }
 

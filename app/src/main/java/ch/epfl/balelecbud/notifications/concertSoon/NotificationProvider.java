@@ -6,10 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
+
 public class NotificationProvider extends BroadcastReceiver {
 
     public static String NOTIFICATION_ID = "notification_id";
     public static String NOTIFICATION = "notification";
+    public static String SLOT_ID = "slot_id";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -20,6 +23,7 @@ public class NotificationProvider extends BroadcastReceiver {
         int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
         notificationManager.notify(notificationId, notification);
 
-        NotificationScheduler.getInstance().onNotificationPushed(notificationId);
+        Intent ackIntent = FlowUtil.packAckIntentWithId(context, intent.getIntExtra(SLOT_ID, -1));
+        context.startService(ackIntent);
     }
 }

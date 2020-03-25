@@ -18,6 +18,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.location.LocationClient;
@@ -83,7 +86,13 @@ public class ConcertSoonNotificationTest {
         String expectedTitle = mActivityRule.getActivity().getString(R.string.concert_soon_notification_title);
 
         Context ctx = mActivityRule.getActivity().getApplicationContext();
-        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        // schedule the notification to go off in 5 seconds,
+        // which leaves plenty of time to cancel it
+        cal.add(Calendar.SECOND, 5);
+        cal.add(Calendar.MINUTE, 15);
+        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
 
         NotificationScheduler ns = NotificationScheduler.getInstance();
         ns.scheduleNotification(ctx, s);
@@ -100,18 +109,5 @@ public class ConcertSoonNotificationTest {
 
         device.waitForIdle();
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void onPushedWhenNotTrackedThrows(){
-        Context ctx = mActivityRule.getActivity().getApplicationContext();
-        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
-        NotificationScheduler.getInstance().onNotificationPushed(s.hashCode());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void cancelWhenNotTrackedThrows(){
-        Context ctx = mActivityRule.getActivity().getApplicationContext();
-        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
-        NotificationScheduler.getInstance().cancelNotification(ctx, s);
-    }
+    
 }
