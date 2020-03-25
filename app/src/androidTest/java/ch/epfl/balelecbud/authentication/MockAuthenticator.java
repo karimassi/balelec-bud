@@ -1,16 +1,12 @@
 package ch.epfl.balelecbud.authentication;
 
-import android.util.Log;
-
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 public class MockAuthenticator implements Authenticator {
@@ -37,20 +33,15 @@ public class MockAuthenticator implements Authenticator {
     public CompletableFuture<User> signIn(final String email, final String password) {
         if (users.containsKey(email) && users.get(email).equals(password)) {
             setLoggedIn(true);
-            return MockDatabaseWrapper.getInstance().getDocument("users", "0", User.class).thenCompose(new Function<User, CompletionStage<User>>() {
+            return MockDatabaseWrapper.getInstance().getDocument("users", "0", User.class).thenApply(new Function<User, User>() {
                 @Override
-                public CompletionStage<User> apply(User user) {
+                public User apply(User user) {
                     currentUser = user;
-                    return CompletableFuture.completedFuture(user);
+                    return user;
                 }
             });
         } else {
-            return CompletableFuture.completedFuture(null).thenApply(new Function<Object, User>() {
-                @Override
-                public User apply(Object o) {
-                    throw new RuntimeException("Failed login");
-                }
-            });
+            return CompletableFutureUtils.getExceptionalFuture("Failed login");
         }
     }
 
@@ -64,12 +55,7 @@ public class MockAuthenticator implements Authenticator {
             MockDatabaseWrapper.getInstance().storeDocumentWithID("users", String.valueOf(uid), u);
             return CompletableFuture.completedFuture(null);
         } else {
-            return CompletableFuture.completedFuture(null).thenApply(new Function<Object, Void>() {
-                @Override
-                public Void apply(Object o) {
-                    throw new RuntimeException("Failed register");
-                }
-            });
+            return CompletableFutureUtils.getExceptionalFuture("Failed registration");
         }
     }
 
