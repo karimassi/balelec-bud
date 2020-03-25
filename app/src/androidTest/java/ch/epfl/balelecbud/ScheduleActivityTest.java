@@ -33,7 +33,7 @@ public class ScheduleActivityTest {
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = new MockDatabaseWrapper();
+            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
             ScheduleAdapter.setDatabaseImplementation(mock);
         }
     };

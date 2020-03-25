@@ -34,7 +34,7 @@ public class PointOfInterestActivityTest {
             new ActivityTestRule<PointOfInterestActivity>(PointOfInterestActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = new MockDatabaseWrapper();
+            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
             PointOfInterestAdapter.setDatabaseImplementation(mock);
         }
     };
