@@ -9,10 +9,8 @@ import android.widget.Toast;
 
 import java.util.function.BiConsumer;
 
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 public class RegisterUserActivity extends BasicActivity {
 
@@ -84,7 +82,7 @@ public class RegisterUserActivity extends BasicActivity {
     }
 
     private void onAuthComplete() {
-        getDatabase().getDocument(DatabaseWrapper.USERS, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
+        getDatabase().getDocument(DatabaseWrapper.USERS_PATH, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
             @Override
             public void accept(User user, Throwable throwable) {
                 if (throwable != null) {
