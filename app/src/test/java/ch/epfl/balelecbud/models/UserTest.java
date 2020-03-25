@@ -1,14 +1,12 @@
 package ch.epfl.balelecbud.models;
 
-import com.google.firebase.firestore.GeoPoint;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 
 public class UserTest {
-    private User u1 = new User("test@email.com", new GeoPoint(24, 42), "name", "surname", "a token");
+    private User u1 = new User("test@email.com", "displayName", "a token");
 
     @Test
     public void testEmptyConstructor() {
@@ -21,24 +19,13 @@ public class UserTest {
     }
 
     @Test
-    public void testGetName() {
-        Assert.assertThat(u1.getName(), is("name"));
-    }
-
-    @Test
-    public void testGetSurname() {
-        Assert.assertThat(u1.getSurname(), is("surname"));
+    public void testGetDisplayName() {
+        Assert.assertThat(u1.getDisplayName(), is("displayName"));
     }
 
     @Test
     public void testGetUserToken() {
-        Assert.assertThat(u1.getUserToken(), is("a token"));
+        Assert.assertThat(u1.getUid(), is("a token"));
     }
-
-    @Test
-    public void testGetLocation() {
-        Assert.assertThat(u1.getLocation(), is(new GeoPoint(24, 42)));
-    }
-
 
 }

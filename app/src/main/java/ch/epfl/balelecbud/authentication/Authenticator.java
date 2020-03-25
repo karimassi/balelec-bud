@@ -1,17 +1,21 @@
 package ch.epfl.balelecbud.authentication;
 
-import com.google.firebase.auth.FirebaseUser;
+import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.util.Callback;
+import ch.epfl.balelecbud.models.User;
 
 public interface Authenticator {
 
-    void signIn(String email, String password, Callback callback);
+    CompletableFuture<User> signIn(String email, String password);
 
-    void createAccount(String email, String password, Callback callback);
+    CompletableFuture<Void> createAccount(String email, String password);
 
     void signOut();
 
-    FirebaseUser getCurrentUser();
+    User getCurrentUser();
+
+    String getCurrentUid();
+
+    void setCurrentUser(User user);
 
 }

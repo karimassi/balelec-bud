@@ -3,6 +3,8 @@ package ch.epfl.balelecbud.festivalInformation;
 import org.junit.Assert;
 import org.junit.Test;
 
+import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
+
 public class FestivalInformationTest {
 
     @Test

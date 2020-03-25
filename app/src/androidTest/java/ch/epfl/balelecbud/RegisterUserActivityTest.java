@@ -12,9 +12,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.util.database.DatabaseListener;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -26,7 +33,6 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest extends BasicAuthenticationTest {
@@ -40,6 +46,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     public final ActivityTestRule<RegisterUserActivity> mActivityRule = new ActivityTestRule<RegisterUserActivity>(RegisterUserActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
+            MockAuthenticator.getInstance().signOut();
             Intents.init();
         }
 
@@ -51,7 +58,8 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Before
     public void setUp() throws Throwable {
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        RegisterUserActivity.setDatabase(MockDatabaseWrapper.getInstance());
+        RegisterUserActivity.setAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
 
@@ -127,7 +135,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         enterPassword("123456");
         repeatPassword("123456");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.buttonRegister)).check(matches(isDisplayed()));
+        intended(hasComponent(RegisterUserActivity.class.getName()));
     }
 
     @Test
@@ -143,6 +151,61 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         repeatPassword("123123");
         onView(withId(R.id.buttonRegister)).perform(click());
         intended(hasComponent(WelcomeActivity.class.getName()));
+    }
+
+    @Test
+    public void testCanRegisterFailDB() {
+        enterEmail("testregister" + randomInt() + "@gmail.com");
+        enterPassword("123123");
+        repeatPassword("123123");
+        RegisterUserActivity.setDatabase(new DatabaseWrapper() {
+            @Override
+            public void unregisterListener(DatabaseListener listener) {
+
+            }
+
+            @Override
+            public void listen(String collectionName, DatabaseListener listener) {
+
+            }
+
+            @Override
+            public <T> CompletableFuture<T> getDocument(String collectionName, String documentID, Class<T> type) {
+                return CompletableFuture.completedFuture(null).thenCompose(new Function<Object, CompletionStage<T>>() {
+                    @Override
+                    public CompletionStage<T> apply(Object o) {
+                        throw new RuntimeException("Failed to store document");
+                    }
+                });
+            }
+
+            @Override
+            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
+
+            }
+
+            @Override
+            public <T> void storeDocument(String collectionName, T document) {
+
+            }
+
+            @Override
+            public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
+                return CompletableFuture.completedFuture(null).thenApply(new Function<Object, Void>() {
+                    @Override
+                    public Void apply(Object o) {
+                        throw new RuntimeException("Failed to store document");
+                    }
+                });
+            }
+
+            @Override
+            public void deleteDocument(String collectionName, String documentID) {
+
+            }
+        });
+        onView(withId(R.id.buttonRegister)).perform(click());
+        intended(hasComponent(RegisterUserActivity.class.getName()));
     }
 
     private void enterEmail(String email) {
