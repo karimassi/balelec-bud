@@ -55,7 +55,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
 
         //what should be launched when notification clicked
         Intent intent = new Intent(context, WelcomeActivity.class);
-        int notificationId = slot.getId(); 
+        int notificationId = slot.getId();
         PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(activity);
 
