@@ -2,15 +2,19 @@ package ch.epfl.balelecbud.util.database;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class FirestoreDatabaseWrapper implements DatabaseWrapper {
 
@@ -49,6 +53,18 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
             }
         });
         registrationMap.put(listener, lr);
+    }
+
+    @Override
+    public <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass){
+        final CompletableFuture<List<T>> compFuture =  new CompletableFuture<>();
+        FirestoreQueryConverter.convert(query).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                compFuture.complete(queryDocumentSnapshots.toObjects(tClass));
+            }
+        });
+        return compFuture;
     }
 
     public static DatabaseWrapper getInstance() {
