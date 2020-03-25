@@ -34,7 +34,6 @@ public class FirebaseAuthenticatorTest extends BasicAuthenticationTest {
 
     @Before
     public void setUp() throws Throwable{
-//        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
 

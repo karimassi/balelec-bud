@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.util.database;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,6 +133,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         switch (collectionName) {
             case DatabaseWrapper.USERS:
                 users.add((User) document);
+                Log.d("HERE", users.toString());
                 break;
             case DatabaseWrapper.FRIENDSHIPS:
                 friendships.add((Map<String, Boolean>) document);

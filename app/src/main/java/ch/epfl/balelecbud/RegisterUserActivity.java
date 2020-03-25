@@ -9,6 +9,11 @@ import android.widget.Toast;
 
 import java.util.function.BiConsumer;
 
+import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+
 public class RegisterUserActivity extends BasicActivity {
 
     private EditText emailField;
@@ -79,9 +84,20 @@ public class RegisterUserActivity extends BasicActivity {
     }
 
     private void onAuthComplete() {
-        Intent intent = new Intent(this, WelcomeActivity.class);
-        startActivity(intent);
-        finish();
+        getDatabase().getDocument(DatabaseWrapper.USERS, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
+            @Override
+            public void accept(User user, Throwable throwable) {
+                if (throwable != null) {
+                    Toast.makeText(RegisterUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
+                } else {
+                    getAuthenticator().setCurrentUser(user);
+                    Intent intent = new Intent(RegisterUserActivity.this, WelcomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
     }
 
     public void onClick(View view) {

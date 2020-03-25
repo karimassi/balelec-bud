@@ -30,7 +30,7 @@ public class FirebaseAuthenticator implements Authenticator {
                 .thenCompose(new Function<AuthResult, CompletionStage<User>>() {
                     @Override
                     public CompletionStage<User> apply(AuthResult authResult) {
-                        return FirestoreDatabaseWrapper.getInstance().getDocument(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), User.class);
+                        return FirestoreDatabaseWrapper.getInstance().getDocument(DatabaseWrapper.USERS, getCurrentUid(), User.class);
                     }
         });
     }
@@ -42,10 +42,7 @@ public class FirebaseAuthenticator implements Authenticator {
                 .thenCompose(new Function<AuthResult, CompletionStage<Void>>() {
                     @Override
                     public CompletionStage<Void> apply(AuthResult authResult) {
-                        User toStore = new User(email, email, mAuth.getCurrentUser().getUid());
-                        setCurrentUser(toStore);
-                        FirestoreDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS, mAuth.getCurrentUser().getUid(), toStore);
-                        return CompletableFuture.completedFuture(null);
+                        return FirestoreDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS, getCurrentUid(), new User(email, email, getCurrentUid()));
                     }
         });
     }
@@ -58,6 +55,11 @@ public class FirebaseAuthenticator implements Authenticator {
     @Override
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    @Override
+    public String getCurrentUid() {
+        return mAuth.getCurrentUser().getUid();
     }
 
     @Override

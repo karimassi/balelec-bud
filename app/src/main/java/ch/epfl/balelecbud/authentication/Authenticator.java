@@ -14,6 +14,8 @@ public interface Authenticator {
 
     User getCurrentUser();
 
+    String getCurrentUid();
+
     void setCurrentUser(User user);
 
 }

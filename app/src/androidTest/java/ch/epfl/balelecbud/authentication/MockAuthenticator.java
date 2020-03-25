@@ -61,7 +61,8 @@ public class MockAuthenticator implements Authenticator {
             setLoggedIn(true);
             User u = new User(email, email, String.valueOf(uid));
             uid++;
-            return MockDatabaseWrapper.getInstance().storeDocumentWithID("users", String.valueOf(uid), u);
+            MockDatabaseWrapper.getInstance().storeDocumentWithID("users", String.valueOf(uid), u);
+            return CompletableFuture.completedFuture(null);
         } else {
             return CompletableFuture.completedFuture(null).thenApply(new Function<Object, Void>() {
                 @Override
@@ -81,6 +82,11 @@ public class MockAuthenticator implements Authenticator {
     @Override
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    @Override
+    public String getCurrentUid() {
+        return String.valueOf(uid);
     }
 
     @Override
