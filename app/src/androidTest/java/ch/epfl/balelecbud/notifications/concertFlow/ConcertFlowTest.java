@@ -26,6 +26,8 @@ import java.util.List;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
+import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 import static org.hamcrest.core.Is.is;
 
@@ -33,7 +35,6 @@ import static org.hamcrest.core.Is.is;
 public class ConcertFlowTest {
     static private Slot slot1;
     static private Slot slot2;
-    static private Slot slot3;
 
     private ConcertOfInterestDatabase db;
     private ConcertFlow flow;
@@ -41,7 +42,7 @@ public class ConcertFlowTest {
     @BeforeClass
     public static void setUpSlots(){
         List<Timestamp> timestamps = new LinkedList<>();
-        for(int i = 0; i < 6; ++i){
+        for(int i = 0; i < 4; ++i){
             Calendar c = Calendar.getInstance();
             c.set(2020,11,11,10 + i, i % 2 == 0 ? 15 : 0);
             Date date = c.getTime();
@@ -49,7 +50,6 @@ public class ConcertFlowTest {
         }
         slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
         slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
-        slot3 = new Slot(2, "Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
 
         Room.databaseBuilder(ApplicationProvider.getApplicationContext(),
                 ConcertOfInterestDatabase.class, "ConcertsOfInterest")
@@ -59,7 +59,6 @@ public class ConcertFlowTest {
     @Before
     public void setup() {
         this.flow = new ConcertFlow();
-//        this.flow.onCreate();
         this.db = Room.inMemoryDatabaseBuilder(
                 ApplicationProvider.getApplicationContext(),
                 ConcertOfInterestDatabase.class
@@ -70,10 +69,6 @@ public class ConcertFlowTest {
     @After
     public void tearDown() {
         this.db.close();
-//        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(ApplicationProvider.getApplicationContext(), 0));
-//        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(ApplicationProvider.getApplicationContext(), 1));
-//        this.flow.onHandleIntent(FlowUtil.packAckIntentWithId(ApplicationProvider.getApplicationContext(), 2));
-//        this.flow.onDestroy();
     }
 
     @Test
@@ -185,10 +180,11 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         final List<Object> sync = new LinkedList<>();
-        flow.setLauncher(new ConcertFlow.IntentLauncher() {
+        flow.setLauncher(new IntentLauncher() {
             @Override
             public void launchIntent(@NonNull Intent intent) {
                 List<Slot> res = FlowUtil.unpackCallback(intent);
+                Assert.assertNotNull(res);
                 Assert.assertThat(res.size(), is(2));
                 Assert.assertTrue(res.contains(slot1));
                 Assert.assertTrue(res.contains(slot2));
@@ -214,10 +210,11 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         final List<Object> sync = new LinkedList<>();
-        flow.setLauncher(new ConcertFlow.IntentLauncher() {
+        flow.setLauncher(new IntentLauncher() {
             @Override
             public void launchIntent(@NonNull Intent intent) {
                 List<Slot> slots = FlowUtil.unpackCallback(intent);
+                Assert.assertNotNull(slots);
                 Assert.assertEquals(slots.size(), 1);
                 Assert.assertFalse(slots.contains(slot1));
                 Assert.assertTrue(slots.contains(slot2));

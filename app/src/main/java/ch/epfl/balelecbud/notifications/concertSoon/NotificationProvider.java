@@ -6,7 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 public class NotificationProvider extends BroadcastReceiver {
 

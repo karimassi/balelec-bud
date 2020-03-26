@@ -9,7 +9,6 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.Timestamp;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -22,10 +21,11 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
+import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -71,9 +71,9 @@ public class ScheduleActivityWithSubscribedConcertTest {
 
     @Before
     public void setUpMockIntentLauncher() {
-        this.mActivityRule.getActivity().setServiceInterface(new ScheduleAdapter.ServiceInterface() {
+        this.mActivityRule.getActivity().setIntentLauncher(new IntentLauncher() {
             @Override
-            public void callService(@NonNull Intent intent) {
+            public void launchIntent(@NonNull Intent intent) {
 
             }
         });
@@ -82,9 +82,9 @@ public class ScheduleActivityWithSubscribedConcertTest {
     @Test
     public void testUnSubscribeToAConcert() throws Throwable {
         final List<Object> sync = new LinkedList<>();
-        mActivityRule.getActivity().setServiceInterface(new ScheduleAdapter.ServiceInterface() {
+        mActivityRule.getActivity().setIntentLauncher(new IntentLauncher() {
             @Override
-            public void callService(@NotNull Intent intent) {
+            public void launchIntent(@NonNull Intent intent) {
                 if (intent.getAction() == null)
                     Assert.fail();
 

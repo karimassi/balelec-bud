@@ -19,25 +19,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
+import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
-    public interface ServiceInterface {
-        void callService(@NonNull Intent intent);
-    }
-
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
 
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
-    private ServiceInterface service = new ServiceInterface() {
+    private IntentLauncher intentLauncher = new IntentLauncher() {
         @Override
-        public void callService(@NonNull Intent intent) {
+        public void launchIntent(@NonNull Intent intent) {
             ScheduleAdapter.this.mainActivity.startService(intent);
         }
     };
@@ -45,8 +42,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     private final Activity mainActivity;
 
     @VisibleForTesting
-    public void setService(ServiceInterface service) {
-        this.service = service;
+    public void setIntentLauncher(IntentLauncher intentLauncher) {
+        this.intentLauncher = intentLauncher;
     }
 
     @VisibleForTesting
@@ -118,11 +115,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if (isChecked) {
                     Log.d(TAG, "Notification switched: ON");
-                    service.callService(
+                    intentLauncher.launchIntent(
                             FlowUtil.packSubscribeIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
                 } else {
                     Log.d(TAG, "Notification switched: ON");
-                    service.callService(
+                    intentLauncher.launchIntent(
                             FlowUtil.packCancelIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
                 }
             }

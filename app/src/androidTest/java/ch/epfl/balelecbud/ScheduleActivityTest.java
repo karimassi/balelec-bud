@@ -16,7 +16,6 @@ import com.google.firebase.Timestamp;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -29,10 +28,11 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.balelecbud.notifications.concertFlow.FlowUtil;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
+import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -77,9 +77,9 @@ public class ScheduleActivityTest {
 
     @Before
     public void setup() {
-        mActivityRule.getActivity().setServiceInterface(new ScheduleAdapter.ServiceInterface() {
+        mActivityRule.getActivity().setIntentLauncher(new IntentLauncher() {
             @Override
-            public void callService(@NotNull Intent intent) {
+            public void launchIntent(@NonNull Intent intent) {
                 if (intent.getAction() == null)
                     Assert.fail();
 
@@ -161,9 +161,9 @@ public class ScheduleActivityTest {
         mock.addItem(slot1);
 
         final List<Object> sync = new LinkedList<>();
-        mActivityRule.getActivity().setServiceInterface(new ScheduleAdapter.ServiceInterface() {
+        mActivityRule.getActivity().setIntentLauncher(new IntentLauncher() {
             @Override
-            public void callService(@NonNull Intent intent) {
+            public void launchIntent(@NonNull Intent intent) {
                 if (intent.getAction() == null)
                     Assert.fail();
 
@@ -175,7 +175,7 @@ public class ScheduleActivityTest {
                         Assert.fail();
                         break;
                     case FlowUtil.SUBSCRIBE_CONCERT:
-                        Assert.assertEquals(FlowUtil.unpackSlotInIntent(intent), slot1);
+                        Assert.assertEquals(FlowUtil.unpackSlotFromIntent(intent), slot1);
                         synchronized (sync) {
                             sync.add(new Object());
                             sync.notify();
