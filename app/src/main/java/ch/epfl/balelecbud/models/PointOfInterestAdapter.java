@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +64,7 @@ public class PointOfInterestAdapter extends RecyclerView.Adapter<PointOfInterest
     public void onBindViewHolder(@NonNull PointOfInterestHolder holder, int position) {
         holder.nameTextView.setText(pointOfInterestData.get(position).getName());
         holder.typeTextView.setText(pointOfInterestData.get(position).getType());
-        holder.locationTextView.setText(pointOfInterestData.get(position).getLocation().toString());
+        holder.locationTextView.setText(toString(pointOfInterestData.get(position).getLocation()));
     }
 
     @Override
@@ -82,5 +84,12 @@ public class PointOfInterestAdapter extends RecyclerView.Adapter<PointOfInterest
             typeTextView = view.findViewById(R.id.poiType);
             locationTextView = view.findViewById(R.id.poiLocation);
         }
+    }
+
+    public static String toString(GeoPoint geoPoint) {
+        StringBuilder string = new StringBuilder().
+                append("Latitude: ").append(geoPoint.getLatitude()).
+                append("\nLongitude: ").append(geoPoint.getLongitude());
+        return string.toString();
     }
 }

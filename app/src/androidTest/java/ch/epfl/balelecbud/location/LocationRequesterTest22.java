@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.location;
 
-
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
@@ -24,8 +23,6 @@ import ch.epfl.balelecbud.WelcomeActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.is;
 
@@ -113,6 +110,45 @@ public class LocationRequesterTest22 {
         this.mActivityRule.getActivity().onRequestPermissionsResult(0,
                 new String[]{}, new int[]{});
         Assert.assertThat(this.mActivityRule.getActivity().isLocationSwitchClickable(), is(before));
+    }
+
+    @Test
+    public void testSwitchOnEnablesLocationInMap() {
+        this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                Assert.assertNotNull(lr);
+                Assert.assertNotNull(intent);
+            }
+
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+                Assert.fail();
+            }
+        });
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.mapButton)).perform(click());
+        Assert.assertTrue(MapViewActivity.getLocationPermission());
+    }
+
+    @Test
+    public void testSwitchOffDisablesLocationInMap() {
+        this.mActivityRule.getActivity().setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                Assert.assertNotNull(lr);
+                Assert.assertNotNull(intent);
+            }
+
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+                Assert.assertNotNull(intent);
+            }
+        });
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.mapButton)).perform(click());
+        Assert.assertFalse(MapViewActivity.getLocationPermission());
     }
 }
 

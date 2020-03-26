@@ -90,6 +90,6 @@ public class PointOfInterestActivityTest {
     private void testInfoInView(ViewInteraction viewInteraction, PointOfInterest poi) {
         viewInteraction.check(matches(hasDescendant(withText(poi.getName()))));
         viewInteraction.check(matches(hasDescendant(withText(poi.getType()))));
-        viewInteraction.check(matches(hasDescendant(withText(poi.getLocation().toString()))));
+        viewInteraction.check(matches(hasDescendant(withText(PointOfInterestAdapter.toString(poi.getLocation())))));
     }
 }
