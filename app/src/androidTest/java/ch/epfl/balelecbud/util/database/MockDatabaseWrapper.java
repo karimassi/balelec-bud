@@ -3,6 +3,8 @@ package ch.epfl.balelecbud.util.database;
 import java.lang.reflect.Field;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.HashMap;
@@ -75,40 +77,54 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     //highly commented because not everybody is familiar with reflection
     private <A> List<A> filterList(List<A> list, MyQuery.WhereClause clause) {
         List<A> newList = new LinkedList<>();
-        try {
-            for (A elem : list) {
-                Class clazz = elem.getClass();
-                Field field = clazz.getDeclaredField(clause.getLeftOperand());
-                // to allow us to modify variable
-                field.setAccessible(true);
-
-                // check that the field and our value have the same type,
-                // right now they must be exactly the same class
-                Object rightOperand = clause.getRightOperand();
-                Class classOfRightOperand = rightOperand.getClass();
-                Class<?> fieldType = field.getType();
-                if (!classOfRightOperand.equals(fieldType)) {
-                    //if not of the same class we consider them uncomparable and return the empty list
-                    return newList;
-                }
-                if (clause.getOp() == MyQuery.WhereClause.Operator.EQUAL) {
-                    if (field.get(elem).equals(rightOperand)) {
-                        newList.add(elem);
-                    }
-                } else if (field.get(elem) instanceof Comparable) {
-                    Comparable rightOperandComparable = (Comparable) field.get(elem);
-                    // fine because we checked before that the types were equal, would be nice
-                    // to find a way so that the IDE doesn't complain
-                    int result = rightOperandComparable.compareTo(rightOperand);
-                    if (evaluateResult(clause.getOp(), result)) {
-                        newList.add(elem);
-                    }
-                }
-            }
-        } catch(Exception e){
+        if(list.isEmpty())
+            return list;
+        A head = list.get(0);
+        Class clazz = head.getClass();
+        Field field = getField(clause, clazz);
+        Object rightOperand = clause.getRightOperand();
+        // check that the field and our value have the same type,
+        // right now they must be exactly the same class
+        if (!rightOperand.getClass().equals(field.getType())) {
             return newList;
         }
+        for (A elem : list) {
+            filterELem(clause.getOp(), newList, field, rightOperand, elem);
+        }
         return newList;
+    }
+
+    private <A> void filterELem(MyQuery.WhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
+        try {
+            if (op == MyQuery.WhereClause.Operator.EQUAL) {
+                if (field.get(elem).equals(rightOperand)) {
+                    newList.add(elem);
+                }
+            } else if (field.get(elem) instanceof Comparable) {
+                Comparable rightOperandComparable = (Comparable) field.get(elem);
+                // fine because we checked before that the types were equal, would be nice
+                // to find a way so that the IDE doesn't complain
+                int result = rightOperandComparable.compareTo(rightOperand);
+                if (evaluateResult(op, result)) {
+                    newList.add(elem);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("Given field param cannot be accessed");
+        }
+    }
+
+    @NotNull
+    private Field getField(MyQuery.WhereClause clause, Class clazz) {
+        Field field = null;
+        try {
+            field = clazz.getDeclaredField(clause.getLeftOperand());
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException("Class" + clazz.getName() + " does not contain a " + field.getName() + " field");
+        }
+        // to allow us to modify variable
+        field.setAccessible(true);
+        return field;
     }
 
     private boolean evaluateResult(MyQuery.WhereClause.Operator op, int resultOfComparison){
