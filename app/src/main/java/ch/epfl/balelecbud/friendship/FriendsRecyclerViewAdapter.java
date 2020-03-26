@@ -15,19 +15,20 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.models.User;
 
 public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecyclerViewAdapter.ViewHolder> {
 
     private List<User> friends = new ArrayList<>();
+    private User currentUser;
 
-    public FriendsRecyclerViewAdapter() {
+    public FriendsRecyclerViewAdapter(User user) {
+        currentUser = user;
         reloadData();
     }
 
     public void reloadData() {
-        FriendshipUtils.getFriendsUids(FirebaseAuthenticator.getInstance().getCurrentUser())
+        FriendshipUtils.getFriendsUids(currentUser)
                 .whenComplete(new BiConsumer<List<String>, Throwable>() {
                     @Override
                     public void accept(List<String> strings, Throwable throwable) {

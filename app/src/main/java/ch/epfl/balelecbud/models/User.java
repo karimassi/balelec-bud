@@ -1,8 +1,9 @@
 package ch.epfl.balelecbud.models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
 
     private String email;
     private String displayName;
@@ -32,12 +33,11 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return getEmail().equals(user.getEmail()) &&
-                getDisplayName().equals(user.getDisplayName()) &&
-                getUid().equals(user.getUid());
+        return (o instanceof User)
+                && ((User) o).getEmail() == email
+                && ((User) o).getDisplayName() == displayName
+                && ((User) o).getUid() == uid;
+
     }
 
     @Override

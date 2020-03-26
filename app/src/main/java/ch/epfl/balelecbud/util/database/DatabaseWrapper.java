@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface DatabaseWrapper {
 
-    String FESITVAL_INFORMATION_PATH = "festivalInfo";
+    String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
     String TRANSPORT_PATH = "transports";
     String CONCERT_SLOTS_PATH = "concertSlots";

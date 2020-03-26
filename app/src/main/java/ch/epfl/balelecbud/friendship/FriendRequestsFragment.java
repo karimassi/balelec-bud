@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.models.User;
 
 public class FriendRequestsFragment extends Fragment {
 
@@ -24,7 +25,7 @@ public class FriendRequestsFragment extends Fragment {
 
         Context context = view.getContext();
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friend_requests);
-        final FriendRequestsRecyclerViewAdapter adapter = new FriendRequestsRecyclerViewAdapter();
+        final FriendRequestsRecyclerViewAdapter adapter = new FriendRequestsRecyclerViewAdapter((User)getArguments().get("user"));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
@@ -41,9 +42,10 @@ public class FriendRequestsFragment extends Fragment {
         return view;
     }
 
-    public static FriendRequestsFragment newInstance() {
+    public static FriendRequestsFragment newInstance(User user) {
 
         Bundle args = new Bundle();
+        args.putSerializable("user", user);
         FriendRequestsFragment fragment = new FriendRequestsFragment();
         fragment.setArguments(args);
         return fragment;

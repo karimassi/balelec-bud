@@ -16,7 +16,6 @@ import java.util.function.BiConsumer;
 import ch.epfl.balelecbud.LoginUserActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.models.FriendRequest;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -37,8 +36,6 @@ public class FriendshipUtilsTest {
         db = MockDatabaseWrapper.getInstance();
         FriendshipUtils.setDatabaseImplementation(db);
         FriendshipUtils.setAuthenticator(authenticator);
-//        authenticator.createAccount("karim@epfl.ch", "1234");
-//        authenticator.createAccount("celine@epfl.ch", "1234");
         sender = new User("karim@epfl.ch", "karim@epfl.ch", "0");
         recipient = new User("celine@epfl.ch", "celine@epfl.ch", "1");
         authenticator.signOut();

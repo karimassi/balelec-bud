@@ -5,7 +5,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,9 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
 
-public class SocialActivity extends AppCompatActivity {
+public class SocialActivity extends BasicActivity {
 
     private SocialAdapter fragmentAdapter;
     ViewPager2 viewPager;
@@ -33,7 +33,7 @@ public class SocialActivity extends AppCompatActivity {
         tabTitleList = new ArrayList<>(Arrays.asList(getString(R.string.tab_friends), getString(R.string.tab_requests)));
 
         setupFragmentAdapter();
-        viewPager = findViewById(R.id.pager_social);
+        viewPager = findViewById(R.id.view_pager_social);
         viewPager.setAdapter(fragmentAdapter);
 
         TabLayout tabs = findViewById(R.id.tabs_social);
@@ -48,15 +48,16 @@ public class SocialActivity extends AppCompatActivity {
         fabAddFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddFriendFragment dialog = new AddFriendFragment();
+                AddFriendFragment dialog =AddFriendFragment.newInstance(getAuthenticator().getCurrentUser());
                 dialog.show(getSupportFragmentManager(), getString(R.string.add_friend_title));
             }
         });
+
     }
 
     private void setupFragmentAdapter() {
         fragmentAdapter = new SocialAdapter(getSupportFragmentManager(), getLifecycle());
-        fragmentAdapter.addFragment(FriendsFragment.newInstance());
-        fragmentAdapter.addFragment(FriendRequestsFragment.newInstance());
+        fragmentAdapter.addFragment(FriendsFragment.newInstance(getAuthenticator().getCurrentUser()));
+        fragmentAdapter.addFragment(FriendRequestsFragment.newInstance(getAuthenticator().getCurrentUser()));
     }
 }

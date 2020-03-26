@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.models.User;
 
 public class FriendsFragment extends Fragment {
+
 
     @Nullable
     @Override
@@ -24,7 +26,7 @@ public class FriendsFragment extends Fragment {
 
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friends);
-        final FriendsRecyclerViewAdapter adapter = new FriendsRecyclerViewAdapter();
+        final FriendsRecyclerViewAdapter adapter = new FriendsRecyclerViewAdapter((User) getArguments().get("user"));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
@@ -41,8 +43,9 @@ public class FriendsFragment extends Fragment {
         return view;
     }
 
-    public static FriendsFragment newInstance() {
+    public static FriendsFragment newInstance(User user) {
         Bundle args = new Bundle();
+        args.putSerializable("user", user);
         FriendsFragment fragment = new FriendsFragment();
         fragment.setArguments(args);
         return fragment;

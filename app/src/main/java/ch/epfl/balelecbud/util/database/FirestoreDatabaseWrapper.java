@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.util.database;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.CollectionReference;

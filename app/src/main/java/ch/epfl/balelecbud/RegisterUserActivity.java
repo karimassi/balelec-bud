@@ -84,14 +84,12 @@ public class RegisterUserActivity extends BasicActivity {
     }
 
     private void onAuthComplete() {
-        Log.d("HERE","Current user id " + getAuthenticator().getCurrentUid());
         getDatabase().getCustomDocument(DatabaseWrapper.USERS, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
             @Override
             public void accept(User user, Throwable throwable) {
                 if (throwable != null) {
                     Toast.makeText(RegisterUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d("HERE","Auth successful, got user back");
                     getAuthenticator().setCurrentUser(user);
                     Intent intent = new Intent(RegisterUserActivity.this, WelcomeActivity.class);
                     startActivity(intent);

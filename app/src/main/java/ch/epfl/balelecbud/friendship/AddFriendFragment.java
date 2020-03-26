@@ -15,7 +15,6 @@ import androidx.fragment.app.DialogFragment;
 import java.util.function.BiConsumer;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.models.User;
 
 public class AddFriendFragment extends DialogFragment {
@@ -54,6 +53,14 @@ public class AddFriendFragment extends DialogFragment {
         return builder.create();
     }
 
+    public static AddFriendFragment newInstance(User user) {
+        AddFriendFragment f = new AddFriendFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("user", user);
+        f.setArguments(args);
+        return f;
+    }
+
     private boolean validateEmail() {
         String email = editTextAddFriend.getText().toString();
         if (TextUtils.isEmpty(email)) {
@@ -62,9 +69,8 @@ public class AddFriendFragment extends DialogFragment {
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextAddFriend.setError(getString(R.string.invalid_email));
             return false;
-        } else if (email.equals(FirebaseAuthenticator.getInstance().getCurrentUser().getEmail())) {
-            Toast.makeText(getContext(), R.string.add_own_as_friend, Toast.LENGTH_SHORT).show();
-            return false;
+        } else if (email.equals(((User)getArguments().get("user")).getEmail())) {
+            Toast.makeText(getContext(), R.string.add_own_as_friend, Toast.LENGTH_SHORT).show();            return false;
         } else
         return true;
     }

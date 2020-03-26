@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.matchers;
+package ch.epfl.balelecbud.testUtils;
 
 
 import android.content.res.Resources;

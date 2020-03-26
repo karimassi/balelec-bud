@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -20,8 +21,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     private MockDatabaseWrapper() {
         listeners = new ArrayList<>();
-        users.add(new User("karim@epfl.ch", "karim@epfl.ch", "0"));
-        users.add(new User("celine@epfl.ch", "celine@epfl.ch", "1"));
+        users.add(new User("karim@epfl.ch", "karim@epfl.ch", MockAuthenticator.provideUid()));
+        users.add(new User("celine@epfl.ch", "celine@epfl.ch", MockAuthenticator.provideUid()));
         friendships.add(new HashMap<String, Boolean>());
         friendships.add(new HashMap<String, Boolean>());
         friendRequests.add(new HashMap<String, Boolean>());
@@ -156,6 +157,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         switch (collectionName) {
             case DatabaseWrapper.USERS:
                 users.add((User) document);
+                friendRequests.add(new HashMap<String, Boolean>());
+                friendships.add(new HashMap<String, Boolean>());
                 break;
             case DatabaseWrapper.FRIENDSHIPS:
                 friendships.add((Map<String, Boolean>) document);
@@ -171,7 +174,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS:
-                users.add(users.size(), (User) document);
+                users.add( Integer.valueOf(((User)document).getUid()), (User) document);
+                friendRequests.add(new HashMap<String, Boolean>());
+                friendships.add(new HashMap<String, Boolean>());
                 break;
             case DatabaseWrapper.FRIENDSHIPS:
                 friendships.get(index).putAll((Map<String, Boolean>) document);
@@ -192,6 +197,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FRIENDSHIPS:
                 friendships.get(index).clear();
                 break;
+            case DatabaseWrapper.FRIEND_REQUESTS:
+                friendRequests.get(index).remove(new ArrayList<>(updates.keySet()).get(0));
+                break;
         }
     }
 
@@ -210,4 +218,14 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
         }
     }
+
+    public void resetFriendshipsAndRequests() {
+        for (Map m : friendships) {
+            m.clear();
+        }
+        for (Map m : friendRequests) {
+            m.clear();
+        }
+    }
+
 }

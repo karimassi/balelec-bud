@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.friendship;
 
-import android.util.Log;
-
 import androidx.annotation.VisibleForTesting;
 
 import com.google.firebase.firestore.FieldValue;
@@ -86,7 +84,6 @@ public class FriendshipUtils {
 
     public static CompletableFuture<List<String>> getRequestsUids(User user) {
         return getUidsFromCollection(user, DatabaseWrapper.FRIEND_REQUESTS);
-
     }
 
     public static CompletableFuture<List<String>> getFriendsUids(User user) {
