@@ -19,8 +19,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
-
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 
@@ -48,7 +46,7 @@ public class LocationRequesterTest {
             new ActivityTestRule<>(WelcomeActivity.class);
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         WelcomeActivity.mockMode = true;
         this.device = UiDevice.getInstance(getInstrumentation());
         this.device.waitForWindowUpdate(null, TIMEOUT);
@@ -96,7 +94,7 @@ public class LocationRequesterTest {
     @Test
     public void whenPermissionGrantedCanSwitchOnLocation() {
         this.mActivityRule.getActivity().onRequestPermissionsResult(
-                WelcomeActivity.REQUEST_PERMISSIONS_REQUEST_CODE,
+                WelcomeActivity.LOCATION_PERMISSIONS_REQUEST_CODE,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 new int[]{PackageManager.PERMISSION_GRANTED});
         Assert.assertTrue(this.mActivityRule.getActivity().isLocationSwitchClickable());
@@ -105,7 +103,7 @@ public class LocationRequesterTest {
     @Test
     public void whenPermissionDeniedCannotSwitchOnLocation() {
         this.mActivityRule.getActivity().onRequestPermissionsResult(
-                WelcomeActivity.REQUEST_PERMISSIONS_REQUEST_CODE,
+                WelcomeActivity.LOCATION_PERMISSIONS_REQUEST_CODE,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 new int[]{PackageManager.PERMISSION_DENIED});
         Assert.assertFalse(this.mActivityRule.getActivity().isLocationSwitchClickable());
@@ -114,7 +112,7 @@ public class LocationRequesterTest {
     @Test
     public void whenPermissionCanceledCannotSwitchOnLocation() {
         this.mActivityRule.getActivity().onRequestPermissionsResult(
-                WelcomeActivity.REQUEST_PERMISSIONS_REQUEST_CODE,
+                WelcomeActivity.LOCATION_PERMISSIONS_REQUEST_CODE,
                 new String[]{},
                 new int[]{});
         Assert.assertFalse(this.mActivityRule.getActivity().isLocationSwitchClickable());

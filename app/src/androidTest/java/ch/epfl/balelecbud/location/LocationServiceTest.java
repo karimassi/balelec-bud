@@ -1,67 +1,60 @@
 package ch.epfl.balelecbud.location;
 
 import android.content.Intent;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.UiDevice;
 
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.GeoPoint;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
 import java.util.Collections;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
-import ch.epfl.balelecbud.WelcomeActivity;
-
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.CoreMatchers.is;
+import ch.epfl.balelecbud.authentication.Authenticator;
+import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 @RunWith(AndroidJUnit4.class)
 public class LocationServiceTest {
     private final static String LOCATION_KEY = "com.google.android.gms.location.EXTRA_LOCATION_RESULT";
-    private final LocationFirestore emptyLf = new LocationFirestore() {
-        @Override
-        public void handleGeoPoint(GeoPoint gp, OnCompleteListener<Void> callback) {
-            Assert.fail();
-        }
-    };
-    private final OnCompleteListener<Void> emptyOncl = new OnCompleteListener<Void>() {
-        @Override
-        public void onComplete(@NonNull Task<Void> task) {
-            Assert.fail();
-        }
-    };
+    private LocationService ls;
+    private Authenticator mockAuth = MockAuthenticator.getInstance();
+    private DatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private Random random = new Random(42);
 
-    @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<>(WelcomeActivity.class);
-
-    @Before
-    public void grantPermission() throws IOException {
-        UiDevice device = UiDevice.getInstance(getInstrumentation());
-//        UiDevice.getInstance(getInstrumentation()).executeShellCommand("pm reset-permissions");
-        if (device.hasObject(By.text("ALLOW"))) {
-            device.findObject(By.text("ALLOW")).click();
-            device.waitForWindowUpdate(null, 1000);
-        }
+    @BeforeClass
+    public static void setUpMock() {
+        LocationService.setAuthenticator(MockAuthenticator.getInstance());
+        LocationService.setDatabase(MockDatabaseWrapper.getInstance());
     }
 
-    private Intent getIntent(Location l) {
-        Intent i = new Intent(mActivityRule.getActivity(), LocationService.class);
+    @Before
+    public void setUp() {
+        ls = new LocationService();
+        mockAuth.setCurrentUser(new User("abc@epfl.ch", "abc", "10"));
+        ls.onCreate();
+    }
+
+    @After
+    public void tearDown() {
+        ls.onDestroy();
+    }
+
+    private Intent getIntent(android.location.Location l) {
+        Intent i = new Intent(ApplicationProvider.getApplicationContext(), LocationService.class);
         LocationResult lr = LocationResult.create(Collections.singletonList(l));
         Bundle b = new Bundle();
         b.putParcelable(LOCATION_KEY, lr);
@@ -70,51 +63,69 @@ public class LocationServiceTest {
         return i;
     }
 
-    @Test
-    public void nullIntent() {
-        LocationService ls = new LocationService(this.emptyLf, this.emptyOncl);
-        ls.onHandleIntent(null);
-    }
-
-    @Test
-    public void nullLocation() {
-        LocationService ls = new LocationService(new LocationFirestore() {
-            @Override
-            public void handleGeoPoint(GeoPoint gp, OnCompleteListener<Void> callback) {
-                Assert.assertThat(gp, is(new GeoPoint(0, 0)));
-            }
-        }, this.emptyOncl);
-        ls.onHandleIntent(getIntent(null));
-    }
-
-    @Test
-    public void validLocation() {
-        final double mockLatitude = 1.2797677;
-        final double mockLongitude = 103.8459285;
-
-        final Location mockLocation = new Location(LocationManager.GPS_PROVIDER);
-        mockLocation.setLatitude(mockLatitude);
-        mockLocation.setLongitude(mockLongitude);
-        mockLocation.setAltitude(0);
-        mockLocation.setTime(System.currentTimeMillis());
-        mockLocation.setAccuracy(1);
-        mockLocation.setElapsedRealtimeNanos(123456789);
-
-        LocationService ls = new LocationService(new LocationFirestore() {
-            @Override
-            public void handleGeoPoint(GeoPoint gp, OnCompleteListener<Void> callback) {
-                Assert.assertThat(gp, is(new GeoPoint(mockLatitude, mockLongitude)));
-            }
-        }, this.emptyOncl);
-
-        ls.onHandleIntent(getIntent(mockLocation));
-    }
-
-    @Test
-    public void intentWithInvalidAction() {
-        LocationService ls = new LocationService(this.emptyLf, this.emptyOncl);
-        Intent intent = new Intent(this.mActivityRule.getActivity(), LocationService.class);
-        intent.setAction("Test");
+    private void checkDoesNotChangeOnDBWithIntent(Intent intent) throws ExecutionException, InterruptedException {
+        Location l = new Location(random.nextDouble(), random.nextDouble());
+        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, mockAuth.getCurrentUser().getUid(), l);
         ls.onHandleIntent(intent);
+        checkStoredOnDB(l);
+    }
+
+    private void checkStoredOnDB(Location location) throws ExecutionException, InterruptedException {
+        Assert.assertEquals(
+                location,
+                mockDB.getDocument(
+                        DatabaseWrapper.LOCATIONS_PATH,
+                        mockAuth.getCurrentUser().getUid(),
+                        Location.class).get()
+        );
+    }
+
+    @Test
+    public void intentWithInvalidAction() throws ExecutionException, InterruptedException {
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), LocationService.class);
+        intent.setAction("Test");
+        checkDoesNotChangeOnDBWithIntent(intent);
+    }
+
+    @Test
+    public void nullIntent() throws ExecutionException, InterruptedException {
+        checkDoesNotChangeOnDBWithIntent(null);
+    }
+
+    @Test
+    public void nullLocation() throws ExecutionException, InterruptedException {
+        checkDoesNotChangeOnDBWithIntent(getIntent(null));
+    }
+
+    private android.location.Location generateAndroidLocation(double lat, double lon) {
+        final android.location.Location mockLocation = new android.location.Location(LocationManager.GPS_PROVIDER);
+        mockLocation.setLatitude(lat);
+        mockLocation.setLongitude(lon);
+        mockLocation.setAltitude(random.nextDouble());
+        mockLocation.setTime(random.nextLong());
+        mockLocation.setAccuracy(random.nextFloat());
+        mockLocation.setElapsedRealtimeNanos(random.nextLong());
+        return mockLocation;
+    }
+
+    @Test
+    public void validLocation() throws ExecutionException, InterruptedException {
+        android.location.Location location = generateAndroidLocation(24, 42);
+
+        ls.onHandleIntent(getIntent(location));
+        checkStoredOnDB(new Location(location));
+    }
+
+    @Test
+    public void twoValidLocations() throws ExecutionException, InterruptedException {
+        android.location.Location location1 = generateAndroidLocation(12, 34);
+
+        ls.onHandleIntent(getIntent(location1));
+        checkStoredOnDB(new Location(location1));
+
+        android.location.Location location2 = generateAndroidLocation(13.4, 54.2);
+
+        ls.onHandleIntent(getIntent(location2));
+        checkStoredOnDB(new Location(location2));
     }
 }

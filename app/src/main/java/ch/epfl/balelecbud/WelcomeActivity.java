@@ -28,7 +28,7 @@ public class WelcomeActivity extends BasicActivity {
     private Switch locationSwitch;
     private boolean isLocalizationActive;
 
-    public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    public static final int LOCATION_PERMISSIONS_REQUEST_CODE = 34;
     private static final long UPDATE_INTERVAL = 60_000;
     private static final long FASTEST_UPDATE_INTERVAL = 30_000;
     private static final long MAX_WAIT_TIME = UPDATE_INTERVAL;
@@ -159,12 +159,12 @@ public class WelcomeActivity extends BasicActivity {
                     new String[]{
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                    LOCATION_PERMISSIONS_REQUEST_CODE);
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{
                             Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                    LOCATION_PERMISSIONS_REQUEST_CODE);
         }
     }
 
@@ -174,7 +174,7 @@ public class WelcomeActivity extends BasicActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+        if (requestCode == LOCATION_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
                 onPermissionCanceled();
             } else if (isLocationPermissionGranted(grantResults)) {

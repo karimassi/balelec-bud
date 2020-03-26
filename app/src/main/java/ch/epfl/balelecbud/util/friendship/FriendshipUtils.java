@@ -31,33 +31,33 @@ public class FriendshipUtils {
 
     public static void addFriend(User friend) {
         FriendRequest request = new FriendRequest(auth.getCurrentUser().getUid(), friend.getUid());
-        database.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS, request.getRecipientId(), request);
+        database.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, request.getRecipientId(), request);
     }
 
     public static void removeFriend(User friend) {
         Map<String,Object> updates = new HashMap<>();
         updates.put(friend.getUid(), FieldValue.delete());
-        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, auth.getCurrentUser().getUid(), updates);
+        database.updateDocument(DatabaseWrapper.FRIENDSHIPS_PATH, auth.getCurrentUser().getUid(), updates);
 
         updates = new HashMap<>();
         updates.put(auth.getCurrentUser().getUid(), FieldValue.delete());
-        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, friend.getUid(), updates);
+        database.updateDocument(DatabaseWrapper.FRIENDSHIPS_PATH, friend.getUid(), updates);
     }
 
     public static void acceptRequest(FriendRequest request) {
         Map<String,Boolean> toStore= new HashMap<>();
         toStore.put(request.getSenderId(), true);
-        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, request.getRecipientId(), toStore);
+        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, request.getRecipientId(), toStore);
 
         toStore = new HashMap<>();
         toStore.put(request.getRecipientId(), true);
-        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, request.getSenderId(), toStore);
+        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, request.getSenderId(), toStore);
 
         deleteRequest(request);
     }
 
     public static void deleteRequest(FriendRequest request) {
-        database.deleteDocument(DatabaseWrapper.FRIEND_REQUESTS, request.getRecipientId());
+        database.deleteDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, request.getRecipientId());
     }
 
 }

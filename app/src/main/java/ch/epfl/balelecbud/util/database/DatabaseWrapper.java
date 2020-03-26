@@ -5,13 +5,14 @@ import java.util.concurrent.CompletableFuture;
 
 public interface DatabaseWrapper {
 
-    String FESITVAL_INFORMATION_PATH = "festivalInfo";
+    String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
     String TRANSPORT_PATH = "transports";
     String CONCERT_SLOTS_PATH = "concertSlots";
-    String USERS = "users";
-    String FRIEND_REQUESTS = "friendRequests";
-    String FRIENDSHIPS = "friendships";
+    String USERS_PATH = "users";
+    String LOCATIONS_PATH = "locations";
+    String FRIENDSHIPS_PATH = "friendships";
+    String FRIEND_REQUESTS_PATH = "friendRequests";
 
     void unregisterListener(DatabaseListener listener);
 
