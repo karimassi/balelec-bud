@@ -4,6 +4,7 @@ package ch.epfl.balelecbud;
 import android.app.PendingIntent;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
@@ -54,12 +55,13 @@ public class WelcomeActivityTest {
     }
 
     @Test
-    public void testMapButtonIsDisplayed() {
-        onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.mapButton)).perform(click());
+    public void testDrawer() {
+        onView(withId(R.id.root_activity_drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.headerImageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
     }
 
-    @Test
+    /**@Test
     public void testInfoButtonIsDisplayed() {
         onView(withId(R.id.infoButton)).check(matches(isDisplayed()));
         onView(withId(R.id.infoButton)).perform(click());
@@ -135,5 +137,5 @@ public class WelcomeActivityTest {
         button.perform(click());
         feature.check(matches(isDisplayed()));
         button.check(doesNotExist());
-    }
+    }**/
 }

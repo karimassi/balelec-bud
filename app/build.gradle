@@ -66,6 +66,8 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     debugImplementation 'androidx.fragment:fragment-testing:1.2.2'
+    implementation "androidx.drawerlayout:drawerlayout:1.0.0"
+    implementation "androidx.cardview:cardview:1.0.0"
 }
 
 tasks.withType(Test) {

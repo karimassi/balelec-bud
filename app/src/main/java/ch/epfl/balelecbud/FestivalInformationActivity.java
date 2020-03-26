@@ -1,16 +1,27 @@
 package ch.epfl.balelecbud;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.navigation.NavigationView;
+
 import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
 
-public class FestivalInformationActivity extends BasicActivity {
+public class FestivalInformationActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter festivalInfoAdapter;
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,5 +34,68 @@ public class FestivalInformationActivity extends BasicActivity {
 
         festivalInfoAdapter = new FestivalInformationAdapter();
         recyclerView.setAdapter(festivalInfoAdapter);
+
+        this.configureToolBar();
+        this.configureDrawerLayout();
+        this.configureNavigationView();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // 5 - Handle back click to close menu
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.activity_main_drawer_info :
+                Intent intentInfo = new Intent(this, FestivalInformationActivity.class);
+                startActivity(intentInfo);
+                break;
+            case R.id.activity_main_drawer_schedule:
+                Intent intentSchedule = new Intent(this, ScheduleActivity.class);
+                startActivity(intentSchedule);
+                break;
+            case R.id.activity_main_drawer_poi:
+                Intent intentPoi = new Intent(this, PointOfInterestActivity.class);
+                startActivity(intentPoi);
+                break;
+            case R.id.activity_main_drawer_map:
+                Intent intentMap = new Intent(this, MapViewActivity.class);
+                startActivity(intentMap);
+                break;
+            case R.id.activity_main_drawer_transport:
+                Intent intentTransport = new Intent(this, TransportActivity.class);
+                startActivity(intentTransport);
+                break;
+            default:
+                break;
+        }
+        this.drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void configureToolBar(){
+        this.toolbar = findViewById(R.id.festival_info_activity_toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    private void configureDrawerLayout(){
+        this.drawerLayout = findViewById(R.id.festival_info_activity_drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    private void configureNavigationView(){
+        this.navigationView = findViewById(R.id.festival_info_activity_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 }

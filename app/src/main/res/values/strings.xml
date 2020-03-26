@@ -35,4 +35,6 @@
     <string name="toggle_location_view">Toggle Location</string>
     <string name="schedule_view">Schedule</string>
     <string name="point_of_interest">Points of interest</string>
+    <string name="navigation_drawer_open">Open Drawer</string>
+    <string name="navigation_drawer_close">Close Drawer</string>
 </resources>
