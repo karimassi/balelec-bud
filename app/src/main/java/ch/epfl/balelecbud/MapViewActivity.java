@@ -30,6 +30,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         @Override
         public void onComplete(@NonNull Task<Location> task) {
             setPositionFrom(task.getResult(), task.isSuccessful());
+            setLocationPermission();
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
         }
     };
@@ -40,8 +41,8 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         setContentView(R.layout.activity_map);
 
         setDefaultPosition();
+        setLocationPermission();
 
-        locationEnabled = WelcomeActivity.isLocationActive();
         locationResult = getDeviceLocation();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -66,7 +67,14 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     protected Task<Location> getDeviceLocation() {
-        return locationEnabled ? LocationServices.getFusedLocationProviderClient(this).getLastLocation() : null;
+        if(locationEnabled) {
+            return LocationServices.getFusedLocationProviderClient(this).getLastLocation();
+        }
+        return null;
+    }
+
+    protected void setLocationPermission() {
+        locationEnabled = WelcomeActivity.isLocationActive();
     }
 
     protected void setPositionFrom(Location location, boolean locationEnabled) {

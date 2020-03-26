@@ -9,10 +9,8 @@ import android.widget.Toast;
 
 import java.util.function.BiConsumer;
 
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 public class RegisterUserActivity extends BasicActivity {
 

@@ -135,6 +135,12 @@ public class MapViewActivityTest {
         }
     }
 
+    @Test
+    public void testSetLocationPermission() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        assertThat(mActivity.getLocationPermission(), is(WelcomeActivity.isLocationActive()));
+    }
+
     private void testSetPositionFrom(final Location location, final boolean locationEnabled){
         MapViewActivity mActivity = mActivityRule.getActivity();
         oldMapPosition = mActivity.getPosition();
