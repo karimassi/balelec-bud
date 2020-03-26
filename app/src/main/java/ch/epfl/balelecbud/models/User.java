@@ -1,23 +1,18 @@
 package ch.epfl.balelecbud.models;
 
-import com.google.firebase.firestore.GeoPoint;
-
 public class User {
+
     private String email;
-    private GeoPoint location;
-    private String name;
-    private String surname;
+    private String displayName;
     private String userToken;
 
-
     public User() {
+
     }
 
-    public User(String email, GeoPoint location, String name, String surname, String userToken) {
+    public User(String email, String displayName, String userToken) {
         this.email = email;
-        this.location = location;
-        this.name = name;
-        this.surname = surname;
+        this.displayName = displayName;
         this.userToken = userToken;
     }
 
@@ -25,19 +20,12 @@ public class User {
         return email;
     }
 
-    public GeoPoint getLocation() {
-        return location;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public String getUserToken() {
+    public String getUid() {
         return userToken;
     }
+
 }

@@ -43,6 +43,13 @@
         android:onClick="onClick"
         android:text="@string/transport_view" />
 
+    <Button
+        android:id="@+id/poiButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="@string/point_of_interest" />
+
     <Switch
         android:id="@+id/locationSwitch"
         android:layout_width="wrap_content"

@@ -57,37 +57,11 @@ public class WelcomeActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        Button infoButton = findViewById(R.id.infoButton);
-        infoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openInfoActivity();
-            }
-        });
-
-        Button scheduleButton = findViewById(R.id.scheduleButton);
-        scheduleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openScheduleActivity();
-            }
-        });
-
-        Button mapButton = findViewById(R.id.mapButton);
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMapActivity();
-            }
-        });
-
-        Button transportButton = findViewById(R.id.transportButton);
-        transportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openTransportActivity();
-            }
-        });
+        bindActivityToButton(FestivalInformationActivity.class, (Button) findViewById(R.id.infoButton));
+        bindActivityToButton(ScheduleActivity.class, (Button) findViewById(R.id.scheduleButton));
+        bindActivityToButton(MapViewActivity.class, (Button) findViewById(R.id.mapButton));
+        bindActivityToButton(TransportActivity.class, (Button) findViewById(R.id.transportButton));
+        bindActivityToButton(PointOfInterestActivity.class, (Button) findViewById(R.id.poiButton));
 
         final Button signOutButton = findViewById(R.id.buttonSignOut);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +72,17 @@ public class WelcomeActivity extends BasicActivity {
         });
 
         setUpLocation();
+    }
+
+    private void bindActivityToButton(final Class activityToOpen, Button button) {
+        final Activity thisActivity = this;
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(thisActivity, activityToOpen);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setUpLocation() {
@@ -248,37 +233,5 @@ public class WelcomeActivity extends BasicActivity {
         Intent intent = new Intent(this, LoginUserActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    /**
-     * Called when the user clicks the Map button
-     */
-    private void openMapActivity() {
-        Intent intent = new Intent(this, MapViewActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Called when the user clicks the Schedule button
-     */
-    private void openScheduleActivity() {
-        Intent intent = new Intent(this, ScheduleActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Called when the user clicks the Info button
-     */
-    private void openInfoActivity() {
-        Intent intent = new Intent(this, FestivalInformationActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Called when the user clicks the Transport button
-     */
-    private void openTransportActivity() {
-        Intent intent = new Intent(this, TransportActivity.class);
-        startActivity(intent);
     }
 }

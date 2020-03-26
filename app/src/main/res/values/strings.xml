@@ -34,4 +34,5 @@
     <string name="transport_view">Transport</string>
     <string name="toggle_location_view">Toggle Location</string>
     <string name="schedule_view">Schedule</string>
+    <string name="point_of_interest">Points of interest</string>
 </resources>
