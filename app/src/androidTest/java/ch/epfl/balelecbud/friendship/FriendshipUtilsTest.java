@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.util.friendship;
+package ch.epfl.balelecbud.friendship;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -16,7 +16,6 @@ import java.util.function.BiConsumer;
 import ch.epfl.balelecbud.LoginUserActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.models.FriendRequest;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -37,7 +36,6 @@ public class FriendshipUtilsTest {
         db = MockDatabaseWrapper.getInstance();
         FriendshipUtils.setDatabaseImplementation(db);
         FriendshipUtils.setAuthenticator(authenticator);
-//        db = FirestoreDatabaseWrapper.getInstance();
         sender = new User("karim@epfl.ch", "karim@epfl.ch", "0");
         recipient = new User("celine@epfl.ch", "celine@epfl.ch", "1");
         authenticator.signOut();
@@ -59,11 +57,11 @@ public class FriendshipUtilsTest {
             myRunnable.wait(1000);
         }
     }
-    private void acceptRequest(final FriendRequest request) throws Throwable {
+    private void acceptRequest(final User sender) throws Throwable {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                FriendshipUtils.acceptRequest(request);
+                FriendshipUtils.acceptRequest(sender);
             }
         };
         runOnUiThread(myRunnable);
@@ -94,26 +92,35 @@ public class FriendshipUtilsTest {
 
         addFriend(recipient);
 
-        db.getDocument("friendRequests", recipient.getUid(), FriendRequest.class).whenComplete(new BiConsumer<FriendRequest, Throwable>() {
+        final Map<String,Boolean> result= new HashMap<>();
+        result.put(sender.getUid(), true);
+
+        db.getCustomDocument("friendRequests", recipient.getUid(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
             @Override
-            public void accept(FriendRequest request, Throwable throwable) {
-                Assert.assertEquals(sender.getUid(), request.getSenderId());
-                Assert.assertEquals(recipient.getUid(), request.getRecipientId());
+            public void accept(HashMap hashMap, Throwable throwable) {
+                if (throwable != null) {
+                    Assert.assertEquals(result, hashMap);
+                } else {
+                    Assert.fail();
+                }
             }
         });
     }
 
     @Test
     public void acceptRequestCreatedFrienship() throws Throwable {
-        final FriendRequest request = new FriendRequest(sender.getUid(), recipient.getUid());
         final Map<String,Boolean> result= new HashMap<>();
-        result.put(request.getSenderId(), true);
+        result.put(sender.getUid(), true);
 
-        acceptRequest(request);
-        db.getDocument("friendships", request.getRecipientId(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
+        acceptRequest(sender);
+        db.getCustomDocument("friendships", recipient.getUid(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
             @Override
             public void accept(HashMap hashMap, Throwable throwable) {
-                Assert.assertEquals(result, (HashMap<String, Boolean>) hashMap);
+                if (throwable!=null) {
+                    Assert.assertEquals(result, (HashMap<String, Boolean>) hashMap);
+                } else {
+                    Assert.fail();
+                }
             }
         });
 
@@ -122,14 +129,17 @@ public class FriendshipUtilsTest {
     @Test
     public void removeFriendsDeleteFriendshipDB() throws Throwable {
         addFriend(recipient);
-        final FriendRequest request = new FriendRequest(sender.getUid(), recipient.getUid());
-        acceptRequest(request);
+        acceptRequest(sender);
         deleteFriend(recipient);
 
-        db.getDocument("friendships", request.getRecipientId(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
+        db.getCustomDocument("friendships", recipient.getUid(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
             @Override
             public void accept(HashMap hashMap, Throwable throwable) {
-                Assert.assertEquals(new HashMap<String, Boolean>(), hashMap);
+                if (throwable != null) {
+                    Assert.assertEquals(new HashMap<String, Boolean>(), hashMap);
+                } else {
+                    Assert.fail();
+                }
             }
         });
     }

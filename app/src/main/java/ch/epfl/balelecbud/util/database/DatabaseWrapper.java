@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface DatabaseWrapper {
 
-    String FESITVAL_INFORMATION_PATH = "festivalInfo";
+    String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
     String TRANSPORT_PATH = "transports";
     String CONCERT_SLOTS_PATH = "concertSlots";
@@ -17,9 +17,11 @@ public interface DatabaseWrapper {
 
     void listen(String collectionName, DatabaseListener listener);
 
-    <T> CompletableFuture<T> getDocument(String collectionName, String documentID, Class<T> type);
+    <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type);
 
-//    <T> void getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class type, Callback<T> callback);
+    CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID);
+
+    <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type);
 
     void updateDocument(String collectionName, String documentID, Map<String,Object> updates);
 

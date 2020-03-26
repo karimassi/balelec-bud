@@ -10,9 +10,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
-import ch.epfl.balelecbud.models.PointOfInterestAdapter;
 import ch.epfl.balelecbud.models.PointOfInterest;
+import ch.epfl.balelecbud.models.PointOfInterestAdapter;
+import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;

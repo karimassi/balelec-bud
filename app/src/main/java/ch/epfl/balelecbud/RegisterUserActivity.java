@@ -3,16 +3,15 @@ package ch.epfl.balelecbud;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.function.BiConsumer;
 
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 public class RegisterUserActivity extends BasicActivity {
 
@@ -84,7 +83,7 @@ public class RegisterUserActivity extends BasicActivity {
     }
 
     private void onAuthComplete() {
-        getDatabase().getDocument(DatabaseWrapper.USERS, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
+        getDatabase().getCustomDocument(DatabaseWrapper.USERS, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
             @Override
             public void accept(User user, Throwable throwable) {
                 if (throwable != null) {

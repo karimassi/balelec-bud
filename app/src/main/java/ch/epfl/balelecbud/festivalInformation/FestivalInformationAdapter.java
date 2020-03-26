@@ -48,7 +48,7 @@ public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInf
             }
         };
         DatabaseListener<FestivalInformation> listener = new DatabaseListener(facade, informationData, FestivalInformation.class);
-        database.listen(DatabaseWrapper.FESITVAL_INFORMATION_PATH, listener);
+        database.listen(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, listener);
     }
 
     @Override
