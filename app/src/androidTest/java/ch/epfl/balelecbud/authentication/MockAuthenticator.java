@@ -3,17 +3,16 @@ package ch.epfl.balelecbud.authentication;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 public class MockAuthenticator implements Authenticator {
 
     private static final Authenticator instance = new MockAuthenticator();
 
-    private boolean loggedIn;
 
     private final Map<String, String> users = new HashMap<String, String>() {
         {
@@ -26,14 +25,13 @@ public class MockAuthenticator implements Authenticator {
     private User currentUser;
 
     private MockAuthenticator() {
-        loggedIn = false;
+
     }
 
     @Override
     public CompletableFuture<User> signIn(final String email, final String password) {
         if (users.containsKey(email) && users.get(email).equals(password)) {
-            setLoggedIn(true);
-            return MockDatabaseWrapper.getInstance().getDocument("users", "0", User.class);
+            return MockDatabaseWrapper.getInstance().getCustomDocument(DatabaseWrapper.USERS, "0", User.class);
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed login");
         }
@@ -43,11 +41,8 @@ public class MockAuthenticator implements Authenticator {
     public CompletableFuture<Void> createAccount(final String email, final String password) {
         if (!users.containsKey(email)) {
             users.put(email, password);
-            setLoggedIn(true);
-            User u = new User(email, email, String.valueOf(uid));
-            uid++;
-            MockDatabaseWrapper.getInstance().storeDocumentWithID("users", String.valueOf(uid), u);
-            return CompletableFuture.completedFuture(null);
+            User u = new User(email, email, provideUid());
+            return MockDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS, u.getUid(), u);
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed registration");
         }
@@ -55,7 +50,6 @@ public class MockAuthenticator implements Authenticator {
 
     @Override
     public void signOut() {
-        setLoggedIn(false);
         currentUser = null;
     }
 
@@ -66,8 +60,13 @@ public class MockAuthenticator implements Authenticator {
 
     @Override
     public String getCurrentUid() {
-        return String.valueOf(uid);
+        return String.valueOf(uid-1);
     }
+
+    public static String provideUid() {
+        return String.valueOf(uid++);
+    }
+
 
     @Override
     public void setCurrentUser(User user) {
@@ -75,16 +74,7 @@ public class MockAuthenticator implements Authenticator {
             currentUser = user;
         }
     }
-
-    private void setLoggedIn(boolean state) {
-        loggedIn = state;
-    }
-
     public static Authenticator getInstance() {
         return instance;
-    }
-
-    public void debugSetUser(User user) {
-        currentUser = user;
     }
 }

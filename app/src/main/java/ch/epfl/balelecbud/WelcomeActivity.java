@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.LocationRequest;
 
+import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationService;
@@ -62,6 +63,7 @@ public class WelcomeActivity extends BasicActivity {
         bindActivityToButton(MapViewActivity.class, (Button) findViewById(R.id.mapButton));
         bindActivityToButton(TransportActivity.class, (Button) findViewById(R.id.transportButton));
         bindActivityToButton(PointOfInterestActivity.class, (Button) findViewById(R.id.poiButton));
+        bindActivityToButton(SocialActivity.class, (Button) findViewById(R.id.socialButton));
 
         final Button signOutButton = findViewById(R.id.buttonSignOut);
         signOutButton.setOnClickListener(new View.OnClickListener() {
