@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -18,6 +19,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Map<String, Boolean>> friendships = new ArrayList<>();
     private ArrayList<Map<String, Boolean>> friendRequests = new ArrayList<>();
+    private Map<String, Location> locations = new HashMap<>();
 
     private MockDatabaseWrapper() {
         listeners = new ArrayList<>();
@@ -107,12 +109,14 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
-            case DatabaseWrapper.USERS:
+            case DatabaseWrapper.USERS_PATH:
                 return CompletableFuture.completedFuture((T)users.get(index));
-            case DatabaseWrapper.FRIENDSHIPS:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
                 return CompletableFuture.completedFuture((T)friendships.get(index));
-            case DatabaseWrapper.FRIEND_REQUESTS:
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 return CompletableFuture.completedFuture((T)friendRequests.get(index));
+            case DatabaseWrapper.LOCATIONS_PATH:
+                return CompletableFuture.completedFuture((T)locations.get(documentID));
             default:
                 return CompletableFuture.completedFuture(null);
         }
@@ -123,10 +127,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         int index = Integer.parseInt(documentID);
         Map<String, Object> result = new HashMap<>();
         switch (collectionName) {
-            case DatabaseWrapper.FRIENDSHIPS:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
                 result.putAll(friendships.get(index));
                 break;
-            case DatabaseWrapper.FRIEND_REQUESTS:
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 result.putAll(friendRequests.get(index));
                 break;
             default:
@@ -138,7 +142,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type) {
         switch (collectionName) {
-            case DatabaseWrapper.USERS:
+            case DatabaseWrapper.USERS_PATH:
                 for (User u : users) {
                     switch (fieldName) {
                         case "email":
@@ -155,15 +159,15 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public <T> void storeDocument(String collectionName, T document) {
         switch (collectionName) {
-            case DatabaseWrapper.USERS:
+            case DatabaseWrapper.USERS_PATH:
                 users.add((User) document);
                 friendRequests.add(new HashMap<String, Boolean>());
                 friendships.add(new HashMap<String, Boolean>());
                 break;
-            case DatabaseWrapper.FRIENDSHIPS:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
                 friendships.add((Map<String, Boolean>) document);
                 break;
-            case DatabaseWrapper.FRIEND_REQUESTS:
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 friendRequests.add((Map<String, Boolean>) document);
                 break;
         }
@@ -173,16 +177,19 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
-            case DatabaseWrapper.USERS:
+            case DatabaseWrapper.USERS_PATH:
                 users.add( Integer.valueOf(((User)document).getUid()), (User) document);
                 friendRequests.add(new HashMap<String, Boolean>());
                 friendships.add(new HashMap<String, Boolean>());
                 break;
-            case DatabaseWrapper.FRIENDSHIPS:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
                 friendships.get(index).putAll((Map<String, Boolean>) document);
                 break;
-            case DatabaseWrapper.FRIEND_REQUESTS:
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 friendRequests.get(index).putAll((Map<String, Boolean>) document);
+                break;
+            case DatabaseWrapper.LOCATIONS_PATH:
+                locations.put(documentID, (Location) document);
                 break;
             default:
                 storeDocument(collectionName, document);
@@ -194,10 +201,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
-            case DatabaseWrapper.FRIENDSHIPS:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
                 friendships.get(index).clear();
                 break;
-            case DatabaseWrapper.FRIEND_REQUESTS:
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 friendRequests.get(index).remove(new ArrayList<>(updates.keySet()).get(0));
                 break;
         }
@@ -207,13 +214,13 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public void deleteDocument(String collectionName, String documentID) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
-            case DatabaseWrapper.USERS:
+            case DatabaseWrapper.USERS_PATH:
                 users.remove(index);
                 break;
-            case DatabaseWrapper.FRIENDSHIPS:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
                 friendships.remove(index);
                 break;
-            case DatabaseWrapper.FRIEND_REQUESTS:
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 friendRequests.remove(index);
                 break;
         }

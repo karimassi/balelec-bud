@@ -83,7 +83,7 @@ public class RegisterUserActivity extends BasicActivity {
     }
 
     private void onAuthComplete() {
-        getDatabase().getCustomDocument(DatabaseWrapper.USERS, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
+        getDatabase().getCustomDocument(DatabaseWrapper.USERS_PATH, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
             @Override
             public void accept(User user, Throwable throwable) {
                 if (throwable != null) {
