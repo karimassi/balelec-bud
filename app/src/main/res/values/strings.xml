@@ -30,9 +30,33 @@
     <string name="location">Location</string>
 
     <string name="festival_information">Festival Information</string>
-    <string name="festival_info_view">Informations</string>
+    <string name="social_view">Social</string>
+    <string name="festival_info_view">Information</string>
     <string name="transport_view">Transport</string>
     <string name="toggle_location_view">Toggle Location</string>
     <string name="schedule_view">Schedule</string>
     <string name="point_of_interest">Points of interest</string>
+
+
+<!--  SOCIAL FEATURES  -->
+
+    <!--   TAB NAMES -->
+    <string name="tab_friends">Friends</string>
+    <string name="tab_requests">Friend requests</string>
+
+    <!-- DIALOG   -->
+    <string name="add_friend_title">Add a friend</string>
+    <string name="add_friend_request">Request</string>
+    <string name="add_friend_cancel">Cancel</string>
+    <string name="add_friend_email_hint">Enter your friend\'s email</string>
+    <string name="add_own_as_friend">You can\'t add yourself as a friend :-)</string>
+    <string name="add_friend_request_sent">Friend request sent to </string>
+
+    <!--  FRIEND ITEM  -->
+    <string name="remove_friend">Unfriend</string>
+
+    <!--  FRIEND REQUEST ITEM  -->
+    <string name="accept_request">Accept</string>
+    <string name="reject_request">Delete</string>
+
 </resources>

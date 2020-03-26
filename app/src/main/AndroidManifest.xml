@@ -29,11 +29,12 @@
         <activity android:name=".PointOfInterestActivity" />
         <activity android:name=".TransportActivity" />
         <activity android:name=".ScheduleActivity" />
+        <activity android:name=".friendship.SocialActivity"/>
         <activity
             android:name=".MapViewActivity"
             android:label="@string/title_activity_map"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".WelcomeActivity" />
+            android:parentActivityName=".WelcomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".location.LocationService"
@@ -46,4 +47,5 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key" />
     </application>
+
 </manifest>

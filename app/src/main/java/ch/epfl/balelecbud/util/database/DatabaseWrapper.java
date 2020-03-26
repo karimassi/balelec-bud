@@ -17,9 +17,11 @@ public interface DatabaseWrapper {
 
     void listen(String collectionName, DatabaseListener listener);
 
-    <T> CompletableFuture<T> getDocument(String collectionName, String documentID, Class<T> type);
+    <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type);
 
-//    <T> void getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class type, Callback<T> callback);
+    CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID);
+
+    <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type);
 
     void updateDocument(String collectionName, String documentID, Map<String,Object> updates);
 
