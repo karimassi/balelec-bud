@@ -39,10 +39,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        final double defaultLat = Double.parseDouble(getString(R.string.default_lat));
-        final double defaultLng = Double.parseDouble(getString(R.string.default_lng));
-        final LatLng defaultLocation = new LatLng(defaultLat, defaultLng);
-        setPosition(defaultLocation);
+        setDefaultPosition();
 
         locationEnabled = WelcomeActivity.isLocationActive();
         locationResult = getDeviceLocation();
@@ -61,9 +58,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         googleMap.setMyLocationEnabled(locationEnabled);
         googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
 
-        if(locationEnabled) {
-            locationResult.addOnCompleteListener(this, callback);
-        }
+        if(locationEnabled) locationResult.addOnCompleteListener(this, callback);
         else {
             googleMap.addMarker(new MarkerOptions().position(position).title("Default Position"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
@@ -90,6 +85,13 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         if (position != null) {
             this.position = position;
         }
+    }
+
+    private void setDefaultPosition() {
+        final double defaultLat = Double.parseDouble(getString(R.string.default_lat));
+        final double defaultLng = Double.parseDouble(getString(R.string.default_lng));
+        final LatLng defaultLocation = new LatLng(defaultLat, defaultLng);
+        setPosition(defaultLocation);
     }
 
     public LatLng getPosition() {
