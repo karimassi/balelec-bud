@@ -44,6 +44,7 @@ public class LocationServiceTest {
     public void setUp() {
         ls = new LocationService();
         mockAuth.setCurrentUser(new User("abc@epfl.ch", "abc", "10"));
+        ls.onCreate();
     }
 
     private Intent getIntent(android.location.Location l) {

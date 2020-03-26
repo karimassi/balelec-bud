@@ -19,11 +19,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.location.LocationClient;
+import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -39,8 +39,7 @@ public class ConcertSoonNotificationTest {
 
     @Before
     public void setup() {
-        WelcomeActivity.mockMode = true;
-        mActivityRule.getActivity().setLocationClient(new LocationClient() {
+        LocationUtil.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
 
