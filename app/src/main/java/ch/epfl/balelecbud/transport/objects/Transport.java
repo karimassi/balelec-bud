@@ -6,6 +6,8 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.Calendar;
 import java.util.Date;
 
+import ch.epfl.balelecbud.util.StringUtils;
+
 public class Transport {
 
     private TransportType type;
@@ -54,9 +56,6 @@ public class Transport {
     }
 
     public String getTimeString() {
-        Date date = time.toDate();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+        return StringUtils.timestampToScheduleString(time);
     }
 }
