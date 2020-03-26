@@ -4,16 +4,16 @@ public class User {
 
     private String email;
     private String displayName;
-    private String userToken;
+    private String uid;
 
     public User() {
 
     }
 
-    public User(String email, String displayName, String userToken) {
+    public User(String email, String displayName, String uid) {
         this.email = email;
         this.displayName = displayName;
-        this.userToken = userToken;
+        this.uid = uid;
     }
 
     public String getEmail() {
@@ -25,7 +25,7 @@ public class User {
     }
 
     public String getUid() {
-        return userToken;
+        return uid;
     }
 
 }

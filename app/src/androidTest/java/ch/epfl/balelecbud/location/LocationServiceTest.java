@@ -9,7 +9,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.android.gms.location.LocationResult;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -45,12 +44,6 @@ public class LocationServiceTest {
     public void setUp() {
         ls = new LocationService();
         mockAuth.setCurrentUser(new User("abc@epfl.ch", "abc", "10"));
-        ls.onCreate();
-    }
-
-    @After
-    public void tearDown() {
-        ls.onDestroy();
     }
 
     private Intent getIntent(android.location.Location l) {
