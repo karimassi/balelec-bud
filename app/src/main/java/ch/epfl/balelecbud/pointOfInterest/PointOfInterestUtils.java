@@ -18,6 +18,7 @@ public class PointOfInterestUtils {
     private static final double DISTANCE = 1.;
     private static DatabaseWrapper dbImplementation = FirestoreDatabaseWrapper.getInstance();
 
+    @VisibleForTesting
     public static void setDbImplementation(DatabaseWrapper dbImplementation) {
         PointOfInterestUtils.dbImplementation = dbImplementation;
     }
