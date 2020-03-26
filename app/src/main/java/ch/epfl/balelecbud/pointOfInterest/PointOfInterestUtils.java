@@ -2,6 +2,8 @@ package ch.epfl.balelecbud.pointOfInterest;
 
 import com.google.common.collect.Lists;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
