@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -125,23 +124,21 @@ public final class FlowUtil {
     public static List<Slot> unpackCallback(@NonNull Intent intent) {
         if (RECEIVE_ALL_CONCERT.equals(intent.getAction())) {
             Parcelable[] ps = intent.getParcelableArrayExtra(CALLBACK);
-            return retrieveSlots(ps);
+            if (ps != null)
+                return retrieveSlots(ps);
         }
         return null;
     }
 
-    @Nullable
-    private static List<Slot> retrieveSlots(Parcelable[] ps) {
-        if (ps != null) {
-            Log.d("FlowUtil", "unpackCallback: ps = " + Arrays.toString(ps));
-            List<Slot> slots = new LinkedList<>();
-            for (Parcelable p : ps) {
-                if (p instanceof Slot)
-                    slots.add((Slot) p);
-            }
-            return slots;
+    @NonNull
+    private static List<Slot> retrieveSlots(@NonNull Parcelable[] ps) {
+        Log.d("FlowUtil", "unpackCallback: ps = " + Arrays.toString(ps));
+        List<Slot> slots = new LinkedList<>();
+        for (Parcelable p : ps) {
+            if (p instanceof Slot)
+                slots.add((Slot) p);
         }
-        return null;
+        return slots;
     }
 
     /**
