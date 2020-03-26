@@ -45,7 +45,7 @@ public class FriendsFragment extends Fragment {
 
     public static FriendsFragment newInstance(User user) {
         Bundle args = new Bundle();
-        args.putSerializable("user", user);
+        args.putParcelable("user", user);
         FriendsFragment fragment = new FriendsFragment();
         fragment.setArguments(args);
         return fragment;

@@ -1,9 +1,11 @@
 package ch.epfl.balelecbud.models;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Objects;
 
-public class User implements Serializable {
+public class User implements Parcelable {
 
     private String email;
     private String displayName;
@@ -17,6 +19,12 @@ public class User implements Serializable {
         this.email = email;
         this.displayName = displayName;
         this.uid = uid;
+    }
+
+    protected User(Parcel in) {
+        email = in.readString();
+        displayName = in.readString();
+        uid = in.readString();
     }
 
     public String getEmail() {
@@ -43,5 +51,30 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(getEmail(), getDisplayName(), getUid());
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(email);
+        dest.writeString(displayName);
+        dest.writeString(uid);
     }
 }

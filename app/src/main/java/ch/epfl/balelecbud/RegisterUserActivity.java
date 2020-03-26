@@ -39,7 +39,6 @@ public class RegisterUserActivity extends BasicActivity {
                 if (throwable != null) {
                     Toast.makeText(RegisterUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d("HERE","Auth complete");
                     onAuthComplete();
                 }
             }

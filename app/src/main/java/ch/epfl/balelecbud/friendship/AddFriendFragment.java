@@ -56,7 +56,7 @@ public class AddFriendFragment extends DialogFragment {
     public static AddFriendFragment newInstance(User user) {
         AddFriendFragment f = new AddFriendFragment();
         Bundle args = new Bundle();
-        args.putSerializable("user", user);
+        args.putParcelable("user", user);
         f.setArguments(args);
         return f;
     }
