@@ -81,14 +81,12 @@ public final class LocationUtil {
     /**
      * Handle the result of the request for permissions needed for the location service
      *
-     * @param permissions           the permissions requested
      * @param grantResults          the results of the request
      * @param onPermissionCanceled  an action to perform if the permission request is canceled
      * @param onPermissionGranted   an action to perform if the permission request is granted
      * @param onPermissionDenied    an action to perform if the permission request is denied
      */
-    public static void onLocationRequestPermissionsResult(@NonNull String[] permissions,
-                                                          @NonNull int[] grantResults,
+    public static void onLocationRequestPermissionsResult(@NonNull int[] grantResults,
                                                           @NonNull Action onPermissionCanceled,
                                                           @NonNull Action onPermissionGranted,
                                                           @NonNull Action onPermissionDenied) {
@@ -124,11 +122,7 @@ public final class LocationUtil {
      * @param context the context from which the order comes from
      */
     public static void enableLocation(Context context) {
-        requestLocationUpdates(context);
-        SharedPreferences sharedPref = context.getSharedPreferences(LOCATION_ENABLE_FILE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(LocationUtil.LOCATION_ENABLE_KEY, true);
-        editor.apply();
+        changedLocationState(context, true);
     }
 
     /**
@@ -137,10 +131,18 @@ public final class LocationUtil {
      * @param context the context from which the order comes from
      */
     public static void disableLocation(Context context) {
-        removeLocationUpdates(context);
+        changedLocationState(context, false);
+    }
+
+    private static void changedLocationState(Context context, boolean status) {
+        if (status) {
+            requestLocationUpdates(context);
+        } else {
+            removeLocationUpdates(context);
+        }
         SharedPreferences sharedPref = context.getSharedPreferences(LOCATION_ENABLE_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(LocationUtil.LOCATION_ENABLE_KEY, false);
+        editor.putBoolean(LocationUtil.LOCATION_ENABLE_KEY, status);
         editor.apply();
     }
 

@@ -88,36 +88,19 @@ public class WelcomeActivity extends BasicActivity {
                                            @NonNull int[] grantResults) {
         if (requestCode == LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE) {
             LocationUtil.onLocationRequestPermissionsResult(
-                    permissions,
                     grantResults,
-                    onPermissionCanceled(),
+                    onPermissionNotGranted("Permission request canceled"),
                     onPermissionGranted(),
-                    onPermissionDenied()
+                    onPermissionNotGranted("Permission denied")
             );
         }
     }
 
-    private Action onPermissionCanceled() {
+    private Action onPermissionNotGranted(final String logText) {
         return new Action() {
             @Override
             public void perform() {
-                Log.i(TAG, "onRequestPermissionsResult: Permission request canceled");
-                WelcomeActivity.this.locationSwitch.setClickable(false);
-                WelcomeActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        WelcomeActivity.this.locationSwitch.setChecked(false);
-                    }
-                });
-            }
-        };
-    }
-
-    private Action onPermissionDenied() {
-        return new Action() {
-            @Override
-            public void perform() {
-                Log.i(TAG, "onRequestPermissionsResult: Permission denied");
+                Log.i(TAG, "onRequestPermissionsResult: " + logText);
                 WelcomeActivity.this.locationSwitch.setClickable(false);
                 WelcomeActivity.this.runOnUiThread(new Runnable() {
                     @Override
