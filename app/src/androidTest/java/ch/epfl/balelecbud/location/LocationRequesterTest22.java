@@ -132,7 +132,6 @@ public class LocationRequesterTest22 {
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertTrue(MapViewActivity.getLocationPermission());
-        onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -153,7 +152,6 @@ public class LocationRequesterTest22 {
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertFalse(MapViewActivity.getLocationPermission());
-        onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 }
 
