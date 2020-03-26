@@ -39,50 +39,44 @@ public class PointOfInterestUtilsTest {
         db.setListToQuery(objectList);
     }
 
-    @Test
-    public void queryFiltersEqualsThan() throws ExecutionException, InterruptedException {
-        MyQuery.WhereClause clause = new MyQuery.WhereClause("longitude", MyQuery.WhereClause.Operator.EQUAL, (double) 2);
+    private List<Location> getResList(double value, MyQuery.WhereClause.Operator op, String fieldName) throws InterruptedException, ExecutionException {
+        MyQuery.WhereClause clause = new MyQuery.WhereClause(fieldName, op, value);
         MyQuery query = new MyQuery("whatever", Lists.newArrayList(clause));
         CompletableFuture<List<Location>> result = db.query(query, Location.class);
-        List<Location> resList = result.get();
+        return result.get();
+    }
+
+    @Test
+    public void queryFiltersEqualsThan() throws ExecutionException, InterruptedException {
+        List<Location> resList = getResList(2, MyQuery.WhereClause.Operator.EQUAL, "longitude");
         List<Location> expected = Lists.newArrayList(l2, l4);
         assertEquals(resList, expected);
     }
+
+
     @Test
     public void queryFiltersLessThan() throws ExecutionException, InterruptedException {
-        MyQuery.WhereClause clause = new MyQuery.WhereClause("longitude", MyQuery.WhereClause.Operator.LESS_THAN, (double) 2);
-        MyQuery query = new MyQuery("whatever", Lists.newArrayList(clause));
-        CompletableFuture<List<Location>> result = db.query(query, Location.class);
-        List<Location> resList = result.get();
+        List<Location> resList = getResList(2, MyQuery.WhereClause.Operator.LESS_THAN, "longitude");
         List<Location> expected = Lists.newArrayList(l1, l3);
         assertEquals(resList, expected);
     }
     @Test
     public void queryFiltersLessEquals() throws ExecutionException, InterruptedException {
-        MyQuery.WhereClause clause = new MyQuery.WhereClause("longitude", MyQuery.WhereClause.Operator.LESS_EQUAL, 1.5);
-        MyQuery query = new MyQuery("whatever", Lists.newArrayList(clause));
-        CompletableFuture<List<Location>> result = db.query(query, Location.class);
-        List<Location> resList = result.get();
+        List<Location> resList = getResList(1.5, MyQuery.WhereClause.Operator.LESS_EQUAL, "longitude");
         List<Location> expected = Lists.newArrayList(l1, l3);
         assertEquals(resList, expected);
     }
 
     @Test
     public void queryFiltersGreaterThan() throws ExecutionException, InterruptedException {
-        MyQuery.WhereClause clause = new MyQuery.WhereClause("longitude", MyQuery.WhereClause.Operator.GREATER_THAN, (double) 1);
-        MyQuery query = new MyQuery("whatever", Lists.newArrayList(clause));
-        CompletableFuture<List<Location>> result = db.query(query, Location.class);
-        List<Location> resList = result.get();
+        List<Location> resList = getResList(1, MyQuery.WhereClause.Operator.GREATER_THAN, "longitude");
         List<Location> expected = Lists.newArrayList(l2, l4);
         assertEquals(resList, expected);
     }
 
     @Test
     public void queryFiltersGreaterEquals() throws ExecutionException, InterruptedException {
-        MyQuery.WhereClause clause = new MyQuery.WhereClause("longitude", MyQuery.WhereClause.Operator.GREATER_EQUAL, 1.5);
-        MyQuery query = new MyQuery("whatever", Lists.newArrayList(clause));
-        CompletableFuture<List<Location>> result = db.query(query, Location.class);
-        List<Location> resList = result.get();
+        List<Location> resList = getResList(1.5, MyQuery.WhereClause.Operator.GREATER_EQUAL, "longitude");
         List<Location> expected = Lists.newArrayList(l2, l4);
         assertEquals(resList, expected);
     }
