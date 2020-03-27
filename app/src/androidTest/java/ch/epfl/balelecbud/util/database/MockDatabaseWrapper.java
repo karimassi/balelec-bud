@@ -31,8 +31,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private MockDatabaseWrapper() {
         listeners = new ArrayList<>();
         listToQuery = new ArrayList<>();
-        users.add(new User("karim@epfl.ch", "karim@epfl.ch", "0"));
-        users.add(new User("celine@epfl.ch", "celine@epfl.ch", "1"));
+        users.add(new User("karim@epfl.ch", "karim@epfl.ch", MockAuthenticator.provideUid()));
+        users.add(new User("celine@epfl.ch", "celine@epfl.ch", MockAuthenticator.provideUid()));
         friendships.add(new HashMap<String, Boolean>());
         friendships.add(new HashMap<String, Boolean>());
         friendRequests.add(new HashMap<String, Boolean>());
