@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud;
 
-
 import android.app.PendingIntent;
 
 import androidx.test.espresso.ViewInteraction;
