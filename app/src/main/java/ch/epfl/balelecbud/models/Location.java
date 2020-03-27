@@ -3,6 +3,9 @@ package ch.epfl.balelecbud.models;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.Objects;
 
 public class Location {
@@ -14,22 +17,40 @@ public class Location {
 
     }
 
-    public Location(double longitude, double latitude) {
-        this.longitude = longitude;
+    public Location(double latitude, double longitude) {
         this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Location(android.location.Location location) {
-        this.longitude = location.getLongitude();
         this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
+    }
+
+    public Location(GeoPoint geoPoint) {
+        this.latitude = geoPoint.getLatitude();
+        this.longitude = geoPoint.getLongitude();
+    }
+
+    public Location(LatLng latLng) {
+        this.latitude = latLng.latitude;
+        this.longitude = latLng.longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
     }
 
     public double getLongitude() {
         return longitude;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public GeoPoint toGeoPoint() {
+        return new GeoPoint(latitude, longitude);
+    }
+
+    public LatLng toLatLng() {
+        return new LatLng(latitude, longitude);
     }
 
     @Override

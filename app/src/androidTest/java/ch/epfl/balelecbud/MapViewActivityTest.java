@@ -1,19 +1,18 @@
 package ch.epfl.balelecbud;
 
-import android.location.Location;
 import android.view.View;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.firestore.GeoPoint;
-import com.google.protobuf.NullValue;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import ch.epfl.balelecbud.location.LocationUtil;
+import ch.epfl.balelecbud.models.Location;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -34,8 +33,8 @@ public class MapViewActivityTest {
 
     private final double testLatitude = -12.12;
     private final double testLongitude = -77.03;
-    private LatLng oldMapPosition;
-    private LatLng newMapPosition;
+    private Location oldMapLocation;
+    private Location newMapLocation;
 
     @Test
     public void testMapViewIsNotNull() {
@@ -74,54 +73,38 @@ public class MapViewActivityTest {
 
     @Test
     public void testNewPositionIsSet() {
-        LatLng newPosition = new LatLng(testLatitude, testLongitude);
+        Location newLocation = new Location(testLatitude, testLongitude);
         MapViewActivity mActivity = mActivityRule.getActivity();
-        mActivity.setPosition(newPosition);
-        assertThat(mActivity.getPosition(), is(newPosition));
-    }
-
-    @Test
-    public void testNullGeoPointIsNotSet() {
-        MapViewActivity mActivity = mActivityRule.getActivity();
-        mActivity.setPositionFrom(null);
-        assertThat(mActivity.getPosition(), is(notNullValue()));
-    }
-
-    @Test
-    public void testNewPositionFromGeoPointIsSet() {
-        LatLng newPosition = new LatLng(testLatitude, testLongitude);
-        MapViewActivity mActivity = mActivityRule.getActivity();
-        GeoPoint geoPoint = new GeoPoint(testLatitude, testLongitude);
-        mActivity.setPositionFrom(geoPoint);
-        assertThat(mActivity.getPosition(), is(newPosition));
+        mActivity.setLocation(newLocation);
+        assertThat(mActivity.getLocation(), is(newLocation));
     }
 
     @Test
     public void testNullPositionIsNotSet() {
         MapViewActivity mActivity = mActivityRule.getActivity();
-        mActivity.setPosition(null);
-        assertThat(mActivity.getPosition(), is(notNullValue()));
+        mActivity.setLocation(null);
+        assertThat(mActivity.getLocation(), is(notNullValue()));
     }
 
     @Test
     public void testNewPositionFromLocationIsSet() {
-        testSetPositionFrom(newTestLocation(), true);
-        assertThat(newMapPosition, is(new LatLng(testLatitude, testLongitude)));
+        testSetLocationFrom(newTestLocation(), true);
+        assertThat(newMapLocation, is(new Location(testLatitude, testLongitude)));
     }
 
     @Test
     public void testNullLocationIsNotSet() {
-        testSetPositionFrom(null, true);
-        assertThat(newMapPosition, is(oldMapPosition));
+        testSetLocationFrom(null, true);
+        assertThat(newMapLocation, is(oldMapLocation));
 
-        testSetPositionFrom(null, false);
-        assertThat(newMapPosition, is(oldMapPosition));
+        testSetLocationFrom(null, false);
+        assertThat(newMapLocation, is(oldMapLocation));
     }
 
     @Test
     public void testLocationIsNotSetWhenLocationDisabled() {
-        testSetPositionFrom(newTestLocation(), false);
-        assertThat(newMapPosition, is(oldMapPosition));
+        testSetLocationFrom(newTestLocation(), false);
+        assertThat(newMapLocation, is(oldMapLocation));
     }
 
     @Test
@@ -138,20 +121,20 @@ public class MapViewActivityTest {
     @Test
     public void testSetLocationPermission() {
         MapViewActivity mActivity = mActivityRule.getActivity();
-        assertThat(mActivity.getLocationPermission(), is(WelcomeActivity.isLocationActive()));
+        assertThat(mActivity.getLocationPermission(), is(LocationUtil.isLocationActive(mActivity)));
     }
 
-    private void testSetPositionFrom(final Location location, final boolean locationEnabled){
+    private void testSetLocationFrom(final android.location.Location deviceLocation, final boolean locationEnabled){
         MapViewActivity mActivity = mActivityRule.getActivity();
-        oldMapPosition = mActivity.getPosition();
-        mActivity.setPositionFrom(location, locationEnabled);
-        newMapPosition = mActivity.getPosition();
+        oldMapLocation = mActivity.getLocation();
+        mActivity.setLocationFrom(deviceLocation, locationEnabled);
+        newMapLocation = mActivity.getLocation();
     }
 
-    private Location newTestLocation() {
-        Location location = new Location("Test location");
-        location.setLatitude(testLatitude);
-        location.setLongitude(testLongitude);
-        return location;
+    private android.location.Location newTestLocation() {
+        android.location.Location deviceLocation = new android.location.Location("Test location");
+        deviceLocation.setLatitude(testLatitude);
+        deviceLocation.setLongitude(testLongitude);
+        return deviceLocation;
     }
 }

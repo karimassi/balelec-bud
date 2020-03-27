@@ -165,7 +165,7 @@ public class LocationRequesterTest {
         Assert.assertEquals(locationSwitch.isClickable(), before);
     }
 
-    @Test
+    /*@Test
     public void testSwitchOnEnablesLocationInMap() {
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
@@ -202,7 +202,7 @@ public class LocationRequesterTest {
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertFalse(MapViewActivity.getLocationPermission());
-    }
+    }*/
 
     public static ViewAssertion switchClickable(final boolean isClickable) {
         return new ViewAssertion() {
