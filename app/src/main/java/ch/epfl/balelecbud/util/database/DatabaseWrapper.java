@@ -18,11 +18,14 @@ public interface DatabaseWrapper {
 
     void listen(String collectionName, DatabaseListener listener);
 
+    
     <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
+    
+    <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type);
 
-    <T> CompletableFuture<T> getDocument(String collectionName, String documentID, Class<T> type);
+    CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID);
 
-//    <T> void getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class type, Callback<T> callback);
+    <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type);
 
     void updateDocument(String collectionName, String documentID, Map<String,Object> updates);
 

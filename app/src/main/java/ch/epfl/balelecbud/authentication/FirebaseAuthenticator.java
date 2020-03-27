@@ -25,19 +25,17 @@ public class FirebaseAuthenticator implements Authenticator {
 
     @Override
     public CompletableFuture<User> signIn(String email, String password) {
-
         return new TaskToCompletableFutureAdapter<>(mAuth.signInWithEmailAndPassword(email, password))
                 .thenCompose(new Function<AuthResult, CompletionStage<User>>() {
                     @Override
                     public CompletionStage<User> apply(AuthResult authResult) {
-                        return FirestoreDatabaseWrapper.getInstance().getDocument(DatabaseWrapper.USERS_PATH, getCurrentUid(), User.class);
+                        return FirestoreDatabaseWrapper.getInstance().getCustomDocument(DatabaseWrapper.USERS_PATH, getCurrentUid(), User.class);
                     }
         });
     }
 
     @Override
     public CompletableFuture<Void> createAccount(final String email, String password) {
-
         return new TaskToCompletableFutureAdapter<>(mAuth.createUserWithEmailAndPassword(email, password))
                 .thenCompose(new Function<AuthResult, CompletionStage<Void>>() {
                     @Override

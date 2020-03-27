@@ -33,7 +33,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
@@ -171,19 +170,29 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
             }
 
-            @Override
+            @Override 
             public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
                 return null;
             }
-
+            
             @Override
-            public <T> CompletableFuture<T> getDocument(String collectionName, String documentID, Class<T> type) {
+            public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
                 return CompletableFuture.completedFuture(null).thenCompose(new Function<Object, CompletionStage<T>>() {
                     @Override
                     public CompletionStage<T> apply(Object o) {
                         throw new RuntimeException("Failed to store document");
                     }
                 });
+            }
+
+            @Override
+            public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
+                return null;
+            }
+
+            @Override
+            public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type) {
+                return null;
             }
 
             @Override

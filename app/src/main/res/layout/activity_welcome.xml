@@ -12,10 +12,10 @@
         android:textSize="@dimen/welcome_text_size" />
 
     <Button
-        android:id="@+id/buttonSignOut"
+        android:id="@+id/socialButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/action_sign_out" />
+        android:text="@string/social_view"/>
 
     <Button
         android:id="@+id/mapButton"
@@ -49,8 +49,16 @@
 
     <Switch
         android:id="@+id/locationSwitch"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:checked="false"
         android:text="@string/toggle_location_view" />
+
+
+    <Button
+        android:id="@+id/buttonSignOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/action_sign_out" />
+
 </LinearLayout>

@@ -48,4 +48,10 @@ public class LocationTest {
         assertFalse(location1.equals(new Object()));
     }
 
+    @Test
+    public void testToString() {
+        Assert.assertEquals("Location(lat = 2.0, long = 1.0)", location1.toString());
+    }
 }
+
+   

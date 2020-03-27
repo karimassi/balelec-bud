@@ -62,12 +62,34 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public <T> CompletableFuture<T> getDocument(final String collectionName, final String documentID, final Class<T> type) {
+    public <T> CompletableFuture<T> getCustomDocument(final String collectionName, final String documentID, final Class<T> type) {
         CompletableFuture<DocumentSnapshot> result = new TaskToCompletableFutureAdapter<>(getCollectionReference(collectionName).document(documentID).get());
         return result.thenApply(new Function<DocumentSnapshot, T>() {
             @Override
             public T apply(DocumentSnapshot documentSnapshot) {
                 return documentSnapshot.toObject(type);
+            }
+        });
+    }
+
+    @Override
+    public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
+        CompletableFuture<DocumentSnapshot> result = new TaskToCompletableFutureAdapter<>(getCollectionReference(collectionName).document(documentID).get());
+        return result.thenApply(new Function<DocumentSnapshot, Map<String, Object>>() {
+            @Override
+            public Map<String, Object> apply(DocumentSnapshot documentSnapshot) {
+                return documentSnapshot.getData();
+            }
+        });
+    }
+
+    @Override
+    public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, final Class<T> type) {
+        CompletableFuture<QuerySnapshot> result = new TaskToCompletableFutureAdapter<>(getCollectionReference(collectionName).whereEqualTo(fieldName, fieldValue).limit(1).get());
+        return result.thenApply(new Function<QuerySnapshot, T>() {
+            @Override
+            public T apply(QuerySnapshot querySnapshot) {
+                return querySnapshot.getDocuments().get(0).toObject(type);
             }
         });
     }
