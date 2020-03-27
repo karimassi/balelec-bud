@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import ch.epfl.balelecbud.models.PointOfInterestAdapter;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterestAdapter;
 
 public class PointOfInterestActivity extends BasicActivity{
 

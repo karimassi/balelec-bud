@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.models;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Assert;
@@ -8,14 +9,15 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class LocationTest {
 
-    private Location location1 = new Location(1,2);
-    private Location location2 = new Location(2,2);
-    private Location same_as_l1 = new Location(1,2);
-
-
+    private Location location = new Location(2,1);
+    private Location differentLocation = new Location(2,2);
+    private Location sameLocation = new Location(2,1);
+    private GeoPoint geoPoint = new GeoPoint(2, 1);
+    private LatLng latLng = new LatLng(2, 1);
 
     @Test
     public void testEmptyConstructor() {
@@ -23,34 +25,54 @@ public class LocationTest {
     }
 
     @Test
+    public void testLocationFromGeoPoint() {
+        assertThat(new Location(geoPoint), is(location));
+    }
+
+    @Test
+    public void testToGeoPoint() {
+        assertThat(location.toGeoPoint(), is(geoPoint));
+    }
+
+    @Test
+    public void testLocationFromLatLng() {
+        assertThat(new Location(latLng), is(location));
+    }
+
+    @Test
+    public void testToLatLng() {
+        assertThat(location.toLatLng(), is(latLng));
+    }
+
+    @Test
     public void testGetLatitude() {
-        Assert.assertThat(location1.getLatitude(), is(2.));
+        assertThat(location.getLatitude(), is(2.));
     }
 
     @Test
     public void testGetLongitude() {
-        Assert.assertThat(location1.getLongitude(), is(1.));
+        assertThat(location.getLongitude(), is(1.));
     }
 
     @Test
     public void testEqualsTwoEqualLocations() {
-        assertEquals(location1,same_as_l1);
+        assertEquals(location,sameLocation);
     }
 
     @Test
     public void testEqualsTwoNonEqualLocation() {
-        assertFalse(location1.equals(location2));
+        assertFalse(location.equals(differentLocation));
     }
 
 
     @Test
     public void testEqualsTwoDifferentObjects() {
-        assertFalse(location1.equals(new Object()));
+        assertFalse(location.equals(new Object()));
     }
 
     @Test
     public void testToString() {
-        Assert.assertEquals("Location(lat = 2.0, long = 1.0)", location1.toString());
+        Assert.assertEquals("Location(lat = 2.0, long = 1.0)", location.toString());
     }
 }
 

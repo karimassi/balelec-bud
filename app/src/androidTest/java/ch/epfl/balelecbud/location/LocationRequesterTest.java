@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.MapViewActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 
@@ -161,6 +162,25 @@ public class LocationRequesterTest {
                 new String[]{}, new int[]{});
 
         Assert.assertEquals(locationSwitch.isClickable(), before);
+    }
+
+    @Test
+    public void testSwitchOffDisablesLocationInMap() {
+        LocationUtil.setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                Assert.assertNotNull(lr);
+                Assert.assertNotNull(intent);
+            }
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+                Assert.assertNotNull(intent);
+            }
+        });
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.mapButton)).perform(click());
+        Assert.assertFalse(MapViewActivity.getLocationPermission());
     }
 
     public static ViewAssertion switchClickable(final boolean isClickable) {

@@ -2,32 +2,49 @@ package ch.epfl.balelecbud;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import ch.epfl.balelecbud.location.LocationUtil;
+import ch.epfl.balelecbud.models.Location;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private double defaultLat;
-    private double defaultLng;
+    private final float DEFAULT_ZOOM = 17;
 
-    private LatLng position;
+    private Location location;
+    private GoogleMap googleMap;
+    private Task<android.location.Location> locationResult;
+    private static boolean locationEnabled;
+
+    private OnCompleteListener<android.location.Location> callback =
+            new OnCompleteListener<android.location.Location>() {
+                @Override
+                public void onComplete(@NonNull Task<android.location.Location> task) {
+                    setLocationFrom(task.getResult(), task.isSuccessful());
+                    setLocationPermission();
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location.toLatLng(), DEFAULT_ZOOM));
+                }
+            };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        defaultLat = Double.parseDouble(getString(R.string.default_lat));
-        defaultLng = Double.parseDouble(getString(R.string.default_lng));
-        LatLng default_location = new LatLng(defaultLat, defaultLng);
+        setDefaultLocation();
+        setLocationPermission();
 
-        setPosition(default_location);
+        locationResult = getDeviceLocation();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -36,17 +53,59 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(position).title("defaultPosition"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(position));
-    }
+        googleMap = map;
 
-    public void setPosition(LatLng position) {
-        if (position != null) {
-            this.position = position;
+        googleMap.getUiSettings().setCompassEnabled(true);
+
+        googleMap.setMyLocationEnabled(locationEnabled);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
+
+        if(locationEnabled) locationResult.addOnCompleteListener(this, callback);
+        else {
+            googleMap.addMarker(new MarkerOptions().position(location.toLatLng()).title("Default Location"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location.toLatLng(), DEFAULT_ZOOM));
         }
     }
 
-    public LatLng getPosition() {
-        return this.position;
+    protected Task<android.location.Location> getDeviceLocation() {
+        if(locationEnabled) {
+            return LocationServices.getFusedLocationProviderClient(this).getLastLocation();
+        }
+        return null;
+    }
+
+    protected void setLocationPermission() {
+        locationEnabled = LocationUtil.isLocationActive(this);
+    }
+
+    protected void setLocationFrom(android.location.Location deviceLocation, boolean locationEnabled) {
+        if(locationEnabled && deviceLocation!=null) {
+            location = new Location(deviceLocation);
+        }
+    }
+
+    protected void setLocation(Location location) {
+        if (location != null) {
+            this.location = location;
+        }
+    }
+
+    private void setDefaultLocation() {
+        final double defaultLat = Double.parseDouble(getString(R.string.default_lat));
+        final double defaultLng = Double.parseDouble(getString(R.string.default_lng));
+        final Location defaultLocation = new Location(defaultLat, defaultLng);
+        setLocation(defaultLocation);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public static boolean getLocationPermission() {
+        return locationEnabled;
+    }
+
+    public GoogleMap getGoogleMap() {
+        return googleMap;
     }
 }

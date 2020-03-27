@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
-import android.view.InflateException;
-
 import com.google.common.collect.Lists;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -14,7 +12,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.models.PointOfInterest;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
 
@@ -26,8 +23,8 @@ public class PointOfInterestUtilsTest {
     private static List<Location> locations;
     private static MockDatabaseWrapper db;
     private static Location l1 = new Location(1, 1);
-    private static Location l2 = new Location(2, 1);
-    private static Location l3 = new Location(1, 2);
+    private static Location l2 = new Location(1, 2);
+    private static Location l3 = new Location(2, 1);
     private static Location l4 = new Location(2, 2);
 
     @BeforeClass

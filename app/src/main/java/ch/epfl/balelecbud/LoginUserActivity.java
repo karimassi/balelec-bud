@@ -79,5 +79,4 @@ public class LoginUserActivity extends BasicActivity {
             startActivity(intent);
         }
     }
-
 }
