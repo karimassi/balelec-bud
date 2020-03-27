@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
@@ -47,7 +48,7 @@ public class FestivalInformationAdapter extends RecyclerView.Adapter<FestivalInf
             }
         };
         DatabaseListener<FestivalInformation> listener = new DatabaseListener(facade, informationData, FestivalInformation.class);
-        database.listen(DatabaseWrapper.FESITVAL_INFORMATION_PATH, listener);
+        database.listen(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, listener);
     }
 
     @Override
