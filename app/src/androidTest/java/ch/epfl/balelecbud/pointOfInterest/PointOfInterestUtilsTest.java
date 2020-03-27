@@ -12,7 +12,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.models.PointOfInterest;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
 
@@ -25,8 +24,8 @@ public class PointOfInterestUtilsTest {
     private static List<Location> locations;
     private static MockDatabaseWrapper db;
     private static Location l1 = new Location(1, 1);
-    private static Location l2 = new Location(2, 1);
-    private static Location l3 = new Location(1, 2);
+    private static Location l2 = new Location(1, 2);
+    private static Location l3 = new Location(2, 1);
     private static Location l4 = new Location(2, 2);
 
     @BeforeClass
@@ -47,31 +46,32 @@ public class PointOfInterestUtilsTest {
 
     @Test
     public void queryFiltersEqualsThan() throws ExecutionException, InterruptedException {
-        List<Location> resList = getResList(2, MyQuery.WhereClause.Operator.EQUAL, "latitude");
+        List<Location> resList = getResList(2, MyQuery.WhereClause.Operator.EQUAL, "longitude");
         List<Location> expected = Lists.newArrayList(l2, l4);
         assertEquals(resList, expected);
     }
 
-    /*
+
     @Test
     public void queryFiltersLessThan() throws ExecutionException, InterruptedException {
         List<Location> resList = getResList(2, MyQuery.WhereClause.Operator.LESS_THAN, "longitude");
-        List<Location> expected = Lists.newArrayList(l1, l2);
+        List<Location> expected = Lists.newArrayList(l1, l3);
         assertThat(resList, is(expected));
     }
+
     @Test
     public void queryFiltersLessEquals() throws ExecutionException, InterruptedException {
         List<Location> resList = getResList(1.5, MyQuery.WhereClause.Operator.LESS_EQUAL, "longitude");
-        List<Location> expected = Lists.newArrayList(l1, l2);
+        List<Location> expected = Lists.newArrayList(l1, l3);
         assertThat(resList, is(expected));
     }
-    */
+
     @Test
     public void queryFiltersGreaterThan() throws ExecutionException, InterruptedException {
-        List<Location> resList = getResList(1, MyQuery.WhereClause.Operator.GREATER_THAN, "latitude");
+        List<Location> resList = getResList(1, MyQuery.WhereClause.Operator.GREATER_THAN, "longitude");
         List<Location> expected = Lists.newArrayList(l2, l4);
         assertEquals(resList, expected);
-    }/*
+    }
 
     @Test
     public void queryFiltersGreaterEquals() throws ExecutionException, InterruptedException {
@@ -91,7 +91,7 @@ public class PointOfInterestUtilsTest {
         List<Location> expected = Lists.newArrayList(l4);
         assertThat(resList, is(expected));
     }
-*/
+
     @Test
     public void getAmountNearPOIReturnsExpectedAmount() throws ExecutionException, InterruptedException {
         List<Object> grid = new LinkedList<>();

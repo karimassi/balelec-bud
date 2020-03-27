@@ -5,6 +5,8 @@ import com.google.firebase.firestore.GeoPoint;
 import org.junit.Assert;
 import org.junit.Test;
 
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
+
 import static org.hamcrest.core.Is.is;
 
 public class PointOfInterestTest {

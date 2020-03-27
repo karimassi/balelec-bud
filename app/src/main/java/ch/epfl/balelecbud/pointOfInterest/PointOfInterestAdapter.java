@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.models;
+package ch.epfl.balelecbud.pointOfInterest;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.GeoPoint;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
@@ -64,7 +63,7 @@ public class PointOfInterestAdapter extends RecyclerView.Adapter<PointOfInterest
     public void onBindViewHolder(@NonNull PointOfInterestHolder holder, int position) {
         holder.nameTextView.setText(pointOfInterestData.get(position).getName());
         holder.typeTextView.setText(pointOfInterestData.get(position).getType());
-        holder.locationTextView.setText(toString(pointOfInterestData.get(position).getLocation()));
+        holder.locationTextView.setText(new Location(pointOfInterestData.get(position).getLocation()).toString());
     }
 
     @Override
@@ -84,12 +83,5 @@ public class PointOfInterestAdapter extends RecyclerView.Adapter<PointOfInterest
             typeTextView = view.findViewById(R.id.poiType);
             locationTextView = view.findViewById(R.id.poiLocation);
         }
-    }
-
-    public static String toString(GeoPoint geoPoint) {
-        StringBuilder string = new StringBuilder().
-                append("Latitude: ").append(geoPoint.getLatitude()).
-                append("\nLongitude: ").append(geoPoint.getLongitude());
-        return string.toString();
     }
 }

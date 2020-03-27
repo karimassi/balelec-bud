@@ -63,7 +63,8 @@ public class Location {
         if (obj instanceof Location) {
             Location that = (Location) obj;
             return this.latitude.equals(that.latitude) &&
-                    this.longitude.equals(that.longitude);
+                    this.longitude.equals(that.longitude) &&
+                    this.hashCode() == that.hashCode();
         }
         return false;
     }

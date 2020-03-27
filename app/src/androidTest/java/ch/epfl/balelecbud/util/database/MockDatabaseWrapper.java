@@ -45,7 +45,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public static DatabaseWrapper getInstance() {
         return instance;
     }
-  
+    
     @Override
     public void unregisterListener(DatabaseListener listener) {
         listeners.remove(listener);
