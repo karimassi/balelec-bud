@@ -63,24 +63,24 @@ public class SocialActivityTest {
             FriendshipUtils.setDatabaseImplementation(mockDb);
             mockAuth.setCurrentUser(currentUser);
             newFriend = new User("test@gmail.com", "test@gmail.com", MockAuthenticator.provideUid());
-            mockDb.storeDocument(DatabaseWrapper.USERS, newFriend);
+            mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);
         }
     };
 
     private void createFriendship(User user) {
         Map<String,Boolean> toStore= new HashMap<>();
         toStore.put(user.getUid(), true);
-        mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, currentUser.getUid(), toStore);
+        mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, currentUser.getUid(), toStore);
 
         toStore = new HashMap<>();
         toStore.put(currentUser.getUid(), true);
-        mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, user.getUid(), toStore);
+        mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, user.getUid(), toStore);
     }
 
     private void createRequestFromUser(User user) {
         Map<String,Boolean> toStore= new HashMap<>();
         toStore.put(user.getUid(), true);
-        mockDb.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS, currentUser.getUid(), toStore);
+        mockDb.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, currentUser.getUid(), toStore);
     }
 
     private void selectTab(int position) {
@@ -247,7 +247,7 @@ public class SocialActivityTest {
         onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(otherUser.getEmail())).perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
-        mockDb.getDocument(DatabaseWrapper.FRIEND_REQUESTS, otherUser.getUid()).whenComplete(new BiConsumer<Map<String, Object>, Throwable>() {
+        mockDb.getDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, otherUser.getUid()).whenComplete(new BiConsumer<Map<String, Object>, Throwable>() {
             @Override
             public void accept(Map<String, Object> stringObjectMap, Throwable throwable) {
                 if (stringObjectMap != null) {
@@ -259,18 +259,4 @@ public class SocialActivityTest {
             }
         });
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
