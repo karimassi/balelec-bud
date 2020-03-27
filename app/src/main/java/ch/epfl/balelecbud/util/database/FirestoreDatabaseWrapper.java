@@ -9,10 +9,12 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -110,6 +112,17 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     @Override
     public void deleteDocument(String collectionName, String documentID) {
         getCollectionReference(collectionName).document(documentID).delete();
+    }
+
+    @Override
+    public <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass){
+        CompletableFuture<QuerySnapshot> future = new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
+        return future.thenApply(new Function<QuerySnapshot, List<T>>() {
+            @Override
+            public List<T> apply(QuerySnapshot value) {
+                return value.toObjects(tClass);
+            }
+        });
     }
 
     public static DatabaseWrapper getInstance() {

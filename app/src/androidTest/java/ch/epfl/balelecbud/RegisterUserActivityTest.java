@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -22,6 +23,7 @@ import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -168,6 +170,11 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
             }
 
+            @Override 
+            public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
+                return null;
+            }
+            
             @Override
             public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
                 return CompletableFuture.completedFuture(null).thenCompose(new Function<Object, CompletionStage<T>>() {
