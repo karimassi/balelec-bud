@@ -31,7 +31,7 @@ public class MockAuthenticator implements Authenticator {
     @Override
     public CompletableFuture<User> signIn(final String email, final String password) {
         if (users.containsKey(email) && users.get(email).equals(password)) {
-            return MockDatabaseWrapper.getInstance().getCustomDocument(DatabaseWrapper.USERS, "0", User.class);
+            return MockDatabaseWrapper.getInstance().getCustomDocument(DatabaseWrapper.USERS_PATH, "0", User.class);
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed login");
         }
@@ -42,7 +42,7 @@ public class MockAuthenticator implements Authenticator {
         if (!users.containsKey(email)) {
             users.put(email, password);
             User u = new User(email, email, provideUid());
-            return MockDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS, u.getUid(), u);
+            return MockDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS_PATH, u.getUid(), u);
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed registration");
         }

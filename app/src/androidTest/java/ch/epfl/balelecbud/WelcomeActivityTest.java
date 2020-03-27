@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud;
 
-
 import android.app.PendingIntent;
 
 import androidx.test.espresso.ViewInteraction;
@@ -17,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.location.LocationClient;
+import ch.epfl.balelecbud.location.LocationUtil;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -30,22 +30,26 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 public class WelcomeActivityTest {
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<>(WelcomeActivity.class);
+            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    super.beforeActivityLaunched();
+                    LocationUtil.setLocationClient(new LocationClient() {
+                        @Override
+                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+
+                        }
+
+                        @Override
+                        public void removeLocationUpdates(PendingIntent intent) {
+
+                        }
+                    });
+                }
+            };
 
     @Before
     public void setup() {
-        WelcomeActivity.mockMode = true;
-        mActivityRule.getActivity().setLocationClient(new LocationClient() {
-            @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-
-            }
-
-            @Override
-            public void removeLocationUpdates(PendingIntent intent) {
-
-            }
-        });
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         if (device.hasObject(By.text("ALLOW"))) {
             device.findObject(By.text("ALLOW")).click();

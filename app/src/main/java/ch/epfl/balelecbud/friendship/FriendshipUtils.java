@@ -35,27 +35,27 @@ public class FriendshipUtils {
     public static void addFriend(User friend) {
         Map<String,Boolean> toStore= new HashMap<>();
         toStore.put(auth.getCurrentUser().getUid(), true);
-        database.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS, friend.getUid(), toStore);
+        database.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, friend.getUid(), toStore);
     }
 
     public static void removeFriend(User friend) {
         Map<String,Object> updates = new HashMap<>();
         updates.put(friend.getUid(), FieldValue.delete());
-        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, auth.getCurrentUser().getUid(), updates);
+        database.updateDocument(DatabaseWrapper.FRIENDSHIPS_PATH, auth.getCurrentUser().getUid(), updates);
 
         updates = new HashMap<>();
         updates.put(auth.getCurrentUser().getUid(), FieldValue.delete());
-        database.updateDocument(DatabaseWrapper.FRIENDSHIPS, friend.getUid(), updates);
+        database.updateDocument(DatabaseWrapper.FRIENDSHIPS_PATH, friend.getUid(), updates);
     }
 
     public static void acceptRequest(User sender) {
         Map<String,Boolean> toStore= new HashMap<>();
         toStore.put(sender.getUid(), true);
-        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, auth.getCurrentUser().getUid(), toStore);
+        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, auth.getCurrentUser().getUid(), toStore);
 
         toStore = new HashMap<>();
         toStore.put(auth.getCurrentUser().getUid(), true);
-        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS, sender.getUid(), toStore);
+        database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, sender.getUid(), toStore);
 
         deleteRequest(sender);
     }
@@ -63,7 +63,7 @@ public class FriendshipUtils {
     public static void deleteRequest(User sender) {
         Map<String,Object> updates = new HashMap<>();
         updates.put(sender.getUid(), FieldValue.delete());
-        database.updateDocument(DatabaseWrapper.FRIEND_REQUESTS, auth.getCurrentUser().getUid(), updates);
+        database.updateDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, auth.getCurrentUser().getUid(), updates);
     }
 
     public static List<CompletableFuture<User>> getFriends(List<String> uidList) {
@@ -75,19 +75,19 @@ public class FriendshipUtils {
     }
 
     public static CompletableFuture<User> getUserFromUid(String uid) {
-        return database.getCustomDocument(DatabaseWrapper.USERS, uid, User.class);
+        return database.getCustomDocument(DatabaseWrapper.USERS_PATH, uid, User.class);
     }
 
     public static CompletableFuture<User> getUserFromEmail(String email) {
-        return database.getDocumentWithFieldCondition(DatabaseWrapper.USERS, "email", email, User.class);
+        return database.getDocumentWithFieldCondition(DatabaseWrapper.USERS_PATH, "email", email, User.class);
     }
 
     public static CompletableFuture<List<String>> getRequestsUids(User user) {
-        return getUidsFromCollection(user, DatabaseWrapper.FRIEND_REQUESTS);
+        return getUidsFromCollection(user, DatabaseWrapper.FRIEND_REQUESTS_PATH);
     }
 
     public static CompletableFuture<List<String>> getFriendsUids(User user) {
-        return getUidsFromCollection(user, DatabaseWrapper.FRIENDSHIPS);
+        return getUidsFromCollection(user, DatabaseWrapper.FRIENDSHIPS_PATH);
     }
 
     private static CompletableFuture<List<String>> getUidsFromCollection(User user, String collectionName) {
