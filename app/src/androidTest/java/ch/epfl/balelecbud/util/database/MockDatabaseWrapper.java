@@ -178,7 +178,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
-                users.add( Integer.valueOf(((User)document).getUid()), (User) document);
+                users.add( Integer.valueOf(((User) document).getUid()), (User) document);
                 friendRequests.add(new HashMap<String, Boolean>());
                 friendships.add(new HashMap<String, Boolean>());
                 break;

@@ -50,6 +50,6 @@ public class Location {
     @NonNull
     @Override
     public String toString() {
-        return "Location(lat = " + latitude.toString() + "long = " + longitude.toString() + ")";
+        return "Location(lat = " + latitude.toString() + ", long = " + longitude.toString() + ")";
     }
 }

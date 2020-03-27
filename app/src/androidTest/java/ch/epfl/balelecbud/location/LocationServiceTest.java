@@ -67,7 +67,7 @@ public class LocationServiceTest {
     private void checkStoredOnDB(Location location) throws ExecutionException, InterruptedException {
         Assert.assertEquals(
                 location,
-                mockDB.getDocument(
+                mockDB.getCustomDocument(
                         DatabaseWrapper.LOCATIONS_PATH,
                         mockAuth.getCurrentUser().getUid(),
                         Location.class).get()
