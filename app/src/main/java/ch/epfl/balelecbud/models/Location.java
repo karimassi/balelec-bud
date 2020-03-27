@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class Location {
 
-    private Double longitude;
     private Double latitude;
+    private Double longitude;
 
     public Location() {
 
@@ -55,7 +55,7 @@ public class Location {
 
     @Override
     public int hashCode() {
-        return Objects.hash(longitude, latitude);
+        return Objects.hash(latitude, longitude);
     }
 
     @Override
