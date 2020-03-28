@@ -75,7 +75,8 @@ public class WelcomeActivityTest {
 
     @Test
     public void testScheduleButtonIsDisplayed() {
-        testButtonIsDisplayed(onView(withId(R.id.scheduleButton)));
+        onView(withId(R.id.scheduleButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.scheduleButton)).perform(click());
     }
 
     @Test

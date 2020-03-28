@@ -44,8 +44,7 @@ public class User implements Parcelable {
         return (o instanceof User)
                 && ((User) o).getEmail().equals(email)
                 && ((User) o).getDisplayName().equals(displayName)
-                && ((User) o).getUid().equals(uid)
-                && ((User) o).hashCode() == this.hashCode();
+                && ((User) o).getUid().equals(uid);
     }
 
     @Override
