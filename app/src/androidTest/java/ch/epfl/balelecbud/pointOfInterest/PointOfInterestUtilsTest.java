@@ -111,5 +111,8 @@ public class PointOfInterestUtilsTest {
         assertEquals(4, res2);
     }
 
-
+    @Test
+    public void defaultConstructor() {
+        new PointOfInterestUtils();
+    }
 }

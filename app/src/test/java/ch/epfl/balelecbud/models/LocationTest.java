@@ -14,7 +14,6 @@ import static org.junit.Assert.assertThat;
 public class LocationTest {
 
     private Location location = new Location(2,1);
-    private Location differentLocation = new Location(2,2);
     private Location sameLocation = new Location(2,1);
     private GeoPoint geoPoint = new GeoPoint(2, 1);
     private LatLng latLng = new LatLng(2, 1);
@@ -60,14 +59,25 @@ public class LocationTest {
     }
 
     @Test
-    public void testEqualsTwoNonEqualLocation() {
-        assertFalse(location.equals(differentLocation));
+    public void testEqualsTwoNonEqualLocations() {
+        Location differentLatitude = new Location(3,1);
+        Location differentLongitude = new Location(2,3);
+        Location allDifferent = new Location(3,3);
+
+        assertFalse(location.equals(differentLatitude));
+        assertFalse(location.equals(differentLongitude));
+        assertFalse(location.equals(allDifferent));
     }
 
 
     @Test
     public void testEqualsTwoDifferentObjects() {
         assertFalse(location.equals(new Object()));
+    }
+
+    @Test
+    public void testHashCode() {
+        assertThat(sameLocation.hashCode(), is(location.hashCode()));
     }
 
     @Test

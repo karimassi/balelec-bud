@@ -62,8 +62,9 @@ public class Location {
     public boolean equals(@Nullable Object obj) {
         if (obj instanceof Location) {
             Location that = (Location) obj;
-            return this.latitude.equals(that.latitude) &&
-                    this.longitude.equals(that.longitude);
+            return this.latitude.equals(that.latitude)
+                    && this.longitude.equals(that.longitude)
+                    && this.hashCode() == (that.hashCode());
         }
         return false;
     }

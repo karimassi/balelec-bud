@@ -111,10 +111,10 @@ public class MapViewActivityTest {
     public void testGetDeviceLocation() {
         MapViewActivity mActivity = mActivityRule.getActivity();
         if(MapViewActivity.getLocationPermission()) {
-            assertThat(mActivity.getDeviceLocation(), is(notNullValue()));
+            assertThat(mActivity.getLocationResult(), is(notNullValue()));
         }
         else {
-            assertNull(mActivity.getDeviceLocation());
+            assertNull(mActivity.getLocationResult());
         }
     }
 

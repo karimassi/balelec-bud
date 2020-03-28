@@ -10,6 +10,7 @@ import androidx.test.uiautomator.UiDevice;
 
 import com.google.android.gms.location.LocationRequest;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -127,6 +128,47 @@ public class WelcomeActivityTest {
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testSwitchOnEnablesLocationInMap() {
+        LocationUtil.setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                Assert.assertNotNull(lr);
+                Assert.assertNotNull(intent);
+            }
+
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+                Assert.fail();
+            }
+        });
+        if (!LocationUtil.isLocationActive(this.mActivityRule.getActivity())) {
+            onView(withId(R.id.locationSwitch)).perform(click());
+        }
+        onView(withId(R.id.mapButton)).perform(click());
+        Assert.assertTrue(MapViewActivity.getLocationPermission());
+    }
+
+    @Test
+    public void testSwitchOffDisablesLocationInMap() {
+        LocationUtil.setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                Assert.assertNotNull(lr);
+                Assert.assertNotNull(intent);
+            }
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+                Assert.assertNotNull(intent);
+            }
+        });
+        if (LocationUtil.isLocationActive(this.mActivityRule.getActivity())) {
+            onView(withId(R.id.locationSwitch)).perform(click());
+        }
+        onView(withId(R.id.mapButton)).perform(click());
+        Assert.assertFalse(MapViewActivity.getLocationPermission());
     }
 
     private void testButtonIsDisplayed(ViewInteraction button) {
