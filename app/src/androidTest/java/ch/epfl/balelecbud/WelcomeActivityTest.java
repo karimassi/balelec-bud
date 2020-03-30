@@ -131,24 +131,6 @@ public class WelcomeActivityTest {
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void testSwitchOnEnablesLocationInMap() {
-        if (!LocationUtil.isLocationActive(this.mActivityRule.getActivity())) {
-            onView(withId(R.id.locationSwitch)).perform(click());
-        }
-        onView(withId(R.id.mapButton)).perform(click());
-        Assert.assertTrue(MapViewActivity.getLocationPermission());
-    }
-
-    @Test
-    public void testSwitchOffDisablesLocationInMap() {
-        if (LocationUtil.isLocationActive(this.mActivityRule.getActivity())) {
-            onView(withId(R.id.locationSwitch)).perform(click());
-        }
-        onView(withId(R.id.mapButton)).perform(click());
-        Assert.assertFalse(MapViewActivity.getLocationPermission());
-    }
-
     private void testButtonIsDisplayed(ViewInteraction button) {
         button.check(matches(isDisplayed()));
         button.perform(click());
