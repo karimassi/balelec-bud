@@ -133,18 +133,6 @@ public class WelcomeActivityTest {
 
     @Test
     public void testSwitchOnEnablesLocationInMap() {
-        LocationUtil.setLocationClient(new LocationClient() {
-            @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                Assert.assertNotNull(lr);
-                Assert.assertNotNull(intent);
-            }
-
-            @Override
-            public void removeLocationUpdates(PendingIntent intent) {
-                Assert.fail();
-            }
-        });
         if (!LocationUtil.isLocationActive(this.mActivityRule.getActivity())) {
             onView(withId(R.id.locationSwitch)).perform(click());
         }
@@ -154,17 +142,6 @@ public class WelcomeActivityTest {
 
     @Test
     public void testSwitchOffDisablesLocationInMap() {
-        LocationUtil.setLocationClient(new LocationClient() {
-            @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                Assert.assertNotNull(lr);
-                Assert.assertNotNull(intent);
-            }
-            @Override
-            public void removeLocationUpdates(PendingIntent intent) {
-                Assert.assertNotNull(intent);
-            }
-        });
         if (LocationUtil.isLocationActive(this.mActivityRule.getActivity())) {
             onView(withId(R.id.locationSwitch)).perform(click());
         }

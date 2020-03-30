@@ -38,7 +38,8 @@ public class LoginUserActivity extends BasicActivity {
                     getAuthenticator().setCurrentUser(user);
                     onAuthComplete();
                 } else {
-                    Toast.makeText(LoginUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginUserActivity.this, throwable.getCause()
+                            .getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
                 }
             }
         });
