@@ -42,9 +42,10 @@ public class User implements Parcelable {
     @Override
     public boolean equals(Object o) {
         return (o instanceof User)
-                && ((User) o).getEmail().equals(email)
-                && ((User) o).getDisplayName().equals(displayName)
-                && ((User) o).getUid().equals(uid);
+                && ((User) o).getEmail() == email
+                && ((User) o).getDisplayName() == displayName
+                && ((User) o).getUid() == uid;
+
     }
 
     @Override

@@ -23,9 +23,11 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityTest {
@@ -129,6 +131,14 @@ public class WelcomeActivityTest {
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testLocationInMap() {
+        onView(withId(R.id.locationSwitch)).perform(click());
+        onView(withId(R.id.mapButton)).perform(click());
+        assertThat(MapViewActivity.getLocationPermission(),
+                is(LocationUtil.isLocationActive(this.mActivityRule.getActivity())));
     }
 
     private void testButtonIsDisplayed(ViewInteraction button) {
