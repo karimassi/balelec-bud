@@ -133,14 +133,6 @@ public class WelcomeActivityTest {
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void testLocationInMap() {
-        onView(withId(R.id.locationSwitch)).perform(click());
-        onView(withId(R.id.mapButton)).perform(click());
-        assertThat(MapViewActivity.getLocationPermission(),
-                is(LocationUtil.isLocationActive(this.mActivityRule.getActivity())));
-    }
-
     private void testButtonIsDisplayed(ViewInteraction button) {
         button.check(matches(isDisplayed()));
         button.perform(click());
