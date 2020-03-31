@@ -69,8 +69,6 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
         // 5 - Handle back click to close menu
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
