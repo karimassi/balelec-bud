@@ -56,46 +56,34 @@ public class ScheduleActivityTest {
         mock.addItem(slot2);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h");
-        mock.addItem(slot3);
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 0)).check(matches(withText("Mr Oizo")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 1)).check(matches(withText("19h - 20h")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 2)).check(matches(withText("Grande scène")));
 
-        mock.modifyItem(slot3, 0);
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText("Upset")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText("Scène Sat'")));
-
-        mock.removeItem(slot3, 0);
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
+        mock.modifyItem(slot2, 0);
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 0)).check(matches(withText("Walking Furret")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 1)).check(matches(withText("20h - 21h")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 2)).check(matches(withText("Les Azimutes")));
 
         mock.removeItem(slot2, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
-
-        mock.removeItem(slot3, 0);
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
         Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h");
         Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h");
-        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h");
 
         mock.addItem(slot1);
         mock.addItem(slot2);
-        mock.addItem(slot3);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText("Mr Oizo")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText("Grande scène")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 0)).check(matches(withText("Mr Oizo")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 1)).check(matches(withText("19h - 20h")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 2)).check(matches(withText("Grande scène")));
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 0)).check(matches(withText("20h - 21h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1)).check(matches(withText("Walking Furret")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 2)).check(matches(withText("Les Azimutes")));
-
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 1)).check(matches(withText("Upset")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 2)).check(matches(withText("Scène Sat'")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 0)).check(matches(withText("Walking Furret")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 1)).check(matches(withText("20h - 21h")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 2)).check(matches(withText("Les Azimutes")));
     }
 
     public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
