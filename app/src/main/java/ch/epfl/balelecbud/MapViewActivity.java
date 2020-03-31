@@ -10,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,7 +32,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
                 @Override
                 public void onComplete(@NonNull Task<android.location.Location> task) {
                     setLocationFrom(task.getResult(), task.isSuccessful());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location.toLatLng(), DEFAULT_ZOOM));
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getLatLng(location), DEFAULT_ZOOM));
                 }
             };
 
@@ -60,8 +61,8 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
         if(locationEnabled) locationResult.addOnCompleteListener(this, callback);
         else {
-            googleMap.addMarker(new MarkerOptions().position(location.toLatLng()).title("Default Location"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location.toLatLng(), DEFAULT_ZOOM));
+            googleMap.addMarker(new MarkerOptions().position(getLatLng(location)).title("Default Location"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getLatLng(location), DEFAULT_ZOOM));
         }
     }
 
@@ -79,8 +80,14 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     protected void setLocationFrom(android.location.Location deviceLocation, boolean locationEnabled) {
-        if(locationEnabled && deviceLocation!=null) {
+        if(locationEnabled && deviceLocation != null) {
             location = new Location(deviceLocation);
+        }
+    }
+
+    protected void setLocationFrom(LatLng latLng) {
+        if(latLng != null) {
+            location = new Location(latLng);
         }
     }
 
@@ -107,6 +114,13 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     public Task<android.location.Location> getLocationResult() {
         return locationResult;
+    }
+
+    public LatLng getLatLng(Location location) {
+        if(location != null) {
+            return new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        else return null;
     }
 
     public GoogleMap getGoogleMap() {

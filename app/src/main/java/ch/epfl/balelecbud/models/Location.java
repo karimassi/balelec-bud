@@ -49,10 +49,6 @@ public class Location {
         return new GeoPoint(latitude, longitude);
     }
 
-    public LatLng toLatLng() {
-        return new LatLng(latitude, longitude);
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(latitude, longitude);

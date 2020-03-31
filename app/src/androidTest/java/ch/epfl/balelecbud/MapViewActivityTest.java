@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,6 +34,8 @@ public class MapViewActivityTest {
 
     private final double testLatitude = -12.12;
     private final double testLongitude = -77.03;
+    private Location testLocation = new Location(testLatitude, testLongitude);
+    private LatLng testLatLng = new LatLng(testLatitude, testLongitude);
     private Location oldMapLocation;
     private Location newMapLocation;
 
@@ -122,6 +125,34 @@ public class MapViewActivityTest {
     public void testSetLocationPermission() {
         MapViewActivity mActivity = mActivityRule.getActivity();
         assertThat(mActivity.getLocationPermission(), is(LocationUtil.isLocationActive(mActivity)));
+    }
+
+    @Test
+    public void testCanGetLatLng() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        assertThat(mActivity.getLatLng(testLocation), is(testLatLng));
+    }
+
+    @Test
+    public void testCantGetNullLatLng() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        assertNull(mActivity.getLatLng(null));
+    }
+
+    @Test
+    public void testNewLatLngIsSet() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        mActivity.setLocationFrom(testLatLng);
+        assertThat(mActivity.getLocation(), is(testLocation));
+    }
+
+    @Test
+    public void testNullLatLngIsNotSet() {
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        oldMapLocation = mActivity.getLocation();
+        mActivity.setLocationFrom(null);
+        newMapLocation = mActivity.getLocation();
+        assertThat(newMapLocation, is(oldMapLocation));
     }
 
     private void testSetLocationFrom(final android.location.Location deviceLocation, final boolean locationEnabled){

@@ -37,12 +37,7 @@ public class LocationTest {
     public void testLocationFromLatLng() {
         assertThat(new Location(latLng), is(location));
     }
-
-    @Test
-    public void testToLatLng() {
-        assertThat(location.toLatLng(), is(latLng));
-    }
-
+    
     @Test
     public void testGetLatitude() {
         assertThat(location.getLatitude(), is(2.));
