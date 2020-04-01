@@ -110,11 +110,11 @@ public final class LocationUtil {
     /**
      * Check if the location service is activated or not
      *
-     * @param context the context from which to check the location service status
      * @return        the location service status
      */
-    public static boolean isLocationActive(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(LOCATION_ENABLE_FILE, Context.MODE_PRIVATE);
+    public static boolean isLocationActive() {
+        SharedPreferences sharedPref = BalelecbudApplication
+                .getAppContext().getSharedPreferences(LOCATION_ENABLE_FILE, Context.MODE_PRIVATE);
         return sharedPref.getBoolean(LocationUtil.LOCATION_ENABLE_KEY, false);
     }
 

@@ -43,6 +43,12 @@ public class User implements Parcelable {
         return uid;
     }
 
+    public static boolean isAUserStored(SharedPreferences preferences) {
+        return preferences.contains(EMAIL) &&
+                preferences.contains(DISPLAY_NAME) &&
+                preferences.contains(UID);
+    }
+
     public void storeUser(SharedPreferences.Editor editor) {
         editor.putString(EMAIL, email);
         editor.putString(DISPLAY_NAME, displayName);
@@ -50,22 +56,23 @@ public class User implements Parcelable {
     }
 
     public static User restoreUser(SharedPreferences preferences) {
-        String email = preferences.getString(EMAIL, null);
-        String displayName = preferences.getString(DISPLAY_NAME, null);
-        String uid = preferences.getString(UID, null);
-        if (email == null || displayName == null || uid == null) {
-            return null;
+        if (isAUserStored(preferences)) {
+            return new User(
+                    preferences.getString(EMAIL, null),
+                    preferences.getString(DISPLAY_NAME, null),
+                    preferences.getString(UID, null)
+            );
         } else {
-            return new User(email, displayName, uid);
+            return null;
         }
     }
 
     @Override
     public boolean equals(Object o) {
         return (o instanceof User)
-                && ((User) o).getEmail() == email
-                && ((User) o).getDisplayName() == displayName
-                && ((User) o).getUid() == uid;
+                && ((User) o).getEmail().equals(email)
+                && ((User) o).getDisplayName().equals(displayName)
+                && ((User) o).getUid().equals(uid);
 
     }
 

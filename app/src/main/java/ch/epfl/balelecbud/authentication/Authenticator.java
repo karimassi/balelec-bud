@@ -34,9 +34,11 @@ public interface Authenticator {
     default void setCurrentUser(User user) {
         SharedPreferences preferences = BalelecbudApplication
                 .getAppContext().getSharedPreferences(CURRENT_USER, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        user.storeUser(editor);
-        editor.apply();
+        if (!User.isAUserStored(preferences)) {
+            SharedPreferences.Editor editor = preferences.edit();
+            user.storeUser(editor);
+            editor.apply();
+        }
     }
 
 }

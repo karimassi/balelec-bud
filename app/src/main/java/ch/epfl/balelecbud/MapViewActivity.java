@@ -76,7 +76,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     protected void setLocationPermission() {
-        locationEnabled = LocationUtil.isLocationActive(this);
+        locationEnabled = LocationUtil.isLocationActive();
     }
 
     protected void setLocationFrom(android.location.Location deviceLocation, boolean locationEnabled) {
