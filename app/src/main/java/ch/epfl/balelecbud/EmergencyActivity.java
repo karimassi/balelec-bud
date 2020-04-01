@@ -9,13 +9,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+
+import com.google.firebase.Timestamp;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.models.emergency.EmergencyType;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 
 public class EmergencyActivity extends BasicActivity {
 
     private Button mShowEmergencyDialog;
+    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
 
     @Override
@@ -38,10 +43,19 @@ public class EmergencyActivity extends BasicActivity {
                 mEmergencySubmit.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
-                        if(!mEmergencyMessage.getText().toString().isEmpty() && !mEmergencyCategory.getSelectedItem().toString().isEmpty()){
 
-                            // GET CURRENT USER AND TIMESTAMP
+                        String emergencyMessage = mEmergencyMessage.getText().toString();
+                        EmergencyType emergencyType = EmergencyType.valueOf(mEmergencyCategory.getSelectedItem().toString());
+
+                        if(!emergencyMessage.isEmpty()){
+
+                            String currentUserUid = getAuthenticator().getCurrentUser().getUid();
+                            Timestamp currentTimestamp = Timestamp.now();
+
+                            Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
+
                             // SUBMIT TO DB HERE
+                            database.storeDocument(DatabaseWrapper.EMERGENCIES_PATH, mEmergency);
 
                             Toast.makeText(EmergencyActivity.this,
 
