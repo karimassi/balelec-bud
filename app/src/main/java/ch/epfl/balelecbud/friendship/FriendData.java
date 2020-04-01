@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
 public class FriendData extends RecyclerViewData<User, FriendViewHolder> {
@@ -21,6 +22,10 @@ public class FriendData extends RecyclerViewData<User, FriendViewHolder> {
 
     @Override
     public void reload() {
+        FriendshipUtils.getFriendsUids(currentUser)
+                .thenCompose( strings -> CompletableFutureUtils.unify(FriendshipUtils.getFriends(strings)))
+                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<User>(this));
+        /*
         FriendshipUtils.getFriendsUids(currentUser)
                 .whenComplete(new BiConsumer<List<String>, Throwable>() {
                     @Override
@@ -48,7 +53,7 @@ public class FriendData extends RecyclerViewData<User, FriendViewHolder> {
                             });
                         }
                     }
-                });
+                });*/
     }
 
     @Override

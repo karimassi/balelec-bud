@@ -6,14 +6,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-public class StandardRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
+import ch.epfl.balelecbud.R;
+
+public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
 
     private ViewHolderFactory<B> factory;
     private RecyclerViewData<A, B> data;
     private int itemId;
 
-    public StandardRecyclerViewAdapter(ViewHolderFactory<B> factory, RecyclerViewData<A, B> data, int itemId) {
+    public RefreshableRecyclerViewAdapter(ViewHolderFactory<B> factory, RecyclerViewData<A, B> data, int itemId) {
         this.factory = factory;
         this.data = data;
         this.itemId = itemId;
@@ -23,6 +26,13 @@ public class StandardRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> e
 
     public void reloadData(){
         data.reload();
+    }
+
+    public void setOnRefreshListener(SwipeRefreshLayout refreshLayout) {
+        refreshLayout.setOnRefreshListener(() -> {
+            reloadData();
+            refreshLayout.setRefreshing(false);
+        });
     }
 
     @NonNull

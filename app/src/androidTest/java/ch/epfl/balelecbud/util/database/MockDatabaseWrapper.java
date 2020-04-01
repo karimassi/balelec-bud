@@ -13,24 +13,27 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.models.PointOfInterest;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.CompletableFutureUtils;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 public class MockDatabaseWrapper implements DatabaseWrapper {
 
-    private List<DatabaseListener> listeners;
-    private List<Object> listToQuery;
+    private List<DatabaseListener> listeners = new ArrayList<>();
 
-    private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<Map<String, Boolean>> friendships = new ArrayList<>();
-    private ArrayList<Map<String, Boolean>> friendRequests = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
+    private List<Map<String, Boolean>> friendships = new ArrayList<>();
+    private List<Map<String, Boolean>> friendRequests = new ArrayList<>();
+    private List<FestivalInformation> festivalInfos = new ArrayList<>();
+    private List<PointOfInterest> pointOfInterests = new ArrayList<>();
     private Map<String, Location> locations = new HashMap<>();
 
+
     private MockDatabaseWrapper() {
-        listeners = new ArrayList<>();
-        listToQuery = new ArrayList<>();
         users.add(new User("karim@epfl.ch", "karim@epfl.ch", MockAuthenticator.provideUid()));
         users.add(new User("celine@epfl.ch", "celine@epfl.ch", MockAuthenticator.provideUid()));
         friendships.add(new HashMap<String, Boolean>());
@@ -59,6 +62,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
         List<T> list = new LinkedList<>();
+        List<T> listToQuery = getListToQuery(query.getCollectionName());
         for(Object elem : listToQuery){
             list.add(tClass.cast(elem));
         }
@@ -68,6 +72,18 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return CompletableFuture.completedFuture(list);
     }
 
+    private List getListToQuery(String name){
+        switch(name){
+            case DatabaseWrapper.FESTIVAL_INFORMATION_PATH :
+                return festivalInfos;
+            case DatabaseWrapper.POINT_OF_INTEREST_PATH :
+                return pointOfInterests;
+            case LOCATIONS_PATH:
+                return new LinkedList(locations.values());
+            default :
+                throw new IllegalArgumentException("Unsupported collection name " + name);
+        }
+    }
     //highly commented because not everybody is familiar with reflection
     private <A> List<A> filterList(List<A> list, MyQuery.WhereClause clause) {
         List<A> newList = new LinkedList<>();
@@ -217,7 +233,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 result.putAll(friendRequests.get(index));
                 break;
             default:
-                break;
+                throw new IllegalArgumentException("Unsupported collectionName " + collectionName);
         }
         return CompletableFuture.completedFuture(result);
     }
@@ -253,6 +269,14 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 friendRequests.add((Map<String, Boolean>) document);
                 break;
+            case DatabaseWrapper.POINT_OF_INTEREST_PATH:
+                pointOfInterests.add((PointOfInterest) document);
+                break;
+            case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
+                festivalInfos.add((FestivalInformation) document);
+                break;
+            default :
+                throw new IllegalArgumentException("Unsupported collection name " + collectionName);
         }
     }
 
@@ -293,8 +317,18 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
+    public void deleteDocument(String collectionName, Object document) {
+        switch (collectionName) {
+            case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
+                festivalInfos.remove((FestivalInformation) document);
+                break;
+            default:
+                throw new IllegalArgumentException("unsupported collectionName" + collectionName);
+        }
+    }
+
     @Override
-    public void deleteDocument(String collectionName, String documentID) {
+    public void deleteDocumentWithID(String collectionName, String documentID) {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
@@ -309,17 +343,28 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-    public void setListToQuery(List<Object> listToQuery) {
-        this.listToQuery = listToQuery;
-    }
-
-
     public void resetFriendshipsAndRequests() {
         for (Map m : friendships) {
             m.clear();
         }
         for (Map m : friendRequests) {
             m.clear();
+        }
+    }
+
+    public void resetDocument(String collectionName){
+        switch(collectionName){
+            case DatabaseWrapper.POINT_OF_INTEREST_PATH:
+                pointOfInterests.clear();
+                break;
+            case DatabaseWrapper.LOCATIONS_PATH:
+                locations.clear();
+                break;
+            case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
+                    festivalInfos.clear();
+                    break;
+            default :
+                throw new IllegalArgumentException("unsupported collectionName");
         }
     }
 

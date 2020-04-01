@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.util.views;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,6 +28,10 @@ public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
         data.remove(index);
         rvAdapter.notifyItemRemoved(index);
         rvAdapter.notifyItemRangeChanged(index, data.size());
+    }
+
+    public List<A> getData() {
+        return Collections.unmodifiableList(data);
     }
 
     public int size(){

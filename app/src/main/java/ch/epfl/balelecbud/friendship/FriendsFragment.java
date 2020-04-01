@@ -15,8 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.views.StandardRecyclerViewAdapter;
-import ch.epfl.balelecbud.util.views.ViewHolderFactory;
+import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
 public class FriendsFragment extends Fragment {
 
@@ -29,25 +28,13 @@ public class FriendsFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friends);
         FriendData data = new FriendData((User) getArguments().get("user"));
-        final StandardRecyclerViewAdapter<User, FriendViewHolder> adapter = new StandardRecyclerViewAdapter<>(new ViewHolderFactory<FriendViewHolder>() {
-            @Override
-            public FriendViewHolder createInstance(View view) {
-                return new FriendViewHolder(view);
-            }
-        }, data, R.layout.item_friend);
-        //final FriendsRecyclerViewAdapter adapter = new FriendsRecyclerViewAdapter((User) getArguments().get("user"));
+        final RefreshableRecyclerViewAdapter<User, FriendViewHolder> adapter = new RefreshableRecyclerViewAdapter<>(FriendViewHolder::new, data, R.layout.item_friend);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
 
         final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_friends);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                adapter.reloadData();
-                refreshLayout.setRefreshing(false);
-            }
-        });
+        adapter.setOnRefreshListener(refreshLayout);
 
         return view;
     }
