@@ -216,7 +216,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             }
 
             @Override
-            public void deleteDocument(String collectionName, String documentID) {
+            public void deleteDocumentWithID(String collectionName, String documentID) {
 
             }
         });
