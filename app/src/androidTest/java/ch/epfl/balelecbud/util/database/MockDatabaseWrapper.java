@@ -322,6 +322,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.remove((FestivalInformation) document);
                 break;
+            case DatabaseWrapper.POINT_OF_INTEREST_PATH:
+                pointOfInterests.remove((PointOfInterest) document);
+                break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName" + collectionName);
         }
