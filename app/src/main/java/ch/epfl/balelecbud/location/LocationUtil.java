@@ -16,6 +16,8 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.LocationRequest;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
+
 public final class LocationUtil {
     private final static String TAG = LocationUtil.class.getSimpleName();
     private static final String LOCATION_ENABLE_FILE = TAG + ".LOCATION_ENABLE_FILE";
@@ -118,23 +120,20 @@ public final class LocationUtil {
 
     /**
      * Enable the location service
-     *
-     * @param context the context from which the order comes from
      */
-    public static void enableLocation(Context context) {
-        changedLocationState(context, true);
+    public static void enableLocation() {
+        changedLocationState(true);
     }
 
     /**
      * Disable the location service
-     *
-     * @param context the context from which the order comes from
      */
-    public static void disableLocation(Context context) {
-        changedLocationState(context, false);
+    public static void disableLocation() {
+        changedLocationState(false);
     }
 
-    private static void changedLocationState(Context context, boolean status) {
+    private static void changedLocationState(boolean status) {
+        Context context = BalelecbudApplication.getAppContext();
         if (status) {
             requestLocationUpdates(context);
         } else {
