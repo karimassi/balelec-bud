@@ -64,5 +64,7 @@
     <!--  FRIEND REQUEST ITEM  -->
     <string name="accept_request">Accept</string>
     <string name="reject_request">Delete</string>
+    <string name="ask_for_help">Ask for help</string>
+    <string name="you_can_report_an_emergency_here">You can report an emergency here :</string>
 
 </resources>
