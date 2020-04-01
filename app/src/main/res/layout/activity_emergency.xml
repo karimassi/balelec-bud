@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/helpButton"
+        android:id="@+id/buttonAskForHelp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="58dp"
@@ -26,7 +26,7 @@
         android:layout_marginTop="186dp"
         android:layout_marginBottom="30dp"
         android:text="@string/you_can_report_an_emergency_here"
-        app:layout_constraintBottom_toTopOf="@+id/helpButton"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAskForHelp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

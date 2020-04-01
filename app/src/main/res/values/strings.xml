@@ -66,5 +66,8 @@
     <string name="reject_request">Delete</string>
     <string name="ask_for_help">Ask for help</string>
     <string name="you_can_report_an_emergency_here">You can report an emergency here :</string>
+    <string name="declare_an_emergency">Declare an emergency</string>
+    <string name="emergency_sent_message">Emergency message sent, please wait</string>
+    <string name="emergency_not_sent_message">Please fill all fields</string>
 
 </resources>
