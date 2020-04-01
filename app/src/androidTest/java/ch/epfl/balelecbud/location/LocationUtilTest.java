@@ -122,4 +122,9 @@ public class LocationUtilTest {
         Assert.assertEquals(1, sync.size());
         Assert.assertFalse(LocationUtil.isLocationActive(ApplicationProvider.getApplicationContext()));
     }
+
+    @Test
+    public void defaultConstructor() {
+        new LocationUtil();
+    }
 }

@@ -13,7 +13,6 @@
         android:layout_height="match_parent"
         map:cameraTargetLat="@string/camera_target_lat"
         map:cameraTargetLng="@string/camera_target_lng"
-        map:cameraTilt="@string/camera_tilt"
         map:cameraZoom="@string/camera_zoom"
         map:mapType="normal"
         map:uiRotateGestures="@bool/ui_rotate_gestures"

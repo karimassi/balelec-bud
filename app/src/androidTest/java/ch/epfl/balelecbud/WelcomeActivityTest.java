@@ -10,6 +10,7 @@ import androidx.test.uiautomator.UiDevice;
 
 import com.google.android.gms.location.LocationRequest;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,9 +23,11 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityTest {
@@ -59,20 +62,17 @@ public class WelcomeActivityTest {
 
     @Test
     public void testMapButtonIsDisplayed() {
-        onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.mapButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.mapButton)));
     }
 
     @Test
     public void testInfoButtonIsDisplayed() {
-        onView(withId(R.id.infoButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.infoButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.infoButton)));
     }
 
     @Test
     public void testTransportButtonIsDisplayed() {
-        onView(withId(R.id.transportButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.transportButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.transportButton)));
     }
 
     @Test
@@ -83,14 +83,12 @@ public class WelcomeActivityTest {
 
     @Test
     public void testPOIButtonIsDisplayed() {
-        onView(withId(R.id.poiButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.poiButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.poiButton)));
     }
 
     @Test
     public void testSignOutIsDisplayed() {
-        onView(withId(R.id.buttonSignOut)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonSignOut)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.buttonSignOut)));
     }
 
     @Test
@@ -133,6 +131,11 @@ public class WelcomeActivityTest {
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
+    }
+
+    private void testButtonIsDisplayed(ViewInteraction button) {
+        button.check(matches(isDisplayed()));
+        button.perform(click());
     }
 
     private void testFeatureIsDisplayed(ViewInteraction button, ViewInteraction feature) {
