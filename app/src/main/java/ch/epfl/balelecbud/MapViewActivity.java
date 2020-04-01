@@ -4,25 +4,43 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+
+import ch.epfl.balelecbud.location.LocationUtil;
+import ch.epfl.balelecbud.models.Location;
 
 public class MapViewActivity extends BasicActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener{
 
-    private double defaultLat;
-    private double defaultLng;
+    private final float DEFAULT_ZOOM = 17;
 
-    private LatLng position;
+    private Location location;
+    private GoogleMap googleMap;
+    private Task<android.location.Location> locationResult;
+    private static boolean locationEnabled;
+
+    private OnCompleteListener<android.location.Location> callback =
+            new OnCompleteListener<android.location.Location>() {
+                @Override
+                public void onComplete(@NonNull Task<android.location.Location> task) {
+                    setLocationFrom(task.getResult(), task.isSuccessful());
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getLatLng(location), DEFAULT_ZOOM));
+                }
+            };
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -33,11 +51,9 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        defaultLat = Double.parseDouble(getString(R.string.default_lat));
-        defaultLng = Double.parseDouble(getString(R.string.default_lng));
-        LatLng default_location = new LatLng(defaultLat, defaultLng);
-
-        setPosition(default_location);
+        setDefaultLocation();
+        setLocationPermission();
+        setLocationResult();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -50,18 +66,79 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(position).title("defaultPosition"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(position));
-    }
+        googleMap = map;
 
-    public void setPosition(LatLng position) {
-        if (position != null) {
-            this.position = position;
+        googleMap.getUiSettings().setCompassEnabled(true);
+
+        googleMap.setMyLocationEnabled(locationEnabled);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
+
+        if(locationEnabled) locationResult.addOnCompleteListener(this, callback);
+        else {
+            googleMap.addMarker(new MarkerOptions().position(getLatLng(location)).title("Default Location"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getLatLng(location), DEFAULT_ZOOM));
         }
     }
 
-    public LatLng getPosition() {
-        return this.position;
+    protected void setLocationResult() {
+        if(locationEnabled) {
+            locationResult = LocationServices.getFusedLocationProviderClient(this).getLastLocation();
+        }
+        else {
+            locationResult = null;
+        }
+    }
+
+    protected void setLocationPermission() {
+        locationEnabled = LocationUtil.isLocationActive(this);
+    }
+
+    protected void setLocationFrom(android.location.Location deviceLocation, boolean locationEnabled) {
+        if(locationEnabled && deviceLocation != null) {
+            location = new Location(deviceLocation);
+        }
+    }
+
+    protected void setLocationFrom(LatLng latLng) {
+        if(latLng != null) {
+            location = new Location(latLng);
+        }
+    }
+
+    protected void setLocation(Location location) {
+        if (location != null) {
+            this.location = location;
+        }
+    }
+
+    private void setDefaultLocation() {
+        final double defaultLat = Double.parseDouble(getString(R.string.default_lat));
+        final double defaultLng = Double.parseDouble(getString(R.string.default_lng));
+        final Location defaultLocation = new Location(defaultLat, defaultLng);
+        setLocation(defaultLocation);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public static boolean getLocationPermission() {
+        return locationEnabled;
+    }
+
+    public Task<android.location.Location> getLocationResult() {
+        return locationResult;
+    }
+
+    public LatLng getLatLng(Location location) {
+        if(location != null) {
+            return new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        else return null;
+    }
+
+    public GoogleMap getGoogleMap() {
+        return googleMap;
     }
 
     @Override

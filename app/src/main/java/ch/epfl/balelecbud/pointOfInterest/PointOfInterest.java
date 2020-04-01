@@ -1,6 +1,7 @@
-package ch.epfl.balelecbud.models;
+package ch.epfl.balelecbud.pointOfInterest;
 
 import androidx.annotation.Nullable;
+
 import com.google.firebase.firestore.GeoPoint;
 
 public class PointOfInterest {

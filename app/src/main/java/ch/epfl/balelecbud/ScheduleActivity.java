@@ -2,6 +2,7 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,9 +13,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
+=======
+import android.util.Log;
+
+import androidx.annotation.VisibleForTesting;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Collections;
+import java.util.List;
+>>>>>>> master
 
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
+import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
+import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
+<<<<<<< HEAD
 public class ScheduleActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ScheduleAdapter mAdapter;
@@ -22,14 +37,21 @@ public class ScheduleActivity extends BasicActivity implements NavigationView.On
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+=======
+public class ScheduleActivity extends BasicActivity {
+    private static final String TAG = ScheduleAdapter.class.getSimpleName();
+    private ScheduleAdapter mAdapter;
+>>>>>>> master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-
-        rvSchedule = findViewById(R.id.scheduleRecyclerView);
-        mAdapter = new ScheduleAdapter();
+        Log.d(TAG, "onCreate: Creation of the activity");
+        RecyclerView rvSchedule = findViewById(R.id.scheduleRecyclerView);
+        List<Slot> slots = FlowUtil.unpackCallback(getIntent());
+        mAdapter = new ScheduleAdapter(this, slots == null ?
+                Collections.<Slot>emptyList() : slots);
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
 
@@ -93,5 +115,10 @@ public class ScheduleActivity extends BasicActivity implements NavigationView.On
     private void configureNavigationView(){
         this.navigationView = (NavigationView) findViewById(R.id.schedule_activity_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @VisibleForTesting
+    public void setIntentLauncher(IntentLauncher intentLauncher) {
+        this.mAdapter.setIntentLauncher(intentLauncher);
     }
 }

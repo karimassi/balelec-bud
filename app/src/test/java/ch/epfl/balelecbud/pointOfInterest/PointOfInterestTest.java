@@ -1,8 +1,11 @@
-package ch.epfl.balelecbud.models;
+package ch.epfl.balelecbud.pointOfInterest;
+
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 
 import static org.hamcrest.core.Is.is;
 
@@ -12,7 +15,7 @@ public class PointOfInterestTest {
 
     @Test
     public void testEmptyConstructor() {
-        new PointOfInterestTest();
+        new PointOfInterest();
     }
 
     @Test
@@ -42,6 +45,21 @@ public class PointOfInterestTest {
     @Test
     public void testEqualsTwoNonEqualPointOfInterest() {
         PointOfInterest p2 = new PointOfInterest( new GeoPoint(22, 42), "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertEquals(false, p1.equals(p2));
+    }
+
+    @Test
+    public void testEqualsDifferentPointOfInterest() {
+        PointOfInterest p2 = new PointOfInterest( new GeoPoint(24, 42), "BCV", "atm", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertEquals(false, p1.equals(p2));
+
+        p2 = new PointOfInterest( new GeoPoint(24, 42), "BCV", "bancomat", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertEquals(false, p1.equals(p2));
+
+        p2 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "atm", "0");
+        Assert.assertEquals(false, p1.equals(p2));
+
+        p2 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "bancomat", "0");
         Assert.assertEquals(false, p1.equals(p2));
     }
 

@@ -17,10 +17,10 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
-import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.transport.objects.Transport;
 import ch.epfl.balelecbud.transport.objects.TransportType;
+import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -45,7 +45,7 @@ public class TransportRecyclerViewTest {
     public final ActivityTestRule<TransportActivity> mActivityRule = new ActivityTestRule<TransportActivity>(TransportActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = new MockDatabaseWrapper();
+            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
             MyTransportRecyclerViewAdapter.setDatabaseImplementation(mock);
         }
     };

@@ -1,14 +1,16 @@
 package ch.epfl.balelecbud.authentication;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import ch.epfl.balelecbud.util.Callback;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
+
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 
 public class FirebaseAuthenticator implements Authenticator {
@@ -16,52 +18,57 @@ public class FirebaseAuthenticator implements Authenticator {
     private static final Authenticator instance = new FirebaseAuthenticator();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+    private User currentUser;
+
     private FirebaseAuthenticator() {
     }
 
     @Override
-    public void signIn(String email, String password, final Callback callback) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(getOnSuccessListener(callback))
-                .addOnFailureListener(getOnFailureListener(callback));
+    public CompletableFuture<User> signIn(String email, String password) {
+        return new TaskToCompletableFutureAdapter<>(mAuth.signInWithEmailAndPassword(email, password))
+                .thenCompose(new Function<AuthResult, CompletionStage<User>>() {
+                    @Override
+                    public CompletionStage<User> apply(AuthResult authResult) {
+                        return FirestoreDatabaseWrapper.getInstance().getCustomDocument(DatabaseWrapper.USERS_PATH, getCurrentUid(), User.class);
+                    }
+        });
     }
 
     @Override
-    public void createAccount(String email, String password, final Callback callback) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(getOnSuccessListener(callback))
-                .addOnFailureListener(getOnFailureListener(callback));
+    public CompletableFuture<Void> createAccount(final String email, String password) {
+        return new TaskToCompletableFutureAdapter<>(mAuth.createUserWithEmailAndPassword(email, password))
+                .thenCompose(new Function<AuthResult, CompletionStage<Void>>() {
+                    @Override
+                    public CompletionStage<Void> apply(AuthResult authResult) {
+                        return FirestoreDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS_PATH, getCurrentUid(), new User(email, email, getCurrentUid()));
+                    }
+        });
     }
 
     @Override
     public void signOut() {
-        mAuth.signOut();
+        currentUser = null;
     }
 
     @Override
-    public FirebaseUser getCurrentUser() {
-        return mAuth.getCurrentUser();
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    @Override
+    public String getCurrentUid() {
+        return mAuth.getCurrentUser().getUid();
+    }
+
+    @Override
+    public void setCurrentUser(User user) {
+        if (currentUser == null) {
+            currentUser = user;
+        }
     }
 
     public static Authenticator getInstance() {
         return instance;
     }
 
-    private OnSuccessListener getOnSuccessListener(final Callback callback) {
-        return new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                callback.onSuccess();
-            }
-        };
-    }
-
-    private OnFailureListener getOnFailureListener(final Callback callback) {
-        return new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                callback.onFailure(e.getLocalizedMessage());
-            }
-        };
-    }
 }

@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.models;
+package ch.epfl.balelecbud.pointOfInterest;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
@@ -62,7 +63,7 @@ public class PointOfInterestAdapter extends RecyclerView.Adapter<PointOfInterest
     public void onBindViewHolder(@NonNull PointOfInterestHolder holder, int position) {
         holder.nameTextView.setText(pointOfInterestData.get(position).getName());
         holder.typeTextView.setText(pointOfInterestData.get(position).getType());
-        holder.locationTextView.setText(pointOfInterestData.get(position).getLocation().toString());
+        holder.locationTextView.setText(new Location(pointOfInterestData.get(position).getLocation()).toString());
     }
 
     @Override

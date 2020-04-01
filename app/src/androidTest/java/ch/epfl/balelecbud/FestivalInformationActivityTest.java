@@ -13,9 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
-import ch.epfl.balelecbud.matchers.RecyclerViewMatcher;
+import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
+import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -35,7 +35,7 @@ public class FestivalInformationActivityTest {
     public final ActivityTestRule<FestivalInformationActivity> mActivityRule = new ActivityTestRule<FestivalInformationActivity>(FestivalInformationActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = new MockDatabaseWrapper();
+            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
             FestivalInformationAdapter.setDatabaseImplementation(mock);
         }
     };

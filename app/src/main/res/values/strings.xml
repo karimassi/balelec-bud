@@ -28,13 +28,43 @@
     <string name="mismatch_password">Passwords do not match!</string>
     <string name="require_password_repeated">Repeat password!</string>
     <string name="location">Location</string>
-
     <string name="festival_information">Festival Information</string>
-    <string name="festival_info_view">Informations</string>
+    <string name="social_view">Social</string>
+    <string name="festival_info_view">Information</string>
+  
+    <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it !</string>
+  
     <string name="transport_view">Transport</string>
     <string name="toggle_location_view">Toggle Location</string>
     <string name="schedule_view">Schedule</string>
     <string name="point_of_interest">Points of interest</string>
     <string name="navigation_drawer_open">Open Drawer</string>
     <string name="navigation_drawer_close">Close Drawer</string>
+ 
+    <string name="concert_soon_channel_name">Concert Soon Channel</string>
+    <string name="concert_soon_notification_title">A concert is starting soon</string>
+    <string name="concert_soon_channel_description">A channel to convey information about concerts starting soon</string>
+
+
+<!--  SOCIAL FEATURES  -->
+
+    <!--   TAB NAMES -->
+    <string name="tab_friends">Friends</string>
+    <string name="tab_requests">Friend requests</string>
+
+    <!-- DIALOG   -->
+    <string name="add_friend_title">Add a friend</string>
+    <string name="add_friend_request">Request</string>
+    <string name="add_friend_cancel">Cancel</string>
+    <string name="add_friend_email_hint">Enter your friend\'s email</string>
+    <string name="add_own_as_friend">You can\'t add yourself as a friend :-)</string>
+    <string name="add_friend_request_sent">Friend request sent to </string>
+
+    <!--  FRIEND ITEM  -->
+    <string name="remove_friend">Unfriend</string>
+
+    <!--  FRIEND REQUEST ITEM  -->
+    <string name="accept_request">Accept</string>
+    <string name="reject_request">Delete</string>
+
 </resources>

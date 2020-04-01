@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import ch.epfl.balelecbud.util.Callback;
+import java.util.function.BiConsumer;
+
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 
 public class RegisterUserActivity extends BasicActivity {
 
@@ -29,16 +32,14 @@ public class RegisterUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        getAuthenticator().createAccount(email, password, new Callback() {
+        getAuthenticator().createAccount(email, password).whenComplete(new BiConsumer<Void, Throwable>() {
             @Override
-            public void onSuccess() {
-                onAuthComplete();
-            }
-
-            @Override
-            public void onFailure(String message) {
-                Toast.makeText(RegisterUserActivity.this, message,
-                        Toast.LENGTH_SHORT).show();
+            public void accept(Void aVoid, Throwable throwable) {
+                if (throwable != null) {
+                    Toast.makeText(RegisterUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
+                } else {
+                    onAuthComplete();
+                }
             }
         });
 
@@ -81,9 +82,20 @@ public class RegisterUserActivity extends BasicActivity {
     }
 
     private void onAuthComplete() {
-        Intent intent = new Intent(this, WelcomeActivity.class);
-        startActivity(intent);
-        finish();
+        getDatabase().getCustomDocument(DatabaseWrapper.USERS_PATH, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
+            @Override
+            public void accept(User user, Throwable throwable) {
+                if (throwable != null) {
+                    Toast.makeText(RegisterUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
+                } else {
+                    getAuthenticator().setCurrentUser(user);
+                    Intent intent = new Intent(RegisterUserActivity.this, WelcomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
     }
 
     public void onClick(View view) {
