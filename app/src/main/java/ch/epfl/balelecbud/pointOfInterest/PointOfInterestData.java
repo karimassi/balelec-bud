@@ -2,8 +2,7 @@ package ch.epfl.balelecbud.pointOfInterest;
 
 import java.util.LinkedList;
 
-import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
-import ch.epfl.balelecbud.models.PointOfInterest;
+import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
@@ -29,6 +28,6 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
     public void bind(int index, PointOfInterestHolder viewHolder) {
         viewHolder.nameTextView.setText(data.get(index).getName());
         viewHolder.typeTextView.setText(data.get(index).getType());
-        viewHolder.locationTextView.setText(data.get(index).getLocation().toString());
+        viewHolder.locationTextView.setText(new Location(data.get(index).getLocation()).toString());
     }
 }
