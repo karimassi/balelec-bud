@@ -64,5 +64,6 @@
     <!--  FRIEND REQUEST ITEM  -->
     <string name="accept_request">Accept</string>
     <string name="reject_request">Delete</string>
+    <string name="require_name">Name required!</string>
 
 </resources>

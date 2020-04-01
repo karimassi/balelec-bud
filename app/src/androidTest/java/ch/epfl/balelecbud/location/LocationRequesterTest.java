@@ -76,14 +76,14 @@ public class LocationRequesterTest {
         this.device = UiDevice.getInstance(getInstrumentation());
         this.device.waitForWindowUpdate(null, TIMEOUT);
         grantPermission();
-        if (LocationUtil.isLocationActive(this.mActivityRule.getActivity()))
+        if (LocationUtil.isLocationActive())
             onView(withId(R.id.locationSwitch)).perform(click());
     }
 
     @After
     public void tearDown() {
         setDumLocationClient();
-        if (LocationUtil.isLocationActive(this.mActivityRule.getActivity()))
+        if (LocationUtil.isLocationActive())
             onView(withId(R.id.locationSwitch)).perform(click());
     }
 
@@ -101,10 +101,10 @@ public class LocationRequesterTest {
                 Assert.fail();
             }
         });
-        Assert.assertFalse(LocationUtil.isLocationActive(mActivityRule.getActivity()));
+        Assert.assertFalse(LocationUtil.isLocationActive());
         onView(withId(R.id.locationSwitch)).check(switchClickable(true));
         onView(withId(R.id.locationSwitch)).perform(click());
-        Assert.assertTrue(LocationUtil.isLocationActive(mActivityRule.getActivity()));
+        Assert.assertTrue(LocationUtil.isLocationActive());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class LocationRequesterTest {
         });
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.locationSwitch)).perform(click());
-        Assert.assertFalse(LocationUtil.isLocationActive(this.mActivityRule.getActivity()));
+        Assert.assertFalse(LocationUtil.isLocationActive());
     }
 
     @Test

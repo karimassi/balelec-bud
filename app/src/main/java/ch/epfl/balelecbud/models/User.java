@@ -1,11 +1,15 @@
 package ch.epfl.balelecbud.models;
 
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Objects;
 
 public class User implements Parcelable {
+    private static final String EMAIL = "User.EMAIL";
+    private static final String DISPLAY_NAME = "User.DISPLAY_NAME";
+    private static final String UID = "User.UID";
 
     private String email;
     private String displayName;
@@ -39,12 +43,36 @@ public class User implements Parcelable {
         return uid;
     }
 
+    public static boolean isAUserStored(SharedPreferences preferences) {
+        return preferences.contains(EMAIL) &&
+                preferences.contains(DISPLAY_NAME) &&
+                preferences.contains(UID);
+    }
+
+    public void storeUser(SharedPreferences.Editor editor) {
+        editor.putString(EMAIL, email);
+        editor.putString(DISPLAY_NAME, displayName);
+        editor.putString(UID, uid);
+    }
+
+    public static User restoreUser(SharedPreferences preferences) {
+        if (isAUserStored(preferences)) {
+            return new User(
+                    preferences.getString(EMAIL, null),
+                    preferences.getString(DISPLAY_NAME, null),
+                    preferences.getString(UID, null)
+            );
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         return (o instanceof User)
-                && ((User) o).getEmail() == email
-                && ((User) o).getDisplayName() == displayName
-                && ((User) o).getUid() == uid;
+                && ((User) o).getEmail().equals(email)
+                && ((User) o).getDisplayName().equals(displayName)
+                && ((User) o).getUid().equals(uid);
 
     }
 
