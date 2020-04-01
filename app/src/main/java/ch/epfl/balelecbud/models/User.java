@@ -1,11 +1,15 @@
 package ch.epfl.balelecbud.models;
 
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Objects;
 
 public class User implements Parcelable {
+    private static final String EMAIL = "User.EMAIL";
+    private static final String DISPLAY_NAME = "User.DISPLAY_NAME";
+    private static final String UID = "User.UID";
 
     private String email;
     private String displayName;
@@ -37,6 +41,23 @@ public class User implements Parcelable {
 
     public String getUid() {
         return uid;
+    }
+
+    public void storeUser(SharedPreferences.Editor editor) {
+        editor.putString(EMAIL, email);
+        editor.putString(DISPLAY_NAME, displayName);
+        editor.putString(UID, uid);
+    }
+
+    public static User restoreUser(SharedPreferences preferences) {
+        String email = preferences.getString(EMAIL, null);
+        String displayName = preferences.getString(DISPLAY_NAME, null);
+        String uid = preferences.getString(UID, null);
+        if (email == null || displayName == null || uid == null) {
+            return null;
+        } else {
+            return new User(email, displayName, uid);
+        }
     }
 
     @Override

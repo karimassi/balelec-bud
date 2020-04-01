@@ -43,9 +43,6 @@
         <service
             android:name=".notifications.concertFlow.ConcertFlow"
             android:exported="false" />
-        <service
-            android:name=".authentication.AuthenticatorService"
-            android:exported="false" />
 
         <receiver
             android:name=".notifications.concertSoon.NotificationProvider"
