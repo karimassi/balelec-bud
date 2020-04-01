@@ -1,9 +1,6 @@
 package ch.epfl.balelecbud.festivalInformation;
 
 import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
@@ -22,9 +19,9 @@ public class FestivalInformationData extends RecyclerViewData<FestivalInformatio
 
     @Override
     public void reload() {
-        MyQuery query = new MyQuery(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new LinkedList<MyQuery.WhereClause>());
+        MyQuery query = new MyQuery(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new LinkedList<>());
         databaseImplementation.query(query, FestivalInformation.class)
-            .whenComplete(new CompletableFutureUtils.MergeBiConsumer<FestivalInformation>(this));
+            .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 
     @Override

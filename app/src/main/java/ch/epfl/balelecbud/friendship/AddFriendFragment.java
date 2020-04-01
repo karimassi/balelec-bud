@@ -1,7 +1,6 @@
 package ch.epfl.balelecbud.friendship;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,8 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-
-import java.util.function.BiConsumer;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.models.User;
@@ -30,26 +27,14 @@ public class AddFriendFragment extends DialogFragment {
         editTextAddFriend = view.findViewById(R.id.edit_text_email_add_friend);
 
         builder.setView(view)
-                .setPositiveButton(R.string.add_friend_request, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (validateEmail()) {
-                            FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString()).whenComplete(new BiConsumer<User, Throwable>() {
-                                @Override
-                                public void accept(User user, Throwable throwable) {
-                                    FriendshipUtils.addFriend(user);
-                                }
-                            });
-                            Toast.makeText(getContext(), getString(R.string.add_friend_request_sent) + editTextAddFriend.getText(), Toast.LENGTH_SHORT).show();
-                        }
+                .setPositiveButton(R.string.add_friend_request, (dialog, id) -> {
+                    if (validateEmail()) {
+                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString()).whenComplete((user, throwable) -> FriendshipUtils.addFriend(user));
+                        Toast.makeText(getContext(), getString(R.string.add_friend_request_sent) + editTextAddFriend.getText(), Toast.LENGTH_SHORT).show();
+                    }
 
-                    }
                 })
-                .setNegativeButton(R.string.add_friend_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        AddFriendFragment.this.getDialog().cancel();
-                    }
-                });
+                .setNegativeButton(R.string.add_friend_cancel, (dialog, id) -> AddFriendFragment.this.getDialog().cancel());
         return builder.create();
     }
 

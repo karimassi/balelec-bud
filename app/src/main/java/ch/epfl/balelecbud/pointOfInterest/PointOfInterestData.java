@@ -19,9 +19,9 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
 
     @Override
     public void reload() {
-        MyQuery query = new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<MyQuery.WhereClause>());
+        MyQuery query = new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>());
         databaseImplementation.query(query, PointOfInterest.class)
-                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<PointOfInterest>(this));
+                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 
     @Override
