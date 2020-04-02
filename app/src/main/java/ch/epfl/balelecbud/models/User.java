@@ -73,7 +73,6 @@ public class User implements Parcelable {
                 && ((User) o).getEmail().equals(email)
                 && ((User) o).getDisplayName().equals(displayName)
                 && ((User) o).getUid().equals(uid);
-
     }
 
     @Override

@@ -1,9 +1,7 @@
 package ch.epfl.balelecbud.friendship;
 
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -37,20 +35,12 @@ public class SocialActivity extends BasicActivity {
         viewPager.setAdapter(fragmentAdapter);
 
         TabLayout tabs = findViewById(R.id.tabs_social);
-        new TabLayoutMediator(tabs, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText(tabTitleList.get(position));
-            }
-        }).attach();
+        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(tabTitleList.get(position))).attach();
 
         FloatingActionButton fabAddFriends = findViewById(R.id.fab_add_friends);
-        fabAddFriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddFriendFragment dialog =AddFriendFragment.newInstance(getAuthenticator().getCurrentUser());
-                dialog.show(getSupportFragmentManager(), getString(R.string.add_friend_title));
-            }
+        fabAddFriends.setOnClickListener(v -> {
+            AddFriendFragment dialog =AddFriendFragment.newInstance(getAuthenticator().getCurrentUser());
+            dialog.show(getSupportFragmentManager(), getString(R.string.add_friend_title));
         });
 
     }
