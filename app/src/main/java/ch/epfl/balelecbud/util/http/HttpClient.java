@@ -1,4 +1,11 @@
 package ch.epfl.balelecbud.util.http;
 
-public class HttpClient {
+import com.google.gson.JsonElement;
+
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+public interface HttpClient {
+
+    CompletableFuture<JsonElement> get(String url);
 }

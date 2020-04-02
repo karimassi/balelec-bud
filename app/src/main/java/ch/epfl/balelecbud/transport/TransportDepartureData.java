@@ -1,30 +1,29 @@
 package ch.epfl.balelecbud.transport;
 
 
-import android.util.Log;
-
-import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.transport.objects.TransportDeparture;
 import ch.epfl.balelecbud.transport.objects.TransportStation;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
-public class TransportStationData extends RecyclerViewData<TransportStation, TransportStationHolder> {
+public class TransportDepartureData extends RecyclerViewData<TransportDeparture, TransportDepartureHolder> {
 
-    Location userLocation;
+    private TransportStation station;
 
-    public TransportStationData(Location userLocation) {
-        this.userLocation = userLocation;
+    public TransportDepartureData(TransportStation station) {
+        this.station = station;
     }
 
     @Override
     public void reload() {
-        new TransportService().getNearbyStations(userLocation)
+        TransportUtil.getNextDepartures(station)
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 
     @Override
-    public void bind(int index, TransportStationHolder viewHolder) {
-        viewHolder.nameView.setText(data.get(index).getStationName());
-        viewHolder.distanceView.setText(String.valueOf(data.get(index).getDistanceToUser()));
+    public void bind(int index, TransportDepartureHolder viewHolder) {
+        viewHolder.lineView.setText(data.get(index).getLine());
+        viewHolder.destinationView.setText(data.get(index).getDestination());
+        viewHolder.departureTimeView.setText(data.get(index).getTimeString());
     }
 }

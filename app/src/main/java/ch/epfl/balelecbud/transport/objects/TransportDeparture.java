@@ -1,77 +1,63 @@
 package ch.epfl.balelecbud.transport.objects;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.GeoPoint;
 
+import java.util.Date;
 import java.util.Objects;
 
 import ch.epfl.balelecbud.util.StringUtils;
 
-public class Transport {
+public class TransportDeparture {
 
-    private TransportType type;
-    private int line;
-    private String direction;
-    private GeoPoint point;
-    private Timestamp time;
+    private String category;
+    private String line;
+    private String destination;
+    private Date time;
 
-    public Transport(TransportType type, int line, String direction, GeoPoint point, Timestamp time) {
-        this.type = type;
+    public TransportDeparture(String category, String line, String destination, Date time) {
+        this.category = category;
         this.line = line;
-        this.direction = direction;
-        this.point = point;
+        this.destination = destination;
         this.time = time;
     }
 
-    public Transport() {
+    public TransportDeparture() {
+
     }
 
-    public TransportType getType() {
-        return type;
+    public String getCategory() {
+        return category;
     }
 
-    public String getTypeString() {
-        return type.toString();
-    }
-
-    public int getLine() {
+    public String getLine() {
         return line;
     }
 
-    public String getLineString() {
-        return Integer.toString(line);
+    public String getDestination() {
+        return destination;
     }
 
-    public String getDirection() {
-        return direction;
-    }
-
-    public GeoPoint getPoint() {
-        return point;
-    }
-
-    public Timestamp getTime() {
+    public Date getTime() {
         return time;
     }
 
     public String getTimeString() {
-        return StringUtils.timestampToScheduleString(time);
+        return StringUtils.dateToString(time);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Transport transport = (Transport) o;
-        return getLine() == transport.getLine() &&
-                getType() == transport.getType() &&
-                getDirection().equals(transport.getDirection()) &&
-                getPoint().equals(transport.getPoint()) &&
-                getTime().equals(transport.getTime());
+        TransportDeparture that = (TransportDeparture) o;
+        return Objects.equals(getCategory(), that.getCategory()) &&
+                Objects.equals(getLine(), that.getLine()) &&
+                Objects.equals(getDestination(), that.getDestination()) &&
+                Objects.equals(getTime(), that.getTime());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getType(), getLine(), getDirection(), getPoint(), getTime());
+        return Objects.hash(getCategory(), getLine(), getDestination(), getTime());
     }
 }

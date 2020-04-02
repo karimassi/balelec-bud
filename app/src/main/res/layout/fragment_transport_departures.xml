@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:id="@+id/swipe_refresh_layout_transport_stations"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/recycler_view_transport_stations"
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/text_view_transport_departures_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:layoutManager="LinearLayoutManager"/>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_width="match_parent"
+        android:id="@+id/swipe_refresh_layout_transport_departures">
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_transport_departures"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layoutManager="LinearLayoutManager"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+</LinearLayout>

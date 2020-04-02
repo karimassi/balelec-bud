@@ -6,13 +6,13 @@ import com.google.firebase.firestore.GeoPoint;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ch.epfl.balelecbud.transport.objects.Transport;
+import ch.epfl.balelecbud.transport.objects.TransportDeparture;
 import ch.epfl.balelecbud.transport.objects.TransportType;
 
 import static org.hamcrest.core.Is.is;
 
 public class TransportTest {
-    private Transport t1 = new Transport(TransportType.BUS, 42, "Home",
+    private TransportDeparture t1 = new TransportDeparture(TransportType.BUS, 42, "Home",
             new GeoPoint(24, 42), new Timestamp(0, 0));
 
     @Test
@@ -37,7 +37,7 @@ public class TransportTest {
 
     @Test
     public void testGetDirection() {
-        Assert.assertThat(t1.getDirection(), is("Home"));
+        Assert.assertThat(t1.getDestination(), is("Home"));
     }
 
     @Test

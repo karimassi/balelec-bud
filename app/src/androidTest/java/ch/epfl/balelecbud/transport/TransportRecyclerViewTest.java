@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
-import ch.epfl.balelecbud.transport.objects.Transport;
+import ch.epfl.balelecbud.transport.objects.TransportDeparture;
 import ch.epfl.balelecbud.transport.objects.TransportType;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
@@ -28,9 +28,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class TransportRecyclerViewTest {
 
-    final Transport transport1 = new Transport(TransportType.BUS, 10, "Nyon", null, Timestamp.now());
-    final Transport transport2 = new Transport(TransportType.METRO, 12, "EPFL", null, Timestamp.now());
-    final Transport transport3 = new Transport(TransportType.BUS, 122, "La lune", null, Timestamp.now());
+    final TransportDeparture transport1 = new TransportDeparture(TransportType.BUS, 10, "Nyon", null, Timestamp.now());
+    final TransportDeparture transport2 = new TransportDeparture(TransportType.METRO, 12, "EPFL", null, Timestamp.now());
+    final TransportDeparture transport3 = new TransportDeparture(TransportType.BUS, 122, "La lune", null, Timestamp.now());
 
     MockDatabaseWrapper mock;
 
@@ -43,10 +43,10 @@ public class TransportRecyclerViewTest {
         }
     };
 
-    private void compareViewAndItem(ViewInteraction viewInt, Transport transport){
+    private void compareViewAndItem(ViewInteraction viewInt, TransportDeparture transport){
         viewInt.check(matches(hasDescendant(withText(transport.getTypeString()))));
         viewInt.check(matches(hasDescendant(withText(transport.getLineString()))));
-        viewInt.check(matches(hasDescendant(withText(transport.getDirection()))));
+        viewInt.check(matches(hasDescendant(withText(transport.getDestination()))));
         viewInt.check(matches(hasDescendant(withText(transport.getTimeString()))));
     }
 

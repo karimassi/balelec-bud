@@ -5,16 +5,20 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import ch.epfl.balelecbud.R;
 
-public class TransportStationHolder extends RecyclerView.ViewHolder {
+public class TransportDepartureHolder extends RecyclerView.ViewHolder {
 
-    public final TextView nameView;
-    public final TextView distanceView;
+    public final TextView lineView;
+    public final TextView destinationView;
+    public final TextView departureTimeView;
 
-    public TransportStationHolder(View view) {
+    public TransportDepartureHolder(View view) {
         super(view);
-        nameView = view.findViewById(R.id.text_view_station_name);
-        distanceView = view.findViewById(R.id.text_view_station_distance);
+        lineView = view.findViewById(R.id.text_view_departure_line);
+        destinationView = view.findViewById(R.id.text_view_departure_destination);
+        departureTimeView = view.findViewById(R.id.text_view_departure_time);
     }
 }
