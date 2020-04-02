@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import ch.epfl.balelecbud.LoginUserActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
@@ -25,14 +24,13 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 @RunWith(AndroidJUnit4.class)
 public class FriendshipUtilsTest {
 
-    Authenticator authenticator;
-    DatabaseWrapper db;
-    User sender;
-    User recipient;
+    private DatabaseWrapper db;
+    private User sender;
+    private User recipient;
 
     @Before
     public void setup() {
-        authenticator = MockAuthenticator.getInstance();
+        Authenticator authenticator = MockAuthenticator.getInstance();
         db = MockDatabaseWrapper.getInstance();
         FriendshipUtils.setDatabaseImplementation(db);
         FriendshipUtils.setAuthenticator(authenticator);
@@ -43,39 +41,27 @@ public class FriendshipUtilsTest {
     }
 
     @Rule
-    public final ActivityTestRule<LoginUserActivity> mActivityRule = new ActivityTestRule<LoginUserActivity>(LoginUserActivity.class);
+    public final ActivityTestRule<LoginUserActivity> mActivityRule =
+            new ActivityTestRule<>(LoginUserActivity.class);
 
     private void addFriend(final User friend) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                FriendshipUtils.addFriend(friend);
-            }
-        };
+        Runnable myRunnable = () -> FriendshipUtils.addFriend(friend);
         runOnUiThread(myRunnable);
         synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
+
     private void acceptRequest(final User sender) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                FriendshipUtils.acceptRequest(sender);
-            }
-        };
+        Runnable myRunnable = () -> FriendshipUtils.acceptRequest(sender);
         runOnUiThread(myRunnable);
         synchronized (myRunnable) {
             myRunnable.wait(1000);
         }
     }
+
     private void deleteFriend(final User user) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                FriendshipUtils.removeFriend(user);
-            }
-        };
+        Runnable myRunnable = () -> FriendshipUtils.removeFriend(user);
         runOnUiThread(myRunnable);
         synchronized (myRunnable) {
             myRunnable.wait(1000);
@@ -95,34 +81,30 @@ public class FriendshipUtilsTest {
         final Map<String,Boolean> result= new HashMap<>();
         result.put(sender.getUid(), true);
 
-        db.getCustomDocument("friendRequests", recipient.getUid(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
-            @Override
-            public void accept(HashMap hashMap, Throwable throwable) {
-                if (throwable != null) {
-                    Assert.assertEquals(result, hashMap);
-                } else {
-                    Assert.fail();
-                }
-            }
-        });
+        db.getCustomDocument("friendRequests", recipient.getUid(), HashMap.class)
+                .whenComplete((hashMap, throwable) -> {
+                    if (throwable != null) {
+                        Assert.assertEquals(result, hashMap);
+                    } else {
+                        Assert.fail();
+                    }
+                });
     }
 
     @Test
-    public void acceptRequestCreatedFrienship() throws Throwable {
+    public void acceptRequestCreatedFriendship() throws Throwable {
         final Map<String,Boolean> result= new HashMap<>();
         result.put(sender.getUid(), true);
 
         acceptRequest(sender);
-        db.getCustomDocument("friendships", recipient.getUid(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
-            @Override
-            public void accept(HashMap hashMap, Throwable throwable) {
-                if (throwable!=null) {
-                    Assert.assertEquals(result, (HashMap<String, Boolean>) hashMap);
-                } else {
-                    Assert.fail();
-                }
-            }
-        });
+        db.getCustomDocument("friendships", recipient.getUid(), HashMap.class)
+                .whenComplete((hashMap, throwable) -> {
+                    if (throwable != null) {
+                        Assert.assertEquals(result, hashMap);
+                    } else {
+                        Assert.fail();
+                    }
+                });
 
     }
 
@@ -132,16 +114,14 @@ public class FriendshipUtilsTest {
         acceptRequest(sender);
         deleteFriend(recipient);
 
-        db.getCustomDocument("friendships", recipient.getUid(), HashMap.class).whenComplete(new BiConsumer<HashMap, Throwable>() {
-            @Override
-            public void accept(HashMap hashMap, Throwable throwable) {
-                if (throwable != null) {
-                    Assert.assertEquals(new HashMap<String, Boolean>(), hashMap);
-                } else {
-                    Assert.fail();
-                }
-            }
-        });
+        db.getCustomDocument("friendships", recipient.getUid(), HashMap.class)
+                .whenComplete((hashMap, throwable) -> {
+                    if (throwable != null) {
+                        Assert.assertEquals(new HashMap<String, Boolean>(), hashMap);
+                    } else {
+                        Assert.fail();
+                    }
+                });
     }
 
 

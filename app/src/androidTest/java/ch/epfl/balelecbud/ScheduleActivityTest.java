@@ -1,12 +1,9 @@
 package ch.epfl.balelecbud;
 
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 
-import androidx.annotation.NonNull;
-import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -32,7 +29,6 @@ import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -77,22 +73,19 @@ public class ScheduleActivityTest {
 
     @Before
     public void setup() {
-        mActivityRule.getActivity().setIntentLauncher(new IntentLauncher() {
-            @Override
-            public void launchIntent(@NonNull Intent intent) {
-                if (intent.getAction() == null)
-                    Assert.fail();
+        mActivityRule.getActivity().setIntentLauncher(intent -> {
+            if (intent.getAction() == null)
+                Assert.fail();
 
-                String action = intent.getAction();
-                switch (action) {
-                    case FlowUtil.ACK_CONCERT:
-                    case FlowUtil.GET_ALL_CONCERT:
-                        Assert.fail();
-                        break;
-                    case FlowUtil.SUBSCRIBE_CONCERT:
-                    case FlowUtil.CANCEL_CONCERT:
-                        break;
-                }
+            String action = intent.getAction();
+            switch (action) {
+                case FlowUtil.ACK_CONCERT:
+                case FlowUtil.GET_ALL_CONCERT:
+                    Assert.fail();
+                    break;
+                case FlowUtil.SUBSCRIBE_CONCERT:
+                case FlowUtil.CANCEL_CONCERT:
+                    break;
             }
         });
     }
@@ -117,10 +110,14 @@ public class ScheduleActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
 
         mock.modifyItem(slot3, 0);
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot3.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot3.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot3.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0))
+                .check(matches(withText(slot3.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1))
+                .check(matches(withText(slot3.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2))
+                .check(matches(withText(slot3.getSceneName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+                .check(switchChecked(false));
 
         mock.removeItem(slot3, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
@@ -139,20 +136,32 @@ public class ScheduleActivityTest {
         mock.addItem(slot2);
         mock.addItem(slot3);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot1.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot1.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot1.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0))
+                .check(matches(withText(slot1.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1))
+                .check(matches(withText(slot1.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2))
+                .check(matches(withText(slot1.getSceneName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+                .check(switchChecked(false));
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 0)).check(matches(withText(slot2.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1)).check(matches(withText(slot2.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 2)).check(matches(withText(slot2.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 0))
+                .check(matches(withText(slot2.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1))
+                .check(matches(withText(slot2.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 2))
+                .check(matches(withText(slot2.getSceneName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+                .check(switchChecked(false));
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 0)).check(matches(withText(slot3.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 1)).check(matches(withText(slot3.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 2)).check(matches(withText(slot3.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 0))
+                .check(matches(withText(slot3.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 1))
+                .check(matches(withText(slot3.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 2))
+                .check(matches(withText(slot3.getSceneName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+                .check(switchChecked(false));
 
     }
 
@@ -161,31 +170,29 @@ public class ScheduleActivityTest {
         mock.addItem(slot1);
 
         final List<Object> sync = new LinkedList<>();
-        mActivityRule.getActivity().setIntentLauncher(new IntentLauncher() {
-            @Override
-            public void launchIntent(@NonNull Intent intent) {
-                if (intent.getAction() == null)
-                    Assert.fail();
+        mActivityRule.getActivity().setIntentLauncher(intent -> {
+            if (intent.getAction() == null)
+                Assert.fail();
 
-                String action = intent.getAction();
-                switch (action) {
-                    case FlowUtil.ACK_CONCERT:
-                    case FlowUtil.CANCEL_CONCERT:
-                    case FlowUtil.GET_ALL_CONCERT:
-                        Assert.fail();
-                        break;
-                    case FlowUtil.SUBSCRIBE_CONCERT:
-                        Assert.assertEquals(FlowUtil.unpackSlotFromIntent(intent), slot1);
-                        synchronized (sync) {
-                            sync.add(new Object());
-                            sync.notify();
-                        }
-                        break;
-                }
+            String action = intent.getAction();
+            switch (action) {
+                case FlowUtil.ACK_CONCERT:
+                case FlowUtil.CANCEL_CONCERT:
+                case FlowUtil.GET_ALL_CONCERT:
+                    Assert.fail();
+                    break;
+                case FlowUtil.SUBSCRIBE_CONCERT:
+                    Assert.assertEquals(FlowUtil.unpackSlotFromIntent(intent), slot1);
+                    synchronized (sync) {
+                        sync.add(new Object());
+                        sync.notify();
+                    }
+                    break;
             }
         });
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).perform(click());
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+                .perform(click());
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -193,15 +200,12 @@ public class ScheduleActivityTest {
     }
 
     public static ViewAssertion switchChecked(final boolean checked) {
-        return new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                if (noViewFoundException != null)
-                    throw noViewFoundException;
-                if (!(view instanceof Switch))
-                    throw new AssertionError("The View should be a Switch be was");
-                Assert.assertThat(((Switch) view).isChecked(), is(checked));
-            }
+        return (view, noViewFoundException) -> {
+            if (noViewFoundException != null)
+                throw noViewFoundException;
+            if (!(view instanceof Switch))
+                throw new AssertionError("The View should be a Switch be was");
+            Assert.assertThat(((Switch) view).isChecked(), is(checked));
         };
     }
 

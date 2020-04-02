@@ -4,10 +4,8 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.view.View;
 import android.widget.Switch;
 
-import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
@@ -183,15 +181,12 @@ public class LocationRequesterTest {
     }
 
     public static ViewAssertion switchClickable(final boolean isClickable) {
-        return new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                if (noViewFoundException != null)
-                    throw noViewFoundException;
-                if (!(view instanceof Switch))
-                    throw new AssertionError("The View should be a Switch be was not");
-                Assert.assertThat(((Switch) view).isClickable(), is(isClickable));
-            }
+        return (view, noViewFoundException) -> {
+            if (noViewFoundException != null)
+                throw noViewFoundException;
+            if (!(view instanceof Switch))
+                throw new AssertionError("The View should be a Switch be was not");
+            Assert.assertThat(view.isClickable(), is(isClickable));
         };
     }
 }

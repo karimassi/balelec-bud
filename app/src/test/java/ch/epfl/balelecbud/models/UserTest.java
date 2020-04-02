@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 
 public class UserTest {
-    private User u1 = new User("test@email.com", "displayName", "a token");
+    private final User u1 = new User("test@email.com", "displayName", "a token");
 
     @Test
     public void testEmptyConstructor() {
@@ -31,21 +31,21 @@ public class UserTest {
     @Test
     public void testEquals() {
         User u2 = new User("test2@email.com", "displayName", "a token");
-        Assert.assertFalse(u1.equals(u2));
+        Assert.assertNotEquals(u1, u2);
 
         u2 = new User("test2@email.com", "name", "another token");
-        Assert.assertFalse(u1.equals(u2));
+        Assert.assertNotEquals(u1, u2);
 
         u2 = new User("test@email.com", "name", "a token");
-        Assert.assertFalse(u1.equals(u2));
+        Assert.assertNotEquals(u1, u2);
 
         u2 = new User("test@email.com", "displayName", "another token");
-        Assert.assertFalse(u1.equals(u2));
+        Assert.assertNotEquals(u1, u2);
 
         u2 = new User("test@email.com", "displayName", "a token");
-        Assert.assertTrue(u1.equals(u2));
+        Assert.assertEquals(u1, u2);
 
-        Assert.assertFalse(u1.equals(new Object()));
+        Assert.assertNotEquals(u1, new Object());
     }
 
     @Test

@@ -7,16 +7,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class LocationTest {
 
-    private Location location = new Location(2,1);
-    private Location sameLocation = new Location(2,1);
-    private GeoPoint geoPoint = new GeoPoint(2, 1);
-    private LatLng latLng = new LatLng(2, 1);
+    private final Location location = new Location(2,1);
+    private final Location sameLocation = new Location(2,1);
+    private final GeoPoint geoPoint = new GeoPoint(2, 1);
+    private final LatLng latLng = new LatLng(2, 1);
 
     @Test
     public void testEmptyConstructor() {
@@ -59,15 +58,15 @@ public class LocationTest {
         Location differentLongitude = new Location(2,3);
         Location allDifferent = new Location(3,3);
 
-        assertFalse(location.equals(differentLatitude));
-        assertFalse(location.equals(differentLongitude));
-        assertFalse(location.equals(allDifferent));
+        Assert.assertNotEquals(location, differentLatitude);
+        Assert.assertNotEquals(location, differentLongitude);
+        Assert.assertNotEquals(location, allDifferent);
     }
 
 
     @Test
     public void testEqualsTwoDifferentObjects() {
-        assertFalse(location.equals(new Object()));
+        Assert.assertNotEquals(location, new Object());
     }
 
     @Test

@@ -27,7 +27,7 @@ public class ScheduleActivity extends BasicActivity {
         RecyclerView rvSchedule = findViewById(R.id.scheduleRecyclerView);
         List<Slot> slots = FlowUtil.unpackCallback(getIntent());
         mAdapter = new ScheduleAdapter(this, slots == null ?
-                Collections.<Slot>emptyList() : slots);
+                Collections.emptyList() : slots);
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
     }

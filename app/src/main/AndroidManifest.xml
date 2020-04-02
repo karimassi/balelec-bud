@@ -46,7 +46,7 @@
 
         <receiver
             android:name=".notifications.concertSoon.NotificationProvider"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="ch.epfl.balelecbud.notifications.concertSoon.ACTION"/>
             </intent-filter>

@@ -12,7 +12,7 @@ import ch.epfl.balelecbud.transport.objects.TransportType;
 import static org.hamcrest.core.Is.is;
 
 public class TransportTest {
-    private Transport t1 = new Transport(TransportType.BUS, 42, "Home",
+    private final Transport t1 = new Transport(TransportType.BUS, 42, "Home",
             new GeoPoint(24, 42), new Timestamp(0, 0));
 
     @Test

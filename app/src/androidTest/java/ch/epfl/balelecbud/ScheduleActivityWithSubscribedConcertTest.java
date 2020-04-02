@@ -2,7 +2,6 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -25,7 +24,6 @@ import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -71,37 +69,31 @@ public class ScheduleActivityWithSubscribedConcertTest {
 
     @Before
     public void setUpMockIntentLauncher() {
-        this.mActivityRule.getActivity().setIntentLauncher(new IntentLauncher() {
-            @Override
-            public void launchIntent(@NonNull Intent intent) {
+        this.mActivityRule.getActivity().setIntentLauncher(intent -> {
 
-            }
         });
     }
 
     @Test
     public void testUnSubscribeToAConcert() throws Throwable {
         final List<Object> sync = new LinkedList<>();
-        mActivityRule.getActivity().setIntentLauncher(new IntentLauncher() {
-            @Override
-            public void launchIntent(@NonNull Intent intent) {
-                if (intent.getAction() == null)
-                    Assert.fail();
+        mActivityRule.getActivity().setIntentLauncher(intent -> {
+            if (intent.getAction() == null)
+                Assert.fail();
 
-                String action = intent.getAction();
-                switch (action) {
-                    case FlowUtil.ACK_CONCERT:
-                    case FlowUtil.GET_ALL_CONCERT:
-                        Assert.fail();
-                        break;
-                    case FlowUtil.CANCEL_CONCERT:
-                        synchronized (sync) {
-                            sync.add(new Object());
-                            sync.notify();
-                        }
-                    case FlowUtil.SUBSCRIBE_CONCERT:
-                        break;
-                }
+            String action = intent.getAction();
+            switch (action) {
+                case FlowUtil.ACK_CONCERT:
+                case FlowUtil.GET_ALL_CONCERT:
+                    Assert.fail();
+                    break;
+                case FlowUtil.CANCEL_CONCERT:
+                    synchronized (sync) {
+                        sync.add(new Object());
+                        sync.notify();
+                    }
+                case FlowUtil.SUBSCRIBE_CONCERT:
+                    break;
             }
         });
         mock.addItem(slot1);

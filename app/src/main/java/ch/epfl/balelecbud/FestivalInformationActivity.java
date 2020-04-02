@@ -13,16 +13,12 @@ import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
 public class FestivalInformationActivity extends BasicActivity {
-
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter festivalInfoAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_festival_info);
 
-        recyclerView = findViewById(R.id.festivalInfoRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.festivalInfoRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 

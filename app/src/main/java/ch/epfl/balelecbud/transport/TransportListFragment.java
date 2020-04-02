@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,13 +28,11 @@ public class TransportListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public TransportListFragment() {
-    }
+    public TransportListFragment() { }
 
     public static TransportListFragment newInstance() {
-        TransportListFragment fragment = new TransportListFragment();
         //right now no need to have any arguments
-        return fragment;
+        return new TransportListFragment();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class TransportListFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mListener = (OnListFragmentInteractionListener) context;
     }

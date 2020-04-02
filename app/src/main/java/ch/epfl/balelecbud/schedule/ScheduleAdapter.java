@@ -2,12 +2,10 @@ package ch.epfl.balelecbud.schedule;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -19,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
@@ -32,12 +30,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
-    private IntentLauncher intentLauncher = new IntentLauncher() {
-        @Override
-        public void launchIntent(@NonNull Intent intent) {
-            ScheduleAdapter.this.mainActivity.startService(intent);
-        }
-    };
+    private IntentLauncher intentLauncher;
 
     private final Activity mainActivity;
 
@@ -51,8 +44,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         database = databaseWrapper;
     }
 
-    private List<Slot> slots;
-    private List<Slot> subscribedConcertAtLaunch;
+    private final List<Slot> slots;
+    private final List<Slot> subscribedConcertAtLaunch;
 
     static class ScheduleViewHolder extends RecyclerView.ViewHolder {
         final TextView timeSlotView;
@@ -93,6 +86,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         };
         DatabaseListener<Slot> listener = new DatabaseListener<>(facade, slots, Slot.class);
         database.listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
+        intentLauncher = ScheduleAdapter.this.mainActivity::startService;
     }
 
     @NonNull
@@ -111,17 +105,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
 
-        viewHolder.subscribeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                if (isChecked) {
-                    Log.d(TAG, "Notification switched: ON");
-                    intentLauncher.launchIntent(
-                            FlowUtil.packSubscribeIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
-                } else {
-                    Log.d(TAG, "Notification switched: ON");
-                    intentLauncher.launchIntent(
-                            FlowUtil.packCancelIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
-                }
+        viewHolder.subscribeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Log.d(TAG, "Notification switched: ON");
+                intentLauncher.launchIntent(
+                        FlowUtil.packSubscribeIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
+            } else {
+                Log.d(TAG, "Notification switched: ON");
+                intentLauncher.launchIntent(
+                        FlowUtil.packCancelIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
             }
         });
 

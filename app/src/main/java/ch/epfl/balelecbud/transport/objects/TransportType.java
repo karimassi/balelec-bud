@@ -15,5 +15,5 @@ public enum TransportType {
         public String toString() {
             return "Bus";
         }
-    };
+    }
 }

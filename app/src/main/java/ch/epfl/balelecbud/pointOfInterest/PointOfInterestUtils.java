@@ -5,7 +5,6 @@ import androidx.annotation.VisibleForTesting;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -38,5 +37,4 @@ public class PointOfInterestUtils {
         CompletableFuture<List<Location>> myFuture = dbImplementation.query(query, Location.class);
         return myFuture.thenApply(List::size);
     }
-
 }

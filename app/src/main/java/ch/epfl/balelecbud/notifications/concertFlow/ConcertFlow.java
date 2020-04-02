@@ -29,12 +29,7 @@ public class ConcertFlow extends IntentService {
         super(TAG);
     }
 
-    private IntentLauncher launcher = new IntentLauncher() {
-        @Override
-        public void launchIntent(@NonNull Intent intent) {
-            ConcertFlow.this.startActivity(intent);
-        }
-    };
+    private IntentLauncher launcher = ConcertFlow.this::startActivity;
 
     @VisibleForTesting
     public void setLauncher(IntentLauncher launcher) {

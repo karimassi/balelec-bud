@@ -6,9 +6,9 @@ import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
 public class DatabaseListener<T> {
 
-    private RecyclerViewAdapterFacade facade; // change type later
-    private List<T> dataList;
-    private Class<T> type;
+    private final RecyclerViewAdapterFacade facade; // change type later
+    private final List<T> dataList;
+    private final Class<T> type;
 
     public DatabaseListener(RecyclerViewAdapterFacade facade, List<T> dataList, Class<T> type) {
         this.facade = facade;

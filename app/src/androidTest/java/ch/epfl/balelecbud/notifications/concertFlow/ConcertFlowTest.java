@@ -3,7 +3,6 @@ package ch.epfl.balelecbud.notifications.concertFlow;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -27,7 +26,6 @@ import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDat
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 import static org.hamcrest.core.Is.is;
 
@@ -180,18 +178,15 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         final List<Object> sync = new LinkedList<>();
-        flow.setLauncher(new IntentLauncher() {
-            @Override
-            public void launchIntent(@NonNull Intent intent) {
-                List<Slot> res = FlowUtil.unpackCallback(intent);
-                Assert.assertNotNull(res);
-                Assert.assertThat(res.size(), is(2));
-                Assert.assertTrue(res.contains(slot1));
-                Assert.assertTrue(res.contains(slot2));
-                synchronized (sync) {
-                    sync.add(new Object());
-                    sync.notify();
-                }
+        flow.setLauncher(intent -> {
+            List<Slot> res = FlowUtil.unpackCallback(intent);
+            Assert.assertNotNull(res);
+            Assert.assertThat(res.size(), is(2));
+            Assert.assertTrue(res.contains(slot1));
+            Assert.assertTrue(res.contains(slot2));
+            synchronized (sync) {
+                sync.add(new Object());
+                sync.notify();
             }
         });
         Intent intent = new Intent();
@@ -210,18 +205,15 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         final List<Object> sync = new LinkedList<>();
-        flow.setLauncher(new IntentLauncher() {
-            @Override
-            public void launchIntent(@NonNull Intent intent) {
-                List<Slot> slots = FlowUtil.unpackCallback(intent);
-                Assert.assertNotNull(slots);
-                Assert.assertEquals(slots.size(), 1);
-                Assert.assertFalse(slots.contains(slot1));
-                Assert.assertTrue(slots.contains(slot2));
-                synchronized (sync) {
-                    sync.add(new Object());
-                    sync.notify();
-                }
+        flow.setLauncher(intent -> {
+            List<Slot> slots = FlowUtil.unpackCallback(intent);
+            Assert.assertNotNull(slots);
+            Assert.assertEquals(slots.size(), 1);
+            Assert.assertFalse(slots.contains(slot1));
+            Assert.assertTrue(slots.contains(slot2));
+            synchronized (sync) {
+                sync.add(new Object());
+                sync.notify();
             }
         });
         Intent intent = new Intent();

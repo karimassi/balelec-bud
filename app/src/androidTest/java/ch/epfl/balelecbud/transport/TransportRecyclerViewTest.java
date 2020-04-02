@@ -28,11 +28,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class TransportRecyclerViewTest {
 
-    final Transport transport1 = new Transport(TransportType.BUS, 10, "Nyon", null, Timestamp.now());
-    final Transport transport2 = new Transport(TransportType.METRO, 12, "EPFL", null, Timestamp.now());
-    final Transport transport3 = new Transport(TransportType.BUS, 122, "La lune", null, Timestamp.now());
+    private final Transport transport1 = new Transport(TransportType.BUS, 10, "Nyon", null, Timestamp.now());
+    private final Transport transport2 = new Transport(TransportType.METRO, 12, "EPFL", null, Timestamp.now());
+    private final Transport transport3 = new Transport(TransportType.BUS, 122, "La lune", null, Timestamp.now());
 
-    MockDatabaseWrapper mock;
+    private MockDatabaseWrapper mock;
 
     @Rule
     public final ActivityTestRule<TransportActivity> mActivityRule = new ActivityTestRule<TransportActivity>(TransportActivity.class) {

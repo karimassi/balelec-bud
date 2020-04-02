@@ -27,7 +27,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     private Task<android.location.Location> locationResult;
     private static boolean locationEnabled;
 
-    private OnCompleteListener<android.location.Location> callback =
+    private final OnCompleteListener<android.location.Location> callback =
             new OnCompleteListener<android.location.Location>() {
                 @Override
                 public void onComplete(@NonNull Task<android.location.Location> task) {
@@ -59,7 +59,8 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         googleMap.setMyLocationEnabled(locationEnabled);
         googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
 
-        if(locationEnabled) locationResult.addOnCompleteListener(this, callback);
+        if(locationEnabled)
+            locationResult.addOnCompleteListener(this, callback);
         else {
             googleMap.addMarker(new MarkerOptions().position(getLatLng(location)).title("Default Location"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getLatLng(location), DEFAULT_ZOOM));

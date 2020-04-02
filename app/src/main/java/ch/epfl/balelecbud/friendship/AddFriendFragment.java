@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
@@ -15,9 +16,9 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.models.User;
 
 public class AddFriendFragment extends DialogFragment {
+    private EditText editTextAddFriend;
 
-    EditText editTextAddFriend;
-
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -29,16 +30,21 @@ public class AddFriendFragment extends DialogFragment {
         builder.setView(view)
                 .setPositiveButton(R.string.add_friend_request, (dialog, id) -> {
                     if (validateEmail()) {
-                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString()).whenComplete((user, throwable) -> FriendshipUtils.addFriend(user));
-                        Toast.makeText(getContext(), getString(R.string.add_friend_request_sent) + editTextAddFriend.getText(), Toast.LENGTH_SHORT).show();
+                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString())
+                                .whenComplete((user, throwable) -> FriendshipUtils.addFriend(user));
+                        Toast.makeText(
+                                getContext(),
+                                getString(R.string.add_friend_request_sent) + editTextAddFriend.getText(),
+                                Toast.LENGTH_SHORT).show();
                     }
 
                 })
-                .setNegativeButton(R.string.add_friend_cancel, (dialog, id) -> AddFriendFragment.this.getDialog().cancel());
+                .setNegativeButton(R.string.add_friend_cancel,
+                        (dialog, id) -> AddFriendFragment.this.getDialog().cancel());
         return builder.create();
     }
 
-    public static AddFriendFragment newInstance(User user) {
+    static AddFriendFragment newInstance(User user) {
         AddFriendFragment f = new AddFriendFragment();
         Bundle args = new Bundle();
         args.putParcelable("user", user);
@@ -55,8 +61,12 @@ public class AddFriendFragment extends DialogFragment {
             editTextAddFriend.setError(getString(R.string.invalid_email));
             return false;
         } else if (email.equals(((User)getArguments().get("user")).getEmail())) {
-            Toast.makeText(getContext(), R.string.add_own_as_friend, Toast.LENGTH_SHORT).show();            return false;
-        } else
+            Toast.makeText(
+                    getContext(),
+                    R.string.add_own_as_friend,
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 }

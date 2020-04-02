@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +34,7 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
     private final List<Transport> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyTransportRecyclerViewAdapter(OnListFragmentInteractionListener fragmentInteractionListenerl) {
+    public MyTransportRecyclerViewAdapter(OnListFragmentInteractionListener fragmentInteractionListener) {
         mValues = new LinkedList<>();
         RecyclerViewAdapterFacade facade = new RecyclerViewAdapterFacade() {
             @Override
@@ -51,11 +52,12 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
                 MyTransportRecyclerViewAdapter.this.notifyItemRemoved(position);
             }
         };
-        DatabaseListener<Transport> listener = new DatabaseListener(facade, mValues, Transport.class);
+        DatabaseListener<Transport> listener = new DatabaseListener<>(facade, mValues, Transport.class);
         database.listen(DatabaseWrapper.TRANSPORT_PATH, listener);
-        mListener = fragmentInteractionListenerl;
+        mListener = fragmentInteractionListener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -70,14 +72,11 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
         holder.lineView.setText(mValues.get(position).getLineString());
         holder.directionView.setText(mValues.get(position).getDirection());
         holder.timeView.setText(mValues.get(position).getTimeString());
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+        holder.mView.setOnClickListener(v -> {
+            if (null != mListener) {
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
+                mListener.onListFragmentInteraction(holder.mItem);
             }
         });
     }
@@ -87,23 +86,22 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View mView;
-        public final TextView typeView;
-        public final TextView lineView;
-        public final TextView directionView;
-        public final TextView timeView;
-        public Transport mItem;
+        final View mView;
+        final TextView typeView;
+        final TextView lineView;
+        final TextView directionView;
+        final TextView timeView;
+        Transport mItem;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
-            typeView = (TextView) view.findViewById(R.id.transportType);
-            lineView = (TextView) view.findViewById(R.id.transportLine);
-            directionView = (TextView) view.findViewById(R.id.transportDirection);
-            timeView = (TextView) view.findViewById(R.id.transportTime);
+            typeView = view.findViewById(R.id.transportType);
+            lineView = view.findViewById(R.id.transportLine);
+            directionView = view.findViewById(R.id.transportDirection);
+            timeView = view.findViewById(R.id.transportTime);
         }
-
     }
 }

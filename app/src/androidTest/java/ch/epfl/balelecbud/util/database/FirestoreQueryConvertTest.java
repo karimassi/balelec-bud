@@ -6,31 +6,31 @@ import com.google.firebase.firestore.Query;
 
 import org.junit.Test;
 
-import java.util.LinkedList;
-
-import ch.epfl.balelecbud.util.database.FirestoreQueryConverter;
-import ch.epfl.balelecbud.util.database.MyQuery;
-
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
 
 public class FirestoreQueryConvertTest {
 
-    private String collectionName = "myCollectionName";
-    private String leftOperandName = "myLeftOperandName";
-    private Integer rightOperandValue = 12;
+    private final String collectionName = "myCollectionName";
+    private final String leftOperandName = "myLeftOperandName";
+    private final Integer rightOperandValue = 12;
 
-    private MyQuery.WhereClause clauseLessThan = new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.LESS_THAN, rightOperandValue);
-    private MyQuery.WhereClause clauseLessEquals = new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.LESS_EQUAL, rightOperandValue);
-    private MyQuery.WhereClause clauseGreaterThan = new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.GREATER_THAN, rightOperandValue);
-    private MyQuery.WhereClause clauseGreaterEquals = new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.GREATER_EQUAL, rightOperandValue);
-    private MyQuery.WhereClause clauseEquals = new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.EQUAL, rightOperandValue);
+    private final MyQuery.WhereClause clauseLessThan =
+            new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.LESS_THAN, rightOperandValue);
+    private final MyQuery.WhereClause clauseLessEquals =
+            new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.LESS_EQUAL, rightOperandValue);
+    private final MyQuery.WhereClause clauseGreaterThan =
+            new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.GREATER_THAN, rightOperandValue);
+    private final MyQuery.WhereClause clauseGreaterEquals =
+            new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.GREATER_EQUAL, rightOperandValue);
+    private final MyQuery.WhereClause clauseEquals =
+            new MyQuery.WhereClause(leftOperandName, MyQuery.WhereClause.Operator.EQUAL, rightOperandValue);
 
     @Test
     public void whereLessThanConversionReturnsCorrectQuery(){
         MyQuery myQuery = new MyQuery(collectionName, Lists.newArrayList(clauseLessThan));
         Query convertedQuery = FirestoreQueryConverter.convert(myQuery);
-        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName).whereLessThan(leftOperandName, rightOperandValue);
+        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName)
+                .whereLessThan(leftOperandName, rightOperandValue);
         assertEquals(expectedQuery, convertedQuery);
     }
 
@@ -38,7 +38,8 @@ public class FirestoreQueryConvertTest {
     public void whereLessEqualsConversionReturnsCorrectQuery(){
         MyQuery myQuery = new MyQuery(collectionName, Lists.newArrayList(clauseLessEquals));
         Query convertedQuery = FirestoreQueryConverter.convert(myQuery);
-        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName).whereLessThanOrEqualTo(leftOperandName, rightOperandValue);
+        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName)
+                .whereLessThanOrEqualTo(leftOperandName, rightOperandValue);
         assertEquals(expectedQuery, convertedQuery);
     }
 
@@ -46,7 +47,8 @@ public class FirestoreQueryConvertTest {
     public void whereGreaterThanConversionReturnsCorrectQuery(){
         MyQuery myQuery = new MyQuery(collectionName, Lists.newArrayList(clauseGreaterThan));
         Query convertedQuery = FirestoreQueryConverter.convert(myQuery);
-        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName).whereGreaterThan(leftOperandName, rightOperandValue);
+        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName)
+                .whereGreaterThan(leftOperandName, rightOperandValue);
         assertEquals(expectedQuery, convertedQuery);
     }
 
@@ -54,7 +56,8 @@ public class FirestoreQueryConvertTest {
     public void whereGreaterEqualsConversionReturnsCorrectQuery(){
         MyQuery myQuery = new MyQuery(collectionName, Lists.newArrayList(clauseGreaterEquals));
         Query convertedQuery = FirestoreQueryConverter.convert(myQuery);
-        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName).whereGreaterThanOrEqualTo(leftOperandName, rightOperandValue);
+        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName)
+                .whereGreaterThanOrEqualTo(leftOperandName, rightOperandValue);
         assertEquals(expectedQuery, convertedQuery);
     }
 
@@ -62,7 +65,8 @@ public class FirestoreQueryConvertTest {
     public void whereEqualsConversionReturnsCorrectQuery(){
         MyQuery myQuery = new MyQuery(collectionName, Lists.newArrayList(clauseEquals));
         Query convertedQuery = FirestoreQueryConverter.convert(myQuery);
-        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName).whereEqualTo(leftOperandName, rightOperandValue);
+        Query expectedQuery = FirebaseFirestore.getInstance().collection(collectionName)
+                .whereEqualTo(leftOperandName, rightOperandValue);
         assertEquals(expectedQuery, convertedQuery);
     }
 }

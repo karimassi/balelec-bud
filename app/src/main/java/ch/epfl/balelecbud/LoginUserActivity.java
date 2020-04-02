@@ -7,10 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.function.BiConsumer;
-
-import ch.epfl.balelecbud.models.User;
-
 public class LoginUserActivity extends BasicActivity {
 
     private EditText emailField;
@@ -31,16 +27,13 @@ public class LoginUserActivity extends BasicActivity {
             return;
         }
 
-        getAuthenticator().signIn(email, password).whenComplete(new BiConsumer<User, Throwable>() {
-            @Override
-            public void accept(User user, Throwable throwable) {
-                if (user != null) {
-                    getAuthenticator().setCurrentUser(user);
-                    onAuthComplete();
-                } else {
-                    Toast.makeText(LoginUserActivity.this, throwable.getCause()
-                            .getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
-                }
+        getAuthenticator().signIn(email, password).whenComplete((user, throwable) -> {
+            if (user != null) {
+                getAuthenticator().setCurrentUser(user);
+                onAuthComplete();
+            } else {
+                Toast.makeText(LoginUserActivity.this, throwable.getCause()
+                        .getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -30,7 +30,7 @@ public class FirebaseAuthenticatorTest extends BasicAuthenticationTest {
         }
     };
 
-    private Authenticator authenticator = FirebaseAuthenticator.getInstance();
+    private final Authenticator authenticator = FirebaseAuthenticator.getInstance();
 
     @Before
     public void setUp() throws Throwable{

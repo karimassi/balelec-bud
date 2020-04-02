@@ -34,8 +34,8 @@ public class MapViewActivityTest {
 
     private final double testLatitude = -12.12;
     private final double testLongitude = -77.03;
-    private Location testLocation = new Location(testLatitude, testLongitude);
-    private LatLng testLatLng = new LatLng(testLatitude, testLongitude);
+    private final Location testLocation = new Location(testLatitude, testLongitude);
+    private final LatLng testLatLng = new LatLng(testLatitude, testLongitude);
     private Location oldMapLocation;
     private Location newMapLocation;
 
@@ -58,26 +58,23 @@ public class MapViewActivityTest {
 
     @Test
     public void testUpdateLocationUi() throws Throwable {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                MapViewActivity mActivity = mActivityRule.getActivity();
-                GoogleMap googleMap = mActivity.getGoogleMap();
-                if(googleMap != null) {
-                    assertThat(googleMap.isMyLocationEnabled(),
-                            is(MapViewActivity.getLocationPermission()));
-                    assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
-                            is(MapViewActivity.getLocationPermission()));
-                }
-
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        runOnUiThread(() -> {
+            GoogleMap googleMap = mActivity.getGoogleMap();
+            if(googleMap != null) {
+                assertThat(googleMap.isMyLocationEnabled(),
+                        is(MapViewActivity.getLocationPermission()));
+                assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
+                        is(MapViewActivity.getLocationPermission()));
             }
+
         });
     }
 
     @Test
     public void testNewLocationIsSet() {
-        Location newLocation = new Location(30, 8);
         MapViewActivity mActivity = mActivityRule.getActivity();
+        Location newLocation = new Location(30, 8);
         mActivity.setLocation(newLocation);
         assertThat(mActivity.getLocation(), is(newLocation));
     }
@@ -115,16 +112,14 @@ public class MapViewActivityTest {
         MapViewActivity mActivity = mActivityRule.getActivity();
         if(MapViewActivity.getLocationPermission()) {
             assertThat(mActivity.getLocationResult(), is(notNullValue()));
-        }
-        else {
+        } else {
             assertNull(mActivity.getLocationResult());
         }
     }
 
     @Test
     public void testSetLocationPermission() {
-        MapViewActivity mActivity = mActivityRule.getActivity();
-        assertThat(mActivity.getLocationPermission(), is(LocationUtil.isLocationActive()));
+        assertThat(MapViewActivity.getLocationPermission(), is(LocationUtil.isLocationActive()));
     }
 
     @Test

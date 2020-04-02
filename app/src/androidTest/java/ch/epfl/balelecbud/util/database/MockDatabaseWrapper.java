@@ -1,15 +1,14 @@
 package ch.epfl.balelecbud.util.database;
 
+import androidx.annotation.NonNull;
+
 import java.lang.reflect.Field;
-import android.util.Log;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -17,30 +16,28 @@ import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
-import ch.epfl.balelecbud.util.CompletableFutureUtils;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 public class MockDatabaseWrapper implements DatabaseWrapper {
 
-    private List<DatabaseListener> listeners = new ArrayList<>();
+    private final List<DatabaseListener> listeners = new ArrayList<>();
 
-    private List<User> users = new ArrayList<>();
-    private List<Map<String, Boolean>> friendships = new ArrayList<>();
-    private List<Map<String, Boolean>> friendRequests = new ArrayList<>();
-    private List<FestivalInformation> festivalInfos = new ArrayList<>();
-    private List<PointOfInterest> pointOfInterests = new ArrayList<>();
-    private Map<String, Location> locations = new HashMap<>();
+    private final List<User> users = new ArrayList<>();
+    private final List<Map<String, Boolean>> friendships = new ArrayList<>();
+    private final List<Map<String, Boolean>> friendRequests = new ArrayList<>();
+    private final List<FestivalInformation> festivalInfos = new ArrayList<>();
+    private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
+    private final Map<String, Location> locations = new HashMap<>();
 
 
     private MockDatabaseWrapper() {
         users.add(new User("karim@epfl.ch", "karim@epfl.ch", MockAuthenticator.provideUid()));
         users.add(new User("celine@epfl.ch", "celine@epfl.ch", MockAuthenticator.provideUid()));
-        friendships.add(new HashMap<String, Boolean>());
-        friendships.add(new HashMap<String, Boolean>());
-        friendRequests.add(new HashMap<String, Boolean>());
-        friendRequests.add(new HashMap<String, Boolean>());
-
+        friendships.add(new HashMap<>());
+        friendships.add(new HashMap<>());
+        friendRequests.add(new HashMap<>());
+        friendRequests.add(new HashMap<>());
     }
 
     private static final DatabaseWrapper instance = new MockDatabaseWrapper();
@@ -107,7 +104,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private <A> void filterELem(MyQuery.WhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
         try {
             if (op == MyQuery.WhereClause.Operator.EQUAL) {
-                if (field.get(elem).equals(rightOperand)) {
+                if (Objects.equals(field.get(elem), rightOperand)) {
                     newList.add(elem);
                 }
             } else if (field.get(elem) instanceof Comparable) {
@@ -124,13 +121,13 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-    @NotNull
+    @NonNull
     private Field getField(MyQuery.WhereClause clause, Class clazz) {
-        Field field = null;
+        Field field;
         try {
             field = clazz.getDeclaredField(clause.getLeftOperand());
         } catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException("Class" + clazz.getName() + " does not contain a " + field.getName() + " field");
+            throw new IllegalArgumentException("Class" + clazz.getName() + "does not contain a" + clause.getLeftOperand());
         }
         // to allow us to modify variable
         field.setAccessible(true);
@@ -148,12 +145,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void addItem(final Object object) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                addItemAux(object);
-            }
-        };
+        Runnable myRunnable = () -> addItemAux(object);
         runOnUiThread(myRunnable);
         synchronized (myRunnable) {
             myRunnable.wait(1000);
@@ -161,12 +153,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void modifyItem(final Object object, final int index) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                changeItemAux(object, index);
-            }
-        };
+        Runnable myRunnable = () -> changeItemAux(object, index);
         runOnUiThread(myRunnable);
         synchronized (myRunnable) {
             myRunnable.wait(1000);
@@ -174,12 +161,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void removeItem(final Object object, final int index) throws Throwable {
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                removeItemAux(object, index);
-            }
-        };
+        Runnable myRunnable = () -> removeItemAux(object, index);
         runOnUiThread(myRunnable);
         synchronized (myRunnable) {
             myRunnable.wait(1000);
@@ -240,19 +222,16 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type) {
-        switch (collectionName) {
-            case DatabaseWrapper.USERS_PATH:
-                for (User u : users) {
-                    switch (fieldName) {
-                        case "email":
-                            if (u.getEmail().equals(fieldValue)) {
-                                return CompletableFuture.completedFuture((T)u);
-                            }
+        if (DatabaseWrapper.USERS_PATH.equals(collectionName)) {
+            for (User u : users) {
+                if ("email".equals(fieldName)) {
+                    if (u.getEmail().equals(fieldValue)) {
+                        return CompletableFuture.completedFuture((T) u);
                     }
                 }
-            default:
-                return CompletableFuture.completedFuture(null);
+            }
         }
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
@@ -260,8 +239,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
                 users.add((User) document);
-                friendRequests.add(new HashMap<String, Boolean>());
-                friendships.add(new HashMap<String, Boolean>());
+                friendRequests.add(new HashMap<>());
+                friendships.add(new HashMap<>());
                 break;
             case DatabaseWrapper.FRIENDSHIPS_PATH:
                 friendships.add((Map<String, Boolean>) document);
@@ -285,9 +264,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
-                users.add( Integer.valueOf(((User) document).getUid()), (User) document);
-                friendRequests.add(new HashMap<String, Boolean>());
-                friendships.add(new HashMap<String, Boolean>());
+                users.add(Integer.parseInt(((User) document).getUid()), (User) document);
+                friendRequests.add(new HashMap<>());
+                friendships.add(new HashMap<>());
                 break;
             case DatabaseWrapper.FRIENDSHIPS_PATH:
                 friendships.get(index).putAll((Map<String, Boolean>) document);
@@ -320,10 +299,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public void deleteDocument(String collectionName, Object document) {
         switch (collectionName) {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
-                festivalInfos.remove((FestivalInformation) document);
+                festivalInfos.remove(document);
                 break;
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
-                pointOfInterests.remove((PointOfInterest) document);
+                pointOfInterests.remove(document);
                 break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName" + collectionName);
@@ -364,8 +343,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 locations.clear();
                 break;
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
-                    festivalInfos.clear();
-                    break;
+                festivalInfos.clear();
+                break;
             default :
                 throw new IllegalArgumentException("unsupported collectionName");
         }

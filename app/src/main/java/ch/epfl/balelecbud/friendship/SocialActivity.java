@@ -19,7 +19,6 @@ import ch.epfl.balelecbud.R;
 public class SocialActivity extends BasicActivity {
 
     private SocialAdapter fragmentAdapter;
-    ViewPager2 viewPager;
 
     private List<String> tabTitleList;
 
@@ -31,7 +30,7 @@ public class SocialActivity extends BasicActivity {
         tabTitleList = new ArrayList<>(Arrays.asList(getString(R.string.tab_friends), getString(R.string.tab_requests)));
 
         setupFragmentAdapter();
-        viewPager = findViewById(R.id.view_pager_social);
+        ViewPager2 viewPager = findViewById(R.id.view_pager_social);
         viewPager.setAdapter(fragmentAdapter);
 
         TabLayout tabs = findViewById(R.id.tabs_social);

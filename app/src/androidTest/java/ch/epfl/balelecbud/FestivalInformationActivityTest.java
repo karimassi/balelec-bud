@@ -24,13 +24,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class FestivalInformationActivityTest {
 
-    MockDatabaseWrapper mock;
+    private MockDatabaseWrapper mock;
 
     @Before
     public void setup(){
@@ -52,7 +50,7 @@ public class FestivalInformationActivityTest {
     }
 
     @Test
-    public void testCanAddInfoToDatabase() throws Throwable {
+    public void testCanAddInfoToDatabase() {
         final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
         mock.storeDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info);
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
@@ -84,7 +82,7 @@ public class FestivalInformationActivityTest {
     }
 
     @Test
-    public void testCanDeleteInfoFromDatabase() throws Throwable {
+    public void testCanDeleteInfoFromDatabase() {
         final FestivalInformation info1 = new FestivalInformation("Bad", "Hello it's a me, bad");
         final FestivalInformation info2 = new FestivalInformation("Good", "Hello it's a me, good");
 

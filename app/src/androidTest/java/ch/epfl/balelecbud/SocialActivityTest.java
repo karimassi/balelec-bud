@@ -1,23 +1,19 @@
 package ch.epfl.balelecbud;
 
-
 import android.os.SystemClock;
 
-import androidx.annotation.InspectableProperty;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -48,12 +44,12 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class SocialActivityTest {
 
-    User currentUser = new User("karim@epfl.ch", "karim@epfl.ch", "0");
-    User otherUser = new User("celine@epfl.ch", "celine@epfl.ch", "1");
-    User newFriend;
+    private final User currentUser = new User("karim@epfl.ch", "karim@epfl.ch", "0");
+    private final User otherUser = new User("celine@epfl.ch", "celine@epfl.ch", "1");
+    private User newFriend;
 
-    Authenticator mockAuth = MockAuthenticator.getInstance();
-    MockDatabaseWrapper mockDb = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
+    private final Authenticator mockAuth = MockAuthenticator.getInstance();
+    private final MockDatabaseWrapper mockDb = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
 
     @Rule
     public final ActivityTestRule<SocialActivity> mActivityRule = new ActivityTestRule<SocialActivity>(SocialActivity.class) {
@@ -142,7 +138,8 @@ public class SocialActivityTest {
     public void buttonDeleteFriendsUpdatesList() {
         selectTab(0);
         onView(withId(R.id.recycler_view_friends)).perform(RecyclerViewActions.
-            actionOnItemAtPosition(0, RecyclerViewButtonClick.clickChildViewWithId(R.id.buttonDeleteFriendItem)));
+            actionOnItemAtPosition(0, RecyclerViewButtonClick
+                    .clickChildViewWithId(R.id.buttonDeleteFriendItem)));
 
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friends)).check(matches(hasChildCount(0)));
@@ -186,7 +183,8 @@ public class SocialActivityTest {
     public void buttonDeleteRequestUpdatesList() {
         selectTab(1);
         onView(withId(R.id.recycler_view_friend_requests)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, RecyclerViewButtonClick.clickChildViewWithId(R.id.button_request_item_delete_request)));
+                actionOnItemAtPosition(0, RecyclerViewButtonClick.
+                        clickChildViewWithId(R.id.button_request_item_delete_request)));
 
         onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));
@@ -196,7 +194,8 @@ public class SocialActivityTest {
     public void buttonAcceptRequestUpdatesRequestsAndFriends() {
         selectTab(1);
         onView(withId(R.id.recycler_view_friend_requests)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, RecyclerViewButtonClick.clickChildViewWithId(R.id.button_request_item_accept_request)));
+                actionOnItemAtPosition(0, RecyclerViewButtonClick
+                                .clickChildViewWithId(R.id.button_request_item_accept_request)));
 
         onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));
@@ -223,12 +222,14 @@ public class SocialActivityTest {
     @Test
     public void addFriendDialogInvalidEmail() {
         onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText("fakemail")).perform(closeSoftKeyboard());
+        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText("fakemail"))
+                .perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
 
         onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText("")).perform(closeSoftKeyboard());
+        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(""))
+                .perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
     }
@@ -236,28 +237,29 @@ public class SocialActivityTest {
     @Test
     public void addFriendDialogOwnEmail() {
         onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(currentUser.getEmail())).perform(closeSoftKeyboard());
+        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(currentUser.getEmail()))
+                .perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withText(R.string.add_own_as_friend))
-                .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+                .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
+                .check(matches(isDisplayed()));
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
     }
 
     @Test
     public void addFriendDialogValidEmail() {
         onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(otherUser.getEmail())).perform(closeSoftKeyboard());
+        onView(withId(R.id.edit_text_email_add_friend))
+                .perform(typeText(otherUser.getEmail())).perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
-        mockDb.getDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, otherUser.getUid()).whenComplete(new BiConsumer<Map<String, Object>, Throwable>() {
-            @Override
-            public void accept(Map<String, Object> stringObjectMap, Throwable throwable) {
-                if (stringObjectMap != null) {
-                    Assert.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
-                }
-                else {
-                    Assert.fail();
-                }
+        mockDb.getDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, otherUser.getUid())
+                .whenComplete((stringObjectMap, throwable) -> {
+            if (stringObjectMap != null) {
+                Assert.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
+            }
+            else {
+                Assert.fail();
             }
         });
     }

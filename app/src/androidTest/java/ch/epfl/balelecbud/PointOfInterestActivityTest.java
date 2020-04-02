@@ -30,10 +30,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class PointOfInterestActivityTest {
 
-    MockDatabaseWrapper mock;
-    private PointOfInterest pointOfInterest1 = new PointOfInterest(
+    private MockDatabaseWrapper mock;
+    private final PointOfInterest pointOfInterest1 = new PointOfInterest(
             new GeoPoint(4, 20), "Bar IC", "Bar", "FUN101");
-    private PointOfInterest pointOfInterest2 = new PointOfInterest(
+    private final PointOfInterest pointOfInterest2 = new PointOfInterest(
             new GeoPoint(4, 22), "Bar EE", "Bar", "UNFUN101");
 
     @Before
@@ -58,7 +58,7 @@ public class PointOfInterestActivityTest {
     }
 
     @Test
-    public void testCanAddPOIToDatabase() throws Throwable {
+    public void testCanAddPOIToDatabase() {
         mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
 
         refreshRecyclerView();
@@ -91,7 +91,7 @@ public class PointOfInterestActivityTest {
     }
 
     @Test
-    public void testCanDeleteFromDatabase() throws Throwable {
+    public void testCanDeleteFromDatabase() {
         mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
         mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest2);
 

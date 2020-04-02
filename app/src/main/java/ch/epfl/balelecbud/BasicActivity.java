@@ -8,7 +8,7 @@ import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
-public class BasicActivity extends AppCompatActivity {
+public abstract class BasicActivity extends AppCompatActivity {
 
     private static Authenticator authenticator = FirebaseAuthenticator.getInstance();
     private static DatabaseWrapper databaseWrapper = FirestoreDatabaseWrapper.getInstance();
