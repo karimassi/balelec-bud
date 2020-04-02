@@ -60,5 +60,4 @@ public class FirebaseAuthenticatorTest extends BasicAuthenticationTest {
         authenticator.setCurrentUser(other);
         Assert.assertEquals(user, authenticator.getCurrentUser());
     }
-
 }

@@ -14,7 +14,6 @@ public class MockAuthenticator implements Authenticator {
 
     private static final Authenticator instance = new MockAuthenticator();
 
-
     private final Map<String, String> users = new HashMap<String, String>() {
         {
             put("karim@epfl.ch", "123456");
@@ -25,9 +24,7 @@ public class MockAuthenticator implements Authenticator {
 
     private User currentUser;
 
-    private MockAuthenticator() {
-
-    }
+    private MockAuthenticator() { }
 
     @Override
     public CompletableFuture<User> signIn(final String email, final String password) {
@@ -68,15 +65,14 @@ public class MockAuthenticator implements Authenticator {
         return String.valueOf(uid++);
     }
 
-
     @Override
     public void setCurrentUser(User user) {
         if(currentUser == null) {
             currentUser = user;
         }
     }
+
     public static Authenticator getInstance() {
         return instance;
     }
-
 }

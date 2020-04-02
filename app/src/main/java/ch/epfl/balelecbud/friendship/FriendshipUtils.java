@@ -32,7 +32,7 @@ public class FriendshipUtils {
     }
 
     public static void addFriend(User friend) {
-        Map<String,Boolean> toStore= new HashMap<>();
+        Map<String,Boolean> toStore = new HashMap<>();
         toStore.put(auth.getCurrentUser().getUid(), true);
         database.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, friend.getUid(), toStore);
     }
@@ -48,7 +48,7 @@ public class FriendshipUtils {
     }
 
     public static void acceptRequest(User sender) {
-        Map<String,Boolean> toStore= new HashMap<>();
+        Map<String,Boolean> toStore = new HashMap<>();
         toStore.put(sender.getUid(), true);
         database.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, auth.getCurrentUser().getUid(), toStore);
 
@@ -92,5 +92,4 @@ public class FriendshipUtils {
     private static CompletableFuture<List<String>> getUidsFromCollection(User user, String collectionName) {
         return database.getDocument(collectionName, user.getUid()).thenApply(stringObjectMap -> new ArrayList<>(stringObjectMap.keySet()));
     }
-
 }

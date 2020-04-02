@@ -2,6 +2,8 @@ package ch.epfl.balelecbud.util.database;
 
 import androidx.annotation.NonNull;
 
+import org.junit.Assert;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,28 +18,32 @@ import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
+import ch.epfl.balelecbud.util.TestAsyncUtils;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
 public class MockDatabaseWrapper implements DatabaseWrapper {
+    public static final User karim =
+            new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
+    public static final User celine =
+            new User("celine@epfl.ch", "celine", MockAuthenticator.provideUid());
 
     private final List<DatabaseListener> listeners = new ArrayList<>();
 
-    private final List<User> users = new ArrayList<>();
-    private final List<Map<String, Boolean>> friendships = new ArrayList<>();
-    private final List<Map<String, Boolean>> friendRequests = new ArrayList<>();
+    private final Map<String, User> users = new HashMap<>();
+    private final Map<String, Map<String, Boolean>> friendships = new HashMap<>();
+    private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
     private final Map<String, Location> locations = new HashMap<>();
 
-
     private MockDatabaseWrapper() {
-        users.add(new User("karim@epfl.ch", "karim@epfl.ch", MockAuthenticator.provideUid()));
-        users.add(new User("celine@epfl.ch", "celine@epfl.ch", MockAuthenticator.provideUid()));
-        friendships.add(new HashMap<>());
-        friendships.add(new HashMap<>());
-        friendRequests.add(new HashMap<>());
-        friendRequests.add(new HashMap<>());
+        users.put(karim.getUid(), karim);
+        users.put(celine.getUid(), celine);
+        friendships.put(karim.getUid(), new HashMap<>());
+        friendships.put(celine.getUid(), new HashMap<>());
+        friendRequests.put(karim.getUid(), new HashMap<>());
+        friendRequests.put(celine.getUid(), new HashMap<>());
     }
 
     private static final DatabaseWrapper instance = new MockDatabaseWrapper();
@@ -145,27 +151,33 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void addItem(final Object object) throws Throwable {
-        Runnable myRunnable = () -> addItemAux(object);
+        TestAsyncUtils sync = new TestAsyncUtils();
+        Runnable myRunnable = () -> {
+            addItemAux(object);
+            sync.call();
+        };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
+        sync.waitCall(1);
     }
 
     public void modifyItem(final Object object, final int index) throws Throwable {
-        Runnable myRunnable = () -> changeItemAux(object, index);
+        TestAsyncUtils sync = new TestAsyncUtils();
+        Runnable myRunnable = () -> {
+            changeItemAux(object, index);
+            sync.call();
+        };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
+        sync.waitCall(1);
     }
 
     public void removeItem(final Object object, final int index) throws Throwable {
-        Runnable myRunnable = () -> removeItemAux(object, index);
+        TestAsyncUtils sync = new TestAsyncUtils();
+        Runnable myRunnable = () -> {
+            removeItemAux(object, index);
+            sync.call();
+        };
         runOnUiThread(myRunnable);
-        synchronized (myRunnable) {
-            myRunnable.wait(1000);
-        }
+        sync.waitCall(1);
     }
 
     private void addItemAux(Object item) {
@@ -188,16 +200,15 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
-        int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
-                return CompletableFuture.completedFuture((T)users.get(index));
+                return CompletableFuture.completedFuture((T) users.get(documentID));
             case DatabaseWrapper.FRIENDSHIPS_PATH:
-                return CompletableFuture.completedFuture((T)friendships.get(index));
+                return CompletableFuture.completedFuture((T) friendships.get(documentID));
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                return CompletableFuture.completedFuture((T)friendRequests.get(index));
+                return CompletableFuture.completedFuture((T) friendRequests.get(documentID));
             case DatabaseWrapper.LOCATIONS_PATH:
-                return CompletableFuture.completedFuture((T)locations.get(documentID));
+                return CompletableFuture.completedFuture((T) locations.get(documentID));
             default:
                 return CompletableFuture.completedFuture(null);
         }
@@ -205,14 +216,13 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
-        int index = Integer.parseInt(documentID);
         Map<String, Object> result = new HashMap<>();
         switch (collectionName) {
             case DatabaseWrapper.FRIENDSHIPS_PATH:
-                result.putAll(friendships.get(index));
+                result.putAll(friendships.get(documentID));
                 break;
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                result.putAll(friendRequests.get(index));
+                result.putAll(friendRequests.get(documentID));
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported collectionName " + collectionName);
@@ -223,7 +233,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type) {
         if (DatabaseWrapper.USERS_PATH.equals(collectionName)) {
-            for (User u : users) {
+            for (User u : users.values()) {
                 if ("email".equals(fieldName)) {
                     if (u.getEmail().equals(fieldValue)) {
                         return CompletableFuture.completedFuture((T) u);
@@ -238,15 +248,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public <T> void storeDocument(String collectionName, T document) {
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
-                users.add((User) document);
-                friendRequests.add(new HashMap<>());
-                friendships.add(new HashMap<>());
-                break;
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
-                friendships.add((Map<String, Boolean>) document);
-                break;
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                friendRequests.add((Map<String, Boolean>) document);
+                User newUser = (User) document;
+                users.put(newUser.getUid(), newUser);
+                friendRequests.put(newUser.getUid(), new HashMap<>());
+                friendships.put(newUser.getUid(), new HashMap<>());
                 break;
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 pointOfInterests.add((PointOfInterest) document);
@@ -261,18 +266,19 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
-        int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
-                users.add(Integer.parseInt(((User) document).getUid()), (User) document);
-                friendRequests.add(new HashMap<>());
-                friendships.add(new HashMap<>());
+                User newUser = (User) document;
+                Assert.assertEquals("documentID must be equals to the userID", documentID, newUser.getUid());
+                users.put(newUser.getUid(), newUser);
+                friendRequests.put(newUser.getUid(), new HashMap<>());
+                friendships.put(newUser.getUid(), new HashMap<>());
                 break;
             case DatabaseWrapper.FRIENDSHIPS_PATH:
-                friendships.get(index).putAll((Map<String, Boolean>) document);
+                friendships.get(documentID).putAll((Map<String, Boolean>) document);
                 break;
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                friendRequests.get(index).putAll((Map<String, Boolean>) document);
+                friendRequests.get(documentID).putAll((Map<String, Boolean>) document);
                 break;
             case DatabaseWrapper.LOCATIONS_PATH:
                 locations.put(documentID, (Location) document);
@@ -285,13 +291,12 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
-        int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.FRIENDSHIPS_PATH:
-                friendships.get(index).clear();
+                friendships.get(documentID).clear();
                 break;
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                friendRequests.get(index).remove(new ArrayList<>(updates.keySet()).get(0));
+                friendRequests.get(documentID).remove(new ArrayList<>(updates.keySet()).get(0));
                 break;
         }
     }
@@ -311,25 +316,24 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public void deleteDocumentWithID(String collectionName, String documentID) {
-        int index = Integer.parseInt(documentID);
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
-                users.remove(index);
+                users.remove(documentID);
                 break;
             case DatabaseWrapper.FRIENDSHIPS_PATH:
-                friendships.remove(index);
+                friendships.remove(documentID);
                 break;
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                friendRequests.remove(index);
+                friendRequests.remove(documentID);
                 break;
         }
     }
 
     public void resetFriendshipsAndRequests() {
-        for (Map m : friendships) {
+        for (Map m : friendships.values()) {
             m.clear();
         }
-        for (Map m : friendRequests) {
+        for (Map m : friendRequests.values()) {
             m.clear();
         }
     }
