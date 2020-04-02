@@ -8,5 +8,4 @@ import androidx.recyclerview.widget.RecyclerView;
 public interface ViewHolderFactory<T extends RecyclerView.ViewHolder> {
 
     T createInstance(View view);
-
 }

@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.LoginUserActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -31,8 +32,8 @@ public class FriendshipUtilsTest {
 
     @Before
     public void setup() {
-        FriendshipUtils.setDatabaseImplementation(db);
-        FriendshipUtils.setAuthenticator(authenticator);
+        BalelecbudApplication.setAppDatabaseWrapper(db);
+        BalelecbudApplication.setAppAuthenticator(authenticator);
         sender = MockDatabaseWrapper.karim;
         recipient = MockDatabaseWrapper.celine;
         authenticator.signOut();

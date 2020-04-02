@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -67,8 +66,8 @@ public class ScheduleActivityTest {
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
-            ScheduleAdapter.setDatabaseImplementation(mock);
+            mock = MockDatabaseWrapper.getInstance();
+            BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };
 

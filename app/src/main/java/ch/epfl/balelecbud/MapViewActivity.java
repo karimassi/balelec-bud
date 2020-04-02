@@ -19,7 +19,6 @@ import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private final float DEFAULT_ZOOM = 17;
 
     private Location location;

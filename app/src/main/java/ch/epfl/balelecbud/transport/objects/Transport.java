@@ -21,8 +21,7 @@ public class Transport {
         this.time = time;
     }
 
-    public Transport() {
-    }
+    public Transport() { }
 
     public TransportType getType() {
         return type;

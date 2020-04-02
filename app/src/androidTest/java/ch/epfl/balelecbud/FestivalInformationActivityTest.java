@@ -10,7 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.festivalInformation.FestivalInformationData;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -40,7 +39,7 @@ public class FestivalInformationActivityTest {
         @Override
         protected void beforeActivityLaunched() {
             mock = MockDatabaseWrapper.getInstance();
-            FestivalInformationData.setDatabaseImplementation(mock);
+            BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };
 

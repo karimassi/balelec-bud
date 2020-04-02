@@ -6,52 +6,31 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 
 import com.google.android.gms.location.LocationResult;
 
-import ch.epfl.balelecbud.authentication.Authenticator;
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class LocationService extends IntentService {
     private static final String TAG = LocationService.class.getSimpleName();
     public static final String ACTION_PROCESS_UPDATES = TAG + ".ACTION_PROCESS_UPDATES";
 
-    private static Authenticator authenticator = FirebaseAuthenticator.getInstance();
-    private static DatabaseWrapper databaseWrapper = FirestoreDatabaseWrapper.getInstance();
-
     private User user;
-
-    @VisibleForTesting
-    public static void setAuthenticator(Authenticator auth) {
-        authenticator = auth;
-    }
-
-    @VisibleForTesting
-    public static void setDatabase(DatabaseWrapper db) {
-        databaseWrapper = db;
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        user = getAuthenticator().getCurrentUser();
+        user = getAppAuthenticator().getCurrentUser();
         if (user == null) {
             LocationUtil.disableLocation();
         }
     }
 
-    public Authenticator getAuthenticator() {
-        return authenticator;
-    }
-
-    public DatabaseWrapper getDatabase() {
-        return databaseWrapper;
-    }
 
     public LocationService() {
         super(TAG);
@@ -68,7 +47,7 @@ public class LocationService extends IntentService {
         LocationResult result = LocationResult.extractResult(intent);
         if (result != null && result.getLastLocation() != null) {
             Log.d(TAG, "handleLocationFromIntent: userId = " + this.user.getUid());
-            getDatabase().storeDocumentWithID(
+            getAppDatabaseWrapper().storeDocumentWithID(
                     DatabaseWrapper.LOCATIONS_PATH,
                     this.user.getUid(),
                     new Location(result.getLastLocation())

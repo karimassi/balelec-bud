@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,7 +16,7 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
-public class ScheduleActivity extends BasicActivity {
+public class ScheduleActivity extends AppCompatActivity {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
     private ScheduleAdapter mAdapter;
 

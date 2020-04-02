@@ -7,10 +7,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 
-public class RegisterUserActivity extends BasicActivity {
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+
+public class RegisterUserActivity extends AppCompatActivity {
     private EditText nameField;
     private EditText emailField;
     private EditText passwordField;
@@ -31,7 +36,7 @@ public class RegisterUserActivity extends BasicActivity {
         if (!validateEntry()) {
             return;
         }
-        getAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
+        getAppAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
             if (throwable != null) {
                 Toast.makeText(
                         RegisterUserActivity.this,
@@ -86,8 +91,8 @@ public class RegisterUserActivity extends BasicActivity {
     }
 
     private void onAuthComplete() {
-        getDatabase()
-                .getCustomDocument(DatabaseWrapper.USERS_PATH, getAuthenticator().getCurrentUid(), User.class)
+        getAppDatabaseWrapper()
+                .getCustomDocument(DatabaseWrapper.USERS_PATH, getAppAuthenticator().getCurrentUid(), User.class)
                 .whenComplete((user, throwable) -> {
                     if (throwable != null) {
                         Toast.makeText(
@@ -95,7 +100,7 @@ public class RegisterUserActivity extends BasicActivity {
                                 throwable.getCause().getLocalizedMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        getAuthenticator().setCurrentUser(user);
+                        getAppAuthenticator().setCurrentUser(user);
                         Intent intent = new Intent(RegisterUserActivity.this, WelcomeActivity.class);
                         startActivity(intent);
                         finish();

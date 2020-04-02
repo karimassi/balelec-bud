@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
@@ -17,20 +16,11 @@ import ch.epfl.balelecbud.transport.TransportListFragment.OnListFragmentInteract
 import ch.epfl.balelecbud.transport.objects.Transport;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+
 public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTransportRecyclerViewAdapter.ViewHolder> {
-
-    //default implementation is Firebase
-    static private DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
-
-    //Used to insert mocks
-    @VisibleForTesting
-    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper){
-        database = databaseWrapper;
-    }
-
     private final List<Transport> mValues;
     private final OnListFragmentInteractionListener mListener;
 
@@ -53,7 +43,7 @@ public class MyTransportRecyclerViewAdapter extends RecyclerView.Adapter<MyTrans
             }
         };
         DatabaseListener<Transport> listener = new DatabaseListener<>(facade, mValues, Transport.class);
-        database.listen(DatabaseWrapper.TRANSPORT_PATH, listener);
+        getAppDatabaseWrapper().listen(DatabaseWrapper.TRANSPORT_PATH, listener);
         mListener = fragmentInteractionListener;
     }
 

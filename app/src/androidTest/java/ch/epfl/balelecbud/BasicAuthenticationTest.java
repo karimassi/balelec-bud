@@ -5,7 +5,7 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
-public class BasicAuthenticationTest {
+public abstract class BasicAuthenticationTest {
 
     protected void logout() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();

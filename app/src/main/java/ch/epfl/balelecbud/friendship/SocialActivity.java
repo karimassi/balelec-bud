@@ -3,6 +3,7 @@ package ch.epfl.balelecbud.friendship;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,11 +14,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
 
-public class SocialActivity extends BasicActivity {
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
+public class SocialActivity extends AppCompatActivity {
     private SocialAdapter fragmentAdapter;
 
     private List<String> tabTitleList;
@@ -38,7 +39,7 @@ public class SocialActivity extends BasicActivity {
 
         FloatingActionButton fabAddFriends = findViewById(R.id.fab_add_friends);
         fabAddFriends.setOnClickListener(v -> {
-            AddFriendFragment dialog =AddFriendFragment.newInstance(getAuthenticator().getCurrentUser());
+            AddFriendFragment dialog =AddFriendFragment.newInstance(getAppAuthenticator().getCurrentUser());
             dialog.show(getSupportFragmentManager(), getString(R.string.add_friend_title));
         });
 
@@ -46,7 +47,7 @@ public class SocialActivity extends BasicActivity {
 
     private void setupFragmentAdapter() {
         fragmentAdapter = new SocialAdapter(getSupportFragmentManager(), getLifecycle());
-        fragmentAdapter.addFragment(FriendsFragment.newInstance(getAuthenticator().getCurrentUser()));
-        fragmentAdapter.addFragment(FriendRequestsFragment.newInstance(getAuthenticator().getCurrentUser()));
+        fragmentAdapter.addFragment(FriendsFragment.newInstance(getAppAuthenticator().getCurrentUser()));
+        fragmentAdapter.addFragment(FriendRequestsFragment.newInstance(getAppAuthenticator().getCurrentUser()));
     }
 }

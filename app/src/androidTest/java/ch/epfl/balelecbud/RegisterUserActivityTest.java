@@ -58,8 +58,8 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Before
     public void setUp() throws Throwable {
-        RegisterUserActivity.setDatabase(MockDatabaseWrapper.getInstance());
-        RegisterUserActivity.setAuthenticator(MockAuthenticator.getInstance());
+        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
 
@@ -171,7 +171,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         enterEmail("testregister" + randomInt() + "@gmail.com");
         enterPassword("123123");
         repeatPassword("123123");
-        RegisterUserActivity.setDatabase(new DatabaseWrapper() {
+        BalelecbudApplication.setAppDatabaseWrapper(new DatabaseWrapper() {
             @Override
             public void unregisterListener(DatabaseListener listener) {
 

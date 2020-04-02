@@ -55,10 +55,8 @@ public class SocialActivityTest {
     public final ActivityTestRule<SocialActivity> mActivityRule = new ActivityTestRule<SocialActivity>(SocialActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            SocialActivity.setAuthenticator(mockAuth);
-            SocialActivity.setDatabase(mockDb);
-            FriendshipUtils.setAuthenticator(mockAuth);
-            FriendshipUtils.setDatabaseImplementation(mockDb);
+            BalelecbudApplication.setAppAuthenticator(mockAuth);
+            BalelecbudApplication.setAppDatabaseWrapper(mockDb);
             mockAuth.setCurrentUser(currentUser);
             newFriend = new User("test@gmail.com", "test@gmail.com", MockAuthenticator.provideUid());
             mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);

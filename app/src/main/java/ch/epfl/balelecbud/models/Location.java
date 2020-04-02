@@ -13,9 +13,7 @@ public class Location {
     private Double longitude;
     private Double latitude;
 
-    public Location() {
-
-    }
+    public Location() { }
 
     public Location(double latitude, double longitude) {
         this.longitude = longitude;

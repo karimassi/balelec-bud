@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.Location;
@@ -36,8 +37,8 @@ public class LocationServiceTest {
 
     @BeforeClass
     public static void setUpMock() {
-        LocationService.setAuthenticator(MockAuthenticator.getInstance());
-        LocationService.setDatabase(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
+        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
     }
 
     @Before

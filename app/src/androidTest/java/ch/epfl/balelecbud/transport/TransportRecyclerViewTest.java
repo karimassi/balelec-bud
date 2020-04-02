@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.TransportActivity;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
@@ -38,7 +39,7 @@ public class TransportRecyclerViewTest {
     public final ActivityTestRule<TransportActivity> mActivityRule = new ActivityTestRule<TransportActivity>(TransportActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            MyTransportRecyclerViewAdapter.setDatabaseImplementation(mock);
+            BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };
 

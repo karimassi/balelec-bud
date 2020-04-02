@@ -31,9 +31,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
     private final Map<Integer, PendingIntent> pendingIntents = new HashMap<>();
 
     //private constructor to ensure singleton
-    private NotificationScheduler() {
-
-    }
+    private NotificationScheduler() { }
 
     public static NotificationScheduler getInstance() {
         if (single_instance == null) {

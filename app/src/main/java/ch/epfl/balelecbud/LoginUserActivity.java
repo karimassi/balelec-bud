@@ -7,8 +7,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginUserActivity extends BasicActivity {
+import androidx.appcompat.app.AppCompatActivity;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+
+public class LoginUserActivity extends AppCompatActivity {
     private EditText emailField;
     private EditText passwordField;
 
@@ -27,9 +30,9 @@ public class LoginUserActivity extends BasicActivity {
             return;
         }
 
-        getAuthenticator().signIn(email, password).whenComplete((user, throwable) -> {
+        getAppAuthenticator().signIn(email, password).whenComplete((user, throwable) -> {
             if (user != null) {
-                getAuthenticator().setCurrentUser(user);
+                getAppAuthenticator().setCurrentUser(user);
                 onAuthComplete();
             } else {
                 Toast.makeText(LoginUserActivity.this, throwable.getCause()

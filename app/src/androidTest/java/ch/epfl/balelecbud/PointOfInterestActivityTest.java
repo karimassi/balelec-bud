@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
-import ch.epfl.balelecbud.pointOfInterest.PointOfInterestData;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -47,8 +46,8 @@ public class PointOfInterestActivityTest {
             new ActivityTestRule<PointOfInterestActivity>(PointOfInterestActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
-            PointOfInterestData.setDatabaseImplementation(mock);
+            mock = MockDatabaseWrapper.getInstance();
+            BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };
 

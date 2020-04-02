@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -104,7 +105,7 @@ public class PointOfInterestUtilsTest {
             }
         }
 
-        PointOfInterestUtils.setDbImplementation(db);
+        BalelecbudApplication.setAppDatabaseWrapper(db);
 
         PointOfInterest p1 = new PointOfInterest(new GeoPoint(1,1),
                 "whatever", "also whatever", "mega whatever");

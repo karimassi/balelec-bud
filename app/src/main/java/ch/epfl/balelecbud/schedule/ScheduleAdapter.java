@@ -20,15 +20,14 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
-
-    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
     private IntentLauncher intentLauncher;
 
@@ -37,11 +36,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     @VisibleForTesting
     public void setIntentLauncher(IntentLauncher intentLauncher) {
         this.intentLauncher = intentLauncher;
-    }
-
-    @VisibleForTesting
-    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
-        database = databaseWrapper;
     }
 
     private final List<Slot> slots;
@@ -85,7 +79,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             }
         };
         DatabaseListener<Slot> listener = new DatabaseListener<>(facade, slots, Slot.class);
-        database.listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
+        getAppDatabaseWrapper().listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
         intentLauncher = ScheduleAdapter.this.mainActivity::startService;
     }
 
