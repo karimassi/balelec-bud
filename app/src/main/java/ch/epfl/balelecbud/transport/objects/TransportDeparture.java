@@ -3,6 +3,8 @@ package ch.epfl.balelecbud.transport.objects;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.Objects;
+
 import ch.epfl.balelecbud.util.StringUtils;
 
 public class Transport {
@@ -54,5 +56,22 @@ public class Transport {
 
     public String getTimeString() {
         return StringUtils.timestampToScheduleString(time);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transport transport = (Transport) o;
+        return getLine() == transport.getLine() &&
+                getType() == transport.getType() &&
+                getDirection().equals(transport.getDirection()) &&
+                getPoint().equals(transport.getPoint()) &&
+                getTime().equals(transport.getTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getType(), getLine(), getDirection(), getPoint(), getTime());
     }
 }

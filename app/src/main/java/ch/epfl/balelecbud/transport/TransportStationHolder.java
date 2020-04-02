@@ -1,0 +1,4 @@
+package ch.epfl.balelecbud.transport;
+
+public class TransportStationHolder {
+}
