@@ -10,13 +10,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.google.firebase.Timestamp;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -25,9 +23,8 @@ import java.util.List;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.TestAsyncUtils;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-
-import static org.hamcrest.core.Is.is;
 
 @RunWith(AndroidJUnit4.class)
 public class ConcertFlowTest {
@@ -71,132 +68,103 @@ public class ConcertFlowTest {
 
     @Test
     public void notificationSchedulerIsCalledWhenNewConcertOfInterestAdded() throws InterruptedException {
-        final List<Object> sync = new ArrayList<>();
+        TestAsyncUtils sync = new TestAsyncUtils();
         this.flow.setNotificationScheduler(new NotificationSchedulerInterface() {
             @Override
             public void scheduleNotification(Context context, Slot slot) {
-                Assert.assertEquals(slot, slot1);
-                synchronized (sync) {
-                    sync.add(new Object());
-                    sync.notify();
-                }
+                sync.assertEquals(slot1, slot);
+                sync.call();
             }
 
             @Override
             public void cancelNotification(Context context, Slot slot) {
-                Assert.fail();
+                sync.fail();
             }
 
         });
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        synchronized (sync) {
-            sync.wait(1000);
-        }
-        Assert.assertFalse(sync.isEmpty());
+        sync.waitCall(1);
+        sync.assertCalled(1);
     }
 
     @Test
     public void notificationSchedulerIsCalledWhenMultipleNewConcertOfInterestAdded() throws InterruptedException {
-        final List<Object> sync = new ArrayList<>();
+        TestAsyncUtils sync = new TestAsyncUtils();
         flow.setNotificationScheduler(new NotificationSchedulerInterface() {
             private int received = 0;
             @Override
             public void scheduleNotification(Context context, Slot slot) {
                 if (received == 0)
-                    Assert.assertEquals(slot, slot1);
+                    sync.assertEquals(slot1, slot);
                 else
-                    Assert.assertEquals(slot, slot2);
-                synchronized (sync) {
-                    sync.add(new Object());
-                    sync.notify();
-                }
+                    sync.assertEquals(slot2, slot);
                 ++received;
+                sync.call();
             }
 
             @Override
             public void cancelNotification(Context context, Slot slot) {
-                Assert.fail();
+                sync.fail();
             }
 
         });
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        synchronized (sync) {
-            sync.wait(1000);
-        }
+        sync.waitCall(1);
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
-        synchronized (sync) {
-            sync.wait(1000);
-        }
-        Assert.assertThat(sync.size(), is(2));
+        sync.waitCall(2);
+        sync.assertCalled(2);
     }
 
     @Test
     public void notificationsUnscheduledWhenConcertRemoved() throws InterruptedException {
-        final List<Object> sync = new ArrayList<>();
+        TestAsyncUtils sync = new TestAsyncUtils();
         flow.setNotificationScheduler(new NotificationSchedulerInterface() {
             private int received = 0;
             @Override
             public void scheduleNotification(Context context, Slot slot) {
                 if (received == 0)
-                    Assert.assertEquals(slot, slot1);
+                    sync.assertEquals(slot1, slot);
                 else
-                    Assert.assertEquals(slot, slot2);
-                synchronized (sync) {
-                    sync.add(new Object());
-                    sync.notify();
-                }
+                    sync.assertEquals(slot2, slot);
                 ++received;
+                sync.call();
             }
 
             @Override
             public void cancelNotification(Context context, Slot slot) {
-                Assert.assertEquals(slot, slot1);
-                synchronized (sync) {
-                    sync.add(new Object());
-                    sync.notify();
-                }
+                sync.assertEquals(slot1, slot);
+                sync.call();
             }
 
         });
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        synchronized (sync) {
-            sync.wait(1000);
-        }
+        sync.waitCall(1);
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
-        synchronized (sync) {
-            sync.wait(1000);
-        }
+        sync.waitCall(2);
         flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        synchronized (sync) {
-            sync.wait(1000);
-        }
-        Assert.assertThat(sync.size(), is(3));
+        sync.waitCall(3);
+        sync.assertCalled(3);
     }
 
     @Test
     public void addedConcertsAreInTheList() throws InterruptedException {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
-        final List<Object> sync = new LinkedList<>();
+        TestAsyncUtils sync = new TestAsyncUtils();
         flow.setLauncher(intent -> {
             List<Slot> res = FlowUtil.unpackCallback(intent);
-            Assert.assertNotNull(res);
-            Assert.assertThat(res.size(), is(2));
-            Assert.assertTrue(res.contains(slot1));
-            Assert.assertTrue(res.contains(slot2));
-            synchronized (sync) {
-                sync.add(new Object());
-                sync.notify();
-            }
+            sync.assertNotNull(res);
+            sync.assertEquals(res.size(), 2);
+            sync.assertTrue(res.contains(slot1));
+            sync.assertTrue(res.contains(slot2));
+            sync.call();
         });
         Intent intent = new Intent();
         intent.setAction(FlowUtil.GET_ALL_CONCERT);
         intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent());
         flow.onHandleIntent(intent);
-        synchronized (sync) {
-            sync.wait(1000);
-        }
-        Assert.assertThat(sync.size(), is(1));
+        sync.waitCall(1);
+        sync.assertCalled(1);
     }
 
     @Test
@@ -204,26 +172,20 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        final List<Object> sync = new LinkedList<>();
+        TestAsyncUtils sync = new TestAsyncUtils();
         flow.setLauncher(intent -> {
             List<Slot> slots = FlowUtil.unpackCallback(intent);
-            Assert.assertNotNull(slots);
-            Assert.assertEquals(slots.size(), 1);
-            Assert.assertFalse(slots.contains(slot1));
-            Assert.assertTrue(slots.contains(slot2));
-            synchronized (sync) {
-                sync.add(new Object());
-                sync.notify();
-            }
+            sync.assertNotNull(slots);
+            sync.assertEquals(slots.size(), 1);
+            sync.assertFalse(slots.contains(slot1));
+            sync.assertTrue(slots.contains(slot2));
+            sync.call();
         });
         Intent intent = new Intent();
         intent.setAction(FlowUtil.GET_ALL_CONCERT);
         intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent());
         flow.onHandleIntent(intent);
-        synchronized (sync) {
-            sync.wait(1000);
-        }
-        Assert.assertThat(sync.size(), is(1));
+        sync.waitCall(1);
+        sync.assertCalled(1);
     }
-
 }

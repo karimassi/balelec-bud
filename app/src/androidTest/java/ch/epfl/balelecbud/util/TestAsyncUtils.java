@@ -65,6 +65,20 @@ public class TestAsyncUtils {
         Log.wtf(TAG, "fail: test failed with error", throwable);
     }
 
+    public void assertTrue(boolean bool) {
+        if (!bool) {
+            hasFailed = true;
+            Log.wtf(TAG, "assertTrue: test failed, should be true", new AssertionFailedError());
+        }
+    }
+
+    public void assertFalse(boolean bool) {
+        if (bool) {
+            hasFailed = true;
+            Log.wtf(TAG, "assertTrue: test failed, should be false", new AssertionFailedError());
+        }
+    }
+
     public void assertNoFailedTests() {
         Assert.assertFalse("Some tests failed, check logcat for details", this.hasFailed);
     }
