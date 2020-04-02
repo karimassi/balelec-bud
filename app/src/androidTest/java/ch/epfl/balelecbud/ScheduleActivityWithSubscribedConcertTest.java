@@ -8,7 +8,6 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.Timestamp;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -22,6 +21,7 @@ import java.util.List;
 
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
@@ -55,7 +55,7 @@ public class ScheduleActivityWithSubscribedConcertTest {
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
+            mock = MockDatabaseWrapper.getInstance();
             ScheduleAdapter.setDatabaseImplementation(mock);
         }
 
@@ -69,29 +69,24 @@ public class ScheduleActivityWithSubscribedConcertTest {
 
     @Before
     public void setUpMockIntentLauncher() {
-        this.mActivityRule.getActivity().setIntentLauncher(intent -> {
-
-        });
+        this.mActivityRule.getActivity().setIntentLauncher(intent -> { });
     }
 
     @Test
     public void testUnSubscribeToAConcert() throws Throwable {
-        final List<Object> sync = new LinkedList<>();
+        TestAsyncUtils sync = new TestAsyncUtils();
         mActivityRule.getActivity().setIntentLauncher(intent -> {
             if (intent.getAction() == null)
-                Assert.fail();
+                sync.fail();
 
             String action = intent.getAction();
             switch (action) {
                 case FlowUtil.ACK_CONCERT:
                 case FlowUtil.GET_ALL_CONCERT:
-                    Assert.fail();
+                    sync.fail();
                     break;
                 case FlowUtil.CANCEL_CONCERT:
-                    synchronized (sync) {
-                        sync.add(new Object());
-                        sync.notify();
-                    }
+                    sync.call();
                 case FlowUtil.SUBSCRIBE_CONCERT:
                     break;
             }
@@ -99,10 +94,8 @@ public class ScheduleActivityWithSubscribedConcertTest {
         mock.addItem(slot1);
         mock.addItem(slot2);
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).perform(click());
-        synchronized (sync) {
-            sync.wait(1000);
-        }
-        Assert.assertEquals(sync.size(), 1);
+        sync.waitCall(1);
+        sync.assertCalled(1);
     }
 
     @Test

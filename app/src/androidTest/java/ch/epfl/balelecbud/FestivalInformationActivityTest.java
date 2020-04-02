@@ -39,7 +39,7 @@ public class FestivalInformationActivityTest {
     public final ActivityTestRule<FestivalInformationActivity> mActivityRule = new ActivityTestRule<FestivalInformationActivity>(FestivalInformationActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
+            mock = MockDatabaseWrapper.getInstance();
             FestivalInformationData.setDatabaseImplementation(mock);
         }
     };

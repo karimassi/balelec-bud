@@ -27,6 +27,7 @@ import java.util.List;
 
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
@@ -97,7 +98,6 @@ public class ScheduleActivityTest {
 
     @Test
     public void testItemModification() throws Throwable {
-
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
         mock.addItem(slot1);
@@ -126,6 +126,9 @@ public class ScheduleActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
         mock.removeItem(slot3, 0);
+        synchronized (this) {
+            this.wait(1000);
+        }
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
@@ -167,9 +170,9 @@ public class ScheduleActivityTest {
 
     @Test
     public void testCanSubscribeToAConcert() throws Throwable {
+        TestAsyncUtils sync = new TestAsyncUtils();
         mock.addItem(slot1);
 
-        final List<Object> sync = new LinkedList<>();
         mActivityRule.getActivity().setIntentLauncher(intent -> {
             if (intent.getAction() == null)
                 Assert.fail();
@@ -179,24 +182,19 @@ public class ScheduleActivityTest {
                 case FlowUtil.ACK_CONCERT:
                 case FlowUtil.CANCEL_CONCERT:
                 case FlowUtil.GET_ALL_CONCERT:
-                    Assert.fail();
+                    sync.fail();
                     break;
                 case FlowUtil.SUBSCRIBE_CONCERT:
-                    Assert.assertEquals(FlowUtil.unpackSlotFromIntent(intent), slot1);
-                    synchronized (sync) {
-                        sync.add(new Object());
-                        sync.notify();
-                    }
+                    sync.assertEquals(slot1, FlowUtil.unpackSlotFromIntent(intent));
+                    sync.call();
                     break;
             }
         });
 
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
                 .perform(click());
-        synchronized (sync) {
-            sync.wait(1000);
-        }
-        Assert.assertThat(sync.size(), is(1));
+        sync.waitCall(1);
+        sync.assertCalled(1);
     }
 
     public static ViewAssertion switchChecked(final boolean checked) {

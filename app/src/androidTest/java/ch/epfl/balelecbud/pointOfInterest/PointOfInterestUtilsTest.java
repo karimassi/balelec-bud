@@ -51,13 +51,13 @@ public class PointOfInterestUtilsTest {
         assertEquals(resList, expected);
     }
 
-
     @Test
     public void queryFiltersLessThan() throws ExecutionException, InterruptedException {
         List<Location> resList = getResList(2, MyQuery.WhereClause.Operator.LESS_THAN, "longitude");
         List<Location> expected = Lists.newArrayList(l1, l3);
         assertEquals(resList, expected);
     }
+
     @Test
     public void queryFiltersLessEquals() throws ExecutionException, InterruptedException {
         List<Location> resList = getResList(1.5, MyQuery.WhereClause.Operator.LESS_EQUAL, "longitude");

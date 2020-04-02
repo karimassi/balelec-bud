@@ -20,7 +20,7 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
 
     private final Map<DatabaseListener, ListenerRegistration> registrationMap;
 
-    private static final DatabaseWrapper instance = new FirestoreDatabaseWrapper();
+    private static final FirestoreDatabaseWrapper instance = new FirestoreDatabaseWrapper();
 
     private FirestoreDatabaseWrapper() {
         registrationMap = new HashMap<>();
@@ -113,7 +113,7 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
         return future.thenApply(value -> value.toObjects(tClass));
     }
 
-    public static DatabaseWrapper getInstance() {
+    public static FirestoreDatabaseWrapper getInstance() {
         return instance;
     }
 

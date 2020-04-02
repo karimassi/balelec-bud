@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.util.TestAsyncUtils;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 @RunWith(JUnit4.class)
 public class LocationUtilTest {

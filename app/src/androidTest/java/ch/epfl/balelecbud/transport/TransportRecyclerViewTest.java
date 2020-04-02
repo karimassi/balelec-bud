@@ -32,13 +32,12 @@ public class TransportRecyclerViewTest {
     private final Transport transport2 = new Transport(TransportType.METRO, 12, "EPFL", null, Timestamp.now());
     private final Transport transport3 = new Transport(TransportType.BUS, 122, "La lune", null, Timestamp.now());
 
-    private MockDatabaseWrapper mock;
+    private MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Rule
     public final ActivityTestRule<TransportActivity> mActivityRule = new ActivityTestRule<TransportActivity>(TransportActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
             MyTransportRecyclerViewAdapter.setDatabaseImplementation(mock);
         }
     };
@@ -52,7 +51,6 @@ public class TransportRecyclerViewTest {
 
     @Test
     public void displayIsUpdatedWhenItemsAdded() throws Throwable {
-
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
         mock.addItem(transport1);
@@ -75,7 +73,6 @@ public class TransportRecyclerViewTest {
 
     @Test
     public void displayIsUpdatedWhenItemsModified() throws Throwable {
-
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
         mock.addItem(transport1);
@@ -89,7 +86,6 @@ public class TransportRecyclerViewTest {
 
     @Test
     public void displayIsUpdatedWhenItemsRemoved() throws Throwable {
-
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
 
         mock.addItem(transport1);
@@ -99,6 +95,10 @@ public class TransportRecyclerViewTest {
 
         mock.removeItem(transport1, 0);
 
+        synchronized (this) {
+            this.wait(1000);
+        }
+
         onView(withId(R.id.fragmentTransportList)).check(matches(hasChildCount(0)));
     }
 
@@ -106,5 +106,4 @@ public class TransportRecyclerViewTest {
     public void canCreateOtherFragment() {
         TransportListFragment.newInstance();
     }
-
 }

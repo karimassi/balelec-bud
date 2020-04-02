@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.util;
+package ch.epfl.balelecbud.testUtils;
 
 import android.util.Log;
 
@@ -15,7 +15,7 @@ public class TestAsyncUtils {
 
     public void waitCall(int shouldBe) throws InterruptedException {
         synchronized (this) {
-            Log.d(TAG, "waitCall: " + called);
+            Log.v(TAG, "waitCall: " + called);
             if (shouldBe != called) {
                 this.wait(1000);
                 Assert.assertEquals("Was not freed by a call", shouldBe, called);
@@ -25,7 +25,7 @@ public class TestAsyncUtils {
 
     public void call() {
         synchronized (this) {
-            Log.d(TAG, "call: " + called);
+            Log.v(TAG, "call: " + called);
             ++called;
             this.notify();
         }

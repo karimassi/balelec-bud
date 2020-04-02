@@ -23,7 +23,7 @@ import java.util.List;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.util.TestAsyncUtils;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 @RunWith(AndroidJUnit4.class)

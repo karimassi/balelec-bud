@@ -6,7 +6,6 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,6 +22,7 @@ import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.RecyclerViewButtonClick;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.testUtils.TabLayoutTabSelect;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
@@ -44,12 +44,12 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 public class SocialActivityTest {
 
-    private final User currentUser = new User("karim@epfl.ch", "karim@epfl.ch", "0");
-    private final User otherUser = new User("celine@epfl.ch", "celine@epfl.ch", "1");
+    private final User currentUser = MockDatabaseWrapper.karim;
+    private final User otherUser = MockDatabaseWrapper.celine;
     private User newFriend;
 
     private final Authenticator mockAuth = MockAuthenticator.getInstance();
-    private final MockDatabaseWrapper mockDb = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
+    private final MockDatabaseWrapper mockDb = MockDatabaseWrapper.getInstance();
 
     @Rule
     public final ActivityTestRule<SocialActivity> mActivityRule = new ActivityTestRule<SocialActivity>(SocialActivity.class) {
@@ -247,20 +247,24 @@ public class SocialActivityTest {
     }
 
     @Test
-    public void addFriendDialogValidEmail() {
+    public void addFriendDialogValidEmail() throws InterruptedException {
         onView(withId(R.id.fab_add_friends)).perform(click());
         onView(withId(R.id.edit_text_email_add_friend))
                 .perform(typeText(otherUser.getEmail())).perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
+        TestAsyncUtils sync = new TestAsyncUtils();
         mockDb.getDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, otherUser.getUid())
                 .whenComplete((stringObjectMap, throwable) -> {
             if (stringObjectMap != null) {
-                Assert.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
+                sync.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
             }
             else {
-                Assert.fail();
+                sync.fail();
             }
+            sync.call();
         });
+        sync.waitCall(1);
+        sync.assertCalled(1);
     }
 }

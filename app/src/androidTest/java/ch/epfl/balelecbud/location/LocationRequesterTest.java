@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import ch.epfl.balelecbud.MapViewActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
-import ch.epfl.balelecbud.util.TestAsyncUtils;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

@@ -18,7 +18,7 @@ import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
-import ch.epfl.balelecbud.util.TestAsyncUtils;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 
@@ -46,9 +46,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         friendRequests.put(celine.getUid(), new HashMap<>());
     }
 
-    private static final DatabaseWrapper instance = new MockDatabaseWrapper();
+    private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
 
-    public static DatabaseWrapper getInstance() {
+    public static MockDatabaseWrapper getInstance() {
         return instance;
     }
 
