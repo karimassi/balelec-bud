@@ -124,7 +124,7 @@ public class MapViewActivityTest {
     @Test
     public void testSetLocationPermission() {
         MapViewActivity mActivity = mActivityRule.getActivity();
-        assertThat(mActivity.getLocationPermission(), is(LocationUtil.isLocationActive(mActivity)));
+        assertThat(mActivity.getLocationPermission(), is(LocationUtil.isLocationActive()));
     }
 
     @Test
