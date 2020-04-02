@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.navigation.NavigationView;
 
 import ch.epfl.balelecbud.festivalInformation.FestivalInformationAdapter;
+import ch.epfl.balelecbud.friendship.SocialActivity;
 
 public class FestivalInformationActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,6 +74,13 @@ public class FestivalInformationActivity extends BasicActivity implements Naviga
                 Intent intentTransport = new Intent(this, TransportActivity.class);
                 startActivity(intentTransport);
                 break;
+            case R.id.activity_main_drawer_social:
+                Intent intentSocial = new Intent(this, SocialActivity.class);
+                startActivity(intentSocial);
+                break;
+            case R.id.sign_out_button:
+                signOut();
+                break;
             default:
                 break;
         }
@@ -95,5 +103,12 @@ public class FestivalInformationActivity extends BasicActivity implements Naviga
     private void configureNavigationView(){
         this.navigationView = findViewById(R.id.festival_info_activity_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void signOut() {
+        getAuthenticator().signOut();
+        Intent intent = new Intent(this, LoginUserActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

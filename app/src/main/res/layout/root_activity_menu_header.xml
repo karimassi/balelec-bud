@@ -29,8 +29,12 @@
                     android:icon="@mipmap/bus"
                     android:title="Transport" />
                 <item
+                    android:id="@+id/activity_main_drawer_social"
+                    android:icon="@mipmap/social"
+                    android:title="Social" />
+                <item
                     android:id="@+id/sign_out_button"
-                    android:icon="@mipmap/bus"
+                    android:icon="@mipmap/signout"
                     android:title="Sign Out" />
             </group>
         </menu>

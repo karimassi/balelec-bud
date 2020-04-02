@@ -100,59 +100,59 @@ public class PointOfInterestActivityTest {
         viewInteraction.check(matches(hasDescendant(withText(new Location(poi.getLocation()).toString()))));
     }
 
-    /**@Test
+    @Test
     public void testDrawer() {
-        onView(withId(R.id.root_activity_drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.poi_activity_drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.headerImageView)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
     }
 
     @Test
     public void openInfoActivityFromDrawer() {
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_info));
+        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_info));
         onView(withId(R.id.festivalInfoRecyclerView)).check(matches(isDisplayed()));
 
     }
 
     @Test
     public void openScheduleActivityFromDrawer() {
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_schedule));
+        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_schedule));
         onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
     }
 
     @Test
     public void openPOIActivityFromDrawer() {
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_poi));
+        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_poi));
         onView(withId(R.id.pointOfInterestRecyclerView)).check(matches(isDisplayed()));
     }
 
     @Test
     public void openMapActivityFromDrawer() {
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_map));
+        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_map));
         onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 
     @Test
     public void openTransportActivityFromDrawer() {
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_transport));
+        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_transport));
         onView(withId(R.id.fragmentTransportList)).check(matches(isDisplayed()));
     }
 
     @Test
     public void signOutFromDrawer() {
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
+        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
         onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
@@ -161,10 +161,10 @@ public class PointOfInterestActivityTest {
 
     @Test
     public void testBackPress(){
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
         Espresso.pressBack();
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
+        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
         Espresso.pressBack();
-    }**/
+    }
 }

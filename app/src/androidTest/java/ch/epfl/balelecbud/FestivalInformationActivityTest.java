@@ -149,6 +149,10 @@ public class FestivalInformationActivityTest {
         onView(withId(R.id.festival_info_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
         onView(withId(R.id.festival_info_activity_nav_view)).check(matches(isDisplayed()));
         onView(withId(R.id.festival_info_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
+        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 
     @Test

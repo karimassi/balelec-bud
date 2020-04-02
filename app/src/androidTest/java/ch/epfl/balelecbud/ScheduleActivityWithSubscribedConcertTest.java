@@ -106,7 +106,7 @@ public class ScheduleActivityWithSubscribedConcertTest {
         });
         mock.addItem(slot1);
         mock.addItem(slot2);
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).perform(click());
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 3)).perform(click());
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -118,7 +118,7 @@ public class ScheduleActivityWithSubscribedConcertTest {
         mock.addItem(slot1);
         mock.addItem(slot2);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(true));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 3)).check(switchChecked(false));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 3)).check(switchChecked(true));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 3)).check(switchChecked(false));
     }
 }

@@ -8,24 +8,35 @@
 
     <TextView
         android:id="@+id/transportType"
+        android:fontFamily="@font/oldsansblack"
+        android:textSize="20dp"
+        android:textColor="@android:color/white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:drawableStart="@drawable/bus"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/transportLine"
+        android:fontFamily="@font/oldsansblack"
+        android:textColor="@android:color/white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/transportDirection"
+        android:fontFamily="@font/oldsansblack"
+        android:textColor="@android:color/white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/transportTime"
+        android:fontFamily="@font/oldsansblack"
+        android:textColor="@android:color/white"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:inputType="time"

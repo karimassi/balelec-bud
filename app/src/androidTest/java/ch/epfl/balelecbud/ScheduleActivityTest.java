@@ -1,23 +1,17 @@
 package ch.epfl.balelecbud;
 
-<<<<<<< HEAD
-import android.view.Gravity;
-=======
 import android.content.Intent;
->>>>>>> master
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 
-<<<<<<< HEAD
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
-=======
 import androidx.annotation.NonNull;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
->>>>>>> master
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -124,28 +118,14 @@ public class ScheduleActivityTest {
         mock.addItem(slot2);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-<<<<<<< HEAD
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 0)).check(matches(withText("Mr Oizo")));
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 1)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 2)).check(matches(withText("Grande scène")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 0)).check(matches(withText(slot1.getArtistName())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 1)).check(matches(withText(slot1.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 2)).check(matches(withText(slot1.getSceneName())));
 
         mock.modifyItem(slot2, 0);
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 0)).check(matches(withText("Walking Furret")));
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 1)).check(matches(withText("20h - 21h")));
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 2)).check(matches(withText("Les Azimutes")));
-=======
-        mock.addItem(slot3);
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
-
-        mock.modifyItem(slot3, 0);
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot3.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot3.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot3.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
-
-        mock.removeItem(slot3, 0);
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
->>>>>>> master
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 0)).check(matches(withText(slot2.getArtistName())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 1)).check(matches(withText(slot2.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 2)).check(matches(withText(slot2.getSceneName())));
 
         mock.removeItem(slot2, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
@@ -153,39 +133,18 @@ public class ScheduleActivityTest {
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-<<<<<<< HEAD
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h");
-        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h");
-=======
->>>>>>> master
-
         mock.addItem(slot1);
         mock.addItem(slot2);
 
-<<<<<<< HEAD
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 0)).check(matches(withText("Mr Oizo")));
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 1)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 2)).check(matches(withText("Grande scène")));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 0)).check(matches(withText(slot1.getArtistName())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 1)).check(matches(withText(slot1.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 2)).check(matches(withText(slot1.getSceneName())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 3)).check(switchChecked(false));
 
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 0)).check(matches(withText("Walking Furret")));
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 1)).check(matches(withText("20h - 21h")));
-        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 2)).check(matches(withText("Les Azimutes")));
-=======
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText(slot1.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText(slot1.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText(slot1.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
-
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 0)).check(matches(withText(slot2.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1)).check(matches(withText(slot2.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 2)).check(matches(withText(slot2.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
-
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 0)).check(matches(withText(slot3.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 1)).check(matches(withText(slot3.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 2)).check(matches(withText(slot3.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).check(switchChecked(false));
-
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 0)).check(matches(withText(slot2.getArtistName())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 1)).check(matches(withText(slot2.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 2)).check(matches(withText(slot2.getSceneName())));
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1), 3)).check(switchChecked(false));
     }
 
     @Test
@@ -217,7 +176,7 @@ public class ScheduleActivityTest {
             }
         });
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).perform(click());
+        onView(nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1), 3)).perform(click());
         synchronized (sync) {
             sync.wait(1000);
         }
@@ -235,7 +194,6 @@ public class ScheduleActivityTest {
                 Assert.assertThat(((Switch) view).isChecked(), is(checked));
             }
         };
->>>>>>> master
     }
 
     public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
@@ -310,6 +268,10 @@ public class ScheduleActivityTest {
         onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
         onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
         onView(withId(R.id.schedule_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
+        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 
     @Test

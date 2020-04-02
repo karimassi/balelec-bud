@@ -178,7 +178,7 @@ public class LocationRequesterTest {
                 Assert.assertNotNull(intent);
             }
         });
-        onView(withId(R.id.mapButton)).perform(click());
+        onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertFalse(MapViewActivity.getLocationPermission());
     }
 

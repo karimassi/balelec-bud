@@ -2,9 +2,10 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD
+import android.util.Log;
 import android.view.MenuItem;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -13,35 +14,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
-=======
-import android.util.Log;
-
-import androidx.annotation.VisibleForTesting;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
->>>>>>> master
 
+import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
-<<<<<<< HEAD
 public class ScheduleActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ScheduleAdapter mAdapter;
-    private RecyclerView rvSchedule;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-=======
-public class ScheduleActivity extends BasicActivity {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
-    private ScheduleAdapter mAdapter;
->>>>>>> master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +82,13 @@ public class ScheduleActivity extends BasicActivity {
                 Intent intentTransport = new Intent(this, TransportActivity.class);
                 startActivity(intentTransport);
                 break;
+            case R.id.activity_main_drawer_social:
+                Intent intentSocial = new Intent(this, SocialActivity.class);
+                startActivity(intentSocial);
+                break;
+            case R.id.sign_out_button:
+                signOut();
+                break;
             default:
                 break;
         }
@@ -120,5 +116,12 @@ public class ScheduleActivity extends BasicActivity {
     @VisibleForTesting
     public void setIntentLauncher(IntentLauncher intentLauncher) {
         this.mAdapter.setIntentLauncher(intentLauncher);
+    }
+
+    private void signOut() {
+        getAuthenticator().signOut();
+        Intent intent = new Intent(this, LoginUserActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -1,42 +1,23 @@
 package ch.epfl.balelecbud;
 
-<<<<<<< HEAD
-import android.Manifest;
-import android.app.PendingIntent;
-=======
->>>>>>> master
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
-<<<<<<< HEAD
-import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.navigation.NavigationView;
-
-import ch.epfl.balelecbud.location.FusedLocationClientAdapter;
-import ch.epfl.balelecbud.location.LocationClient;
-import ch.epfl.balelecbud.location.LocationService;
-=======
 
 import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.location.LocationUtil.Action;
-import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
-import ch.epfl.balelecbud.util.intents.FlowUtil;
->>>>>>> master
 
 
 public class WelcomeActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,28 +34,9 @@ public class WelcomeActivity extends BasicActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-<<<<<<< HEAD
         this.configureToolBar();
         this.configureDrawerLayout();
         this.configureNavigationView();
-        /**final Button signOutButton = findViewById(R.id.sign_out_button);
-=======
-        bindActivityToButton(FestivalInformationActivity.class, (Button) findViewById(R.id.infoButton));
-        bindActivityToButton(ScheduleActivity.class, (Button) findViewById(R.id.scheduleButton));
-        bindActivityToButton(MapViewActivity.class, (Button) findViewById(R.id.mapButton));
-        bindActivityToButton(TransportActivity.class, (Button) findViewById(R.id.transportButton));
-        bindActivityToButton(PointOfInterestActivity.class, (Button) findViewById(R.id.poiButton));
-        bindActivityToButton(SocialActivity.class, (Button) findViewById(R.id.socialButton));
-        bindScheduleActivityToButton();
-        final Button signOutButton = findViewById(R.id.buttonSignOut);
->>>>>>> master
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOut();
-            }
-<<<<<<< HEAD
-        });**/
         setUpLocation();
     }
 
@@ -110,6 +72,10 @@ public class WelcomeActivity extends BasicActivity implements NavigationView.OnN
                 Intent intentTransport = new Intent(this, TransportActivity.class);
                 startActivity(intentTransport);
                 break;
+            case R.id.activity_main_drawer_social:
+                Intent intentSocial = new Intent(this, SocialActivity.class);
+                startActivity(intentSocial);
+                break;
             case R.id.sign_out_button:
                 signOut();
                 break;
@@ -135,35 +101,7 @@ public class WelcomeActivity extends BasicActivity implements NavigationView.OnN
     private void configureNavigationView(){
         this.navigationView = (NavigationView) findViewById(R.id.root_activity_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-=======
-        });
-
-
         setUpLocation();
-    }
-
-    private void bindScheduleActivityToButton() {
-        Button button = findViewById(R.id.scheduleButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WelcomeActivity.this, ConcertFlow.class);
-                intent.setAction(FlowUtil.GET_ALL_CONCERT);
-                intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(WelcomeActivity.this, ScheduleActivity.class));
-                startService(intent);
-            }
-        });
-    }
-
-    private void bindActivityToButton(final Class activityToOpen, Button button) {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WelcomeActivity.this, activityToOpen);
-                startActivity(intent);
-            }
-        });
->>>>>>> master
     }
 
     private void setUpLocation() {

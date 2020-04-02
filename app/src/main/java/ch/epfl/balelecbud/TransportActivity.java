@@ -8,10 +8,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.navigation.NavigationView;
 
+import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.transport.TransportListFragment;
 import ch.epfl.balelecbud.transport.objects.Transport;
 
@@ -68,6 +68,13 @@ public class TransportActivity extends BasicActivity implements TransportListFra
                 Intent intentTransport = new Intent(this, TransportActivity.class);
                 startActivity(intentTransport);
                 break;
+            case R.id.activity_main_drawer_social:
+                Intent intentSocial = new Intent(this, SocialActivity.class);
+                startActivity(intentSocial);
+                break;
+            case R.id.sign_out_button:
+                signOut();
+                break;
             default:
                 break;
         }
@@ -90,5 +97,12 @@ public class TransportActivity extends BasicActivity implements TransportListFra
     private void configureNavigationView(){
         this.navigationView = findViewById(R.id.transport_activity_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void signOut() {
+        getAuthenticator().signOut();
+        Intent intent = new Intent(this, LoginUserActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
