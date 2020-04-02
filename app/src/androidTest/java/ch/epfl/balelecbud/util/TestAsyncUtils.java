@@ -33,7 +33,7 @@ public class TestAsyncUtils {
 
     public void assertCalled(int nTimes) {
         synchronized (this) {
-            Assert.assertEquals(called, nTimes);
+            Assert.assertEquals(nTimes, called);
         }
     }
 
@@ -43,6 +43,14 @@ public class TestAsyncUtils {
             Log.wtf(TAG, "assertEquals: test failed" +
                             "\n\texpected = " + expected.toString() +
                             "\n\tactual = " + actual.toString(),
+                    new AssertionFailedError());
+        }
+    }
+
+    public void assertNotNull(Object o) {
+        if (o == null) {
+            hasFailed = true;
+            Log.wtf(TAG, "assertNotNull: test failed should be null but was",
                     new AssertionFailedError());
         }
     }
