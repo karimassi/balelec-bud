@@ -78,7 +78,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return festivalInfos;
             case DatabaseWrapper.POINT_OF_INTEREST_PATH :
                 return pointOfInterests;
-            case LOCATIONS_PATH:
+            case DatabaseWrapper.LOCATIONS_PATH:
                 return new LinkedList(locations.values());
             default :
                 throw new IllegalArgumentException("Unsupported collection name " + name);

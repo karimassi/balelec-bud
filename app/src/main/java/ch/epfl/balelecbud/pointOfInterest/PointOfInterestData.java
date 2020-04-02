@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.util.LinkedList;
 
 import ch.epfl.balelecbud.models.Location;
@@ -13,6 +15,7 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
 
     private static DatabaseWrapper databaseImplementation = FirestoreDatabaseWrapper.getInstance();
 
+    @VisibleForTesting
     public static void setDatabaseImplementation(DatabaseWrapper db){
         databaseImplementation = db;
     }

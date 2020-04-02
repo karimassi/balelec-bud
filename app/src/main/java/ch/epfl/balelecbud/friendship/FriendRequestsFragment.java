@@ -27,7 +27,8 @@ public class FriendRequestsFragment extends Fragment {
         Context context = view.getContext();
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friend_requests);
         FriendRequestData data = new FriendRequestData((User)getArguments().get("user"));
-        final RefreshableRecyclerViewAdapter adapter = new RefreshableRecyclerViewAdapter<>(RequestViewHolder::new, data, R.layout.item_friend_request );
+        final RefreshableRecyclerViewAdapter<User, RequestViewHolder> adapter =
+                new RefreshableRecyclerViewAdapter<>(RequestViewHolder::new, data, R.layout.item_friend_request );
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);

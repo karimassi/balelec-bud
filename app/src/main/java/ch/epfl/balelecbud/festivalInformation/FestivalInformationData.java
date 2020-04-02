@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.festivalInformation;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.util.LinkedList;
 
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
@@ -13,6 +15,7 @@ public class FestivalInformationData extends RecyclerViewData<FestivalInformatio
 
     private static DatabaseWrapper databaseImplementation = FirestoreDatabaseWrapper.getInstance();
 
+    @VisibleForTesting
     public static void setDatabaseImplementation(DatabaseWrapper db){
         databaseImplementation = db;
     }
