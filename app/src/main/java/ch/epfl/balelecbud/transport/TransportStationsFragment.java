@@ -22,6 +22,7 @@ import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 public class TransportStationsFragment extends Fragment {
 
     private OnRecyclerViewInteractionListener<TransportStation> stationSelectedListener;
+    private static final String LOCATION_KEY = "location";
 
 
     @Nullable
@@ -33,7 +34,7 @@ public class TransportStationsFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_transport_stations);
 
-        TransportStationData data = new TransportStationData(getArguments().getParcelable("location"), stationSelectedListener);
+        TransportStationData data = new TransportStationData(getArguments().getParcelable(LOCATION_KEY), stationSelectedListener);
         final RefreshableRecyclerViewAdapter<TransportStation, TransportStationHolder> adapter =
                 new RefreshableRecyclerViewAdapter<>(TransportStationHolder::new, data, R.layout.item_transport_station);
         final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_transport_stations);
@@ -51,7 +52,7 @@ public class TransportStationsFragment extends Fragment {
 
     public static TransportStationsFragment newInstance(Location userLocation) {
         Bundle args = new Bundle();
-        args.putParcelable("location", userLocation);
+        args.putParcelable(LOCATION_KEY, userLocation);
         TransportStationsFragment fragment = new TransportStationsFragment();
         fragment.setArguments(args);
         return fragment;

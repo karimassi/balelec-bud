@@ -1,28 +1,22 @@
 package ch.epfl.balelecbud;
 
-import androidx.test.espresso.PerformException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.testUtils.RecyclerViewButtonClick;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
-import ch.epfl.balelecbud.transport.objects.TransportDeparture;
 import ch.epfl.balelecbud.transport.objects.TransportStation;
-import ch.epfl.balelecbud.util.http.HttpClient;
 import ch.epfl.balelecbud.util.http.MockHttpClient;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressBack;
-import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -43,22 +37,12 @@ public class TransportActivityTest {
         }
     };
 
-    HttpClient client;
-
-
     private TransportStation lausanne = new TransportStation(Location.DEFAULT_LOCATION, "0", "Lausanne", 100);
-
-    @Before
-    public void setup() {
-        client = BalelecbudApplication.getHttpClient();
-        onView(withId(R.id.swipe_refresh_layout_transport_stations)).perform(swipeDown());
-    }
 
     private void compareViewAndItem(ViewInteraction viewInt, TransportStation transport){
         viewInt.check(matches(hasDescendant(withText(transport.getStationName()))));
         viewInt.check(matches(hasDescendant(withText(String.valueOf(transport.getDistanceToUser())))));
     }
-
 
     @Test
     public void testStationIsDisplayed() {

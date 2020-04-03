@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.transport.objects;
 
-import com.google.firebase.Timestamp;
-
 import java.util.Date;
 import java.util.Objects;
 

@@ -14,7 +14,6 @@ public class BalelecbudApplication extends Application {
     private static Context appContext;
     private static HttpClient httpClient;
 
-
     public static Context getAppContext() {
         return appContext;
     }
@@ -28,10 +27,13 @@ public class BalelecbudApplication extends Application {
     public void onCreate() {
         super.onCreate();
         appContext = getApplicationContext();
-        httpClient = VolleyHttpClient.getInstance();
+        if (httpClient == null) {
+            httpClient = VolleyHttpClient.getInstance();
+        }
         NotificationScheduler.getInstance().createNotificationChannel(appContext);
     }
 
+    @VisibleForTesting
     public static void setHttpClient(HttpClient client) {
         httpClient = client;
     }

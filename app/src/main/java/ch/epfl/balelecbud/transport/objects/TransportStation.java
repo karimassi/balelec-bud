@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import java.util.Objects;
 
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.models.User;
 
 public class TransportStation implements Parcelable {
 

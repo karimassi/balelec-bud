@@ -14,16 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.w3c.dom.Text;
-
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.transport.objects.TransportDeparture;
 import ch.epfl.balelecbud.transport.objects.TransportStation;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
 public class TransportDeparturesFragment extends Fragment {
 
+    private static final String STATION_KEY = "station";
 
     @Nullable
     @Override
@@ -33,7 +31,7 @@ public class TransportDeparturesFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_transport_departures);
 
-        TransportStation station = getArguments().getParcelable("station");
+        TransportStation station = getArguments().getParcelable(STATION_KEY);
 
         ((TextView)view.findViewById(R.id.text_view_transport_departures_title)).setText(station.getStationName());
 
@@ -52,7 +50,7 @@ public class TransportDeparturesFragment extends Fragment {
 
     public static TransportDeparturesFragment newInstance(TransportStation station) {
         Bundle args = new Bundle();
-        args.putParcelable("station", station);
+        args.putParcelable(STATION_KEY, station);
         TransportDeparturesFragment fragment = new TransportDeparturesFragment();
         fragment.setArguments(args);
         return fragment;

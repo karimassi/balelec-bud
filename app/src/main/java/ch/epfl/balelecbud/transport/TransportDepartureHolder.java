@@ -5,8 +5,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import ch.epfl.balelecbud.R;
 
 public class TransportDepartureHolder extends RecyclerView.ViewHolder {

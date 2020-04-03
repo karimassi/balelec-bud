@@ -1,43 +1,23 @@
 package ch.epfl.balelecbud.util.http;
 
-import android.app.Instrumentation;
 import android.util.Log;
 
-import androidx.test.espresso.internal.inject.InstrumentationContext;
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import org.mockito.internal.util.io.IOUtil;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class MockHttpClient implements HttpClient {
 
     private static final HttpClient instance = new MockHttpClient();
 
     JsonElement responseStations;
-
 
     private MockHttpClient() {
         responseStations = new JsonObject();

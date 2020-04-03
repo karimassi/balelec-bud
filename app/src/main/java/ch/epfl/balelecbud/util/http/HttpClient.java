@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.util.http;
 
 import com.google.gson.JsonElement;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface HttpClient {
