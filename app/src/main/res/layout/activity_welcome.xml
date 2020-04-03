@@ -51,7 +51,7 @@
         android:background="@color/blek_blue"
         app:headerLayout="@layout/root_activity_nav_header"
         app:itemTextAppearance="@style/blek_font_style"
-        app:menu="@layout/root_activity_menu_header"
+        app:menu="@menu/root_activity_menu_header"
         app:itemIconTint="@color/blek_orange" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
