@@ -34,6 +34,6 @@ public interface DatabaseWrapper {
 
     <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document);
 
-    void deleteDocument(String collectionName, String documentID);
+    void deleteDocumentWithID(String collectionName, String documentID);
 
 }

@@ -3,9 +3,7 @@ package ch.epfl.balelecbud;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
@@ -25,20 +23,15 @@ public class WelcomeActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        bindActivityToButton(FestivalInformationActivity.class, (Button) findViewById(R.id.infoButton));
-        bindActivityToButton(ScheduleActivity.class, (Button) findViewById(R.id.scheduleButton));
-        bindActivityToButton(MapViewActivity.class, (Button) findViewById(R.id.mapButton));
-        bindActivityToButton(TransportActivity.class, (Button) findViewById(R.id.transportButton));
-        bindActivityToButton(PointOfInterestActivity.class, (Button) findViewById(R.id.poiButton));
-        bindActivityToButton(SocialActivity.class, (Button) findViewById(R.id.socialButton));
+        bindActivityToButton(FestivalInformationActivity.class, findViewById(R.id.infoButton));
+        bindActivityToButton(ScheduleActivity.class, findViewById(R.id.scheduleButton));
+        bindActivityToButton(MapViewActivity.class, findViewById(R.id.mapButton));
+        bindActivityToButton(TransportActivity.class, findViewById(R.id.transportButton));
+        bindActivityToButton(PointOfInterestActivity.class, findViewById(R.id.poiButton));
+        bindActivityToButton(SocialActivity.class, findViewById(R.id.socialButton));
         bindScheduleActivityToButton();
         final Button signOutButton = findViewById(R.id.buttonSignOut);
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOut();
-            }
-        });
+        signOutButton.setOnClickListener(v -> signOut());
 
 
         setUpLocation();
@@ -46,38 +39,30 @@ public class WelcomeActivity extends BasicActivity {
 
     private void bindScheduleActivityToButton() {
         Button button = findViewById(R.id.scheduleButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WelcomeActivity.this, ConcertFlow.class);
-                intent.setAction(FlowUtil.GET_ALL_CONCERT);
-                intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(WelcomeActivity.this, ScheduleActivity.class));
-                startService(intent);
-            }
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(WelcomeActivity.this, ConcertFlow.class);
+            intent.setAction(FlowUtil.GET_ALL_CONCERT);
+            intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(WelcomeActivity.this, ScheduleActivity.class));
+            startService(intent);
         });
     }
 
     private void bindActivityToButton(final Class activityToOpen, Button button) {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WelcomeActivity.this, activityToOpen);
-                startActivity(intent);
-            }
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(WelcomeActivity.this, activityToOpen);
+            startActivity(intent);
         });
     }
 
     private void setUpLocation() {
         this.locationSwitch = findViewById(R.id.locationSwitch);
-        this.locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Log.d(TAG, "Location switched: ON");
-                    LocationUtil.enableLocation(WelcomeActivity.this);
-                } else {
-                    Log.d(TAG, "Location switched: OFF");
-                    LocationUtil.disableLocation(WelcomeActivity.this);
-                }
+        this.locationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Log.d(TAG, "Location switched: ON");
+                LocationUtil.enableLocation();
+            } else {
+                Log.d(TAG, "Location switched: OFF");
+                LocationUtil.disableLocation();
             }
         });
         LocationUtil.requestLocationPermission(this);
@@ -97,42 +82,30 @@ public class WelcomeActivity extends BasicActivity {
     }
 
     private Action onPermissionNotGranted(final String logText) {
-        return new Action() {
-            @Override
-            public void perform() {
-                Log.i(TAG, "onRequestPermissionsResult: " + logText);
-                WelcomeActivity.this.locationSwitch.setClickable(false);
-                WelcomeActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        WelcomeActivity.this.locationSwitch.setChecked(false);
-                    }
-                });
-            }
+        return () -> {
+            Log.i(TAG, "onRequestPermissionsResult: " + logText);
+            WelcomeActivity.this.locationSwitch.setClickable(false);
+            WelcomeActivity.this.runOnUiThread(() ->
+                    WelcomeActivity.this.locationSwitch.setChecked(false));
         };
     }
 
     private Action onPermissionGranted() {
-        return new Action() {
-            @Override
-            public void perform() {
-                Log.i(TAG, "onRequestPermissionsResult: Permission granted");
-                WelcomeActivity.this.locationSwitch.setClickable(true);
-                if (LocationUtil.isLocationActive(WelcomeActivity.this)) {
-                    Log.d(TAG, "onPermissionGranted: location was active");
-                    WelcomeActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            WelcomeActivity.this.locationSwitch.setChecked(true);
-                        }
-                    });
-                }
+        return () -> {
+            Log.i(TAG, "onRequestPermissionsResult: Permission granted");
+            WelcomeActivity.this.locationSwitch.setClickable(true);
+            if (LocationUtil.isLocationActive()) {
+                Log.d(TAG, "onPermissionGranted: location was active");
+                WelcomeActivity.this.runOnUiThread(() ->
+                        WelcomeActivity.this.locationSwitch.setChecked(true));
             }
         };
     }
 
     private void signOut() {
         getAuthenticator().signOut();
+        if (LocationUtil.isLocationActive())
+            LocationUtil.disableLocation();
         Intent intent = new Intent(this, LoginUserActivity.class);
         startActivity(intent);
         finish();

@@ -61,7 +61,7 @@ public class LoginUserActivityTest extends BasicAuthenticationTest{
         onView(withId(R.id.editTextEmailLogin)).check(matches(hasErrorText("Email required!")));
         onView(withId(R.id.editTextPasswordLogin)).check(matches(hasErrorText("Password required!")));
     }
-//
+
     @Test
     public void testCantSignInInvalidEmailEmptyPassword() {
         // invalid email empty pws

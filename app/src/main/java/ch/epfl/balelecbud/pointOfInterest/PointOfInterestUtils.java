@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
-import com.google.common.collect.Lists;
-
 import androidx.annotation.VisibleForTesting;
 
 import java.util.LinkedList;
@@ -10,7 +8,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.models.PointOfInterest;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
@@ -39,12 +36,7 @@ public class PointOfInterestUtils {
         clauses.add(new MyQuery.WhereClause("latitude", MyQuery.WhereClause.Operator.LESS_EQUAL, maxLatitude));
         MyQuery query = new MyQuery(DatabaseWrapper.LOCATIONS_PATH, clauses);
         CompletableFuture<List<Location>> myFuture = dbImplementation.query(query, Location.class);
-        return myFuture.thenApply(new Function<List<Location>, Integer>() {
-            @Override
-            public Integer apply(List<Location> locations) {
-                return locations.size();
-            }
-        });
+        return myFuture.thenApply(List::size);
     }
 
 }
