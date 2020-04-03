@@ -55,8 +55,11 @@
         android:id="@+id/buttonEmergencySubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:layout_marginBottom="383dp"
         android:text="Submit emergency"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="300dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textEmergencyMessage" />
 </androidx.constraintlayout.widget.ConstraintLayout>
