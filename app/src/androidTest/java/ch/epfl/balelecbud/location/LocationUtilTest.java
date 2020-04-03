@@ -15,6 +15,8 @@ import org.junit.runners.JUnit4;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
+
 @RunWith(JUnit4.class)
 public class LocationUtilTest {
     @Before
@@ -30,6 +32,7 @@ public class LocationUtilTest {
 
             }
         });
+        BalelecbudApplication.setAppContext(ApplicationProvider.getApplicationContext());
     }
 
     @Test
@@ -50,12 +53,12 @@ public class LocationUtilTest {
             }
         });
 
-        LocationUtil.enableLocation(ApplicationProvider.getApplicationContext());
+        LocationUtil.enableLocation();
         synchronized (sync) {
             sync.wait(1000);
         }
         Assert.assertEquals(1, sync.size());
-        Assert.assertTrue(LocationUtil.isLocationActive(ApplicationProvider.getApplicationContext()));
+        Assert.assertTrue(LocationUtil.isLocationActive());
     }
 
     @Test
@@ -84,16 +87,16 @@ public class LocationUtilTest {
             }
         });
 
-        LocationUtil.enableLocation(ApplicationProvider.getApplicationContext());
+        LocationUtil.enableLocation();
         synchronized (sync) {
             sync.wait(1000);
         }
-        LocationUtil.disableLocation(ApplicationProvider.getApplicationContext());
+        LocationUtil.disableLocation();
         synchronized (sync) {
             sync.wait(1000);
         }
         Assert.assertEquals(2, sync.size());
-        Assert.assertFalse(LocationUtil.isLocationActive(ApplicationProvider.getApplicationContext()));
+        Assert.assertFalse(LocationUtil.isLocationActive());
     }
 
     @Test
@@ -115,11 +118,16 @@ public class LocationUtilTest {
             }
         });
 
-        LocationUtil.disableLocation(ApplicationProvider.getApplicationContext());
+        LocationUtil.disableLocation();
         synchronized (sync) {
             sync.wait(1000);
         }
         Assert.assertEquals(1, sync.size());
-        Assert.assertFalse(LocationUtil.isLocationActive(ApplicationProvider.getApplicationContext()));
+        Assert.assertFalse(LocationUtil.isLocationActive());
+    }
+
+    @Test
+    public void defaultConstructor() {
+        new LocationUtil();
     }
 }

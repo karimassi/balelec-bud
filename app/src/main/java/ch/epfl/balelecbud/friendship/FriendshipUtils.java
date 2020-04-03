@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
@@ -91,12 +90,7 @@ public class FriendshipUtils {
     }
 
     private static CompletableFuture<List<String>> getUidsFromCollection(User user, String collectionName) {
-        return database.getDocument(collectionName, user.getUid()).thenApply(new Function<Map<String, Object>, List<String>>() {
-            @Override
-            public List<String> apply(Map<String, Object> stringObjectMap) {
-                return new ArrayList<>(stringObjectMap.keySet());
-            }
-        });
+        return database.getDocument(collectionName, user.getUid()).thenApply(stringObjectMap -> new ArrayList<>(stringObjectMap.keySet()));
     }
 
 }

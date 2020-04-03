@@ -7,7 +7,8 @@ import androidx.fragment.app.FragmentActivity;
 import ch.epfl.balelecbud.transport.TransportListFragment;
 import ch.epfl.balelecbud.transport.objects.Transport;
 
-public class TransportActivity extends FragmentActivity implements TransportListFragment.OnListFragmentInteractionListener {
+public class TransportActivity extends FragmentActivity
+        implements TransportListFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

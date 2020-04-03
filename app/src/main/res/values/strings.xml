@@ -70,4 +70,7 @@
     <string name="emergency_sent_message">Emergency message sent, please wait</string>
     <string name="emergency_not_sent_message">Please fill all fields</string>
 
+    <string name="require_name">Name required!</string>
+
+
 </resources>

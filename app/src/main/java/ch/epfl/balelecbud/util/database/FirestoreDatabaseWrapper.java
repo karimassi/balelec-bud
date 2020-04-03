@@ -110,7 +110,7 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public void deleteDocument(String collectionName, String documentID) {
+    public void deleteDocumentWithID(String collectionName, String documentID) {
         getCollectionReference(collectionName).document(documentID).delete();
     }
 

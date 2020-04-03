@@ -33,6 +33,9 @@ public class UserTest {
         User u2 = new User("test2@email.com", "displayName", "a token");
         Assert.assertFalse(u1.equals(u2));
 
+        u2 = new User("test2@email.com", "name", "another token");
+        Assert.assertFalse(u1.equals(u2));
+
         u2 = new User("test@email.com", "name", "a token");
         Assert.assertFalse(u1.equals(u2));
 
@@ -43,7 +46,6 @@ public class UserTest {
         Assert.assertTrue(u1.equals(u2));
 
         Assert.assertFalse(u1.equals(new Object()));
-
     }
 
     @Test
@@ -53,9 +55,5 @@ public class UserTest {
 
         u2 = new User("test@email.com", "name", "a token");
         Assert.assertNotEquals(u2.hashCode(), u1.hashCode());
-
-
     }
-
-
 }

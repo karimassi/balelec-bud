@@ -30,5 +30,4 @@ public class BasicActivity extends AppCompatActivity {
     public DatabaseWrapper getDatabase() {
         return databaseWrapper;
     }
-
 }

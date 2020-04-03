@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.function.Function;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
@@ -34,6 +32,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest extends BasicAuthenticationTest {
@@ -66,11 +65,12 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testCantRegisterWithEmptyFields() {
-        // empty email empty password
+        enterName("");
         enterEmail("");
         enterPassword("");
         repeatPassword("");
         onView(withId(R.id.buttonRegister)).perform(click());
+        onView(withId(R.id.editTextNameRegister)).check(matches(hasErrorText("Name required!")));
         onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Email required!")));
         onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password required!")));
         onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(hasErrorText("Repeat password!")));
@@ -78,11 +78,12 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testCantRegisterInvalidEmailEmptyPassword() {
-        // invalid email empty pwd
+        enterName("");
         enterEmail("invalidemail");
         enterPassword("");
         repeatPassword("");
         onView(withId(R.id.buttonRegister)).perform(click());
+        onView(withId(R.id.editTextNameRegister)).check(matches(hasErrorText("Name required!")));
         onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Enter a valid email!")));
         onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password required!")));
         onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(hasErrorText("Repeat password!")));
@@ -91,10 +92,12 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     @Test
     public void testCantRegisterValidEmailEmptyPassword() {
         // valid email empty pwd
+        enterName("");
         enterEmail("valid@email.com");
         enterPassword("");
         repeatPassword("");
         onView(withId(R.id.buttonRegister)).perform(click());
+        onView(withId(R.id.editTextNameRegister)).check(matches(hasErrorText("Name required!")));
         onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password required!")));
         onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(hasErrorText("Repeat password!")));
     }
@@ -102,36 +105,43 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     @Test
     public void testCantRegisterInvalidEmail() {
         // invalid email valid pwd
+        enterName("");
         enterEmail("invalidemail");
         enterPassword("123456");
         repeatPassword("123456");
         onView(withId(R.id.buttonRegister)).perform(click());
+        onView(withId(R.id.editTextNameRegister)).check(matches(hasErrorText("Name required!")));
         onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Enter a valid email!")));
     }
 
     @Test
     public void testCantRegisterMismatchPassword() {
         // invalid email valid pwd
-        enterEmail("invalidemail");
+        enterName("name");
+        enterEmail("valid@email.com");
         enterPassword("123456");
         repeatPassword("123478");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Enter a valid email!")));
+        onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(hasErrorText("Passwords do not match!")));
+        onView(withId(R.id.editTextEmailRegister)).check(matches(not(hasErrorText("Enter a valid email!"))));
     }
 
     @Test
     public void testCantRegisterInvalidEmailShortPassword() {
         // invalid email invalid password
+        enterName("name");
         enterEmail("invalidemail");
         enterPassword("124");
         repeatPassword("124");
         onView(withId(R.id.buttonRegister)).perform(click());
+        onView(withId(R.id.editTextNameRegister)).check(matches(not(hasErrorText("Name required!"))));
         onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Enter a valid email!")));
         onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password should be at least 6 characters long.")));
     }
 
     @Test
     public void testRegisterExistingAccount() {
+        enterName("name");
         enterEmail("karim@epfl.ch");
         enterPassword("123456");
         repeatPassword("123456");
@@ -147,6 +157,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testCanRegister() {
+        enterName("name");
         enterEmail("testregister" + randomInt() + "@gmail.com");
         enterPassword("123123");
         repeatPassword("123123");
@@ -156,6 +167,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testCanRegisterFailDB() {
+        enterName("name");
         enterEmail("testregister" + randomInt() + "@gmail.com");
         enterPassword("123123");
         repeatPassword("123123");
@@ -177,11 +189,8 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             
             @Override
             public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
-                return CompletableFuture.completedFuture(null).thenCompose(new Function<Object, CompletionStage<T>>() {
-                    @Override
-                    public CompletionStage<T> apply(Object o) {
-                        throw new RuntimeException("Failed to store document");
-                    }
+                return CompletableFuture.completedFuture(null).thenCompose(o -> {
+                    throw new RuntimeException("Failed to store document");
                 });
             }
 
@@ -207,21 +216,22 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
             @Override
             public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
-                return CompletableFuture.completedFuture(null).thenApply(new Function<Object, Void>() {
-                    @Override
-                    public Void apply(Object o) {
-                        throw new RuntimeException("Failed to store document");
-                    }
+                return CompletableFuture.completedFuture(null).thenApply(o -> {
+                    throw new RuntimeException("Failed to store document");
                 });
             }
 
             @Override
-            public void deleteDocument(String collectionName, String documentID) {
+            public void deleteDocumentWithID(String collectionName, String documentID) {
 
             }
         });
         onView(withId(R.id.buttonRegister)).perform(click());
         intended(hasComponent(RegisterUserActivity.class.getName()));
+    }
+
+    private void enterName(String name) {
+        onView(withId(R.id.editTextNameRegister)).perform(typeText(name)).perform(closeSoftKeyboard());
     }
 
     private void enterEmail(String email) {

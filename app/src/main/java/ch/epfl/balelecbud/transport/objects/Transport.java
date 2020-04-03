@@ -3,9 +3,6 @@ package ch.epfl.balelecbud.transport.objects;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import ch.epfl.balelecbud.util.StringUtils;
 
 public class Transport {

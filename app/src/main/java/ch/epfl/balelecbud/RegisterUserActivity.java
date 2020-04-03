@@ -7,13 +7,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.function.BiConsumer;
-
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 
 public class RegisterUserActivity extends BasicActivity {
-
+    private EditText nameField;
     private EditText emailField;
     private EditText passwordField;
     private EditText repeatPasswordField;
@@ -23,23 +21,24 @@ public class RegisterUserActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
 
+        nameField = findViewById(R.id.editTextNameRegister);
         emailField = findViewById(R.id.editTextEmailRegister);
         passwordField = findViewById(R.id.editTextPasswordRegister);
         repeatPasswordField = findViewById(R.id.editTextRepeatPasswordRegister);
     }
 
-    private void register(String email, String password) {
+    private void register(String name, String email, String password) {
         if (!validateEntry()) {
             return;
         }
-        getAuthenticator().createAccount(email, password).whenComplete(new BiConsumer<Void, Throwable>() {
-            @Override
-            public void accept(Void aVoid, Throwable throwable) {
-                if (throwable != null) {
-                    Toast.makeText(RegisterUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
-                } else {
-                    onAuthComplete();
-                }
+        getAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
+            if (throwable != null) {
+                Toast.makeText(
+                        RegisterUserActivity.this,
+                        throwable.getCause().getLocalizedMessage(),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                onAuthComplete();
             }
         });
 
@@ -47,6 +46,11 @@ public class RegisterUserActivity extends BasicActivity {
 
     private boolean validateEntry() {
         boolean valid = true;
+        String name = nameField.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            nameField.setError(getString(R.string.require_name));
+            valid = false;
+        }
 
         String email = emailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
@@ -82,25 +86,31 @@ public class RegisterUserActivity extends BasicActivity {
     }
 
     private void onAuthComplete() {
-        getDatabase().getCustomDocument(DatabaseWrapper.USERS_PATH, getAuthenticator().getCurrentUid(), User.class).whenComplete(new BiConsumer<User, Throwable>() {
-            @Override
-            public void accept(User user, Throwable throwable) {
-                if (throwable != null) {
-                    Toast.makeText(RegisterUserActivity.this, throwable.getCause().getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
-                } else {
-                    getAuthenticator().setCurrentUser(user);
-                    Intent intent = new Intent(RegisterUserActivity.this, WelcomeActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        });
+        getDatabase()
+                .getCustomDocument(DatabaseWrapper.USERS_PATH, getAuthenticator().getCurrentUid(), User.class)
+                .whenComplete((user, throwable) -> {
+                    if (throwable != null) {
+                        Toast.makeText(
+                                RegisterUserActivity.this,
+                                throwable.getCause().getLocalizedMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        getAuthenticator().setCurrentUser(user);
+                        Intent intent = new Intent(RegisterUserActivity.this, WelcomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
 
     }
 
     public void onClick(View view) {
         if (view.getId() == R.id.buttonRegister) {
-            register(emailField.getText().toString(), passwordField.getText().toString());
+            register(
+                    nameField.getText().toString(),
+                    emailField.getText().toString(),
+                    passwordField.getText().toString()
+            );
         }
         if (view.getId() == R.id.buttonRegisterToLogin) {
             Intent intent = new Intent(RegisterUserActivity.this, LoginUserActivity.class);

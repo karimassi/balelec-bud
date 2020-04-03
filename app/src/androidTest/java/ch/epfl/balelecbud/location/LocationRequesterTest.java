@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.MapViewActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 
@@ -75,14 +76,14 @@ public class LocationRequesterTest {
         this.device = UiDevice.getInstance(getInstrumentation());
         this.device.waitForWindowUpdate(null, TIMEOUT);
         grantPermission();
-        if (LocationUtil.isLocationActive(this.mActivityRule.getActivity()))
+        if (LocationUtil.isLocationActive())
             onView(withId(R.id.locationSwitch)).perform(click());
     }
 
     @After
     public void tearDown() {
         setDumLocationClient();
-        if (LocationUtil.isLocationActive(this.mActivityRule.getActivity()))
+        if (LocationUtil.isLocationActive())
             onView(withId(R.id.locationSwitch)).perform(click());
     }
 
@@ -100,10 +101,10 @@ public class LocationRequesterTest {
                 Assert.fail();
             }
         });
-        Assert.assertFalse(LocationUtil.isLocationActive(mActivityRule.getActivity()));
+        Assert.assertFalse(LocationUtil.isLocationActive());
         onView(withId(R.id.locationSwitch)).check(switchClickable(true));
         onView(withId(R.id.locationSwitch)).perform(click());
-        Assert.assertTrue(LocationUtil.isLocationActive(mActivityRule.getActivity()));
+        Assert.assertTrue(LocationUtil.isLocationActive());
     }
 
     @Test
@@ -122,7 +123,7 @@ public class LocationRequesterTest {
         });
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.locationSwitch)).perform(click());
-        Assert.assertFalse(LocationUtil.isLocationActive(this.mActivityRule.getActivity()));
+        Assert.assertFalse(LocationUtil.isLocationActive());
     }
 
     @Test
@@ -161,6 +162,24 @@ public class LocationRequesterTest {
                 new String[]{}, new int[]{});
 
         Assert.assertEquals(locationSwitch.isClickable(), before);
+    }
+
+    @Test
+    public void testSwitchOffDisablesLocationInMap() {
+        LocationUtil.setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                Assert.assertNotNull(lr);
+                Assert.assertNotNull(intent);
+            }
+
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+                Assert.assertNotNull(intent);
+            }
+        });
+        onView(withId(R.id.mapButton)).perform(click());
+        Assert.assertFalse(MapViewActivity.getLocationPermission());
     }
 
     public static ViewAssertion switchClickable(final boolean isClickable) {
