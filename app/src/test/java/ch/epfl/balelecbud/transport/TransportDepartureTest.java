@@ -7,8 +7,6 @@ import java.util.Date;
 
 import ch.epfl.balelecbud.transport.objects.TransportDeparture;
 
-import static org.hamcrest.core.Is.is;
-
 public class TransportDepartureTest {
     private TransportDeparture t1 = new TransportDeparture("M", "m1", "Flon", new Date(Long.parseLong("1585866499")*1000));
 
