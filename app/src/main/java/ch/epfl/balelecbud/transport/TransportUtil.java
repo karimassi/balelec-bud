@@ -13,13 +13,8 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.transport.objects.TransportDeparture;
 import ch.epfl.balelecbud.transport.objects.TransportStation;
-import ch.epfl.balelecbud.util.http.VolleyHttpClient;
 
 public class TransportUtil {
-
-
-    public TransportUtil() {
-    }
 
     public static CompletableFuture<List<TransportStation>> getNearbyStations(Location currentLocation) {
         String parameter_x = "x=" + currentLocation.getLatitude();
@@ -40,7 +35,6 @@ public class TransportUtil {
                                     stationObject.get("distance").getAsDouble()));
                         }
                     }
-
                     return stations;
                 });
     }
@@ -48,7 +42,7 @@ public class TransportUtil {
 
     public static CompletableFuture<List<TransportDeparture>> getNextDepartures(TransportStation station) {
         String parameter_id = "id=" + station.getStationId();
-        String url = "http://transport.opendata.ch/v1/stationboard?"+parameter_id+"&limit=10";
+        String url = "http://transport.opendata.ch/v1/stationboard?"+parameter_id+"&limit=20";
         return BalelecbudApplication.getHttpClient().get(url)
                 .thenApply(jsonElement -> {
                     List<TransportDeparture> departures = new ArrayList<>();
