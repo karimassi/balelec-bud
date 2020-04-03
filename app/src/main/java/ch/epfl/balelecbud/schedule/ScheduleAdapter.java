@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.schedule;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -22,19 +24,18 @@ import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
 
-    private IntentLauncher intentLauncher;
+    private Consumer<Intent> intentLauncher;
 
     private final Activity mainActivity;
 
     @VisibleForTesting
-    public void setIntentLauncher(IntentLauncher intentLauncher) {
+    public void setIntentLauncher(Consumer<Intent> intentLauncher) {
         this.intentLauncher = intentLauncher;
     }
 
@@ -102,11 +103,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         viewHolder.subscribeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Log.d(TAG, "Notification switched: ON");
-                intentLauncher.launchIntent(
+                intentLauncher.accept(
                         FlowUtil.packSubscribeIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
             } else {
                 Log.d(TAG, "Notification switched: ON");
-                intentLauncher.launchIntent(
+                intentLauncher.accept(
                         FlowUtil.packCancelIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
             }
         });

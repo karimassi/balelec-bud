@@ -33,7 +33,7 @@ public class TransportRecyclerViewTest {
     private final Transport transport2 = new Transport(TransportType.METRO, 12, "EPFL", null, Timestamp.now());
     private final Transport transport3 = new Transport(TransportType.BUS, 122, "La lune", null, Timestamp.now());
 
-    private MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
+    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Rule
     public final ActivityTestRule<TransportActivity> mActivityRule = new ActivityTestRule<TransportActivity>(TransportActivity.class) {

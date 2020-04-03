@@ -14,6 +14,7 @@ import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import static ch.epfl.balelecbud.util.StringUtils.isEmailValid;
 
 public class RegisterUserActivity extends AppCompatActivity {
     private EditText nameField;
@@ -33,9 +34,9 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     private void register(String name, String email, String password) {
-        if (!validateEntry()) {
+        if (!validateEntry())
             return;
-        }
+
         getAppAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
             if (throwable != null) {
                 Toast.makeText(
@@ -51,21 +52,20 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private boolean validateEntry() {
         boolean valid = true;
-        String name = nameField.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            nameField.setError(getString(R.string.require_name));
+        if (!isNameValid())
             valid = false;
-        }
 
-        String email = emailField.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            emailField.setError(getString(R.string.require_email));
+        if (!isEmailValid(this, emailField))
             valid = false;
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailField.setError(getString(R.string.invalid_email));
-            valid = false;
-        }
 
+        if (!isPasswordsValid())
+            valid = false;
+
+        return valid;
+    }
+
+    private boolean isPasswordsValid() {
+        boolean valid = true;
         String password = passwordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
             passwordField.setError(getString(R.string.require_password));
@@ -86,8 +86,16 @@ public class RegisterUserActivity extends AppCompatActivity {
             repeatPasswordField.setError(getString(R.string.mismatch_password));
             valid = false;
         }
-
         return valid;
+    }
+
+    private boolean isNameValid() {
+        String name = nameField.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            nameField.setError(getString(R.string.require_name));
+           return false;
+        }
+        return true;
     }
 
     private void onAuthComplete() {

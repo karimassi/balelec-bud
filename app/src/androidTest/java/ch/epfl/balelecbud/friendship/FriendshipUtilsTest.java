@@ -26,7 +26,7 @@ import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.r
 public class FriendshipUtilsTest {
 
     private final DatabaseWrapper db = MockDatabaseWrapper.getInstance();
-    private Authenticator authenticator = MockAuthenticator.getInstance();
+    private final Authenticator authenticator = MockAuthenticator.getInstance();
     private User sender;
     private User recipient;
 

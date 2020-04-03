@@ -19,9 +19,7 @@ import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.testUtils.RecyclerViewButtonClick;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
-import ch.epfl.balelecbud.testUtils.TabLayoutTabSelect;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -39,6 +37,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
+import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
@@ -80,7 +80,7 @@ public class SocialActivityTest {
     }
 
     private void selectTab(int position) {
-        onView(withId(R.id.tabs_social)).perform(TabLayoutTabSelect.clickTabWithPosition(position));
+        onView(withId(R.id.tabs_social)).perform(clickTabWithPosition(position));
         SystemClock.sleep(500);
     }
 
@@ -136,8 +136,7 @@ public class SocialActivityTest {
     public void buttonDeleteFriendsUpdatesList() {
         selectTab(0);
         onView(withId(R.id.recycler_view_friends)).perform(RecyclerViewActions.
-            actionOnItemAtPosition(0, RecyclerViewButtonClick
-                    .clickChildViewWithId(R.id.buttonDeleteFriendItem)));
+            actionOnItemAtPosition(0, clickChildViewWithId(R.id.buttonDeleteFriendItem)));
 
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friends)).check(matches(hasChildCount(0)));
@@ -181,8 +180,7 @@ public class SocialActivityTest {
     public void buttonDeleteRequestUpdatesList() {
         selectTab(1);
         onView(withId(R.id.recycler_view_friend_requests)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, RecyclerViewButtonClick.
-                        clickChildViewWithId(R.id.button_request_item_delete_request)));
+                actionOnItemAtPosition(0, clickChildViewWithId(R.id.button_request_item_delete_request)));
 
         onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));
@@ -192,8 +190,7 @@ public class SocialActivityTest {
     public void buttonAcceptRequestUpdatesRequestsAndFriends() {
         selectTab(1);
         onView(withId(R.id.recycler_view_friend_requests)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, RecyclerViewButtonClick
-                                .clickChildViewWithId(R.id.button_request_item_accept_request)));
+                actionOnItemAtPosition(0, clickChildViewWithId(R.id.button_request_item_accept_request)));
 
         onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));

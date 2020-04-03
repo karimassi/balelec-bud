@@ -1,29 +1,13 @@
 package ch.epfl.balelecbud;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Switch;
-
-import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.firebase.Timestamp;
-
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
@@ -37,30 +21,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
+import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
-
     private MockDatabaseWrapper mock;
-
-    static private Slot slot1;
-    static private Slot slot2;
-    static private Slot slot3;
-
-    @BeforeClass
-    public static void setUpSlots(){
-        List<Timestamp> timestamps = new LinkedList<>();
-        for(int i = 0; i < 6; ++i){
-            Calendar c = Calendar.getInstance();
-            c.set(2020,11,11,10 + i, i % 2 == 0 ? 15 : 0);
-            Date date = c.getTime();
-            timestamps.add(i, new Timestamp(date));
-        }
-        slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
-        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
-        slot3 = new Slot(2, "Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
-    }
 
     @Rule
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
@@ -109,14 +78,7 @@ public class ScheduleActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
 
         mock.modifyItem(slot3, 0);
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0))
-                .check(matches(withText(slot3.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1))
-                .check(matches(withText(slot3.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2))
-                .check(matches(withText(slot3.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
-                .check(switchChecked(false));
+        checkSlot(0, slot3);
 
         mock.removeItem(slot3, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
@@ -133,38 +95,26 @@ public class ScheduleActivityTest {
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-
         mock.addItem(slot1);
         mock.addItem(slot2);
         mock.addItem(slot3);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0))
+        checkSlot(0, slot1);
+
+        checkSlot(1, slot2);
+
+        checkSlot(2, slot3);
+    }
+
+    private void checkSlot(int i, Slot slot1) {
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 0))
                 .check(matches(withText(slot1.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1))
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 1))
                 .check(matches(withText(slot1.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2))
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 2))
                 .check(matches(withText(slot1.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 3))
                 .check(switchChecked(false));
-
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 0))
-                .check(matches(withText(slot2.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1))
-                .check(matches(withText(slot2.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 2))
-                .check(matches(withText(slot2.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
-                .check(switchChecked(false));
-
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 0))
-                .check(matches(withText(slot3.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 1))
-                .check(matches(withText(slot3.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 2))
-                .check(matches(withText(slot3.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
-                .check(switchChecked(false));
-
     }
 
     @Test
@@ -174,8 +124,7 @@ public class ScheduleActivityTest {
 
         mActivityRule.getActivity().setIntentLauncher(intent -> {
             if (intent.getAction() == null)
-                Assert.fail();
-
+                sync.fail();
             String action = intent.getAction();
             switch (action) {
                 case FlowUtil.ACK_CONCERT:
@@ -194,34 +143,5 @@ public class ScheduleActivityTest {
                 .perform(click());
         sync.waitCall(1);
         sync.assertCalled(1);
-    }
-
-    public static ViewAssertion switchChecked(final boolean checked) {
-        return (view, noViewFoundException) -> {
-            if (noViewFoundException != null)
-                throw noViewFoundException;
-            if (!(view instanceof Switch))
-                throw new AssertionError("The View should be a Switch be was");
-            Assert.assertThat(((Switch) view).isChecked(), is(checked));
-        };
-    }
-
-    public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("with " + childPosition + " child view of type parentMatcher");
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                if (!(view.getParent() instanceof ViewGroup)) {
-                    return parentMatcher.matches(view.getParent());
-                }
-
-                ViewGroup group = (ViewGroup) view.getParent();
-                return parentMatcher.matches(view.getParent()) && group.getChildAt(childPosition).equals(view);
-            }
-        };
     }
 }

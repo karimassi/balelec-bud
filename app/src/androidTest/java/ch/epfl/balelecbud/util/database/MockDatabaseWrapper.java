@@ -2,10 +2,14 @@ package ch.epfl.balelecbud.util.database;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.Timestamp;
+
 import org.junit.Assert;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +22,7 @@ import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
+import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -27,6 +32,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
     public static final User celine =
             new User("celine@epfl.ch", "celine", MockAuthenticator.provideUid());
+
+    public static Slot slot1;
+    public static Slot slot2;
+    public static Slot slot3;
 
     private final List<DatabaseListener> listeners = new ArrayList<>();
 
@@ -44,6 +53,16 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         friendships.put(celine.getUid(), new HashMap<>());
         friendRequests.put(karim.getUid(), new HashMap<>());
         friendRequests.put(celine.getUid(), new HashMap<>());
+        List<Timestamp> timestamps = new LinkedList<>();
+        for(int i = 0; i < 6; ++i){
+            Calendar c = Calendar.getInstance();
+            c.set(2020,11,11,10 + i, i % 2 == 0 ? 15 : 0);
+            Date date = c.getTime();
+            timestamps.add(i, new Timestamp(date));
+        }
+        slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
+        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
+        slot3 = new Slot(2, "Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
     }
 
     private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();

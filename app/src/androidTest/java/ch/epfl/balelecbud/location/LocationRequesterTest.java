@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.widget.Switch;
 
-import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
@@ -31,7 +30,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.Matchers.is;
+import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchClickable;
 
 @SdkSuppress(minSdkVersion = Build.VERSION_CODES.N_MR1, maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
@@ -132,31 +131,31 @@ public class LocationRequesterTest {
         sync.assertCalled(2);
     }
 
-    @Test
-    public void whenPermissionGrantedCanSwitchOnLocation() {
+    private void checkPermissionAfterResult(String[] permissions, int[] permissionStatus, boolean b) {
         this.mActivityRule.getActivity().onRequestPermissionsResult(
                 LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
+                permissions,
+                permissionStatus);
+        onView(withId(R.id.locationSwitch)).check(switchClickable(b));
+    }
+
+    @Test
+    public void whenPermissionGrantedCanSwitchOnLocation() {
+        checkPermissionAfterResult(
                 new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                new int[] { PackageManager.PERMISSION_GRANTED });
-        onView(withId(R.id.locationSwitch)).check(switchClickable(true));
+                new int[] { PackageManager.PERMISSION_GRANTED}, true);
     }
 
     @Test
     public void whenPermissionDeniedCannotSwitchOnLocation() {
-        this.mActivityRule.getActivity().onRequestPermissionsResult(
-                LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
+        checkPermissionAfterResult(
                 new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                new int[] { PackageManager.PERMISSION_DENIED });
-        onView(withId(R.id.locationSwitch)).check(switchClickable(false));
+                new int[] { PackageManager.PERMISSION_DENIED }, false);
     }
 
     @Test
     public void whenPermissionCanceledCannotSwitchOnLocation() {
-        this.mActivityRule.getActivity().onRequestPermissionsResult(
-                LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
-                new String[] { },
-                new int[] { });
-        onView(withId(R.id.locationSwitch)).check(switchClickable(false));
+        checkPermissionAfterResult(new String[] { }, new int[] { }, false);
     }
 
     @Test
@@ -167,7 +166,7 @@ public class LocationRequesterTest {
         this.mActivityRule.getActivity().onRequestPermissionsResult(0,
                 new String[] { }, new int[] { });
 
-        Assert.assertEquals(locationSwitch.isClickable(), before);
+        onView(withId(R.id.locationSwitch)).check(switchClickable(before));
     }
 
     @Test
@@ -187,15 +186,5 @@ public class LocationRequesterTest {
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertFalse(MapViewActivity.getLocationPermission());
         sync.assertCalled(0);
-    }
-
-    public static ViewAssertion switchClickable(final boolean isClickable) {
-        return (view, noViewFoundException) -> {
-            if (noViewFoundException != null)
-                throw noViewFoundException;
-            if (!(view instanceof Switch))
-                throw new AssertionError("The View should be a Switch be was not");
-            Assert.assertThat(view.isClickable(), is(isClickable));
-        };
     }
 }

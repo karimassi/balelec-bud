@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 public class ScheduleActivity extends AppCompatActivity {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
@@ -34,7 +35,7 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     @VisibleForTesting
-    public void setIntentLauncher(IntentLauncher intentLauncher) {
+    public void setIntentLauncher(Consumer<Intent> intentLauncher) {
         this.mAdapter.setIntentLauncher(intentLauncher);
     }
 }

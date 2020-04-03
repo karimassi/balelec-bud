@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.util.StringUtils.isEmailValid;
 
 public class LoginUserActivity extends AppCompatActivity {
     private EditText emailField;
@@ -44,14 +45,8 @@ public class LoginUserActivity extends AppCompatActivity {
     private boolean validateEntry() {
         boolean valid = true;
 
-        String email = emailField.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            emailField.setError(getString(R.string.require_email));
+        if (!isEmailValid(this, emailField))
             valid = false;
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailField.setError(getString(R.string.invalid_email));
-            valid = false;
-        }
 
         String password = passwordField.getText().toString();
         if (TextUtils.isEmpty(password)) {

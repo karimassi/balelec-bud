@@ -7,18 +7,14 @@ import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.google.firebase.Timestamp;
-
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
@@ -26,30 +22,13 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
+
 @RunWith(AndroidJUnit4.class)
 public class ConcertFlowTest {
-    static private Slot slot1;
-    static private Slot slot2;
-
     private ConcertOfInterestDatabase db;
     private ConcertFlow flow;
-
-    @BeforeClass
-    public static void setUpSlots(){
-        List<Timestamp> timestamps = new LinkedList<>();
-        for(int i = 0; i < 4; ++i){
-            Calendar c = Calendar.getInstance();
-            c.set(2020,11,11,10 + i, i % 2 == 0 ? 15 : 0);
-            Date date = c.getTime();
-            timestamps.add(i, new Timestamp(date));
-        }
-        slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
-        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
-
-        Room.databaseBuilder(ApplicationProvider.getApplicationContext(),
-                ConcertOfInterestDatabase.class, "ConcertsOfInterest")
-                .build().clearAllTables();
-    }
 
     @Before
     public void setup() {
@@ -80,7 +59,6 @@ public class ConcertFlowTest {
             public void cancelNotification(Context context, Slot slot) {
                 sync.fail();
             }
-
         });
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         sync.waitCall(1);
@@ -90,24 +68,7 @@ public class ConcertFlowTest {
     @Test
     public void notificationSchedulerIsCalledWhenMultipleNewConcertOfInterestAdded() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        flow.setNotificationScheduler(new NotificationSchedulerInterface() {
-            private int received = 0;
-            @Override
-            public void scheduleNotification(Context context, Slot slot) {
-                if (received == 0)
-                    sync.assertEquals(slot1, slot);
-                else
-                    sync.assertEquals(slot2, slot);
-                ++received;
-                sync.call();
-            }
-
-            @Override
-            public void cancelNotification(Context context, Slot slot) {
-                sync.fail();
-            }
-
-        });
+        flow.setNotificationScheduler(getScheduler(sync, s -> sync.fail()));
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         sync.waitCall(1);
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
@@ -118,7 +79,23 @@ public class ConcertFlowTest {
     @Test
     public void notificationsUnscheduledWhenConcertRemoved() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        flow.setNotificationScheduler(new NotificationSchedulerInterface() {
+        flow.setNotificationScheduler(getScheduler(sync, slot -> {
+            sync.assertEquals(slot1, slot);
+            sync.call();
+        }));
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        sync.waitCall(1);
+        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
+        sync.waitCall(2);
+        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        sync.waitCall(3);
+        sync.assertCalled(3);
+    }
+
+    @NotNull
+    private NotificationSchedulerInterface getScheduler(TestAsyncUtils sync,
+                                                        Consumer<Slot> cancel) {
+        return new NotificationSchedulerInterface() {
             private int received = 0;
             @Override
             public void scheduleNotification(Context context, Slot slot) {
@@ -132,18 +109,9 @@ public class ConcertFlowTest {
 
             @Override
             public void cancelNotification(Context context, Slot slot) {
-                sync.assertEquals(slot1, slot);
-                sync.call();
+                cancel.accept(slot);
             }
-
-        });
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        sync.waitCall(1);
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
-        sync.waitCall(2);
-        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        sync.waitCall(3);
-        sync.assertCalled(3);
+        };
     }
 
     @Test

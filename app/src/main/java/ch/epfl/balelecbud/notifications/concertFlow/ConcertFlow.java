@@ -10,6 +10,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.room.Room;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDAO;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
@@ -17,7 +18,6 @@ import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 public class ConcertFlow extends IntentService {
     private static final String TAG = ConcertFlow.class.getSimpleName();
@@ -29,10 +29,10 @@ public class ConcertFlow extends IntentService {
         super(TAG);
     }
 
-    private IntentLauncher launcher = ConcertFlow.this::startActivity;
+    private Consumer<Intent> launcher = ConcertFlow.this::startActivity;
 
     @VisibleForTesting
-    public void setLauncher(IntentLauncher launcher) {
+    public void setLauncher(Consumer<Intent> launcher) {
         this.launcher = launcher;
     }
 
@@ -116,7 +116,7 @@ public class ConcertFlow extends IntentService {
     private void getAllScheduledConcert(Intent callbackIntent) {
         Slot[] res = this.concertOfInterestDAO.getAllConcertOfInterest();
         Log.d(TAG, "getAllScheduledConcert: " + Arrays.toString(res));
-        this.launcher.launchIntent(FlowUtil.packCallback(res, callbackIntent));
+        this.launcher.accept(FlowUtil.packCallback(res, callbackIntent));
     }
 
     private void scheduleNewConcert(final Slot newSlot) {
