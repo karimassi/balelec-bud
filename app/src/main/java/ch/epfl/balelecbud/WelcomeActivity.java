@@ -20,11 +20,8 @@ import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.location.LocationUtil.Action;
 
 
-public class WelcomeActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class WelcomeActivity extends BasicActivity {
 
-    private Toolbar toolbar;
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
 
     private static final String TAG = WelcomeActivity.class.getSimpleName();
     private Switch locationSwitch;
@@ -34,73 +31,9 @@ public class WelcomeActivity extends BasicActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        this.configureToolBar();
-        this.configureDrawerLayout();
-        this.configureNavigationView();
-        setUpLocation();
-    }
-
-    @Override
-    public void onBackPressed() {
-        // 5 - Handle back click to close menu
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.activity_main_drawer_info :
-                Intent intentInfo = new Intent(this, FestivalInformationActivity.class);
-                startActivity(intentInfo);
-                break;
-            case R.id.activity_main_drawer_schedule:
-                Intent intentSchedule = new Intent(this, ScheduleActivity.class);
-                startActivity(intentSchedule);
-                break;
-            case R.id.activity_main_drawer_poi:
-                Intent intentPoi = new Intent(this, PointOfInterestActivity.class);
-                startActivity(intentPoi);
-                break;
-            case R.id.activity_main_drawer_map:
-                Intent intentMap = new Intent(this, MapViewActivity.class);
-                startActivity(intentMap);
-                break;
-            case R.id.activity_main_drawer_transport:
-                Intent intentTransport = new Intent(this, TransportActivity.class);
-                startActivity(intentTransport);
-                break;
-            case R.id.activity_main_drawer_social:
-                Intent intentSocial = new Intent(this, SocialActivity.class);
-                startActivity(intentSocial);
-                break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
-            default:
-                break;
-        }
-        this.drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void configureToolBar(){
-        this.toolbar = (Toolbar) findViewById(R.id.root_activity_toolbar);
-        setSupportActionBar(toolbar);
-    }
-
-    private void configureDrawerLayout(){
-        this.drawerLayout = (DrawerLayout) findViewById(R.id.root_activity_drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-
-    private void configureNavigationView(){
-        this.navigationView = (NavigationView) findViewById(R.id.root_activity_nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        this.configureToolBar(R.id.root_activity_toolbar);
+        this.configureDrawerLayout(R.id.root_activity_drawer_layout);
+        this.configureNavigationView(R.id.root_activity_nav_view);
         setUpLocation();
     }
 
@@ -168,10 +101,4 @@ public class WelcomeActivity extends BasicActivity implements NavigationView.OnN
         };
     }
 
-    private void signOut() {
-        getAuthenticator().signOut();
-        Intent intent = new Intent(this, LoginUserActivity.class);
-        startActivity(intent);
-        finish();
-    }
 }
