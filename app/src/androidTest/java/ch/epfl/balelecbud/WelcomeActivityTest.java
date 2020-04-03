@@ -114,8 +114,8 @@ public class WelcomeActivityTest {
 
     @Test
     public void testTransportIsDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.transportButton)), onView(withId(R.id.linear_layout_transport)));
-        onView(withId(R.id.fragmentTransportList)).check(matches(isDisplayed()));
+        testFeatureIsDisplayed(onView(withId(R.id.transportButton)), onView(withId(R.id.transport_fragment_container)));
+        onView(withId(R.id.transport_fragment_container)).check(matches(isDisplayed()));
     }
 
     @Test

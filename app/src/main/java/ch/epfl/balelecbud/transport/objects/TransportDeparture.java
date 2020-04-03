@@ -21,10 +21,6 @@ public class TransportDeparture {
         this.time = time;
     }
 
-    public TransportDeparture() {
-
-    }
-
     public String getCategory() {
         return category;
     }

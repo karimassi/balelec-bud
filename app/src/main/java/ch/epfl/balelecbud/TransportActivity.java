@@ -6,6 +6,9 @@ import androidx.core.app.NavUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.location.LocationServices;
+
+import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.transport.TransportDeparturesFragment;
 import ch.epfl.balelecbud.transport.TransportStationsFragment;

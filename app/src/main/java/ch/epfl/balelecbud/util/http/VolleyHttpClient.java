@@ -3,7 +3,6 @@ package ch.epfl.balelecbud.util.http;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.concurrent.CompletableFuture;
 

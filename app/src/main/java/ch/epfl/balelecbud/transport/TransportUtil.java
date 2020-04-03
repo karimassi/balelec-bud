@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.transport.objects.TransportDeparture;
 import ch.epfl.balelecbud.transport.objects.TransportStation;
@@ -24,7 +25,7 @@ public class TransportUtil {
         String parameter_x = "x=" + currentLocation.getLatitude();
         String parameter_y = "y=" + currentLocation.getLongitude();
         String url = "http://transport.opendata.ch/v1/locations?"+parameter_x+"&"+parameter_y;
-        return VolleyHttpClient.getInstance().get(url)
+        return BalelecbudApplication.getHttpClient().get(url)
                 .thenApply(jsonElement -> {
                     List<TransportStation> stations = new ArrayList<>();
                     JsonArray stationsJson = jsonElement.getAsJsonObject().get("stations").getAsJsonArray();
@@ -48,7 +49,7 @@ public class TransportUtil {
     public static CompletableFuture<List<TransportDeparture>> getNextDepartures(TransportStation station) {
         String parameter_id = "id=" + station.getStationId();
         String url = "http://transport.opendata.ch/v1/stationboard?"+parameter_id+"&limit=10";
-        return VolleyHttpClient.getInstance().get(url)
+        return BalelecbudApplication.getHttpClient().get(url)
                 .thenApply(jsonElement -> {
                     List<TransportDeparture> departures = new ArrayList<>();
                     JsonObject stationJson = jsonElement.getAsJsonObject().get("station").getAsJsonObject();
