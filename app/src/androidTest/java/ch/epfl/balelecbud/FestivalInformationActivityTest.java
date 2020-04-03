@@ -27,7 +27,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class FestivalInformationActivityTest {
 
-    private MockDatabaseWrapper mock;
+    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Before
     public void setup(){
@@ -38,7 +38,6 @@ public class FestivalInformationActivityTest {
     public final ActivityTestRule<FestivalInformationActivity> mActivityRule = new ActivityTestRule<FestivalInformationActivity>(FestivalInformationActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = MockDatabaseWrapper.getInstance();
             BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };

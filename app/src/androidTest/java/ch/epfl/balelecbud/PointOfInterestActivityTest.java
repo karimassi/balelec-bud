@@ -29,7 +29,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class PointOfInterestActivityTest {
 
-    private MockDatabaseWrapper mock;
+    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
     private final PointOfInterest pointOfInterest1 = new PointOfInterest(
             new GeoPoint(4, 20), "Bar IC", "Bar", "FUN101");
     private final PointOfInterest pointOfInterest2 = new PointOfInterest(
@@ -46,7 +46,6 @@ public class PointOfInterestActivityTest {
             new ActivityTestRule<PointOfInterestActivity>(PointOfInterestActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = MockDatabaseWrapper.getInstance();
             BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };
