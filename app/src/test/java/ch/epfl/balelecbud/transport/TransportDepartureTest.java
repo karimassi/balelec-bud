@@ -29,7 +29,7 @@ public class TransportDepartureTest {
 
     @Test
     public void testGetTimeString() {
-        Assert.assertEquals("03-04 00:28:19", t1.getTimeString());
+        Assert.assertEquals("03-04 00:28", t1.getTimeString());
     }
 
     @Test
