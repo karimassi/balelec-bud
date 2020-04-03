@@ -25,7 +25,7 @@ public class StringUtils {
     }
 
     public static String dateToString(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM HH:mm", Locale.FRANCE);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM HH:mm", Locale.ENGLISH);
         return dateFormat.format(date);
     }
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.Date;
 
 import ch.epfl.balelecbud.transport.objects.TransportDeparture;
+import ch.epfl.balelecbud.util.StringUtils;
 
 public class TransportDepartureTest {
     private TransportDeparture t1 = new TransportDeparture("M", "m1", "Flon", new Date(Long.parseLong("1585866499")*1000));
@@ -27,7 +28,7 @@ public class TransportDepartureTest {
 
     @Test
     public void testGetTimeString() {
-        Assert.assertEquals("03-04 00:28", t1.getTimeString());
+        Assert.assertEquals(StringUtils.dateToString(new Date(Long.parseLong("1585866499")*1000)), t1.getTimeString());
     }
 
     @Test
