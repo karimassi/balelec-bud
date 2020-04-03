@@ -54,7 +54,6 @@ public class EmergencyActivity extends BasicActivity {
 
                             Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
 
-                            // SUBMIT TO DB HERE
                             database.storeDocument(DatabaseWrapper.EMERGENCIES_PATH, mEmergency);
 
                             Toast.makeText(EmergencyActivity.this,
