@@ -81,54 +81,47 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testCantRegisterWithEmptyFields() {
-        enterValues("", "", "", "");
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("", "", "", "");
         checkErrors(nameRequiredError, emailRequiredError, pwdRequiredError, pwdRepeatRequiredError);
     }
 
     @Test
     public void testCantRegisterInvalidEmailEmptyPassword() {
-        enterValues("", "invalidemail", "", "");
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("", "invalidemail", "", "");
         checkErrors(nameRequiredError, emailInvalidError, pwdRequiredError, pwdRepeatRequiredError);
     }
 
     @Test
     public void testCantRegisterValidEmailEmptyPassword() {
         // valid email empty pwd
-        enterValues("", "valid@email.com", "", "");
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("", "valid@email.com", "", "");
         checkErrors(nameRequiredError, emailNoError, pwdRequiredError, pwdRepeatRequiredError);
     }
 
     @Test
     public void testCantRegisterInvalidEmail() {
         // invalid email valid pwd
-        enterValues("", "invalidemail", "123456", "123456");
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("", "invalidemail", "123456", "123456");
         checkErrors(nameRequiredError, emailInvalidError, pwdNoError, pwdRepeatNoError);
     }
 
     @Test
     public void testCantRegisterMismatchPassword() {
         // invalid email valid pwd
-        enterValues("name", "valid@email.com", "123456", "123478");
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("name", "valid@email.com", "123456", "123478");
         checkErrors(nameNoError, emailNoError, pwdsDoNotMatchError, pwdsDoNotMatchError);
     }
 
     @Test
     public void testCantRegisterInvalidEmailShortPassword() {
         // invalid email invalid password
-        enterValues("name", "invalidemail", "124", "124");
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("name", "invalidemail", "124", "124");
         checkErrors(nameNoError, emailInvalidError, pwdTooShortError, pwdRepeatNoError);
     }
 
     @Test
     public void testRegisterExistingAccount() {
-        enterValues("name", "karim@epfl.ch", "123456", "123456");
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("name", "karim@epfl.ch", "123456", "123456");
         intended(hasComponent(RegisterUserActivity.class.getName()));
     }
 
@@ -140,30 +133,24 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testCanRegister() {
-        enterValues("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
         intended(hasComponent(WelcomeActivity.class.getName()));
     }
 
     @Test
     public void testCanRegisterFailDB() {
-        enterValues("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
         BalelecbudApplication.setAppDatabaseWrapper(new DatabaseWrapper() {
             @Override
-            public void unregisterListener(DatabaseListener listener) {
-
-            }
+            public void unregisterListener(DatabaseListener listener) { }
 
             @Override
-            public void listen(String collectionName, DatabaseListener listener) {
+            public void listen(String collectionName, DatabaseListener listener) { }
 
-            }
-
-            @Override 
+            @Override
             public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
                 return null;
             }
-            
+
             @Override
             public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
                 return CompletableFuture.completedFuture(null).thenCompose(o -> {
@@ -183,14 +170,10 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             }
 
             @Override
-            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
-
-            }
+            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) { }
 
             @Override
-            public <T> void storeDocument(String collectionName, T document) {
-
-            }
+            public <T> void storeDocument(String collectionName, T document) { }
 
             @Override
             public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
@@ -200,11 +183,9 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             }
 
             @Override
-            public void deleteDocumentWithID(String collectionName, String documentID) {
-
-            }
+            public void deleteDocumentWithID(String collectionName, String documentID) { }
         });
-        onView(withId(R.id.buttonRegister)).perform(click());
+        enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
         intended(hasComponent(RegisterUserActivity.class.getName()));
     }
 
@@ -218,11 +199,12 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(pwd2Matcher));
     }
 
-    private void enterValues(String name, String email, String pwd, String pwd2) {
+    private void enterValuesAndClick(String name, String email, String pwd, String pwd2) {
         onView(withId(R.id.editTextNameRegister)).perform(typeText(name)).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextEmailRegister)).perform(typeText(email)).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordRegister)).perform(typeText(pwd)).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextRepeatPasswordRegister)).perform(typeText(pwd2)).perform(closeSoftKeyboard());
+        onView(withId(R.id.buttonRegister)).perform(click());
     }
 
     private String randomInt() {

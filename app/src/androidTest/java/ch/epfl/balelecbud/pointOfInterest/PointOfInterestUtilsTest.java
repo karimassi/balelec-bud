@@ -20,7 +20,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class PointOfInterestUtilsTest {
 
-    private MockDatabaseWrapper db;
+    private final MockDatabaseWrapper db = MockDatabaseWrapper.getInstance();;
     private final static Location l1 = new Location(1, 1);
     private final static Location l2 = new Location(1, 2);
     private final static Location l3 = new Location(2, 1);
@@ -29,7 +29,6 @@ public class PointOfInterestUtilsTest {
     @Before
     public void setup(){
         List<Location> locations = Lists.newArrayList(l1, l2, l3, l4);
-        db = MockDatabaseWrapper.getInstance();
         db.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
         int i = 0;
         for(Object obj : locations){

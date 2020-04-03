@@ -14,13 +14,13 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -59,7 +59,7 @@ public class MapViewActivityTest {
     @Test
     public void testUpdateLocationUi() throws Throwable {
         MapViewActivity mActivity = mActivityRule.getActivity();
-        runOnUiThread(() -> {
+        TestAsyncUtils.runOnUIThreadAndWait(() -> {
             GoogleMap googleMap = mActivity.getGoogleMap();
             if(googleMap != null) {
                 assertThat(googleMap.isMyLocationEnabled(),
@@ -67,7 +67,6 @@ public class MapViewActivityTest {
                 assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
                         is(MapViewActivity.getLocationPermission()));
             }
-
         });
     }
 

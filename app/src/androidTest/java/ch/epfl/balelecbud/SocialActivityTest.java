@@ -62,10 +62,13 @@ public class SocialActivityTest {
         }
     };
 
-    private void onTabClickOnChild(int tab, int id, int child) {
+    private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {
         selectTab(tab);
-        onView(withId(id)).perform(RecyclerViewActions.
+        onView(withId(recyclerViewId)).perform(RecyclerViewActions.
                 actionOnItemAtPosition(0, clickChildViewWithId(child)));
+
+        onView(withId(layoutId)).perform(swipeDown());
+        onView(withId(recyclerViewId)).check(matches(hasChildCount(0)));
     }
 
     private void createFriendship(User user) {
@@ -139,10 +142,7 @@ public class SocialActivityTest {
 
     @Test
     public void buttonDeleteFriendsUpdatesList() {
-        onTabClickOnChild(0, R.id.recycler_view_friends, R.id.buttonDeleteFriendItem);
-
-        onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
-        onView(withId(R.id.recycler_view_friends)).check(matches(hasChildCount(0)));
+        onTabClickOnChildAndSwipe(0, R.id.recycler_view_friends, R.id.buttonDeleteFriendItem, R.id.swipe_refresh_layout_friends);
     }
 
     @Test
@@ -181,18 +181,14 @@ public class SocialActivityTest {
 
     @Test
     public void buttonDeleteRequestUpdatesList() {
-        onTabClickOnChild(1, R.id.recycler_view_friend_requests, R.id.button_request_item_delete_request);
-
-        onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
-        onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));
+        onTabClickOnChildAndSwipe(1, R.id.recycler_view_friend_requests,
+                R.id.button_request_item_delete_request, R.id.swipe_refresh_layout_friend_requests);
     }
 
     @Test
     public void buttonAcceptRequestUpdatesRequestsAndFriends() {
-        onTabClickOnChild(1, R.id.recycler_view_friend_requests, R.id.button_request_item_accept_request);
-
-        onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
-        onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));
+        onTabClickOnChildAndSwipe(1, R.id.recycler_view_friend_requests,
+                R.id.button_request_item_accept_request, R.id.swipe_refresh_layout_friend_requests);
 
         selectTab(0);
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());

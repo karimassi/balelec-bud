@@ -29,13 +29,12 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
-    private MockDatabaseWrapper mock;
+    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Rule
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = MockDatabaseWrapper.getInstance();
             BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };
