@@ -23,9 +23,8 @@ import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 
 public class MockDatabaseWrapper implements DatabaseWrapper {
     public static final User karim =
@@ -170,33 +169,15 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void addItem(final Object object) throws Throwable {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        Runnable myRunnable = () -> {
-            addItemAux(object);
-            sync.call();
-        };
-        runOnUiThread(myRunnable);
-        sync.waitCall(1);
+        runOnUIThreadAndWait(() -> addItemAux(object));
     }
 
     public void modifyItem(final Object object, final int index) throws Throwable {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        Runnable myRunnable = () -> {
-            changeItemAux(object, index);
-            sync.call();
-        };
-        runOnUiThread(myRunnable);
-        sync.waitCall(1);
+        runOnUIThreadAndWait(() -> changeItemAux(object, index));
     }
 
     public void removeItem(final Object object, final int index) throws Throwable {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        Runnable myRunnable = () -> {
-            removeItemAux(object, index);
-            sync.call();
-        };
-        runOnUiThread(myRunnable);
-        sync.waitCall(1);
+        runOnUIThreadAndWait(() -> removeItemAux(object, index));
     }
 
     private void addItemAux(Object item) {

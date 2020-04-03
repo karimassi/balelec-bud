@@ -46,7 +46,7 @@ public class SocialActivityTest {
 
     private final User currentUser = MockDatabaseWrapper.karim;
     private final User otherUser = MockDatabaseWrapper.celine;
-    private User newFriend;
+    private final User newFriend = new User("test@gmail.com", "testUser", MockAuthenticator.provideUid());;
 
     private final Authenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabaseWrapper mockDb = MockDatabaseWrapper.getInstance();
@@ -58,10 +58,15 @@ public class SocialActivityTest {
             BalelecbudApplication.setAppAuthenticator(mockAuth);
             BalelecbudApplication.setAppDatabaseWrapper(mockDb);
             mockAuth.setCurrentUser(currentUser);
-            newFriend = new User("test@gmail.com", "test@gmail.com", MockAuthenticator.provideUid());
             mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);
         }
     };
+
+    private void onTabClickOnChild(int tab, int id, int child) {
+        selectTab(tab);
+        onView(withId(id)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, clickChildViewWithId(child)));
+    }
 
     private void createFriendship(User user) {
         Map<String,Boolean> toStore= new HashMap<>();
@@ -134,9 +139,7 @@ public class SocialActivityTest {
 
     @Test
     public void buttonDeleteFriendsUpdatesList() {
-        selectTab(0);
-        onView(withId(R.id.recycler_view_friends)).perform(RecyclerViewActions.
-            actionOnItemAtPosition(0, clickChildViewWithId(R.id.buttonDeleteFriendItem)));
+        onTabClickOnChild(0, R.id.recycler_view_friends, R.id.buttonDeleteFriendItem);
 
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friends)).check(matches(hasChildCount(0)));
@@ -178,9 +181,7 @@ public class SocialActivityTest {
 
     @Test
     public void buttonDeleteRequestUpdatesList() {
-        selectTab(1);
-        onView(withId(R.id.recycler_view_friend_requests)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, clickChildViewWithId(R.id.button_request_item_delete_request)));
+        onTabClickOnChild(1, R.id.recycler_view_friend_requests, R.id.button_request_item_delete_request);
 
         onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));
@@ -188,9 +189,7 @@ public class SocialActivityTest {
 
     @Test
     public void buttonAcceptRequestUpdatesRequestsAndFriends() {
-        selectTab(1);
-        onView(withId(R.id.recycler_view_friend_requests)).perform(RecyclerViewActions.
-                actionOnItemAtPosition(0, clickChildViewWithId(R.id.button_request_item_accept_request)));
+        onTabClickOnChild(1, R.id.recycler_view_friend_requests, R.id.button_request_item_accept_request);
 
         onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));

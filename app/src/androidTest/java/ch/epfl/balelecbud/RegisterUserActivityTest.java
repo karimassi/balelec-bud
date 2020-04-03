@@ -1,12 +1,14 @@
 package ch.epfl.balelecbud;
 
 import android.Manifest;
+import android.view.View;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,10 +34,23 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserActivityTest extends BasicAuthenticationTest {
+
+    private final Matcher<View> nameRequiredError = hasErrorText("Name required!");
+    private final Matcher<View> emailRequiredError = hasErrorText("Email required!");
+    private final Matcher<View> emailInvalidError = hasErrorText("Enter a valid email!");
+    private final Matcher<View> pwdRequiredError = hasErrorText("Password required!");
+    private final Matcher<View> pwdTooShortError = hasErrorText("Password should be at least 6 characters long.");
+    private final Matcher<View> pwdRepeatRequiredError = hasErrorText("Repeat password!");
+    private final Matcher<View> pwdsDoNotMatchError = hasErrorText("Passwords do not match!");
+    private final Matcher<View> nameNoError = not(nameRequiredError);
+    private final Matcher<View> emailNoError = not(anyOf(emailInvalidError, emailInvalidError));
+    private final Matcher<View> pwdNoError = not(anyOf(pwdRequiredError, pwdTooShortError, pwdsDoNotMatchError));
+    private final Matcher<View> pwdRepeatNoError = not(anyOf(pwdRepeatRequiredError, pwdsDoNotMatchError));
 
     @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
@@ -43,7 +58,8 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     );
 
     @Rule
-    public final ActivityTestRule<RegisterUserActivity> mActivityRule = new ActivityTestRule<RegisterUserActivity>(RegisterUserActivity.class) {
+    public final ActivityTestRule<RegisterUserActivity> mActivityRule =
+            new ActivityTestRule<RegisterUserActivity>(RegisterUserActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             MockAuthenticator.getInstance().signOut();
@@ -67,20 +83,14 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     public void testCantRegisterWithEmptyFields() {
         enterValues("", "", "", "");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.editTextNameRegister)).check(matches(hasErrorText("Name required!")));
-        onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Email required!")));
-        onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password required!")));
-        onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(hasErrorText("Repeat password!")));
+        checkErrors(nameRequiredError, emailRequiredError, pwdRequiredError, pwdRepeatRequiredError);
     }
 
     @Test
     public void testCantRegisterInvalidEmailEmptyPassword() {
         enterValues("", "invalidemail", "", "");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.editTextNameRegister)).check(matches(hasErrorText("Name required!")));
-        onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Enter a valid email!")));
-        onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password required!")));
-        onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(hasErrorText("Repeat password!")));
+        checkErrors(nameRequiredError, emailInvalidError, pwdRequiredError, pwdRepeatRequiredError);
     }
 
     @Test
@@ -88,9 +98,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         // valid email empty pwd
         enterValues("", "valid@email.com", "", "");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.editTextNameRegister)).check(matches(hasErrorText("Name required!")));
-        onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password required!")));
-        onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(hasErrorText("Repeat password!")));
+        checkErrors(nameRequiredError, emailNoError, pwdRequiredError, pwdRepeatRequiredError);
     }
 
     @Test
@@ -98,8 +106,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         // invalid email valid pwd
         enterValues("", "invalidemail", "123456", "123456");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.editTextNameRegister)).check(matches(hasErrorText("Name required!")));
-        onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Enter a valid email!")));
+        checkErrors(nameRequiredError, emailInvalidError, pwdNoError, pwdRepeatNoError);
     }
 
     @Test
@@ -107,8 +114,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         // invalid email valid pwd
         enterValues("name", "valid@email.com", "123456", "123478");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(hasErrorText("Passwords do not match!")));
-        onView(withId(R.id.editTextEmailRegister)).check(matches(not(hasErrorText("Enter a valid email!"))));
+        checkErrors(nameNoError, emailNoError, pwdsDoNotMatchError, pwdsDoNotMatchError);
     }
 
     @Test
@@ -116,9 +122,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         // invalid email invalid password
         enterValues("name", "invalidemail", "124", "124");
         onView(withId(R.id.buttonRegister)).perform(click());
-        onView(withId(R.id.editTextNameRegister)).check(matches(not(hasErrorText("Name required!"))));
-        onView(withId(R.id.editTextEmailRegister)).check(matches(hasErrorText("Enter a valid email!")));
-        onView(withId(R.id.editTextPasswordRegister)).check(matches(hasErrorText("Password should be at least 6 characters long.")));
+        checkErrors(nameNoError, emailInvalidError, pwdTooShortError, pwdRepeatNoError);
     }
 
     @Test
@@ -173,7 +177,8 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             }
 
             @Override
-            public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type) {
+            public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName,
+                                                                          String fieldName, String fieldValue, Class<T> type) {
                 return null;
             }
 
@@ -201,6 +206,16 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         });
         onView(withId(R.id.buttonRegister)).perform(click());
         intended(hasComponent(RegisterUserActivity.class.getName()));
+    }
+
+    private void checkErrors(Matcher<View> nameMatcher,
+                             Matcher<View> emailMatcher,
+                             Matcher<View> pwdMatcher,
+                             Matcher<View> pwd2Matcher) {
+        onView(withId(R.id.editTextNameRegister)).check(matches(nameMatcher));
+        onView(withId(R.id.editTextEmailRegister)).check(matches(emailMatcher));
+        onView(withId(R.id.editTextPasswordRegister)).check(matches(pwdMatcher));
+        onView(withId(R.id.editTextRepeatPasswordRegister)).check(matches(pwd2Matcher));
     }
 
     private void enterValues(String name, String email, String pwd, String pwd2) {

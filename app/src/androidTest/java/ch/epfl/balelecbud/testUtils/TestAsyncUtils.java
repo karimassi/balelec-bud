@@ -8,10 +8,21 @@ import org.junit.Assert;
 
 import java.util.Objects;
 
+import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+
 public class TestAsyncUtils {
     private static final String TAG = TestAsyncUtils.class.getSimpleName();
     private int called = 0;
     private boolean hasFailed = false;
+
+    public static void runOnUIThreadAndWait(Runnable runnable) throws Throwable {
+        TestAsyncUtils sync = new TestAsyncUtils();
+        runOnUiThread(() -> {
+            runnable.run();
+            sync.call();
+        });
+        sync.waitCall(1);
+    }
 
     public void waitCall(int shouldBe) throws InterruptedException {
         synchronized (this) {

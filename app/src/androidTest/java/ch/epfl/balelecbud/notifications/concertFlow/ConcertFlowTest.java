@@ -118,21 +118,7 @@ public class ConcertFlowTest {
     public void addedConcertsAreInTheList() throws InterruptedException {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
-        TestAsyncUtils sync = new TestAsyncUtils();
-        flow.setLauncher(intent -> {
-            List<Slot> res = FlowUtil.unpackCallback(intent);
-            sync.assertNotNull(res);
-            sync.assertEquals(res.size(), 2);
-            sync.assertTrue(res.contains(slot1));
-            sync.assertTrue(res.contains(slot2));
-            sync.call();
-        });
-        Intent intent = new Intent();
-        intent.setAction(FlowUtil.GET_ALL_CONCERT);
-        intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent());
-        flow.onHandleIntent(intent);
-        sync.waitCall(1);
-        sync.assertCalled(1);
+        launchAndCheck(2, true, true);
     }
 
     @Test
@@ -140,13 +126,17 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        launchAndCheck( 1, true, false);
+    }
+
+    private void launchAndCheck(int size, boolean containsSlot1, boolean containsSlot2) throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
         flow.setLauncher(intent -> {
             List<Slot> slots = FlowUtil.unpackCallback(intent);
             sync.assertNotNull(slots);
-            sync.assertEquals(slots.size(), 1);
-            sync.assertFalse(slots.contains(slot1));
-            sync.assertTrue(slots.contains(slot2));
+            sync.assertEquals(size, slots.size());
+            sync.assertEquals(containsSlot1, slots.contains(slot1));
+            sync.assertEquals(containsSlot2, slots.contains(slot2));
             sync.call();
         });
         Intent intent = new Intent();

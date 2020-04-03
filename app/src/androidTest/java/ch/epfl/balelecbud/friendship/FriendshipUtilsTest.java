@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.LoginUserActivity;
@@ -20,22 +21,20 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 
 @RunWith(AndroidJUnit4.class)
 public class FriendshipUtilsTest {
 
     private final DatabaseWrapper db = MockDatabaseWrapper.getInstance();
     private final Authenticator authenticator = MockAuthenticator.getInstance();
-    private User sender;
-    private User recipient;
+    private final User sender = MockDatabaseWrapper.karim;
+    private final User recipient = MockDatabaseWrapper.celine;
 
     @Before
     public void setup() {
         BalelecbudApplication.setAppDatabaseWrapper(db);
         BalelecbudApplication.setAppAuthenticator(authenticator);
-        sender = MockDatabaseWrapper.karim;
-        recipient = MockDatabaseWrapper.celine;
         authenticator.signOut();
         authenticator.setCurrentUser(sender);
     }
@@ -45,33 +44,30 @@ public class FriendshipUtilsTest {
             new ActivityTestRule<>(LoginUserActivity.class);
 
     private void addFriend(final User friend) throws Throwable {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        Runnable myRunnable = () -> {
-            FriendshipUtils.addFriend(friend);
-            sync.call();
-        };
-        runOnUiThread(myRunnable);
-        sync.waitCall(1);
+        runOnUIThreadAndWait(() -> FriendshipUtils.addFriend(friend));
     }
 
     private void acceptRequest(final User sender) throws Throwable {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        Runnable myRunnable = () -> {
-            FriendshipUtils.acceptRequest(sender);
-            sync.call();
-        };
-        runOnUiThread(myRunnable);
-        sync.waitCall(1);
+        runOnUIThreadAndWait(() -> FriendshipUtils.acceptRequest(sender));
     }
 
     private void deleteFriend(final User user) throws Throwable {
+        runOnUIThreadAndWait(() -> FriendshipUtils.removeFriend(user));
+    }
+
+    private void checkResult(CompletableFuture<HashMap> document, Map<String, Boolean> expected)
+            throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        Runnable myRunnable = () -> {
-            FriendshipUtils.removeFriend(user);
+        document.whenComplete((hashMap, throwable) -> {
+            if (throwable == null) {
+                sync.assertEquals(expected, hashMap);
+            } else {
+                sync.fail(throwable);
+            }
             sync.call();
-        };
-        runOnUiThread(myRunnable);
+        });
         sync.waitCall(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
@@ -83,46 +79,24 @@ public class FriendshipUtilsTest {
     public void addFriendCreatesRequest() throws Throwable{
         addFriend(recipient);
 
-        final Map<String,Boolean> result = new HashMap<>();
+        final Map<String, Boolean> result = new HashMap<>();
         result.put(sender.getUid(), true);
 
-        TestAsyncUtils sync = new TestAsyncUtils();
-
-        db.getCustomDocument("friendRequests", recipient.getUid(), HashMap.class)
-                .whenComplete((hashMap, throwable) -> {
-                    if (throwable == null) {
-                        sync.assertEquals(result, hashMap);
-                    } else {
-                        sync.fail(throwable);
-                    }
-                    sync.call();
-                });
-        sync.waitCall(1);
-        sync.assertNoFailedTests();
+        checkResult(db.getCustomDocument("friendRequests", recipient.getUid(), HashMap.class),
+                result);
     }
 
     @Test
     public void acceptRequestCreatedFriendship() throws Throwable {
         authenticator.signOut();
         authenticator.setCurrentUser(recipient);
-        final Map<String,Boolean> result = new HashMap<>();
+        final Map<String, Boolean> result = new HashMap<>();
         result.put(sender.getUid(), true);
 
         acceptRequest(sender);
 
-        TestAsyncUtils sync = new TestAsyncUtils();
-
-        db.getCustomDocument("friendships", recipient.getUid(), HashMap.class)
-                .whenComplete((hashMap, throwable) -> {
-                    if (throwable == null) {
-                        sync.assertEquals(result, hashMap);
-                    } else {
-                        sync.fail(throwable);
-                    }
-                    sync.call();
-                });
-        sync.waitCall(1);
-        sync.assertNoFailedTests();
+        checkResult(db.getCustomDocument("friendships", recipient.getUid(), HashMap.class),
+                result);
     }
 
     @Test
@@ -131,18 +105,7 @@ public class FriendshipUtilsTest {
         acceptRequest(sender);
         deleteFriend(recipient);
 
-        TestAsyncUtils sync = new TestAsyncUtils();
-
-        db.getCustomDocument("friendships", recipient.getUid(), HashMap.class)
-                .whenComplete((hashMap, throwable) -> {
-                    if (throwable == null) {
-                        sync.assertEquals(new HashMap<String, Boolean>(), hashMap);
-                    } else {
-                        sync.fail(throwable);
-                    }
-                    sync.call();
-                });
-        sync.waitCall(1);
-        sync.assertNoFailedTests();
+        checkResult(db.getCustomDocument("friendships", recipient.getUid(), HashMap.class),
+                new HashMap<>());
     }
 }
