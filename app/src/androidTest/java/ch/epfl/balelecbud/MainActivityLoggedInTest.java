@@ -44,8 +44,6 @@ public class MainActivityLoggedInTest extends BasicAuthenticationTest {
         }
     };
 
-    @Before
-
     @Test
     public void testLoggedOutGoesToLoginActivity() {
         onView(withId(R.id.buttonSignOut)).check(matches(isDisplayed()));

@@ -79,6 +79,7 @@ public class LocationTest {
     public void testToString() {
         Assert.assertEquals("Location(lat = 2.0, long = 1.0)", location.toString());
     }
+
 }
 
    
