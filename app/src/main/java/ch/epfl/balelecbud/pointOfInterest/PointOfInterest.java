@@ -41,9 +41,9 @@ public class PointOfInterest {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof PointOfInterest)
-                && ((PointOfInterest) obj).getName() == name
-                && ((PointOfInterest) obj).getType() == type
+                && ((PointOfInterest) obj).getName().equals(name)
+                && ((PointOfInterest) obj).getType().equals(type)
                 && ((PointOfInterest) obj).getLocation().equals(location)
-                && ((PointOfInterest) obj).getPoiToken() == poiToken;
+                && ((PointOfInterest) obj).getPoiToken().equals(poiToken);
     }
 }

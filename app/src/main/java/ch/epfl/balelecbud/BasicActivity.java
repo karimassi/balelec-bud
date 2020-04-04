@@ -114,5 +114,4 @@ public class BasicActivity extends AppCompatActivity implements NavigationView.O
     public DatabaseWrapper getDatabase() {
         return databaseWrapper;
     }
-
 }

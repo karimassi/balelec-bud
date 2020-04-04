@@ -28,7 +28,11 @@ tools:context="ch.epfl.balelecbud.PointOfInterestActivity">
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+android:layout_height="match_parent"
+android:layout_width="match_parent"
+android:id="@+id/swipe_refresh_layout_point_of_interest"
+xmlns:android="http://schemas.android.com/apk/res/android">
     <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -40,6 +44,7 @@ tools:context="ch.epfl.balelecbud.PointOfInterestActivity">
         app:layoutManager="LinearLayoutManager"
         tools:context=".PointOfInterestActivity"
         tools:listitem="@layout/item_point_of_interest" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
 
@@ -55,3 +60,4 @@ tools:context="ch.epfl.balelecbud.PointOfInterestActivity">
     app:menu="@menu/root_activity_menu_header"
     app:itemIconTint="@color/blek_orange" />
 </androidx.drawerlayout.widget.DrawerLayout>
+

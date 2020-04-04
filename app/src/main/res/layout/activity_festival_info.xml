@@ -29,6 +29,12 @@ tools:context="ch.epfl.balelecbud.FestivalInformationActivity">
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/swipe_refresh_layout_festival_info"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/festivalInfoRecyclerView"
             android:layout_width="match_parent"
@@ -38,6 +44,8 @@ tools:context="ch.epfl.balelecbud.FestivalInformationActivity">
             app:layoutManager="LinearLayoutManager"
             tools:context=".FestivalInformationActivity"
             tools:listitem="@layout/item_festival_info" />
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
 

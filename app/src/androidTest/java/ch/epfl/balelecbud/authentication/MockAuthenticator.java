@@ -38,7 +38,7 @@ public class MockAuthenticator implements Authenticator {
     }
 
     @Override
-    public CompletableFuture<Void> createAccount(final String email, final String password) {
+    public CompletableFuture<Void> createAccount(final String name, final String email, final String password) {
         if (!users.containsKey(email)) {
             users.put(email, password);
             User u = new User(email, email, provideUid());

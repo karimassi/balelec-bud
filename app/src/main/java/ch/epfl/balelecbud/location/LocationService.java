@@ -1,9 +1,7 @@
 package ch.epfl.balelecbud.location;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,7 +24,7 @@ public class LocationService extends IntentService {
     private static Authenticator authenticator = FirebaseAuthenticator.getInstance();
     private static DatabaseWrapper databaseWrapper = FirestoreDatabaseWrapper.getInstance();
 
-    private String userId;
+    private User user;
 
     @VisibleForTesting
     public static void setAuthenticator(Authenticator auth) {
@@ -41,25 +39,10 @@ public class LocationService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        User user = getAuthenticator().getCurrentUser();
-        if (user != null) {
-            this.userId = user.getUid();
-        } else {
-            SharedPreferences sharedPref = this.getSharedPreferences("User", Context.MODE_PRIVATE);
-            this.userId = sharedPref.getString("CurrentUser", null);
+        user = getAuthenticator().getCurrentUser();
+        if (user == null) {
+            LocationUtil.disableLocation();
         }
-        if (userId == null) {
-            LocationUtil.disableLocation(this);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        SharedPreferences sharedPref = this.getSharedPreferences("User", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("CurrentUser", userId);
-        editor.apply();
     }
 
     public Authenticator getAuthenticator() {
@@ -84,10 +67,10 @@ public class LocationService extends IntentService {
     private void handleLocationFromIntent(@NonNull Intent intent) {
         LocationResult result = LocationResult.extractResult(intent);
         if (result != null && result.getLastLocation() != null) {
-            Log.d(TAG, "handleLocationFromIntent: userId = " + this.userId);
+            Log.d(TAG, "handleLocationFromIntent: userId = " + this.user.getUid());
             getDatabase().storeDocumentWithID(
                     DatabaseWrapper.LOCATIONS_PATH,
-                    this.userId,
+                    this.user.getUid(),
                     new Location(result.getLastLocation())
             );
         }

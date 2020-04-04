@@ -87,7 +87,7 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
     }
 
     protected void setLocationPermission() {
-        locationEnabled = LocationUtil.isLocationActive(this);
+        locationEnabled = LocationUtil.isLocationActive();
     }
 
     protected void setLocationFrom(android.location.Location deviceLocation, boolean locationEnabled) {

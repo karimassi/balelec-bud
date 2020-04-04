@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.Button;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
@@ -39,15 +40,13 @@ public class WelcomeActivity extends BasicActivity {
 
     private void setUpLocation() {
         this.locationSwitch = findViewById(R.id.locationSwitch);
-        this.locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Log.d(TAG, "Location switched: ON");
-                    LocationUtil.enableLocation(WelcomeActivity.this);
-                } else {
-                    Log.d(TAG, "Location switched: OFF");
-                    LocationUtil.disableLocation(WelcomeActivity.this);
-                }
+        this.locationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Log.d(TAG, "Location switched: ON");
+                LocationUtil.enableLocation();
+            } else {
+                Log.d(TAG, "Location switched: OFF");
+                LocationUtil.disableLocation();
             }
         });
         LocationUtil.requestLocationPermission(this);
@@ -67,36 +66,22 @@ public class WelcomeActivity extends BasicActivity {
     }
 
     private Action onPermissionNotGranted(final String logText) {
-        return new Action() {
-            @Override
-            public void perform() {
-                Log.i(TAG, "onRequestPermissionsResult: " + logText);
-                WelcomeActivity.this.locationSwitch.setClickable(false);
-                WelcomeActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        WelcomeActivity.this.locationSwitch.setChecked(false);
-                    }
-                });
-            }
+        return () -> {
+            Log.i(TAG, "onRequestPermissionsResult: " + logText);
+            WelcomeActivity.this.locationSwitch.setClickable(false);
+            WelcomeActivity.this.runOnUiThread(() ->
+                    WelcomeActivity.this.locationSwitch.setChecked(false));
         };
     }
 
     private Action onPermissionGranted() {
-        return new Action() {
-            @Override
-            public void perform() {
-                Log.i(TAG, "onRequestPermissionsResult: Permission granted");
-                WelcomeActivity.this.locationSwitch.setClickable(true);
-                if (LocationUtil.isLocationActive(WelcomeActivity.this)) {
-                    Log.d(TAG, "onPermissionGranted: location was active");
-                    WelcomeActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            WelcomeActivity.this.locationSwitch.setChecked(true);
-                        }
-                    });
-                }
+        return () -> {
+            Log.i(TAG, "onRequestPermissionsResult: Permission granted");
+            WelcomeActivity.this.locationSwitch.setClickable(true);
+            if (LocationUtil.isLocationActive()) {
+                Log.d(TAG, "onPermissionGranted: location was active");
+                WelcomeActivity.this.runOnUiThread(() ->
+                        WelcomeActivity.this.locationSwitch.setChecked(true));
             }
         };
     }
