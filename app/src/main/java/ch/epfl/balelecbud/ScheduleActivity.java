@@ -1,30 +1,21 @@
 package ch.epfl.balelecbud;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 
 import androidx.annotation.VisibleForTesting;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.Collections;
 import java.util.List;
 
-import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
-public class ScheduleActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ScheduleActivity extends BasicActivity {
 
     private ScheduleAdapter mAdapter;
 

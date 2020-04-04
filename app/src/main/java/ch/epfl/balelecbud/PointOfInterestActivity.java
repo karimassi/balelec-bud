@@ -6,15 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.navigation.NavigationView;
-
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestData;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestHolder;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
-public class PointOfInterestActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class PointOfInterestActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

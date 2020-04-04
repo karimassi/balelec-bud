@@ -15,10 +15,12 @@ import com.google.android.material.navigation.NavigationView;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.friendship.SocialActivity;
+import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
 
-public class BasicActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class BasicActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static Authenticator authenticator = FirebaseAuthenticator.getInstance();
     private static DatabaseWrapper databaseWrapper = FirestoreDatabaseWrapper.getInstance();
@@ -36,6 +38,10 @@ public class BasicActivity extends AppCompatActivity implements NavigationView.O
                 break;
             case R.id.activity_main_drawer_schedule:
                 startActivity(new Intent(this, ScheduleActivity.class));
+                Intent intent = new Intent(this, ConcertFlow.class);
+                intent.setAction(FlowUtil.GET_ALL_CONCERT);
+                intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(this, ScheduleActivity.class));
+                startService(intent);
                 break;
             case R.id.activity_main_drawer_poi:
                 startActivity(new Intent(this, PointOfInterestActivity.class));
