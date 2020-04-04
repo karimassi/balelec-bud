@@ -2,6 +2,7 @@ package ch.epfl.balelecbud;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 import androidx.fragment.app.Fragment;
 
@@ -11,7 +12,7 @@ import ch.epfl.balelecbud.transport.TransportStationsFragment;
 import ch.epfl.balelecbud.transport.objects.TransportStation;
 import ch.epfl.balelecbud.util.views.OnRecyclerViewInteractionListener;
 
-public class TransportActivity extends BasicActivity implements OnRecyclerViewInteractionListener<TransportStation> {
+public class TransportActivity extends AppCompatActivity implements OnRecyclerViewInteractionListener<TransportStation> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

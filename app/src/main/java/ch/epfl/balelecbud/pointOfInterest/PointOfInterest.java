@@ -12,14 +12,12 @@ public class PointOfInterest {
 
     public PointOfInterest(){ }
 
-
     public PointOfInterest(GeoPoint location, String name, String type, String poiToken) {
         this.location = location;
         this.name = name;
         this.type = type;
         this.poiToken = poiToken;
     }
-
 
     public GeoPoint getLocation() {
         return location;
@@ -36,7 +34,6 @@ public class PointOfInterest {
     public String getPoiToken() {
         return poiToken;
     }
-
 
     @Override
     public boolean equals(@Nullable Object obj) {

@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.location.LocationUtil;
@@ -14,7 +15,9 @@ import ch.epfl.balelecbud.location.LocationUtil.Action;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
-public class WelcomeActivity extends BasicActivity {
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+
+public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
     private Switch locationSwitch;
 
@@ -103,7 +106,7 @@ public class WelcomeActivity extends BasicActivity {
     }
 
     private void signOut() {
-        getAuthenticator().signOut();
+        getAppAuthenticator().signOut();
         if (LocationUtil.isLocationActive())
             LocationUtil.disableLocation();
         Intent intent = new Intent(this, LoginUserActivity.class);

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -17,42 +16,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.facades.RecyclerViewAdapterFacade;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
 
-    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
-
-    private IntentLauncher intentLauncher = new IntentLauncher() {
-        @Override
-        public void launchIntent(@NonNull Intent intent) {
-            ScheduleAdapter.this.mainActivity.startService(intent);
-        }
-    };
+    private Consumer<Intent> intentLauncher;
 
     private final Activity mainActivity;
 
     @VisibleForTesting
-    public void setIntentLauncher(IntentLauncher intentLauncher) {
+    public void setIntentLauncher(Consumer<Intent> intentLauncher) {
         this.intentLauncher = intentLauncher;
     }
 
-    @VisibleForTesting
-    public static void setDatabaseImplementation(DatabaseWrapper databaseWrapper) {
-        database = databaseWrapper;
-    }
-
-    private List<Slot> slots;
-    private List<Slot> subscribedConcertAtLaunch;
+    private final List<Slot> slots;
+    private final List<Slot> subscribedConcertAtLaunch;
 
     static class ScheduleViewHolder extends RecyclerView.ViewHolder {
         final TextView timeSlotView;
@@ -92,7 +80,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             }
         };
         DatabaseListener<Slot> listener = new DatabaseListener<>(facade, slots, Slot.class);
-        database.listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
+        getAppDatabaseWrapper().listen(DatabaseWrapper.CONCERT_SLOTS_PATH, listener);
+        intentLauncher = ScheduleAdapter.this.mainActivity::startService;
     }
 
     @NonNull
@@ -111,17 +100,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
 
-        viewHolder.subscribeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                if (isChecked) {
-                    Log.d(TAG, "Notification switched: ON");
-                    intentLauncher.launchIntent(
-                            FlowUtil.packSubscribeIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
-                } else {
-                    Log.d(TAG, "Notification switched: ON");
-                    intentLauncher.launchIntent(
-                            FlowUtil.packCancelIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
-                }
+        viewHolder.subscribeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Log.d(TAG, "Notification switched: ON");
+                intentLauncher.accept(
+                        FlowUtil.packSubscribeIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
+            } else {
+                Log.d(TAG, "Notification switched: ON");
+                intentLauncher.accept(
+                        FlowUtil.packCancelIntentWithSlot(ScheduleAdapter.this.mainActivity, slot));
             }
         });
 

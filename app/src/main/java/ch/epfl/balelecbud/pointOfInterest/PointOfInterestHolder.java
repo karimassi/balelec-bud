@@ -9,9 +9,9 @@ import ch.epfl.balelecbud.R;
 
 public class PointOfInterestHolder extends RecyclerView.ViewHolder {
 
-    public TextView nameTextView;
-    public TextView typeTextView;
-    public TextView locationTextView;
+    public final TextView nameTextView;
+    public final TextView typeTextView;
+    public final TextView locationTextView;
 
     public PointOfInterestHolder(View view) {
         super(view);

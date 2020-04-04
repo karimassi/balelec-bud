@@ -48,7 +48,7 @@ public class LoginUserActivityTest extends BasicAuthenticationTest{
 
     @Before
     public void setUp() throws Throwable{
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
 

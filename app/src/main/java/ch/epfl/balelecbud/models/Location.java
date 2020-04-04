@@ -18,7 +18,7 @@ public class Location implements Parcelable {
 
     public static Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
 
-    public Location() {}
+    public Location() { }
 
     public Location(double latitude, double longitude) {
         this.longitude = longitude;

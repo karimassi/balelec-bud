@@ -23,7 +23,7 @@ public class MainActivityTest extends BasicAuthenticationTest {
         @Override
         protected void beforeActivityLaunched() {
             MockAuthenticator.getInstance().signOut();
-            MainActivity.setAuthenticator(MockAuthenticator.getInstance());
+            BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
             Intents.init();
         }
 
@@ -35,7 +35,7 @@ public class MainActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testLoggedOutGoesToLoginActivity() {
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 }
