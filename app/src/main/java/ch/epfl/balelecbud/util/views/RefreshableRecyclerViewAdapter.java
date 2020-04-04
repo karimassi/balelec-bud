@@ -50,4 +50,5 @@ public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder
     public int getItemCount() {
         return data.size();
     }
+
 }

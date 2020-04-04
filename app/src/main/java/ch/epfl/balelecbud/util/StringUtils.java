@@ -8,6 +8,7 @@ import com.google.firebase.Timestamp;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import ch.epfl.balelecbud.R;
 
@@ -15,7 +16,7 @@ public class StringUtils {
 
     public static String timestampToScheduleString(Timestamp time) {
         Date date = time.toDate();
-        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
         return dtf.format(date);
     }
 
@@ -29,5 +30,10 @@ public class StringUtils {
             return false;
         }
         return true;
+    }
+
+    public static String dateToString(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM HH:mm", Locale.ENGLISH);
+        return dateFormat.format(date);
     }
 }
