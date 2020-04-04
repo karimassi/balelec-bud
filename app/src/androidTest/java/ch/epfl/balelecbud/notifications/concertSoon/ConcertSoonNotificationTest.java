@@ -91,7 +91,8 @@ public class ConcertSoonNotificationTest {
         // which leaves plenty of time to cancel it
         cal.add(Calendar.SECOND, 5);
         cal.add(Calendar.MINUTE, 15);
-        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
+        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3",
+                new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
 
         NotificationScheduler ns = NotificationScheduler.getInstance();
         ns.scheduleNotification(ctx, s);

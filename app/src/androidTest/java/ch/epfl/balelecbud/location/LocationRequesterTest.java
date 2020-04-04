@@ -106,6 +106,7 @@ public class LocationRequesterTest {
         onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertTrue(LocationUtil.isLocationActive());
         sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
@@ -129,6 +130,7 @@ public class LocationRequesterTest {
         onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertFalse(LocationUtil.isLocationActive());
         sync.assertCalled(2);
+        sync.assertNoFailedTests();
     }
 
     private void checkPermissionAfterResult(String[] permissions, int[] permissionStatus, boolean b) {
@@ -186,5 +188,6 @@ public class LocationRequesterTest {
         onView(withId(R.id.mapButton)).perform(click());
         Assert.assertFalse(MapViewActivity.getLocationPermission());
         sync.assertCalled(0);
+        sync.assertNoFailedTests();
     }
 }

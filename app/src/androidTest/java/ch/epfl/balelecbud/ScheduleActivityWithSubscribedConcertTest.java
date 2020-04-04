@@ -72,6 +72,7 @@ public class ScheduleActivityWithSubscribedConcertTest {
         onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).perform(click());
         sync.waitCall(1);
         sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test

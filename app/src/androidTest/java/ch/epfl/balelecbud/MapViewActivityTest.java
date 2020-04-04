@@ -59,15 +59,19 @@ public class MapViewActivityTest {
     @Test
     public void testUpdateLocationUi() throws Throwable {
         MapViewActivity mActivity = mActivityRule.getActivity();
+        TestAsyncUtils sync = new TestAsyncUtils();
         TestAsyncUtils.runOnUIThreadAndWait(() -> {
             GoogleMap googleMap = mActivity.getGoogleMap();
             if(googleMap != null) {
-                assertThat(googleMap.isMyLocationEnabled(),
+                sync.assertThat(googleMap.isMyLocationEnabled(),
                         is(MapViewActivity.getLocationPermission()));
-                assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
+                sync.assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
                         is(MapViewActivity.getLocationPermission()));
+                sync.call();
             }
         });
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test

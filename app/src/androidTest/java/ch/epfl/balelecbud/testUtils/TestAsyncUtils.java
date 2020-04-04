@@ -4,6 +4,7 @@ import android.util.Log;
 
 import junit.framework.AssertionFailedError;
 
+import org.hamcrest.Matcher;
 import org.junit.Assert;
 
 import java.util.Objects;
@@ -92,5 +93,12 @@ public class TestAsyncUtils {
 
     public void assertNoFailedTests() {
         Assert.assertFalse("Some tests failed, check logcat for details", this.hasFailed);
+    }
+
+    public <T> void assertThat(T actual, Matcher<? super T> matcher) {
+        if (!matcher.matches(actual)) {
+            hasFailed = true;
+            Log.wtf(TAG, "assertThat: match failed\n\texpected = " + matcher.toString() + "\n\tactual = " + actual.toString());
+        }
     }
 }

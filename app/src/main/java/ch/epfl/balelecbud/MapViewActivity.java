@@ -69,8 +69,7 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     protected void setLocationResult() {
         if(locationEnabled) {
             locationResult = LocationServices.getFusedLocationProviderClient(this).getLastLocation();
-        }
-        else {
+        } else {
             locationResult = null;
         }
     }

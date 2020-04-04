@@ -44,12 +44,13 @@ public class LocationUtilTest {
 
             @Override
             public void removeLocationUpdates(PendingIntent intent) {
-                Assert.fail();
+                sync.fail();
             }
         });
 
         LocationUtil.enableLocation();
         sync.assertCalled(1);
+        sync.assertNoFailedTests();
         Assert.assertTrue(LocationUtil.isLocationActive());
     }
 
@@ -60,21 +61,22 @@ public class LocationUtilTest {
             PendingIntent intent;
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                Assert.assertNotNull(lr);
-                Assert.assertNotNull(intent);
+                sync.assertNotNull(lr);
+                sync.assertNotNull(intent);
                 this.intent = intent;
                 sync.call();
             }
 
             @Override
             public void removeLocationUpdates(PendingIntent intent) {
-                Assert.assertEquals(this.intent, intent);
+                sync.assertEquals(this.intent, intent);
                 sync.call();
             }
         });
         LocationUtil.enableLocation();
         LocationUtil.disableLocation();
         sync.assertCalled(2);
+        sync.assertNoFailedTests();
         Assert.assertFalse(LocationUtil.isLocationActive());
     }
 
@@ -84,18 +86,19 @@ public class LocationUtilTest {
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                Assert.fail();
+                sync.fail();
             }
 
             @Override
             public void removeLocationUpdates(PendingIntent intent) {
-                Assert.assertNotNull(intent);
+                sync.assertNotNull(intent);
                 sync.call();
             }
         });
 
         LocationUtil.disableLocation();
         sync.assertCalled(1);
+        sync.assertNoFailedTests();
         Assert.assertFalse(LocationUtil.isLocationActive());
     }
 

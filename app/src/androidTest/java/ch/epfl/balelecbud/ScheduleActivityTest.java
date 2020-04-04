@@ -142,5 +142,6 @@ public class ScheduleActivityTest {
                 .perform(click());
         sync.waitCall(1);
         sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 }

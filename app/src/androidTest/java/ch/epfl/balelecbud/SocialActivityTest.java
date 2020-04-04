@@ -256,5 +256,6 @@ public class SocialActivityTest {
         });
         sync.waitCall(1);
         sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 }

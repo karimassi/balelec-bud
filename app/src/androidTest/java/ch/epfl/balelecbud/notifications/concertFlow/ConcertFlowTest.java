@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,11 +38,25 @@ public class ConcertFlowTest {
                 ApplicationProvider.getApplicationContext(),
                 ConcertOfInterestDatabase.class
         ).build();
-        this.flow.setDb(db);
+        ConcertFlow.setMockDb(db);
+        setDummyNotificationScheduler();
+        flow.onCreate();
+    }
+
+    private void setDummyNotificationScheduler() {
+        this.flow.setNotificationScheduler(new NotificationSchedulerInterface() {
+            @Override
+            public void scheduleNotification(Context context, Slot slot) { }
+
+            @Override
+            public void cancelNotification(Context context, Slot slot) { }
+        });
     }
 
     @After
     public void tearDown() {
+        flow.onDestroy();
+        Assert.assertTrue(this.db.isOpen());
         this.db.close();
     }
 
@@ -63,6 +78,7 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         sync.waitCall(1);
         sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
@@ -74,6 +90,7 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         sync.waitCall(2);
         sync.assertCalled(2);
+        sync.assertNoFailedTests();
     }
 
     @Test
@@ -90,6 +107,7 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         sync.waitCall(3);
         sync.assertCalled(3);
+        sync.assertNoFailedTests();
     }
 
     @NotNull
@@ -126,7 +144,7 @@ public class ConcertFlowTest {
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
         flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
         flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        launchAndCheck( 1, true, false);
+        launchAndCheck( 1, false, true);
     }
 
     private void launchAndCheck(int size, boolean containsSlot1, boolean containsSlot2) throws InterruptedException {
@@ -145,5 +163,6 @@ public class ConcertFlowTest {
         flow.onHandleIntent(intent);
         sync.waitCall(1);
         sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 }
