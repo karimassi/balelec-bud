@@ -67,8 +67,8 @@ public class MapViewActivityTest {
                         is(MapViewActivity.getLocationPermission()));
                 sync.assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
                         is(MapViewActivity.getLocationPermission()));
-                sync.call();
             }
+            sync.call();
         });
         sync.assertCalled(1);
         sync.assertNoFailedTests();
