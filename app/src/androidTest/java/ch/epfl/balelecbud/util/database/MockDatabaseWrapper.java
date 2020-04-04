@@ -1,7 +1,6 @@
 package ch.epfl.balelecbud.util.database;
 
 import java.lang.reflect.Field;
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +16,6 @@ import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
-import ch.epfl.balelecbud.util.CompletableFutureUtils;
 
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 

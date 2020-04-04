@@ -6,7 +6,6 @@ import com.google.firebase.firestore.GeoPoint;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
