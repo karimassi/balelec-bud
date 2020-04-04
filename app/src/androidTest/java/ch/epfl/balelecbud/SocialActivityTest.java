@@ -260,7 +260,7 @@ public class SocialActivityTest extends BasicActivityTest {
     }
 
     @Override
-    void setIds() {
+    protected void setIds() {
         setIds(R.id.social_activity_drawer_layout, R.id.social_activity_nav_view);
     }
 }

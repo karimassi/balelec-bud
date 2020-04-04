@@ -211,7 +211,7 @@ public class ScheduleActivityTest extends BasicActivityTest {
     }
 
     @Override
-    void setIds() {
+    protected void setIds() {
         setIds(R.id.schedule_activity_drawer_layout, R.id.schedule_activity_nav_view);
     }
 }

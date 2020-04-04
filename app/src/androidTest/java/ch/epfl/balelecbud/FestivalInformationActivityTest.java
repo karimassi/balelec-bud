@@ -116,7 +116,7 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
     }
 
     @Override
-    void setIds() {
+    protected void setIds() {
         setIds(R.id.festival_info_activity_drawer_layout, R.id.festival_info_activity_nav_view);
     }
 }

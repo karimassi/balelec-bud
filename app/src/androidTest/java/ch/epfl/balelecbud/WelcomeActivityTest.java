@@ -50,7 +50,7 @@ public class WelcomeActivityTest extends BasicActivityTest {
     }
 
     @Override
-    void setIds() {
+    protected void setIds() {
         setIds(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
     }
 }

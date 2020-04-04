@@ -165,7 +165,7 @@ public class MapViewActivityTest extends BasicActivityTest {
     }
 
     @Override
-    void setIds() {
+    protected void setIds() {
         setIds(R.id.map_activity_drawer_layout, R.id.map_activity_nav_view);
     }
 }

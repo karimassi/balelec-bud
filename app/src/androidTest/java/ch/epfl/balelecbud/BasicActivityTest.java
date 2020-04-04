@@ -100,9 +100,9 @@ public abstract class BasicActivityTest {
         onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
     }
 
-    abstract void setIds();
+    protected abstract void setIds();
 
-    void setIds(int activity_drawer_layout_id, int activity_nav_view_id){
+    protected void setIds(int activity_drawer_layout_id, int activity_nav_view_id){
         this.activity_drawer_layout_id = activity_drawer_layout_id;
         this.activity_nav_view_id = activity_nav_view_id;
     }
