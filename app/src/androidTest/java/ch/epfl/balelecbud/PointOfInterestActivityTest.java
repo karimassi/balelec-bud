@@ -1,11 +1,6 @@
 package ch.epfl.balelecbud;
 
-import android.view.Gravity;
-
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -27,14 +22,13 @@ import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class PointOfInterestActivityTest {
+public class PointOfInterestActivityTest extends BasicActivityTest {
 
     MockDatabaseWrapper mock;
     private PointOfInterest pointOfInterest1 = new PointOfInterest(
@@ -43,7 +37,7 @@ public class PointOfInterestActivityTest {
             new GeoPoint(4, 22), "Bar EE", "Bar", "UNFUN101");
 
     @Before
-    public void setup(){
+    public void setup() {
         mock.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
         refreshRecyclerView();
     }
@@ -51,12 +45,12 @@ public class PointOfInterestActivityTest {
     @Rule
     public final ActivityTestRule<PointOfInterestActivity> mActivityRule =
             new ActivityTestRule<PointOfInterestActivity>(PointOfInterestActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
-            PointOfInterestData.setDatabaseImplementation(mock);
-        }
-    };
+                @Override
+                protected void beforeActivityLaunched() {
+                    mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
+                    PointOfInterestData.setDatabaseImplementation(mock);
+                }
+            };
 
     @Test
     public void testPointOfInterestRecyclerViewIsDisplayed() {
@@ -132,71 +126,8 @@ public class PointOfInterestActivityTest {
         viewInteraction.check(matches(hasDescendant(withText(new Location(poi.getLocation()).toString()))));
     }
 
-    @Test
-    public void testDrawer() {
-        onView(withId(R.id.poi_activity_drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.headerImageView)).check(matches(isDisplayed()));
-        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openInfoActivityFromDrawer() {
-        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_info));
-        onView(withId(R.id.festivalInfoRecyclerView)).check(matches(isDisplayed()));
-
-    }
-
-    @Test
-    public void openScheduleActivityFromDrawer() {
-        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_schedule));
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openPOIActivityFromDrawer() {
-        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_poi));
-        onView(withId(R.id.pointOfInterestRecyclerView)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openMapActivityFromDrawer() {
-        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_map));
-        onView(withId(R.id.map)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openTransportActivityFromDrawer() {
-        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_transport));
-        onView(withId(R.id.fragmentTransportList)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void signOutFromDrawer() {
-        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.poi_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
-        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testBackPress(){
-        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.poi_activity_nav_view)).check(matches(isDisplayed()));
-        Espresso.pressBack();
-        onView(withId(R.id.poi_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
-        Espresso.pressBack();
+    @Override
+    void setIds() {
+        setIds(R.id.poi_activity_drawer_layout, R.id.poi_activity_nav_view);
     }
 }

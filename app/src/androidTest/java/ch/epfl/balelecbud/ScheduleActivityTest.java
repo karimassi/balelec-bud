@@ -1,14 +1,10 @@
 package ch.epfl.balelecbud;
 
 import android.content.Intent;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.annotation.NonNull;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
@@ -41,7 +37,6 @@ import ch.epfl.balelecbud.util.intents.IntentLauncher;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -49,7 +44,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
-public class ScheduleActivityTest {
+public class ScheduleActivityTest extends BasicActivityTest {
 
     private MockDatabaseWrapper mock;
 
@@ -58,17 +53,17 @@ public class ScheduleActivityTest {
     static private Slot slot3;
 
     @BeforeClass
-    public static void setUpSlots(){
+    public static void setUpSlots() {
         List<Timestamp> timestamps = new LinkedList<>();
-        for(int i = 0; i < 6; ++i){
+        for (int i = 0; i < 6; ++i) {
             Calendar c = Calendar.getInstance();
-            c.set(2020,11,11,10 + i, i % 2 == 0 ? 15 : 0);
+            c.set(2020, 11, 11, 10 + i, i % 2 == 0 ? 15 : 0);
             Date date = c.getTime();
             timestamps.add(i, new Timestamp(date));
         }
         slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
-        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3)) ;
-        slot3 = new Slot(2, "Upset", "Scène Sat'",  timestamps.get(4), timestamps.get(5));
+        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3));
+        slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
     }
 
     @Rule
@@ -215,71 +210,8 @@ public class ScheduleActivityTest {
         };
     }
 
-    @Test
-    public void testDrawer() {
-        onView(withId(R.id.schedule_activity_drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.headerImageView)).check(matches(isDisplayed()));
-        onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openInfoActivityFromDrawer() {
-        onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.schedule_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_info));
-        onView(withId(R.id.festivalInfoRecyclerView)).check(matches(isDisplayed()));
-
-    }
-
-    @Test
-    public void openScheduleActivityFromDrawer() {
-        onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.schedule_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_schedule));
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openPOIActivityFromDrawer() {
-        onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.schedule_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_poi));
-        onView(withId(R.id.pointOfInterestRecyclerView)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openMapActivityFromDrawer() {
-        onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.schedule_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_map));
-        onView(withId(R.id.map)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openTransportActivityFromDrawer() {
-        onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.schedule_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_transport));
-        onView(withId(R.id.fragmentTransportList)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void signOutFromDrawer() {
-        onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.schedule_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
-        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testBackPress(){
-        onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.schedule_activity_nav_view)).check(matches(isDisplayed()));
-        Espresso.pressBack();
-        onView(withId(R.id.schedule_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
-        Espresso.pressBack();
+    @Override
+    void setIds() {
+        setIds(R.id.schedule_activity_drawer_layout, R.id.schedule_activity_nav_view);
     }
 }

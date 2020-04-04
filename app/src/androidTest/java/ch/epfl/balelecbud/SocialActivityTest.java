@@ -2,11 +2,7 @@ package ch.epfl.balelecbud;
 
 
 import android.os.SystemClock;
-import android.view.Gravity;
 
-import androidx.test.espresso.Espresso;
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -39,7 +35,6 @@ import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -49,7 +44,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class SocialActivityTest {
+public class SocialActivityTest extends BasicActivityTest {
 
     User currentUser = new User("karim@epfl.ch", "karim@epfl.ch", "0");
     User otherUser = new User("celine@epfl.ch", "celine@epfl.ch", "1");
@@ -73,7 +68,7 @@ public class SocialActivityTest {
     };
 
     private void createFriendship(User user) {
-        Map<String,Boolean> toStore= new HashMap<>();
+        Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(user.getUid(), true);
         mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, currentUser.getUid(), toStore);
 
@@ -83,7 +78,7 @@ public class SocialActivityTest {
     }
 
     private void createRequestFromUser(User user) {
-        Map<String,Boolean> toStore= new HashMap<>();
+        Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(user.getUid(), true);
         mockDb.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, currentUser.getUid(), toStore);
     }
@@ -145,7 +140,7 @@ public class SocialActivityTest {
     public void buttonDeleteFriendsUpdatesList() {
         selectTab(0);
         onView(withId(R.id.recycler_view_friends)).perform(RecyclerViewActions.
-            actionOnItemAtPosition(0, RecyclerViewButtonClick.clickChildViewWithId(R.id.buttonDeleteFriendItem)));
+                actionOnItemAtPosition(0, RecyclerViewButtonClick.clickChildViewWithId(R.id.buttonDeleteFriendItem)));
 
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friends)).check(matches(hasChildCount(0)));
@@ -257,90 +252,15 @@ public class SocialActivityTest {
             public void accept(Map<String, Object> stringObjectMap, Throwable throwable) {
                 if (stringObjectMap != null) {
                     Assert.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
-                }
-                else {
+                } else {
                     Assert.fail();
                 }
             }
         });
     }
 
-    @Test
-    public void testDrawer() {
-        onView(withId(R.id.social_activity_drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.headerImageView)).check(matches(isDisplayed()));
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openInfoActivityFromDrawer() {
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.social_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_info));
-        onView(withId(R.id.festivalInfoRecyclerView)).check(matches(isDisplayed()));
-
-    }
-
-    @Test
-    public void openScheduleActivityFromDrawer() {
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.social_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_schedule));
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openPOIActivityFromDrawer() {
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.social_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_poi));
-        onView(withId(R.id.pointOfInterestRecyclerView)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openMapActivityFromDrawer() {
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.social_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_map));
-        onView(withId(R.id.map)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openTransportActivityFromDrawer() {
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.social_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_transport));
-        onView(withId(R.id.fragmentTransportList)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void openSocialActivityFromDrawer(){
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.social_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_social));
-        onView(withId(R.id.appbar)).check(matches(isDisplayed()));
-        onView(withId(R.id.tabs_social)).check(matches(isDisplayed()));
-        onView(withId(R.id.view_pager_social)).check(matches(isDisplayed()));
-        onView(withId(R.id.fab_add_friends)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void signOutFromDrawer() {
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.social_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
-        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testBackPress(){
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.social_activity_nav_view)).check(matches(isDisplayed()));
-        Espresso.pressBack();
-        onView(withId(R.id.social_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
-        Espresso.pressBack();
+    @Override
+    void setIds() {
+        setIds(R.id.social_activity_drawer_layout, R.id.social_activity_nav_view);
     }
 }
