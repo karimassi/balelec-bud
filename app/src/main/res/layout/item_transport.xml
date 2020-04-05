@@ -28,7 +28,6 @@
         android:id="@+id/transportTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:inputType="time"
         android:layout_weight="1" />
 
 </LinearLayout>

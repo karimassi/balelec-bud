@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.Location;
@@ -30,14 +31,14 @@ import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 public class LocationServiceTest {
     private final static String LOCATION_KEY = "com.google.android.gms.location.EXTRA_LOCATION_RESULT";
     private LocationService ls;
-    private Authenticator mockAuth = MockAuthenticator.getInstance();
-    private DatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
-    private Random random = new Random(42);
+    private final Authenticator mockAuth = MockAuthenticator.getInstance();
+    private final DatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final Random random = new Random(42);
 
     @BeforeClass
     public static void setUpMock() {
-        LocationService.setAuthenticator(MockAuthenticator.getInstance());
-        LocationService.setDatabase(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
+        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
     }
 
     @Before

@@ -2,6 +2,7 @@ package ch.epfl.balelecbud;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -12,7 +13,7 @@ import ch.epfl.balelecbud.pointOfInterest.PointOfInterestHolder;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
-public class PointOfInterestActivity extends BasicActivity{
+public class PointOfInterestActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

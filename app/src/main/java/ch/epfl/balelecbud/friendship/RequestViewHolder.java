@@ -11,9 +11,9 @@ import ch.epfl.balelecbud.R;
 
 public class RequestViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView friendName;
-    public Button acceptButton;
-    public Button deleteButton;
+    public final TextView friendName;
+    public final Button acceptButton;
+    public final Button deleteButton;
 
     public RequestViewHolder(@NonNull View itemView) {
         super(itemView);

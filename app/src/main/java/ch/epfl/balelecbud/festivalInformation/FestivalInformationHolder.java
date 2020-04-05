@@ -9,8 +9,8 @@ import ch.epfl.balelecbud.R;
 
 public class FestivalInformationHolder extends RecyclerView.ViewHolder {
 
-    public TextView informationTitleTextView;
-    public TextView informationContentTextView;
+    public final TextView informationTitleTextView;
+    public final TextView informationContentTextView;
 
     public FestivalInformationHolder(View view) {
         super(view);

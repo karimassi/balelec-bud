@@ -6,7 +6,7 @@
     android:id="@+id/swipe_refresh_layout_friends"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recycler_view_friends"

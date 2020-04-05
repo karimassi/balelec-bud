@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.authentication;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.models.User;
@@ -13,7 +14,6 @@ public class MockAuthenticator implements Authenticator {
 
     private static final Authenticator instance = new MockAuthenticator();
 
-
     private final Map<String, String> users = new HashMap<String, String>() {
         {
             put("karim@epfl.ch", "123456");
@@ -24,13 +24,11 @@ public class MockAuthenticator implements Authenticator {
 
     private User currentUser;
 
-    private MockAuthenticator() {
-
-    }
+    private MockAuthenticator() { }
 
     @Override
     public CompletableFuture<User> signIn(final String email, final String password) {
-        if (users.containsKey(email) && users.get(email).equals(password)) {
+        if (users.containsKey(email) && Objects.equals(users.get(email), password)) {
             return MockDatabaseWrapper.getInstance().getCustomDocument(DatabaseWrapper.USERS_PATH, "0", User.class);
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed login");
@@ -67,15 +65,14 @@ public class MockAuthenticator implements Authenticator {
         return String.valueOf(uid++);
     }
 
-
     @Override
     public void setCurrentUser(User user) {
         if(currentUser == null) {
             currentUser = user;
         }
     }
+
     public static Authenticator getInstance() {
         return instance;
     }
-
 }

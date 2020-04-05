@@ -10,9 +10,9 @@ import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 public class NotificationProvider extends BroadcastReceiver {
 
-    public static String NOTIFICATION_ID = "notification_id";
-    public static String NOTIFICATION = "notification";
-    public static String SLOT_ID = "slot_id";
+    public final static String NOTIFICATION_ID = "notification_id";
+    public final static String NOTIFICATION = "notification";
+    public final static String SLOT_ID = "slot_id";
 
     @Override
     public void onReceive(Context context, Intent intent) {

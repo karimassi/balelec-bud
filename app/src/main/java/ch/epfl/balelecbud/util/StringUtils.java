@@ -1,23 +1,39 @@
 package ch.epfl.balelecbud.util;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
+import android.content.Context;
+import android.text.TextUtils;
+import android.widget.EditText;
 
 import com.google.firebase.Timestamp;
 
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
+import ch.epfl.balelecbud.R;
 
 public class StringUtils {
 
     public static String timestampToScheduleString(Timestamp time) {
         Date date = time.toDate();
-        //Calendar calendar = Calendar.getInstance();
-        //calendar.setTime(date);
-        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dtf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
         return dtf.format(date);
+    }
+
+    public static boolean isEmailValid(Context context, EditText emailField) {
+        String email = emailField.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            emailField.setError(context.getString(R.string.require_email));
+            return false;
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailField.setError(context.getString(R.string.invalid_email));
+            return false;
+        }
+        return true;
+    }
+
+    public static String dateToString(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM HH:mm", Locale.ENGLISH);
+        return dateFormat.format(date);
     }
 }
