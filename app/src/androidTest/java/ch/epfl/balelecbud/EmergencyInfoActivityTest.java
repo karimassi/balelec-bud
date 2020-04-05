@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.emergency;
+package ch.epfl.balelecbud;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -29,7 +29,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyInfoRecyclerViewTest {
+public class EmergencyInfoActivityTest {
 
     final EmergencyInfo info1 = new EmergencyInfo("To much alcool","Seek assistance");
     final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
