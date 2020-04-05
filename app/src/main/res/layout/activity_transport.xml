@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/transportLinearLayout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/transport_fragment_container"
+    android:parentActivityName="ch.epfl.balelecbud.WelcomeActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".TransportActivity">
-
-    <fragment
-        android:id="@+id/fragmentTransportList"
-        android:name="ch.epfl.balelecbud.transport.TransportListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="97dp"
-        tools:layout_editor_absoluteY="159dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:layout_height="match_parent" />

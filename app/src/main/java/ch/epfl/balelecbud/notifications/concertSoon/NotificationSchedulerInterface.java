@@ -9,5 +9,4 @@ public interface NotificationSchedulerInterface {
     void scheduleNotification(Context context, Slot slot);
 
     void cancelNotification(Context context, Slot slot);
-
 }

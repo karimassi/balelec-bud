@@ -31,9 +31,7 @@ public class Slot implements Parcelable {
     }
 
     @Ignore
-    public Slot() {
-
-    }
+    public Slot() { }
 
     protected Slot(Parcel in) {
         id = in.readInt();

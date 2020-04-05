@@ -12,10 +12,9 @@ import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 public class FirebaseAuthenticator implements Authenticator {
     private static final Authenticator instance = new FirebaseAuthenticator();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-    private FirebaseAuthenticator() {
-    }
+    private FirebaseAuthenticator() { }
 
     @Override
     public CompletableFuture<User> signIn(String email, String password) {

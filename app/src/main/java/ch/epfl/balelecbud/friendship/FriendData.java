@@ -6,7 +6,7 @@ import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
 public class FriendData extends RecyclerViewData<User, FriendViewHolder> {
 
-    private User currentUser;
+    private final User currentUser;
 
     public FriendData(User user) {
         super();

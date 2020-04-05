@@ -10,6 +10,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.room.Room;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDAO;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
@@ -17,32 +18,27 @@ import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 public class ConcertFlow extends IntentService {
     private static final String TAG = ConcertFlow.class.getSimpleName();
     private NotificationSchedulerInterface scheduler;
     private ConcertOfInterestDAO concertOfInterestDAO;
     private ConcertOfInterestDatabase db;
+    private static ConcertOfInterestDatabase mockDb = null;
 
     public ConcertFlow() {
         super(TAG);
     }
 
-    private IntentLauncher launcher = new IntentLauncher() {
-        @Override
-        public void launchIntent(@NonNull Intent intent) {
-            ConcertFlow.this.startActivity(intent);
-        }
-    };
+    private Consumer<Intent> launcher = ConcertFlow.this::startActivity;
 
     @VisibleForTesting
-    public void setLauncher(IntentLauncher launcher) {
+    public void setLauncher(Consumer<Intent> launcher) {
         this.launcher = launcher;
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    public void onHandleIntent(@Nullable Intent intent) {
         if (intent == null || intent.getAction() == null)
             return;
 
@@ -52,14 +48,12 @@ public class ConcertFlow extends IntentService {
             case FlowUtil.ACK_CONCERT:
                 handleAckIntent(intent);
                 break;
-            case FlowUtil.SUBSCRIBE_CONCERT: {
+            case FlowUtil.SUBSCRIBE_CONCERT:
                 handleSubscribeIntent(intent);
                 break;
-            }
-            case FlowUtil.CANCEL_CONCERT: {
+            case FlowUtil.CANCEL_CONCERT:
                 handleCancelIntent(intent);
                 break;
-            }
             case FlowUtil.GET_ALL_CONCERT:
                 handleGetAllIntent(intent);
                 break;
@@ -92,25 +86,27 @@ public class ConcertFlow extends IntentService {
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "onCreate");
-        db = Room.databaseBuilder(this,
-                ConcertOfInterestDatabase.class, "ConcertsOfInterest").build();
+        if (mockDb == null)
+            db = Room.databaseBuilder(this,
+                    ConcertOfInterestDatabase.class, "ConcertsOfInterest").build();
+        else
+            db = mockDb;
         concertOfInterestDAO = db.getConcertOfInterestDAO();
-        scheduler = NotificationScheduler.getInstance();
+        if (scheduler == null)
+            scheduler = NotificationScheduler.getInstance();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy");
-        db.close();
+        if (mockDb == null)
+            db.close();
     }
 
     @VisibleForTesting
-    public void setDb(ConcertOfInterestDatabase concertDb) {
-        if (db != null)
-            db.close();
-        this.db = concertDb;
-        concertOfInterestDAO = concertDb.getConcertOfInterestDAO();
+    public static void setMockDb(ConcertOfInterestDatabase concertDb) {
+        mockDb = concertDb;
     }
 
     @VisibleForTesting
@@ -121,21 +117,19 @@ public class ConcertFlow extends IntentService {
     private void getAllScheduledConcert(Intent callbackIntent) {
         Slot[] res = this.concertOfInterestDAO.getAllConcertOfInterest();
         Log.d(TAG, "getAllScheduledConcert: " + Arrays.toString(res));
-        this.launcher.launchIntent(FlowUtil.packCallback(res, callbackIntent));
+        this.launcher.accept(FlowUtil.packCallback(res, callbackIntent));
     }
 
     private void scheduleNewConcert(final Slot newSlot) {
         if (!concertOfInterestDAO.getAllConcertOfInterestList().contains(newSlot)) {
             concertOfInterestDAO.insertConcert(newSlot);
         }
-        if (scheduler != null)
-            scheduler.scheduleNotification(ConcertFlow.this, newSlot);
+        scheduler.scheduleNotification(ConcertFlow.this, newSlot);
     }
 
     private void removeConcert(final Slot slot) {
         concertOfInterestDAO.removeConcert(slot);
-        if (scheduler != null)
-            scheduler.cancelNotification(this, slot);
+        scheduler.cancelNotification(this, slot);
     }
 
     private void removeConcertById(int id) {

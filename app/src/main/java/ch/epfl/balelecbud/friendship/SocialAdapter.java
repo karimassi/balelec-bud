@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SocialAdapter extends FragmentStateAdapter {
-
     private final List<Fragment> fragmentList = new ArrayList<>();
 
     public SocialAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {

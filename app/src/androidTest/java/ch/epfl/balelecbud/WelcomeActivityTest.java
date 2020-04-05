@@ -10,7 +10,6 @@ import androidx.test.uiautomator.UiDevice;
 
 import com.google.android.gms.location.LocationRequest;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,11 +22,9 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityTest {
@@ -115,8 +112,8 @@ public class WelcomeActivityTest {
 
     @Test
     public void testTransportIsDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.transportButton)), onView(withId(R.id.transportLinearLayout)));
-        onView(withId(R.id.fragmentTransportList)).check(matches(isDisplayed()));
+        testFeatureIsDisplayed(onView(withId(R.id.transportButton)), onView(withId(R.id.transport_fragment_container)));
+        onView(withId(R.id.transport_fragment_container)).check(matches(isDisplayed()));
     }
 
     @Test

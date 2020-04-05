@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
 
-    protected List<A> data = new LinkedList<>();
+    protected final List<A> data = new LinkedList<>();
     private RecyclerView.Adapter<B> rvAdapter;
 
     public void setAdapter(RecyclerView.Adapter<B> adapter){

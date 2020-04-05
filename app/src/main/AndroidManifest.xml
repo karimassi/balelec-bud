@@ -30,7 +30,10 @@
         <activity android:name=".WelcomeActivity" />
         <activity android:name=".FestivalInformationActivity" />
         <activity android:name=".PointOfInterestActivity" />
-        <activity android:name=".TransportActivity" />
+        <activity
+            android:name=".TransportActivity"
+            android:parentActivityName="ch.epfl.balelecbud.WelcomeActivity">
+        </activity>
         <activity android:name=".ScheduleActivity" />
         <activity android:name=".friendship.SocialActivity"/>
         <activity
@@ -48,7 +51,7 @@
 
         <receiver
             android:name=".notifications.concertSoon.NotificationProvider"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="ch.epfl.balelecbud.notifications.concertSoon.ACTION"/>
             </intent-filter>
