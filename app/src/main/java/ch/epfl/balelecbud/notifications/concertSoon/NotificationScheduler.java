@@ -20,10 +20,9 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
-
 public class NotificationScheduler implements NotificationSchedulerInterface {
 
-    private static final String TAG = "ConcertSoon.Sched";
+    private static final String TAG = "ConcertSoon.Scheduler";
     private static final String CHANNEL_ID = "CONCERT_SOON_CHANNEL_ID";
     private static final String CONCERT_SOON_ACTION = "ch.epfl.balelecbud.notifications.concertSoon.ACTION";
 
@@ -32,9 +31,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
     private final Map<Integer, PendingIntent> pendingIntents = new HashMap<>();
 
     //private constructor to ensure singleton
-    private NotificationScheduler() {
-
-    }
+    private NotificationScheduler() { }
 
     public static NotificationScheduler getInstance() {
         if (single_instance == null) {

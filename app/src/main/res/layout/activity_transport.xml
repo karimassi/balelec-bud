@@ -29,13 +29,11 @@ tools:context="ch.epfl.balelecbud.TransportActivity">
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <fragment
-            android:id="@+id/fragmentTransportList"
-            android:name="ch.epfl.balelecbud.transport.TransportListFragment"
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/transport_fragment_container"
+            android:parentActivityName="ch.epfl.balelecbud.WelcomeActivity"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="97dp"
-            tools:layout_editor_absoluteY="159dp" />
+            android:layout_height="match_parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
 

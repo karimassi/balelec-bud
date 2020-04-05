@@ -1,35 +1,35 @@
 package ch.epfl.balelecbud;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
-import ch.epfl.balelecbud.util.intents.IntentLauncher;
 
 public class ScheduleActivity extends BasicActivity {
-
-    private ScheduleAdapter mAdapter;
-
+    
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
+    private ScheduleAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-        Log.d(TAG, "onCreate: Creation of the activity");
+        Log.v(TAG, "onCreate: Creation of the activity");
         RecyclerView rvSchedule = findViewById(R.id.scheduleRecyclerView);
         List<Slot> slots = FlowUtil.unpackCallback(getIntent());
-        mAdapter = new ScheduleAdapter(this, slots == null ?
-                Collections.<Slot>emptyList() : slots);
+        mAdapter = new ScheduleAdapter(this, slots);
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
 
@@ -39,7 +39,7 @@ public class ScheduleActivity extends BasicActivity {
     }
 
     @VisibleForTesting
-    public void setIntentLauncher(IntentLauncher intentLauncher) {
+    public void setIntentLauncher(Consumer<Intent> intentLauncher) {
         this.mAdapter.setIntentLauncher(intentLauncher);
     }
 

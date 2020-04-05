@@ -20,10 +20,10 @@ public final class FlowUtil {
     public static final String SUBSCRIBE_CONCERT =  TAG + ".SUBSCRIBE_CONCERT";
     public static final String ACK_CONCERT = TAG + ".ACK_CONCERT";
     public static final String GET_ALL_CONCERT = TAG + ".GET_ALL_CONCERT";
-    public static final String RECEIVE_ALL_CONCERT = TAG + ".RECEIVE_ALL_CONCERT";
-    public static final String ID = TAG + ".ID";
-    public static final String SLOT = TAG + ".SLOT";
-    public static final String CALLBACK = TAG + ".CALLBACK";
+    private static final String RECEIVE_ALL_CONCERT = TAG + ".RECEIVE_ALL_CONCERT";
+    private static final String ID = TAG + ".ID";
+    private static final String SLOT = TAG + ".SLOT";
+    private static final String CALLBACK = TAG + ".CALLBACK";
     public static final String CALLBACK_INTENT = TAG + ".CALLBACK_INTENT";
 
     /**

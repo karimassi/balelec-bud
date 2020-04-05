@@ -5,13 +5,13 @@ import com.google.firebase.firestore.GeoPoint;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
-
 import static org.hamcrest.core.Is.is;
 
 public class PointOfInterestTest {
 
-    private PointOfInterest p1 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+    private final PointOfInterest p1 =
+            new PointOfInterest(new GeoPoint(24, 42),
+                    "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
 
     @Test
     public void testEmptyConstructor() {
@@ -38,35 +38,41 @@ public class PointOfInterestTest {
 
     @Test
     public void testEqualsTwoEqualPointOfInterest() {
-        PointOfInterest p2 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
-        Assert.assertEquals(true, p1.equals(p2));
+        PointOfInterest p2 = new PointOfInterest(new GeoPoint(24, 42),
+                "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertEquals(p1, p2);
     }
 
     @Test
     public void testEqualsTwoNonEqualPointOfInterest() {
-        PointOfInterest p2 = new PointOfInterest( new GeoPoint(22, 42), "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
-        Assert.assertEquals(false, p1.equals(p2));
+        PointOfInterest p2 = new PointOfInterest( new GeoPoint(22, 42),
+                "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertNotEquals(p1, p2);
     }
 
     @Test
     public void testEqualsDifferentPointOfInterest() {
-        PointOfInterest p2 = new PointOfInterest( new GeoPoint(24, 42), "BCV", "atm", "BXnkTQdLsOXoGJmMSeCS");
-        Assert.assertEquals(false, p1.equals(p2));
+        PointOfInterest p2 = new PointOfInterest( new GeoPoint(24, 42),
+                "BCV", "atm", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertNotEquals(p1, p2);
 
-        p2 = new PointOfInterest( new GeoPoint(24, 42), "BCV", "bancomat", "BXnkTQdLsOXoGJmMSeCS");
-        Assert.assertEquals(false, p1.equals(p2));
+        p2 = new PointOfInterest( new GeoPoint(24, 42), "BCV",
+                "bancomat", "BXnkTQdLsOXoGJmMSeCS");
+        Assert.assertNotEquals(p1, p2);
 
-        p2 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "atm", "0");
-        Assert.assertEquals(false, p1.equals(p2));
+        p2 = new PointOfInterest( new GeoPoint(24, 42),
+                "credit suisse", "atm", "0");
+        Assert.assertNotEquals(p1, p2);
 
-        p2 = new PointOfInterest( new GeoPoint(24, 42), "credit suisse", "bancomat", "0");
-        Assert.assertEquals(false, p1.equals(p2));
+        p2 = new PointOfInterest( new GeoPoint(24, 42),
+                "credit suisse", "bancomat", "0");
+        Assert.assertNotEquals(p1, p2);
     }
 
 
     @Test
     public void testEqualsTwoDifferentObjects() {
-        Assert.assertEquals(false, p1.equals(new Object()));
+        Assert.assertNotEquals(p1, new Object());
     }
 
 

@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.util.database;
 
-import android.util.AndroidException;
-
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 

@@ -11,11 +11,18 @@ import com.google.android.gms.location.LocationRequest;
 
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
@@ -52,5 +59,10 @@ public class WelcomeActivityTest extends BasicActivityTest {
     @Override
     protected void setIds() {
         setIds(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
+    }
+    @Test
+    public void testToggleLocationIsDisplayed() {
+        onView(withId(R.id.locationSwitch)).check(matches(isDisplayed()));
+        onView(withId(R.id.locationSwitch)).perform(click());
     }
 }

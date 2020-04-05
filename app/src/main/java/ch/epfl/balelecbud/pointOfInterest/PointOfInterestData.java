@@ -1,29 +1,21 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
-import androidx.annotation.VisibleForTesting;
-
 import java.util.LinkedList;
 
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+
 public class PointOfInterestData extends RecyclerViewData<PointOfInterest, PointOfInterestHolder> {
-
-    private static DatabaseWrapper databaseImplementation = FirestoreDatabaseWrapper.getInstance();
-
-    @VisibleForTesting
-    public static void setDatabaseImplementation(DatabaseWrapper db){
-        databaseImplementation = db;
-    }
 
     @Override
     public void reload() {
         MyQuery query = new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>());
-        databaseImplementation.query(query, PointOfInterest.class)
+        getAppDatabaseWrapper().query(query, PointOfInterest.class)
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 

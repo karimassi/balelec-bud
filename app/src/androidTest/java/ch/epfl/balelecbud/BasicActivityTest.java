@@ -7,7 +7,6 @@ import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public abstract class BasicActivityTest {
 
 
     @Before
-    public void  passIDsToBasicActivityTest(){
+    public void passIDsToBasicActivityTest() {
         setIds();
     }
 
@@ -61,13 +60,13 @@ public abstract class BasicActivityTest {
     @Test
     public void openTransportActivityFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_transport, R.id.fragmentTransportList);
+        clickItem(R.id.activity_main_drawer_transport, R.id.transport_fragment_container);
     }
 
     @Ignore("ignore for now because since stuff is not mocked this fails, could create hacky fix now " +
             "but will do something nice later instead")
     @Test
-    public void openSocialActivityFromDrawer(){
+    public void openSocialActivityFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_social, R.id.tabs_social);
     }
@@ -83,7 +82,7 @@ public abstract class BasicActivityTest {
     }
 
     @Test
-    public void testBackPress(){
+    public void testBackPress() {
         openDrawer();
         Espresso.pressBack();
         onView(withId(activity_drawer_layout_id)).check(matches(isClosed(Gravity.LEFT)));
@@ -102,7 +101,7 @@ public abstract class BasicActivityTest {
 
     protected abstract void setIds();
 
-    protected void setIds(int activity_drawer_layout_id, int activity_nav_view_id){
+    protected void setIds(int activity_drawer_layout_id, int activity_nav_view_id) {
         this.activity_drawer_layout_id = activity_drawer_layout_id;
         this.activity_nav_view_id = activity_nav_view_id;
     }

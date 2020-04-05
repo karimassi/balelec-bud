@@ -14,12 +14,12 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -34,8 +34,8 @@ public class MapViewActivityTest extends BasicActivityTest {
 
     private final double testLatitude = -12.12;
     private final double testLongitude = -77.03;
-    private Location testLocation = new Location(testLatitude, testLongitude);
-    private LatLng testLatLng = new LatLng(testLatitude, testLongitude);
+    private final Location testLocation = new Location(testLatitude, testLongitude);
+    private final LatLng testLatLng = new LatLng(testLatitude, testLongitude);
     private Location oldMapLocation;
     private Location newMapLocation;
 
@@ -54,26 +54,26 @@ public class MapViewActivityTest extends BasicActivityTest {
 
     @Test
     public void testUpdateLocationUi() throws Throwable {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                MapViewActivity mActivity = mActivityRule.getActivity();
-                GoogleMap googleMap = mActivity.getGoogleMap();
-                if (googleMap != null) {
-                    assertThat(googleMap.isMyLocationEnabled(),
-                            is(MapViewActivity.getLocationPermission()));
-                    assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
-                            is(MapViewActivity.getLocationPermission()));
-                }
-
+        MapViewActivity mActivity = mActivityRule.getActivity();
+        TestAsyncUtils sync = new TestAsyncUtils();
+        TestAsyncUtils.runOnUIThreadAndWait(() -> {
+            GoogleMap googleMap = mActivity.getGoogleMap();
+            if(googleMap != null) {
+                sync.assertThat(googleMap.isMyLocationEnabled(),
+                        is(MapViewActivity.getLocationPermission()));
+                sync.assertThat(googleMap.getUiSettings().isMyLocationButtonEnabled(),
+                        is(MapViewActivity.getLocationPermission()));
             }
+            sync.call();
         });
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
     public void testNewLocationIsSet() {
-        Location newLocation = new Location(30, 8);
         MapViewActivity mActivity = mActivityRule.getActivity();
+        Location newLocation = new Location(30, 8);
         mActivity.setLocation(newLocation);
         assertThat(mActivity.getLocation(), is(newLocation));
     }
@@ -118,8 +118,7 @@ public class MapViewActivityTest extends BasicActivityTest {
 
     @Test
     public void testSetLocationPermission() {
-        MapViewActivity mActivity = mActivityRule.getActivity();
-        assertThat(mActivity.getLocationPermission(), is(LocationUtil.isLocationActive()));
+        assertThat(MapViewActivity.getLocationPermission(), is(LocationUtil.isLocationActive()));
     }
 
     @Test

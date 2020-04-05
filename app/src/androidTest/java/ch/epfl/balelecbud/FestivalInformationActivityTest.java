@@ -10,7 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.festivalInformation.FestivalInformationData;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -28,7 +27,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class FestivalInformationActivityTest extends BasicActivityTest {
 
-    MockDatabaseWrapper mock;
+    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Before
     public void setup() {
@@ -39,8 +38,7 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
     public final ActivityTestRule<FestivalInformationActivity> mActivityRule = new ActivityTestRule<FestivalInformationActivity>(FestivalInformationActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
-            FestivalInformationData.setDatabaseImplementation(mock);
+            BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };
 
@@ -50,7 +48,7 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
     }
 
     @Test
-    public void testCanAddInfoToDatabase() throws Throwable {
+    public void testCanAddInfoToDatabase() {
         final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
         mock.storeDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info);
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
@@ -82,7 +80,7 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
     }
 
     @Test
-    public void testCanDeleteInfoFromDatabase() throws Throwable {
+    public void testCanDeleteInfoFromDatabase() {
         final FestivalInformation info1 = new FestivalInformation("Bad", "Hello it's a me, bad");
         final FestivalInformation info2 = new FestivalInformation("Good", "Hello it's a me, good");
 

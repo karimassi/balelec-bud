@@ -6,7 +6,7 @@ import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
 public class FriendRequestData extends RecyclerViewData<User, RequestViewHolder> {
 
-    private User currentUser;
+    private final User currentUser;
 
     public FriendRequestData(User user) {
         super();

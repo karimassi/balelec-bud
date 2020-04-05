@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.function.BiConsumer;
+import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.balelecbud.models.User;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.util.StringUtils.isEmailValid;
 
-public class LoginUserActivity extends BasicActivity {
-
+public class LoginUserActivity extends AppCompatActivity {
     private EditText emailField;
     private EditText passwordField;
 
@@ -31,16 +31,13 @@ public class LoginUserActivity extends BasicActivity {
             return;
         }
 
-        getAuthenticator().signIn(email, password).whenComplete(new BiConsumer<User, Throwable>() {
-            @Override
-            public void accept(User user, Throwable throwable) {
-                if (user != null) {
-                    getAuthenticator().setCurrentUser(user);
-                    onAuthComplete();
-                } else {
-                    Toast.makeText(LoginUserActivity.this, throwable.getCause()
-                            .getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
-                }
+        getAppAuthenticator().signIn(email, password).whenComplete((user, throwable) -> {
+            if (user != null) {
+                getAppAuthenticator().setCurrentUser(user);
+                onAuthComplete();
+            } else {
+                Toast.makeText(LoginUserActivity.this, throwable.getCause()
+                        .getLocalizedMessage() ,Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -48,14 +45,8 @@ public class LoginUserActivity extends BasicActivity {
     private boolean validateEntry() {
         boolean valid = true;
 
-        String email = emailField.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            emailField.setError(getString(R.string.require_email));
+        if (!isEmailValid(this, emailField))
             valid = false;
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailField.setError(getString(R.string.invalid_email));
-            valid = false;
-        }
 
         String password = passwordField.getText().toString();
         if (TextUtils.isEmpty(password)) {

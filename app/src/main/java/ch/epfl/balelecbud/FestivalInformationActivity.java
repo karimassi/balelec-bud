@@ -2,6 +2,7 @@ package ch.epfl.balelecbud;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -13,15 +14,13 @@ import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
 public class FestivalInformationActivity extends BasicActivity {
-
-    private RecyclerView recyclerView;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_festival_info);
 
-        recyclerView = findViewById(R.id.festivalInfoRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.festivalInfoRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 

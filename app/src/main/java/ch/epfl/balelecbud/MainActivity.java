@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class MainActivity extends BasicActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -13,7 +17,7 @@ public class MainActivity extends BasicActivity {
 
     private void choseActivity() {
         Class<? extends Activity> activityClass;
-        if (getAuthenticator().getCurrentUser() == null) {
+        if (getAppAuthenticator().getCurrentUser() == null) {
             activityClass = LoginUserActivity.class;
         } else {
             activityClass = WelcomeActivity.class;

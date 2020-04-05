@@ -4,11 +4,11 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.view.View;
+import android.view.Gravity;
 import android.widget.Switch;
 
-import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
@@ -27,12 +27,16 @@ import org.junit.runner.RunWith;
 import ch.epfl.balelecbud.MapViewActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.Matchers.is;
+import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchClickable;
 
 @SdkSuppress(minSdkVersion = Build.VERSION_CODES.N_MR1, maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
@@ -89,68 +93,77 @@ public class LocationRequesterTest {
 
     @Test
     public void testCanSwitchOnLocation() {
+        TestAsyncUtils sync = new TestAsyncUtils();
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                Assert.assertNotNull(lr);
-                Assert.assertNotNull(intent);
+                sync.assertNotNull(lr);
+                sync.assertNotNull(intent);
+                sync.call();
             }
 
             @Override
             public void removeLocationUpdates(PendingIntent intent) {
-                Assert.fail();
+                sync.fail();
             }
         });
         Assert.assertFalse(LocationUtil.isLocationActive());
         onView(withId(R.id.locationSwitch)).check(switchClickable(true));
         onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertTrue(LocationUtil.isLocationActive());
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
     public void testCanSwitchOffLocation() {
+        TestAsyncUtils sync = new TestAsyncUtils();
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                Assert.assertNotNull(lr);
-                Assert.assertNotNull(intent);
+                sync.assertNotNull(lr);
+                sync.assertNotNull(intent);
+                sync.call();
             }
 
             @Override
             public void removeLocationUpdates(PendingIntent intent) {
-                Assert.assertNotNull(intent);
+                sync.assertNotNull(intent);
+                sync.call();
             }
         });
         onView(withId(R.id.locationSwitch)).perform(click());
         onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertFalse(LocationUtil.isLocationActive());
+        sync.assertCalled(2);
+        sync.assertNoFailedTests();
+    }
+
+    private void checkPermissionAfterResult(String[] permissions, int[] permissionStatus, boolean b) {
+        this.mActivityRule.getActivity().onRequestPermissionsResult(
+                LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
+                permissions,
+                permissionStatus);
+        onView(withId(R.id.locationSwitch)).check(switchClickable(b));
     }
 
     @Test
     public void whenPermissionGrantedCanSwitchOnLocation() {
-        this.mActivityRule.getActivity().onRequestPermissionsResult(
-                LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                new int[]{PackageManager.PERMISSION_GRANTED});
-        onView(withId(R.id.locationSwitch)).check(switchClickable(true));
+        checkPermissionAfterResult(
+                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                new int[] { PackageManager.PERMISSION_GRANTED}, true);
     }
 
     @Test
     public void whenPermissionDeniedCannotSwitchOnLocation() {
-        this.mActivityRule.getActivity().onRequestPermissionsResult(
-                LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                new int[]{PackageManager.PERMISSION_DENIED});
-        onView(withId(R.id.locationSwitch)).check(switchClickable(false));
+        checkPermissionAfterResult(
+                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                new int[] { PackageManager.PERMISSION_DENIED }, false);
     }
 
     @Test
     public void whenPermissionCanceledCannotSwitchOnLocation() {
-        this.mActivityRule.getActivity().onRequestPermissionsResult(
-                LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
-                new String[]{},
-                new int[]{});
-        onView(withId(R.id.locationSwitch)).check(switchClickable(false));
+        checkPermissionAfterResult(new String[] { }, new int[] { }, false);
     }
 
     @Test
@@ -159,39 +172,43 @@ public class LocationRequesterTest {
         boolean before = locationSwitch.isClickable();
 
         this.mActivityRule.getActivity().onRequestPermissionsResult(0,
-                new String[]{}, new int[]{});
+                new String[] { }, new int[] { });
 
-        Assert.assertEquals(locationSwitch.isClickable(), before);
+        onView(withId(R.id.locationSwitch)).check(switchClickable(before));
     }
 
     @Test
-    public void testSwitchOffDisablesLocationInMap() {
+    public void testSwitchOffDisablesLocationInMap() throws InterruptedException {
+        TestAsyncUtils sync = new TestAsyncUtils();
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                Assert.assertNotNull(lr);
-                Assert.assertNotNull(intent);
+                sync.fail();
             }
 
             @Override
             public void removeLocationUpdates(PendingIntent intent) {
-                Assert.assertNotNull(intent);
+                sync.fail();
             }
         });
-        onView(withId(R.id.locationSwitch)).perform(click());
+        openMapActivity();
         Assert.assertFalse(MapViewActivity.getLocationPermission());
+        sync.assertCalled(0);
+        sync.assertNoFailedTests();
     }
 
-    public static ViewAssertion switchClickable(final boolean isClickable) {
-        return new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                if (noViewFoundException != null)
-                    throw noViewFoundException;
-                if (!(view instanceof Switch))
-                    throw new AssertionError("The View should be a Switch be was not");
-                Assert.assertThat(((Switch) view).isClickable(), is(isClickable));
-            }
-        };
+    private void openDrawer() {
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
+    }
+
+    private void clickItem(int itemId) {
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
+    }
+
+    private void openMapActivity() throws InterruptedException {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_map);
+        Thread.sleep(1000);
     }
 }

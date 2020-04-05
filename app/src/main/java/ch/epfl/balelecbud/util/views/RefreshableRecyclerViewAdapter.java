@@ -10,9 +10,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
 
-    private ViewHolderFactory<B> factory;
-    private RecyclerViewData<A, B> data;
-    private int itemId;
+    private final ViewHolderFactory<B> factory;
+    private final RecyclerViewData<A, B> data;
+    private final int itemId;
 
     public RefreshableRecyclerViewAdapter(ViewHolderFactory<B> factory, RecyclerViewData<A, B> data, int itemId) {
         this.factory = factory;
@@ -50,4 +50,5 @@ public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder
     public int getItemCount() {
         return data.size();
     }
+
 }

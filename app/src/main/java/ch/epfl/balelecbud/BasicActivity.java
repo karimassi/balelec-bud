@@ -37,7 +37,7 @@ public abstract class BasicActivity extends AppCompatActivity implements Navigat
                 startActivity(new Intent(this, FestivalInformationActivity.class));
                 break;
             case R.id.activity_main_drawer_schedule:
-                startActivity(new Intent(this, ScheduleActivity.class));
+                //startActivity(new Intent(this, ScheduleActivity.class));
                 Intent intent = new Intent(this, ConcertFlow.class);
                 intent.setAction(FlowUtil.GET_ALL_CONCERT);
                 intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(this, ScheduleActivity.class));
