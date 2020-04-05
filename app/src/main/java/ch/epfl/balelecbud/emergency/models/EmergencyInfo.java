@@ -4,6 +4,10 @@ public class EmergencyInfo {
     private String instruction;
     private String name;
 
+    public EmergencyInfo(){
+
+    }
+
     public EmergencyInfo(String name,String instruction){
         this.instruction = instruction;
         this.name=name;

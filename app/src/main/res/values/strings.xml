@@ -29,18 +29,14 @@
     <string name="require_password_repeated">Repeat password!</string>
     <string name="location">Location</string>
     <string name="festival_information">Festival Information</string>
-<<<<<<< HEAD
 
     <string name="emergency_tile">Case: </string>
     <string name="emergency_solution">What to do: </string>
-    <string name="festival_info_view">Informations</string>
-=======
     <string name="social_view">Social</string>
     <string name="festival_info_view">Information</string>
   
     <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it !</string>
   
->>>>>>> b309442f7422dd8797148ec620674f39cebba0f6
     <string name="transport_view">Transport</string>
     <string name="toggle_location_view">Toggle Location</string>
     <string name="schedule_view">Schedule</string>

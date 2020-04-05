@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
@@ -43,6 +44,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
+    private final List<EmergencyInfo> emergencyInfos = new ArrayList<>();
     private final Map<String, Location> locations = new HashMap<>();
 
     private MockDatabaseWrapper() {
@@ -99,6 +101,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return festivalInfos;
             case DatabaseWrapper.POINT_OF_INTEREST_PATH :
                 return pointOfInterests;
+            case DatabaseWrapper.EMERGENCY_INFO_PATH :
+                return emergencyInfos;
             case DatabaseWrapper.LOCATIONS_PATH:
                 return new LinkedList(locations.values());
             default :
@@ -256,6 +260,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 pointOfInterests.add((PointOfInterest) document);
                 break;
+            case DatabaseWrapper.EMERGENCY_INFO_PATH:
+                emergencyInfos.add((EmergencyInfo) document);
+                break;
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.add((FestivalInformation) document);
                 break;
@@ -309,6 +316,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 pointOfInterests.remove(document);
                 break;
+            case DatabaseWrapper.EMERGENCY_INFO_PATH:
+                emergencyInfos.remove(document);
+                break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName" + collectionName);
         }
@@ -348,6 +358,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.clear();
+                break;
+            case DatabaseWrapper.EMERGENCY_INFO_PATH:
+                emergencyInfos.clear();
                 break;
             default :
                 throw new IllegalArgumentException("unsupported collectionName");

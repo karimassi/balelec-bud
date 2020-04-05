@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -29,7 +30,7 @@ import java.util.Map;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyNumbers;
 
-public class EmergencyNumbersActivity extends BasicActivity {
+public class EmergencyNumbersActivity extends AppCompatActivity {
     public static final int PERMISSION_TO_CALL_CODE = 991;
     private boolean callPermissionGranted;
     private ListView numbersListView;
