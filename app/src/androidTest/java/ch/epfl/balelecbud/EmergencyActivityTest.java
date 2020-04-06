@@ -20,11 +20,16 @@ import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 import static java.util.regex.Pattern.matches;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 @RunWith(AndroidJUnit4.class)
@@ -46,6 +51,7 @@ public class EmergencyActivityTest {
     public void testSubmittEmergencyButtonIsDisplayedWhenButtonClicked() {
         onView(withId(R.id.buttonAskForHelp)).perform(click());
         onView(withId(R.id.buttonEmergencySubmit)).check(matches(isDisplayed()));
+
     }
 
     @Test
@@ -56,5 +62,15 @@ public class EmergencyActivityTest {
     }
 
 
+    private void submitEmergency(String category, String message) {
+        onView(withId(R.id.buttonAskForHelp)).perform(click());
+        onView(withId(R.id.spinnerEmergencyCategories)).perform(click());
+        onView(allOf(withId(R.id.textEmergencyMessage), withText("Theft"))).perform(click());
+        onView(withId(R.id.textEmergencyMessage)).perform(typeText(message)).perform(closeSoftKeyboard());
+        onView(withId(R.id.buttonEmergencySubmit)).perform(click());
+
+
+
+    }
 
 }

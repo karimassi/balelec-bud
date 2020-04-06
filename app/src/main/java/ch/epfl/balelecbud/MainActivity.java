@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         if (getAppAuthenticator().getCurrentUser() == null) {
             activityClass = LoginUserActivity.class;
         } else {
-            activityClass = WelcomeActivity.class;
+            activityClass = EmergencyActivity.class;
         }
         Intent intent = new Intent(this, activityClass);
         startActivity(intent);

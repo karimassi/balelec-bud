@@ -30,9 +30,7 @@ public class Emergency {
     public String getMessage(){return message;}
     public String getUserID(){return userID;}
     public Timestamp getTimestamp(){return timestamp;}
-    public String getCategoryString() {
-        return category.toString();
-    }
+
 
     @Override
     public boolean equals(Object o) {

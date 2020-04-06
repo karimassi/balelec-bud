@@ -31,53 +31,40 @@ public class EmergencyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency);
-
         mShowEmergencyDialog = (Button) findViewById(R.id.buttonAskForHelp);
         mShowEmergencyDialog.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder((EmergencyActivity.this));
                 View mView = getLayoutInflater().inflate(R.layout.dialog_emergency,null);
+                mBuilder.setView(mView);
+                AlertDialog dialog = mBuilder.create();
                 final EditText mEmergencyMessage = (EditText) mView.findViewById(R.id.textEmergencyMessage);
                 final Spinner mEmergencyCategory = (Spinner) mView.findViewById(R.id.spinnerEmergencyCategories);
                 Button mEmergencySubmit = (Button) mView.findViewById(R.id.buttonEmergencySubmit);
                 mEmergencyCategory.setAdapter(new ArrayAdapter<EmergencyType>(EmergencyActivity.this, android.R.layout.simple_spinner_item, EmergencyType.values()));
-
                 mEmergencySubmit.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
-
                         String emergencyMessage = mEmergencyMessage.getText().toString();
                         EmergencyType emergencyType = EmergencyType.valueOf(mEmergencyCategory.getSelectedItem().toString().toUpperCase());
-
                         if(!emergencyMessage.isEmpty()){
-
                             String currentUserUid = getAppAuthenticator().getCurrentUser().getUid();
                             Timestamp currentTimestamp = Timestamp.now();
-
                             Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
-
                             database.storeDocument(DatabaseWrapper.EMERGENCIES_PATH, mEmergency);
-
-                            Toast.makeText(EmergencyActivity.this,
-
-                                    R.string.emergency_sent_message,
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EmergencyActivity.this, R.string.emergency_sent_message, Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
                         }else{
-                            Toast.makeText(EmergencyActivity.this,
-                                    R.string.emergency_not_sent_message,
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EmergencyActivity.this, R.string.emergency_not_sent_message, Toast.LENGTH_SHORT).show();
                         }
+
+
+
                     }
                 });
 
-                mBuilder.setView(mView);
-                AlertDialog dialog = mBuilder.create();
                 dialog.show();
-
-
-
             }
         });
     }

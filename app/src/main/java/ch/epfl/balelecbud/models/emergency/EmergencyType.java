@@ -14,7 +14,7 @@ public enum EmergencyType {
         @NonNull
         @Override
         public String toString() {
-            return "Faitness";
+            return "Faintness";
         }
     };
 }
