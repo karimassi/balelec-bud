@@ -30,7 +30,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 @RunWith(AndroidJUnit4.class)
 public class EmergencyActivityTest {
 
-//    MockDatabaseWrapper mock;
+    MockDatabaseWrapper mock;
 //    private Emergency emergency = new Emergency(EmergencyType.THEFT, "Help please","a user id",new Timestamp(0, 0));
 
     @Rule
@@ -38,15 +38,9 @@ public class EmergencyActivityTest {
             new ActivityTestRule<EmergencyActivity>(EmergencyActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
-//                    mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
+                    mock = (MockDatabaseWrapper) MockDatabaseWrapper.getInstance();
                 }
             };
-
-    @Test
-    public void testDialogIsDisplayedWhenButtonClicked() {
-        onView(withId(R.id.buttonAskForHelp)).perform(click());
-        onView(withId(R.layout.dialog_emergency)).check(matches(isDisplayed()));
-    }
 
     @Test
     public void testSubmittEmergencyButtonIsDisplayedWhenButtonClicked() {

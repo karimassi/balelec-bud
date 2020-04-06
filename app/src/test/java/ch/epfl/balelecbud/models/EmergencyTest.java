@@ -35,7 +35,7 @@ public class EmergencyTest {
         Emergency e2 = new Emergency(EmergencyType.THEFT,"Help please","a user id",new Timestamp(0, 0));
         Assert.assertEquals(e2.hashCode(), e1.hashCode());
 
-        e2 = new Emergency(EmergencyType.THEFT,"Help please","a user id",new Timestamp(0, 0));
+        e2 = new Emergency(EmergencyType.FAINTNESS,"Help please","a user id",new Timestamp(0, 0));
         Assert.assertNotEquals(e1.hashCode(), e2.hashCode());
 
     }

@@ -10,14 +10,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.Timestamp;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.models.emergency.EmergencyType;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public class EmergencyActivity extends BasicActivity {
+
+public class EmergencyActivity extends AppCompatActivity {
 
     private Button mShowEmergencyDialog;
     private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
@@ -45,11 +49,11 @@ public class EmergencyActivity extends BasicActivity {
                     public void onClick(View v) {
 
                         String emergencyMessage = mEmergencyMessage.getText().toString();
-                        EmergencyType emergencyType = EmergencyType.valueOf(mEmergencyCategory.getSelectedItem().toString());
+                        EmergencyType emergencyType = EmergencyType.valueOf(mEmergencyCategory.getSelectedItem().toString().toUpperCase());
 
                         if(!emergencyMessage.isEmpty()){
 
-                            String currentUserUid = getAuthenticator().getCurrentUser().getUid();
+                            String currentUserUid = getAppAuthenticator().getCurrentUser().getUid();
                             Timestamp currentTimestamp = Timestamp.now();
 
                             Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
