@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.util.database;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.Timestamp;
@@ -27,6 +29,7 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 
 public class MockDatabaseWrapper implements DatabaseWrapper {
+    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
     public static final User celine =
@@ -169,14 +172,17 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void addItem(final Object object) throws Throwable {
+        Log.d(TAG, "addItem() called with: object = [" + object + "]");
         runOnUIThreadAndWait(() -> addItemAux(object));
     }
 
     public void modifyItem(final Object object, final int index) throws Throwable {
+        Log.d(TAG, "modifyItem() called with: object = [" + object + "], index = [" + index + "]");
         runOnUIThreadAndWait(() -> changeItemAux(object, index));
     }
 
     public void removeItem(final Object object, final int index) throws Throwable {
+        Log.d(TAG, "removeItem() called with: object = [" + object + "], index = [" + index + "]");
         runOnUIThreadAndWait(() -> removeItemAux(object, index));
     }
 

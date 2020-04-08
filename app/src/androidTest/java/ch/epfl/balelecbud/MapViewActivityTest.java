@@ -17,7 +17,6 @@ import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -27,7 +26,8 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
-public class MapViewActivityTest {
+public class MapViewActivityTest extends BasicActivityTest {
+
     @Rule
     public final ActivityTestRule<MapViewActivity> mActivityRule =
             new ActivityTestRule<>(MapViewActivity.class);
@@ -51,10 +51,6 @@ public class MapViewActivityTest {
         onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void testMapButtonIsNotDisplayed() {
-        onView(withId((R.id.mapButton))).check(doesNotExist());
-    }
 
     @Test
     public void testUpdateLocationUi() throws Throwable {
@@ -113,7 +109,7 @@ public class MapViewActivityTest {
     @Test
     public void testGetDeviceLocation() {
         MapViewActivity mActivity = mActivityRule.getActivity();
-        if(MapViewActivity.getLocationPermission()) {
+        if (MapViewActivity.getLocationPermission()) {
             assertThat(mActivity.getLocationResult(), is(notNullValue()));
         } else {
             assertNull(mActivity.getLocationResult());
@@ -153,7 +149,7 @@ public class MapViewActivityTest {
         assertThat(newMapLocation, is(oldMapLocation));
     }
 
-    private void testSetLocationFrom(final android.location.Location deviceLocation, final boolean locationEnabled){
+    private void testSetLocationFrom(final android.location.Location deviceLocation, final boolean locationEnabled) {
         MapViewActivity mActivity = mActivityRule.getActivity();
         oldMapLocation = mActivity.getLocation();
         mActivity.setLocationFrom(deviceLocation, locationEnabled);
@@ -165,5 +161,10 @@ public class MapViewActivityTest {
         deviceLocation.setLatitude(testLatitude);
         deviceLocation.setLongitude(testLongitude);
         return deviceLocation;
+    }
+
+    @Override
+    protected void setIds() {
+        setIds(R.id.map_activity_drawer_layout, R.id.map_activity_nav_view);
     }
 }

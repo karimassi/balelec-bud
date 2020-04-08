@@ -20,6 +20,7 @@ public class TestAsyncUtils {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUiThread(() -> {
             runnable.run();
+            Log.v(TAG, "runnable ran");
             sync.call();
         });
         sync.waitCall(1);
@@ -27,7 +28,8 @@ public class TestAsyncUtils {
 
     public void waitCall(int shouldBe) throws InterruptedException {
         synchronized (this) {
-            Log.v(TAG, "waitCall: " + called);
+            this.wait(50);
+            Log.d(TAG, "waitCall() called with: shouldBe = [" + shouldBe + "] and called = [" + called + "]");
             if (shouldBe != called) {
                 this.wait(1000);
                 Assert.assertEquals("Was not freed by a call", shouldBe, called);
@@ -37,7 +39,7 @@ public class TestAsyncUtils {
 
     public void call() {
         synchronized (this) {
-            Log.v(TAG, "call: " + called);
+            Log.d(TAG, "call() called with: called = [" + called + "]");
             ++called;
             this.notify();
         }
@@ -98,7 +100,9 @@ public class TestAsyncUtils {
     public <T> void assertThat(T actual, Matcher<? super T> matcher) {
         if (!matcher.matches(actual)) {
             hasFailed = true;
-            Log.wtf(TAG, "assertThat: match failed\n\texpected = " + matcher.toString() + "\n\tactual = " + actual.toString());
+            Log.wtf(TAG, "assertThat: match failed" +
+                    "\n\texpected = " + matcher.toString() +
+                    "\n\tactual = " + actual.toString());
         }
     }
 }

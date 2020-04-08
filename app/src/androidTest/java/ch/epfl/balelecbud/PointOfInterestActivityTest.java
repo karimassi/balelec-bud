@@ -27,7 +27,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class PointOfInterestActivityTest {
+public class PointOfInterestActivityTest extends BasicActivityTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
     private final PointOfInterest pointOfInterest1 = new PointOfInterest(
@@ -36,7 +36,7 @@ public class PointOfInterestActivityTest {
             new GeoPoint(4, 22), "Bar EE", "Bar", "UNFUN101");
 
     @Before
-    public void setup(){
+    public void setup() {
         mock.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
         refreshRecyclerView();
     }
@@ -122,5 +122,10 @@ public class PointOfInterestActivityTest {
         viewInteraction.check(matches(hasDescendant(withText(poi.getName()))));
         viewInteraction.check(matches(hasDescendant(withText(poi.getType()))));
         viewInteraction.check(matches(hasDescendant(withText(new Location(poi.getLocation()).toString()))));
+    }
+
+    @Override
+    protected void setIds() {
+        setIds(R.id.poi_activity_drawer_layout, R.id.poi_activity_nav_view);
     }
 }

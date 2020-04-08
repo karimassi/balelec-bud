@@ -38,6 +38,8 @@
     <string name="toggle_location_view">Toggle Location</string>
     <string name="schedule_view">Schedule</string>
     <string name="point_of_interest">Points of interest</string>
+    <string name="navigation_drawer_open">Open Drawer</string>
+    <string name="navigation_drawer_close">Close Drawer</string>
  
     <string name="concert_soon_channel_name">Concert Soon Channel</string>
     <string name="concert_soon_notification_title">A concert is starting soon</string>

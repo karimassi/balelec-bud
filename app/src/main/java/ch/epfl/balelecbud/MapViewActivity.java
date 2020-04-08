@@ -3,7 +3,6 @@ package ch.epfl.balelecbud;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,11 +12,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -27,7 +24,8 @@ import java.util.List;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 
-public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapViewActivity extends BasicActivity implements OnMapReadyCallback {
+
     private final float DEFAULT_ZOOM = 17;
 
     private Location location;
@@ -66,6 +64,11 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        configureToolBar(R.id.map_activity_toolbar);
+        configureDrawerLayout(R.id.map_activity_drawer_layout);
+        configureNavigationView(R.id.map_activity_nav_view);
+
         friendsLocation = new HashMap<String,LatLng>();
     }
 
@@ -73,7 +76,6 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     protected void onStart() {
         super.onStart();
         updateFriendLocation();
-
     }
 
     @Override
@@ -158,27 +160,21 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     public void updateFriendLocation(){
         localUserDocRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                       @Override
-                       public void onSuccess(DocumentSnapshot documentSnapshot) {
-                           if (documentSnapshot.exists()) {
-                               List<String> friends = (List<String>) documentSnapshot.get("firends");
-                               for (String friend : friends) {
-                                   DocumentReference friendRef = userCollectionRef.document(friend);
-                                   friendRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                       @Override
-                                       public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                           if (documentSnapshot.exists()) {
-                                               LatLng friendLocation = getPosition((GeoPoint) documentSnapshot.get("location"));
-                                               String friendName = (String) documentSnapshot.get("name");
-                                               friendsLocation.put(friendName, friendLocation);
-                                           }
-                                       }
-                                   });
-                               }
-                           }
-                       }
-                   });
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> friends = (List<String>) documentSnapshot.get("firends");
+                        for (String friend : friends) {
+                            DocumentReference friendRef = userCollectionRef.document(friend);
+                            friendRef.get().addOnSuccessListener(documentSnapshot1 -> {
+                                if (documentSnapshot1.exists()) {
+                                    LatLng friendLocation = getPosition((GeoPoint) documentSnapshot1.get("location"));
+                                    String friendName = (String) documentSnapshot1.get("name");
+                                    friendsLocation.put(friendName, friendLocation);
+                                }
+                            });
+                        }
+                    }
+                });
 
     }
 
@@ -190,4 +186,5 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     public GoogleMap getGoogleMap() {
         return googleMap;
     }
+
 }

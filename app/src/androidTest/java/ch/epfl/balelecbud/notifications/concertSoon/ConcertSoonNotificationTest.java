@@ -55,6 +55,13 @@ public class ConcertSoonNotificationTest {
             device.findObject(By.text("ALLOW")).click();
             device.waitForWindowUpdate(null, 1000);
         }
+        device.openNotification();
+        UiObject2 button = device.findObject(By.text("CLEAR ALL"));
+        if (button != null) {
+            button.click();
+        } else {
+            device.pressBack();
+        }
     }
 
     @Test
