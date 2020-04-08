@@ -55,6 +55,7 @@ public abstract class BasicActivityTest {
         clickItem(R.id.activity_main_drawer_poi, R.id.pointOfInterestRecyclerView);
     }
 
+    @Ignore("need to enable mocking or hardware acceleration in CI to use the map")
     @Test
     public void openMapActivityFromDrawer() {
         openDrawer();
