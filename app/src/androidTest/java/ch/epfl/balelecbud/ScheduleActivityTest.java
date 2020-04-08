@@ -1,42 +1,62 @@
 package ch.epfl.balelecbud;
 
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
+import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest {
-
-    MockDatabaseWrapper mock;
+    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Rule
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            mock = new MockDatabaseWrapper();
-            ScheduleAdapter.setDatabaseImplementation(mock);
+            BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
     };
+
+    @Before
+    public void setup() {
+        mActivityRule.getActivity().setIntentLauncher(intent -> {
+            if (intent.getAction() == null)
+                Assert.fail();
+
+            String action = intent.getAction();
+            switch (action) {
+                case FlowUtil.ACK_CONCERT:
+                case FlowUtil.GET_ALL_CONCERT:
+                    Assert.fail();
+                    break;
+                case FlowUtil.SUBSCRIBE_CONCERT:
+                case FlowUtil.CANCEL_CONCERT:
+                    break;
+            }
+        });
+    }
 
     @Test
     public void testRecyclerViewVisible() {
@@ -45,25 +65,19 @@ public class ScheduleActivityTest {
 
     @Test
     public void testItemModification() throws Throwable {
-
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h");
         mock.addItem(slot1);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h");
         mock.addItem(slot2);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h");
         mock.addItem(slot3);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
 
         mock.modifyItem(slot3, 0);
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText("Upset")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText("Scène Sat'")));
+        checkSlot(0, slot3);
 
         mock.removeItem(slot3, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
@@ -72,48 +86,62 @@ public class ScheduleActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
         mock.removeItem(slot3, 0);
+        synchronized (this) {
+            this.wait(1000);
+        }
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-        Slot slot1 = new Slot("Mr Oizo", "Grande scène", "19h - 20h");
-        Slot slot2 = new Slot("Walking Furret", "Les Azimutes", "20h - 21h");
-        Slot slot3 = new Slot("Upset", "Scène Sat'", "19h - 20h");
-
         mock.addItem(slot1);
         mock.addItem(slot2);
         mock.addItem(slot3);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 1)).check(matches(withText("Mr Oizo")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 2)).check(matches(withText("Grande scène")));
+        checkSlot(0, slot1);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 0)).check(matches(withText("20h - 21h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 1)).check(matches(withText("Walking Furret")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 2)).check(matches(withText("Les Azimutes")));
+        checkSlot(1, slot2);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 0)).check(matches(withText("19h - 20h")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 1)).check(matches(withText("Upset")));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 2), 2)).check(matches(withText("Scène Sat'")));
+        checkSlot(2, slot3);
     }
 
-    public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("with " + childPosition + " child view of type parentMatcher");
-            }
+    private void checkSlot(int i, Slot slot1) {
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 0))
+                .check(matches(withText(slot1.getTimeSlot())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 1))
+                .check(matches(withText(slot1.getArtistName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 2))
+                .check(matches(withText(slot1.getSceneName())));
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 3))
+                .check(switchChecked(false));
+    }
 
-            @Override
-            public boolean matchesSafely(View view) {
-                if (!(view.getParent() instanceof ViewGroup)) {
-                    return parentMatcher.matches(view.getParent());
-                }
+    @Test
+    public void testCanSubscribeToAConcert() throws Throwable {
+        TestAsyncUtils sync = new TestAsyncUtils();
+        mock.addItem(slot1);
 
-                ViewGroup group = (ViewGroup) view.getParent();
-                return parentMatcher.matches(view.getParent()) && group.getChildAt(childPosition).equals(view);
+        mActivityRule.getActivity().setIntentLauncher(intent -> {
+            if (intent.getAction() == null)
+                sync.fail();
+            String action = intent.getAction();
+            switch (action) {
+                case FlowUtil.ACK_CONCERT:
+                case FlowUtil.CANCEL_CONCERT:
+                case FlowUtil.GET_ALL_CONCERT:
+                    sync.fail();
+                    break;
+                case FlowUtil.SUBSCRIBE_CONCERT:
+                    sync.assertEquals(slot1, FlowUtil.unpackSlotFromIntent(intent));
+                    sync.call();
+                    break;
             }
-        };
+        });
+
+        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+                .perform(click());
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 }

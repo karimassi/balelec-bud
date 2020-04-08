@@ -6,7 +6,6 @@
 
     <string name="camera_target_lat">-33.796923</string>
     <string name="camera_target_lng">150.922433</string>
-    <string name="camera_tilt">30</string>
     <string name="camera_zoom">15</string>
 
     <bool name="ui_rotate_gestures">true</bool>

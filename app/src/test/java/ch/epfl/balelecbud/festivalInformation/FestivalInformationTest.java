@@ -3,6 +3,8 @@ package ch.epfl.balelecbud.festivalInformation;
 import org.junit.Assert;
 import org.junit.Test;
 
+import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
+
 public class FestivalInformationTest {
 
     @Test
@@ -21,27 +23,27 @@ public class FestivalInformationTest {
     public void testEqualsTwoEqualFestivalInfo() {
         FestivalInformation first = new FestivalInformation("title", "info");
         FestivalInformation second = new FestivalInformation("title", "info");
-        Assert.assertEquals(true, first.equals(second));
+        Assert.assertEquals(first, second);
     }
 
     @Test
     public void testEqualsTwoNonEqualFestivalInfo() {
         FestivalInformation first = new FestivalInformation("title", "info2");
         FestivalInformation second = new FestivalInformation("title", "info1");
-        Assert.assertEquals(false, first.equals(second));
+        Assert.assertNotEquals(first, second);
     }
 
     @Test
     public void testEqualsTwoNonEqualFestivalTitle() {
         FestivalInformation first = new FestivalInformation("title1", "info");
         FestivalInformation second = new FestivalInformation("title2", "info");
-        Assert.assertEquals(false, first.equals(second));
+        Assert.assertNotEquals(first, second);
     }
 
     @Test
     public void testEqualsTwoDifferentObjects() {
         FestivalInformation first = new FestivalInformation("title1", "info");
-        Assert.assertEquals(false, first.equals(new Object()));
+        Assert.assertNotEquals(first, new Object());
     }
 
 

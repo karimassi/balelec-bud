@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud;
 
-
 import android.app.PendingIntent;
 
 import androidx.test.espresso.ViewInteraction;
@@ -17,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.location.LocationClient;
+import ch.epfl.balelecbud.location.LocationUtil;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -29,22 +29,27 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityTest {
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule = new ActivityTestRule<>(WelcomeActivity.class);
+    public final ActivityTestRule<WelcomeActivity> mActivityRule =
+            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    super.beforeActivityLaunched();
+                    LocationUtil.setLocationClient(new LocationClient() {
+                        @Override
+                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+
+                        }
+
+                        @Override
+                        public void removeLocationUpdates(PendingIntent intent) {
+
+                        }
+                    });
+                }
+            };
 
     @Before
     public void setup() {
-        WelcomeActivity.mockMode = true;
-        mActivityRule.getActivity().setLocationClient(new LocationClient() {
-            @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-
-            }
-
-            @Override
-            public void removeLocationUpdates(PendingIntent intent) {
-
-            }
-        });
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         if (device.hasObject(By.text("ALLOW"))) {
             device.findObject(By.text("ALLOW")).click();
@@ -54,20 +59,17 @@ public class WelcomeActivityTest {
 
     @Test
     public void testMapButtonIsDisplayed() {
-        onView(withId(R.id.mapButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.mapButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.mapButton)));
     }
 
     @Test
     public void testInfoButtonIsDisplayed() {
-        onView(withId(R.id.infoButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.infoButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.infoButton)));
     }
 
     @Test
     public void testTransportButtonIsDisplayed() {
-        onView(withId(R.id.transportButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.transportButton)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.transportButton)));
     }
 
     @Test
@@ -77,9 +79,13 @@ public class WelcomeActivityTest {
     }
 
     @Test
+    public void testPOIButtonIsDisplayed() {
+        testButtonIsDisplayed(onView(withId(R.id.poiButton)));
+    }
+
+    @Test
     public void testSignOutIsDisplayed() {
-        onView(withId(R.id.buttonSignOut)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonSignOut)).perform(click());
+        testButtonIsDisplayed(onView(withId(R.id.buttonSignOut)));
     }
 
     @Test
@@ -100,9 +106,14 @@ public class WelcomeActivityTest {
     }
 
     @Test
+    public void testPOIIsDisplayed() {
+        testFeatureIsDisplayed(onView(withId(R.id.poiButton)), onView(withId(R.id.pointOfInterestRecyclerView)));
+    }
+
+    @Test
     public void testTransportIsDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.transportButton)), onView(withId(R.id.transportLinearLayout)));
-        onView(withId(R.id.fragmentTransportList)).check(matches(isDisplayed()));
+        testFeatureIsDisplayed(onView(withId(R.id.transportButton)), onView(withId(R.id.transport_fragment_container)));
+        onView(withId(R.id.transport_fragment_container)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -117,6 +128,11 @@ public class WelcomeActivityTest {
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
+    }
+
+    private void testButtonIsDisplayed(ViewInteraction button) {
+        button.check(matches(isDisplayed()));
+        button.perform(click());
     }
 
     private void testFeatureIsDisplayed(ViewInteraction button, ViewInteraction feature) {

@@ -4,7 +4,6 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,13 +16,14 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class MainActivityTest extends BasicAuthenticationTest {
 
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             MockAuthenticator.getInstance().signOut();
+            BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
             Intents.init();
         }
 
@@ -33,16 +33,9 @@ public class MainActivityTest {
         }
     };
 
-
-    @Before
-    public void setUp() {
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
-    }
-
-    @Before
-
     @Test
     public void testLoggedOutGoesToLoginActivity() {
+        BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 }

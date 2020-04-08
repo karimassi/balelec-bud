@@ -2,42 +2,52 @@ package ch.epfl.balelecbud;
 
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import ch.epfl.balelecbud.user.models.User;
+import java.util.HashMap;
+import java.util.List;
+
+import ch.epfl.balelecbud.location.LocationUtil;
+import ch.epfl.balelecbud.models.Location;
 
 public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
+    private final float DEFAULT_ZOOM = 17;
 
-    private double defaultLat;
-    private double defaultLng;
+    private Location location;
+    private GoogleMap googleMap;
+    private Task<android.location.Location> locationResult;
+    private static boolean locationEnabled;
 
-    private LatLng position;
+    private final OnCompleteListener<android.location.Location> callback =
+            new OnCompleteListener<android.location.Location>() {
+                @Override
+                public void onComplete(@NonNull Task<android.location.Location> task) {
+                    setLocationFrom(task.getResult(), task.isSuccessful());
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getLatLng(location), DEFAULT_ZOOM));
+                }
+            };
 
     public static final String LOCATION_KEY = "location";
     public static final String FRIENDS_KEY = "friends";
 
-    private  HashMap<String, LatLng> friendsLocation;
+    private HashMap<String, LatLng> friendsLocation;
 
     private CollectionReference userCollectionRef = FirebaseFirestore.getInstance().collection("users");
 
@@ -49,11 +59,9 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        defaultLat = Double.parseDouble(getString(R.string.default_lat));
-        defaultLng = Double.parseDouble(getString(R.string.default_lng));
-        LatLng default_location = new LatLng(defaultLat, defaultLng);
-
-        setPosition(default_location);
+        setDefaultLocation();
+        setLocationPermission();
+        setLocationResult();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -70,17 +78,77 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(position).title("defaultPosition"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(position));
         displayFriendsLocation(map);
-    }
+        googleMap = map;
 
-    public void setPosition(LatLng position) {
-        if (position != null) {
-            this.position = position;
+        googleMap.getUiSettings().setCompassEnabled(true);
+
+        googleMap.setMyLocationEnabled(locationEnabled);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(locationEnabled);
+
+        if(locationEnabled)
+            locationResult.addOnCompleteListener(this, callback);
+        else {
+            googleMap.addMarker(new MarkerOptions().position(getLatLng(location)).title("Default Location"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getLatLng(location), DEFAULT_ZOOM));
         }
     }
 
+    protected void setLocationResult() {
+        if(locationEnabled) {
+            locationResult = LocationServices.getFusedLocationProviderClient(this).getLastLocation();
+        } else {
+            locationResult = null;
+        }
+    }
+
+    protected void setLocationPermission() {
+        locationEnabled = LocationUtil.isLocationActive();
+    }
+
+    protected void setLocationFrom(android.location.Location deviceLocation, boolean locationEnabled) {
+        if(locationEnabled && deviceLocation != null) {
+            location = new Location(deviceLocation);
+        }
+    }
+
+    protected void setLocationFrom(LatLng latLng) {
+        if(latLng != null) {
+            location = new Location(latLng);
+        }
+    }
+
+    protected void setLocation(Location location) {
+        if (location != null) {
+            this.location = location;
+        }
+    }
+
+    private void setDefaultLocation() {
+        final double defaultLat = Double.parseDouble(getString(R.string.default_lat));
+        final double defaultLng = Double.parseDouble(getString(R.string.default_lng));
+        final Location defaultLocation = new Location(defaultLat, defaultLng);
+        setLocation(defaultLocation);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public static boolean getLocationPermission() {
+        return locationEnabled;
+    }
+
+    public Task<android.location.Location> getLocationResult() {
+        return locationResult;
+    }
+
+    public LatLng getLatLng(Location location) {
+        if(location != null) {
+            return new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        else return null;
+    }
 
     public void displayFriendsLocation(GoogleMap map){
         for (String name : friendsLocation.keySet()) {
@@ -89,27 +157,28 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     public void updateFriendLocation(){
-        localUserDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                       @Override
-                                                       public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                           if (documentSnapshot.exists()) {
-                                                               List<String> friends = (List<String>) documentSnapshot.get("firends");
-                                                               for (String friend : friends) {
-                                                                   DocumentReference friendRef = userCollectionRef.document(friend);
-                                                                   friendRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                                       @Override
-                                                                       public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                           if (documentSnapshot.exists()) {
-                                                                               LatLng friendLocation = getPosition((GeoPoint) documentSnapshot.get("location"));
-                                                                               String friendName = (String) documentSnapshot.get("name");
-                                                                               friendsLocation.put(friendName, friendLocation);
-                                                                           }
-                                                                       }
-                                                                   });
-                                                               }
-                                                           }
-                                                       }
-                                                   });
+        localUserDocRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                       @Override
+                       public void onSuccess(DocumentSnapshot documentSnapshot) {
+                           if (documentSnapshot.exists()) {
+                               List<String> friends = (List<String>) documentSnapshot.get("firends");
+                               for (String friend : friends) {
+                                   DocumentReference friendRef = userCollectionRef.document(friend);
+                                   friendRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                       @Override
+                                       public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                           if (documentSnapshot.exists()) {
+                                               LatLng friendLocation = getPosition((GeoPoint) documentSnapshot.get("location"));
+                                               String friendName = (String) documentSnapshot.get("name");
+                                               friendsLocation.put(friendName, friendLocation);
+                                           }
+                                       }
+                                   });
+                               }
+                           }
+                       }
+                   });
 
     }
 
@@ -117,8 +186,8 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     public LatLng getPosition(GeoPoint point){
         return new LatLng(point.getLatitude(), point.getLongitude());
     }
-
-    public LatLng getPosition() {
-        return this.position;
+    
+    public GoogleMap getGoogleMap() {
+        return googleMap;
     }
 }

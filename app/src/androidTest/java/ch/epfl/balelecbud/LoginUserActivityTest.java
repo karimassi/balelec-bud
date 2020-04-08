@@ -19,11 +19,11 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginUserActivityTest extends BasicAuthenticationTest{
@@ -48,7 +48,7 @@ public class LoginUserActivityTest extends BasicAuthenticationTest{
 
     @Before
     public void setUp() throws Throwable{
-        mActivityRule.getActivity().setAuthenticator(MockAuthenticator.getInstance());
+        BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
 
@@ -61,7 +61,7 @@ public class LoginUserActivityTest extends BasicAuthenticationTest{
         onView(withId(R.id.editTextEmailLogin)).check(matches(hasErrorText("Email required!")));
         onView(withId(R.id.editTextPasswordLogin)).check(matches(hasErrorText("Password required!")));
     }
-//
+
     @Test
     public void testCantSignInInvalidEmailEmptyPassword() {
         // invalid email empty pws

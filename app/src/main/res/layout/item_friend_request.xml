@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_friend_request"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_view_friend_request_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textAlignment="center" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/button_request_item_accept_request"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/accept_request"/>
+
+    <Button
+        android:id="@+id/button_request_item_delete_request"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/reject_request"/>
+
+</LinearLayout>
