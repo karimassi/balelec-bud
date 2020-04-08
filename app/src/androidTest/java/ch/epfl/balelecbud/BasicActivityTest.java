@@ -5,6 +5,7 @@ import android.view.Gravity;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -15,15 +16,18 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 public abstract class BasicActivityTest {
 
     private int activity_drawer_layout_id;
     private int activity_nav_view_id;
+    private UiDevice device;
 
 
     @Before
     public void passIDsToBasicActivityTest() {
+        device = UiDevice.getInstance(getInstrumentation());
         setIds();
     }
 
@@ -91,11 +95,13 @@ public abstract class BasicActivityTest {
 
     private void openDrawer() {
         onView(withId(activity_drawer_layout_id)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        device.waitForIdle();
         onView(withId(activity_nav_view_id)).check(matches(isDisplayed()));
     }
 
     private void clickItem(int itemId, int viewToDisplayId) {
         onView(withId(activity_nav_view_id)).perform(NavigationViewActions.navigateTo(itemId));
+        device.waitForIdle();
         onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
     }
 
