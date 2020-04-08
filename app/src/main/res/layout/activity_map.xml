@@ -1,24 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mapLinearLayout"
+<androidx.drawerlayout.widget.DrawerLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/map_activity_drawer_layout"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:fitsSystemWindows="true"
+android:background="@color/blek_blue"
+tools:openDrawer="start"
+tools:context="ch.epfl.balelecbud.MapViewActivity">
+
+<!-- 1 | MainActivity RootView -->
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapViewActivity">
+    android:orientation="vertical"
+    >
 
-    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/map"
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/map_activity_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        map:cameraTargetLat="@string/camera_target_lat"
-        map:cameraTargetLng="@string/camera_target_lng"
-        map:cameraZoom="@string/camera_zoom"
-        map:mapType="normal"
-        map:uiRotateGestures="@bool/ui_rotate_gestures"
-        map:uiScrollGestures="@bool/ui_scroll_gestures"
-        map:uiTiltGestures="@bool/ui_tilt_gestures"
-        map:uiZoomControls="@bool/ui_zoom_controls"
-        map:uiZoomGestures="@bool/ui_zoom_gestures" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/blek_blue"
+        app:theme="@style/ToolBarStyle" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            map:cameraTargetLat="@string/camera_target_lat"
+            map:cameraTargetLng="@string/camera_target_lng"
+            map:cameraZoom="@string/camera_zoom"
+            map:mapType="normal"
+            map:uiRotateGestures="@bool/ui_rotate_gestures"
+            map:uiScrollGestures="@bool/ui_scroll_gestures"
+            map:uiTiltGestures="@bool/ui_tilt_gestures"
+            map:uiZoomControls="@bool/ui_zoom_controls"
+            map:uiZoomGestures="@bool/ui_zoom_gestures" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- FrameLayout for our fragments -->
+</LinearLayout>
+
+<!-- 2 | NavigationView -->
+<com.google.android.material.navigation.NavigationView
+    android:id="@+id/map_activity_nav_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    android:background="@color/blek_blue"
+    app:headerLayout="@layout/root_activity_nav_header"
+    app:itemTextAppearance="@style/blek_font_style"
+    app:menu="@menu/root_activity_menu_header"
+    app:itemIconTint="@color/blek_orange" />
+</androidx.drawerlayout.widget.DrawerLayout>

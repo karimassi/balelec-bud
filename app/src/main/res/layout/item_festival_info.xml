@@ -8,12 +8,17 @@
 
     <TextView
         android:id="@+id/festivalInfoTitle"
+        android:fontFamily="@font/oldsansblack"
+        android:textSize="30dp"
+        android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/festivalInfoContent"
+        android:fontFamily="@font/oldsansblack"
+        android:textColor="@android:color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1" />

@@ -1,64 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_activity_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    android:background="@drawable/blek_main_root"
+    tools:openDrawer="start"
+    tools:context="ch.epfl.balelecbud.WelcomeActivity">
 
-    <TextView
-        android:id="@+id/greetingTextView"
+    <!-- 1 | MainActivity RootView -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome"
-        android:textSize="@dimen/welcome_text_size" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
-    <Button
-        android:id="@+id/socialButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/social_view"/>
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/root_activity_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/blek_blue"
+            app:theme="@style/ToolBarStyle"/>
 
-    <Button
-        android:id="@+id/mapButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/map_view" />
+        <!-- FrameLayout for our fragments -->
+        <FrameLayout
+            android:id="@+id/root_activity_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/scheduleButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/schedule_view" />
+            <Switch
+                android:id="@+id/locationSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/toggle_location_view" />
+        </FrameLayout>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/infoButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/festival_info_view" />
+    <!-- 2 | NavigationView -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/root_activity_nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:background="@color/blek_blue"
+        app:headerLayout="@layout/root_activity_nav_header"
+        app:itemTextAppearance="@style/blek_font_style"
+        app:menu="@menu/root_activity_menu_header"
+        app:itemIconTint="@color/blek_orange" />
 
-    <Button
-        android:id="@+id/transportButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/transport_view" />
-
-    <Button
-        android:id="@+id/poiButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/point_of_interest" />
-
-    <Switch
-        android:id="@+id/locationSwitch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:checked="false"
-        android:text="@string/toggle_location_view" />
-
-
-    <Button
-        android:id="@+id/buttonSignOut"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/action_sign_out" />
-
-</LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

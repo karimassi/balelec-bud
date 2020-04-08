@@ -3,7 +3,6 @@ package ch.epfl.balelecbud;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,7 +17,8 @@ import com.google.android.gms.tasks.Task;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 
-public class MapViewActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapViewActivity extends BasicActivity implements OnMapReadyCallback {
+
     private final float DEFAULT_ZOOM = 17;
 
     private Location location;
@@ -47,6 +47,10 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        configureToolBar(R.id.map_activity_toolbar);
+        configureDrawerLayout(R.id.map_activity_drawer_layout);
+        configureNavigationView(R.id.map_activity_nav_view);
     }
 
     @Override
@@ -125,4 +129,5 @@ public class MapViewActivity extends FragmentActivity implements OnMapReadyCallb
     public GoogleMap getGoogleMap() {
         return googleMap;
     }
+
 }

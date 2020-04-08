@@ -18,8 +18,7 @@ import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
@@ -38,14 +37,15 @@ public class ScheduleActivityWithSubscribedConcertTest {
         @Override
         protected Intent getActivityIntent() {
             Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
-            FlowUtil.packCallback(new Slot[] { slot1 }, intent);
+            FlowUtil.packCallback(new Slot[]{slot1}, intent);
             return intent;
         }
     };
 
     @Before
     public void setUpMockIntentLauncher() {
-        this.mActivityRule.getActivity().setIntentLauncher(intent -> { });
+        this.mActivityRule.getActivity().setIntentLauncher(intent -> {
+        });
     }
 
     @Test
@@ -69,7 +69,8 @@ public class ScheduleActivityWithSubscribedConcertTest {
         });
         mock.addItem(slot1);
         mock.addItem(slot2);
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3)).perform(click());
+        Thread.sleep(1000);
+        onView(getItemInSchedule(0, 3)).perform(click());
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
@@ -79,10 +80,11 @@ public class ScheduleActivityWithSubscribedConcertTest {
     public void testSubscribedConcertIsChecked() throws Throwable {
         mock.addItem(slot1);
         mock.addItem(slot2);
+        Thread.sleep(1000);
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+        onView(getItemInSchedule(0, 3))
                 .check(switchChecked(true));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 1), 3))
+        onView(getItemInSchedule(1, 3))
                 .check(switchChecked(false));
     }
 }

@@ -20,6 +20,7 @@ public class TestAsyncUtils {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUiThread(() -> {
             runnable.run();
+            Log.v(TAG, "runnable ran");
             sync.call();
         });
         sync.waitCall(1);
