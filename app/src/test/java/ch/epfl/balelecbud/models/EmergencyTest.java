@@ -19,7 +19,7 @@ public class EmergencyTest {
     public void testGetCategory(){ Assert.assertThat(e1.getCategory(), is(EmergencyType.THEFT));}
 
     @Test
-    public void testGetCategoryString(){ Assert.assertThat(e1.getCategoryString(), is(EmergencyType.THEFT.toString()));}
+    public void testGetCategoryString(){ Assert.assertThat(e1.getCategory().toString(), is(EmergencyType.THEFT.toString()));}
 
     @Test
     public void testGetMessage(){ Assert.assertThat(e1.getMessage(), is("Help please"));}

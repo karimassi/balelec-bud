@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import ch.epfl.balelecbud.models.emergency.Emergency;
+
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         if (getAppAuthenticator().getCurrentUser() == null) {
             activityClass = LoginUserActivity.class;
         } else {
-            activityClass = EmergencyActivity.class;
+            activityClass = WelcomeActivity.class;
         }
         Intent intent = new Intent(this, activityClass);
         startActivity(intent);

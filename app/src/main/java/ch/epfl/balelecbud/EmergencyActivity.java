@@ -19,12 +19,12 @@ import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 
 public class EmergencyActivity extends AppCompatActivity {
 
     private Button mShowEmergencyDialog;
-    private static DatabaseWrapper database = FirestoreDatabaseWrapper.getInstance();
 
 
     @Override
@@ -52,15 +52,12 @@ public class EmergencyActivity extends AppCompatActivity {
                             String currentUserUid = getAppAuthenticator().getCurrentUser().getUid();
                             Timestamp currentTimestamp = Timestamp.now();
                             Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
-                            database.storeDocument(DatabaseWrapper.EMERGENCIES_PATH, mEmergency);
+                            getAppDatabaseWrapper().storeDocument(DatabaseWrapper.EMERGENCIES_PATH, mEmergency);
                             Toast.makeText(EmergencyActivity.this, R.string.emergency_sent_message, Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }else{
                             Toast.makeText(EmergencyActivity.this, R.string.emergency_not_sent_message, Toast.LENGTH_SHORT).show();
                         }
-
-
-
                     }
                 });
 
