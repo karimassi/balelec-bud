@@ -37,6 +37,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public static final User celine =
             new User("celine@epfl.ch", "celine", MockAuthenticator.provideUid());
 
+    private static final String TAG = "MockDB";
+
     public static Slot slot1;
     public static Slot slot2;
     public static Slot slot3;
@@ -177,7 +179,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void addItem(final Object object) throws Throwable {
-        runOnUIThreadAndWait(() -> addItemAux(object));
+        runOnUIThreadAndWait(() -> {
+            addItemAux(object);
+            Log.v(TAG, "added item " + object.toString());
+        });
     }
 
     public void modifyItem(final Object object, final int index) throws Throwable {

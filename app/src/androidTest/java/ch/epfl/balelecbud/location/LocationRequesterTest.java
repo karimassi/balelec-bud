@@ -4,8 +4,11 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.view.Gravity;
 import android.widget.Switch;
 
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
@@ -28,6 +31,9 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchClickable;
@@ -172,7 +178,7 @@ public class LocationRequesterTest {
     }
 
     @Test
-    public void testSwitchOffDisablesLocationInMap() {
+    public void testSwitchOffDisablesLocationInMap() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
@@ -185,9 +191,24 @@ public class LocationRequesterTest {
                 sync.fail();
             }
         });
-        onView(withId(R.id.mapButton)).perform(click());
+        openMapActivity();
         Assert.assertFalse(MapViewActivity.getLocationPermission());
         sync.assertCalled(0);
         sync.assertNoFailedTests();
+    }
+
+    private void openDrawer() {
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
+    }
+
+    private void clickItem(int itemId) {
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
+    }
+
+    private void openMapActivity() throws InterruptedException {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_map);
+        Thread.sleep(1000);
     }
 }

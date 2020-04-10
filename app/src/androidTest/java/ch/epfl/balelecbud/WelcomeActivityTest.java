@@ -2,7 +2,6 @@ package ch.epfl.balelecbud;
 
 import android.app.PendingIntent;
 
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
@@ -27,7 +26,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
-public class WelcomeActivityTest {
+public class WelcomeActivityTest extends BasicActivityTest {
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
@@ -57,87 +56,13 @@ public class WelcomeActivityTest {
         }
     }
 
-    @Test
-    public void testMapButtonIsDisplayed() {
-        testButtonIsDisplayed(onView(withId(R.id.mapButton)));
+    @Override
+    protected void setIds() {
+        setIds(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
     }
-
-    @Test
-    public void testInfoButtonIsDisplayed() {
-        testButtonIsDisplayed(onView(withId(R.id.infoButton)));
-    }
-
-    @Test
-    public void testTransportButtonIsDisplayed() {
-        testButtonIsDisplayed(onView(withId(R.id.transportButton)));
-    }
-
-    @Test
-    public void testScheduleButtonIsDisplayed() {
-        onView(withId(R.id.scheduleButton)).check(matches(isDisplayed()));
-        onView(withId(R.id.scheduleButton)).perform(click());
-    }
-
-    @Test
-    public void testPOIButtonIsDisplayed() {
-        testButtonIsDisplayed(onView(withId(R.id.poiButton)));
-    }
-
-    @Test
-    public void testSignOutIsDisplayed() {
-        testButtonIsDisplayed(onView(withId(R.id.buttonSignOut)));
-    }
-
     @Test
     public void testToggleLocationIsDisplayed() {
         onView(withId(R.id.locationSwitch)).check(matches(isDisplayed()));
         onView(withId(R.id.locationSwitch)).perform(click());
-    }
-
-    @Test
-    public void testMapIsDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.mapButton)), onView(withId((R.id.mapLinearLayout))));
-        onView(withId(R.id.map)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testInfoIsDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.infoButton)), onView(withId(R.id.festivalInfoRecyclerView)));
-    }
-
-    @Test
-    public void testPOIIsDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.poiButton)), onView(withId(R.id.pointOfInterestRecyclerView)));
-    }
-
-    @Test
-    public void testTransportIsDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.transportButton)), onView(withId(R.id.transport_fragment_container)));
-        onView(withId(R.id.transport_fragment_container)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testScheduleIsDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.scheduleButton)), onView(withId(R.id.scheduleRecyclerView)));
-    }
-
-    @Test
-    public void testLoginScreenDisplayed() {
-        testFeatureIsDisplayed(onView(withId(R.id.buttonSignOut)), onView(withId(R.id.loginLinearLayout)));
-        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
-    }
-
-    private void testButtonIsDisplayed(ViewInteraction button) {
-        button.check(matches(isDisplayed()));
-        button.perform(click());
-    }
-
-    private void testFeatureIsDisplayed(ViewInteraction button, ViewInteraction feature) {
-        button.perform(click());
-        feature.check(matches(isDisplayed()));
-        button.check(doesNotExist());
     }
 }

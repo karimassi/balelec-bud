@@ -1,7 +1,11 @@
 package ch.epfl.balelecbud;
 
+import android.content.Intent;
+
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,15 +25,17 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
 
 @RunWith(AndroidJUnit4.class)
-public class ScheduleActivityTest {
+public class ScheduleActivityTest extends BasicActivityTest {
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
+    UiDevice device;
 
     @Rule
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
@@ -37,6 +43,14 @@ public class ScheduleActivityTest {
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
+
+        @Override
+        protected Intent getActivityIntent() {
+            Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
+            FlowUtil.packCallback(new Slot[]{}, intent);
+            return intent;
+        }
+
     };
 
     @Before
@@ -56,6 +70,7 @@ public class ScheduleActivityTest {
                     break;
             }
         });
+        device = UiDevice.getInstance(getInstrumentation());
     }
 
     @Test
@@ -68,27 +83,23 @@ public class ScheduleActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
         mock.addItem(slot1);
+        device.waitForIdle();
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
         mock.addItem(slot2);
+        device.waitForIdle();
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-        mock.addItem(slot3);
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(3)));
-
         mock.modifyItem(slot3, 0);
+        device.waitForIdle();
         checkSlot(0, slot3);
 
         mock.removeItem(slot3, 0);
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
-
-        mock.removeItem(slot2, 0);
+        Thread.sleep(1000);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        mock.removeItem(slot3, 0);
-        synchronized (this) {
-            this.wait(1000);
-        }
+        mock.removeItem(slot2, 0);
+        Thread.sleep(1000);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
@@ -96,23 +107,21 @@ public class ScheduleActivityTest {
     public void testCaseForRecyclerItems() throws Throwable {
         mock.addItem(slot1);
         mock.addItem(slot2);
-        mock.addItem(slot3);
+        Thread.sleep(1000);
 
         checkSlot(0, slot1);
 
         checkSlot(1, slot2);
-
-        checkSlot(2, slot3);
     }
 
     private void checkSlot(int i, Slot slot1) {
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 0))
-                .check(matches(withText(slot1.getTimeSlot())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 1))
+        onView(getItemInSchedule(i, 0))
                 .check(matches(withText(slot1.getArtistName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 2))
+        onView(getItemInSchedule(i, 1))
+                .check(matches(withText(slot1.getTimeSlot())));
+        onView(getItemInSchedule(i, 2))
                 .check(matches(withText(slot1.getSceneName())));
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), i), 3))
+        onView(getItemInSchedule(i, 3))
                 .check(switchChecked(false));
     }
 
@@ -138,10 +147,15 @@ public class ScheduleActivityTest {
             }
         });
 
-        onView(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), 0), 3))
+        onView(getItemInSchedule(0, 3))
                 .perform(click());
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
+    }
+
+    @Override
+    protected void setIds() {
+        setIds(R.id.schedule_activity_drawer_layout, R.id.schedule_activity_nav_view);
     }
 }

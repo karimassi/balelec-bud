@@ -13,12 +13,16 @@ import ch.epfl.balelecbud.pointOfInterest.PointOfInterestHolder;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
-public class PointOfInterestActivity extends AppCompatActivity {
+public class PointOfInterestActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_point_of_interest);
+
+        configureToolBar(R.id.poi_activity_toolbar);
+        configureDrawerLayout(R.id.poi_activity_drawer_layout);
+        configureNavigationView(R.id.poi_activity_nav_view);
 
         RecyclerView recyclerView = findViewById(R.id.pointOfInterestRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -30,4 +34,5 @@ public class PointOfInterestActivity extends AppCompatActivity {
         SwipeRefreshLayout refreshLayout = findViewById(R.id.swipe_refresh_layout_point_of_interest);
         adapter.setOnRefreshListener(refreshLayout);
     }
+
 }

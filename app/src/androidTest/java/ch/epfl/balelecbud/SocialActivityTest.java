@@ -42,7 +42,7 @@ import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class SocialActivityTest {
+public class SocialActivityTest extends BasicActivityTest {
 
     private final User currentUser = MockDatabaseWrapper.karim;
     private final User otherUser = MockDatabaseWrapper.celine;
@@ -72,7 +72,7 @@ public class SocialActivityTest {
     }
 
     private void createFriendship(User user) {
-        Map<String,Boolean> toStore= new HashMap<>();
+        Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(user.getUid(), true);
         mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, currentUser.getUid(), toStore);
 
@@ -82,7 +82,7 @@ public class SocialActivityTest {
     }
 
     private void createRequestFromUser(User user) {
-        Map<String,Boolean> toStore= new HashMap<>();
+        Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(user.getUid(), true);
         mockDb.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, currentUser.getUid(), toStore);
     }
@@ -248,8 +248,7 @@ public class SocialActivityTest {
                 .whenComplete((stringObjectMap, throwable) -> {
             if (stringObjectMap != null) {
                 sync.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
-            }
-            else {
+            } else {
                 sync.fail();
             }
             sync.call();
@@ -257,5 +256,10 @@ public class SocialActivityTest {
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
+    }
+
+    @Override
+    protected void setIds() {
+        setIds(R.id.social_activity_drawer_layout, R.id.social_activity_nav_view);
     }
 }

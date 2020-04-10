@@ -13,7 +13,8 @@ import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
-public class FestivalInformationActivity extends AppCompatActivity {
+public class FestivalInformationActivity extends BasicActivity {
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,5 +30,10 @@ public class FestivalInformationActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         SwipeRefreshLayout refreshLayout = findViewById(R.id.swipe_refresh_layout_festival_info);
         adapter.setOnRefreshListener(refreshLayout);
+        
+        configureToolBar(R.id.festival_info_activity_toolbar);
+        configureDrawerLayout(R.id.festival_info_activity_drawer_layout);
+        configureNavigationView(R.id.festival_info_activity_nav_view);
     }
+
 }

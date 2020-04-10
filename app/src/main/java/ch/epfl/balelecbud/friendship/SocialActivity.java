@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public class SocialActivity extends AppCompatActivity {
+public class SocialActivity extends BasicActivity {
     private SocialAdapter fragmentAdapter;
 
     private List<String> tabTitleList;
@@ -27,6 +28,10 @@ public class SocialActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
+
+        this.configureToolBar(R.id.social_activity_toolbar);
+        this.configureDrawerLayout(R.id.social_activity_drawer_layout);
+        this.configureNavigationView(R.id.social_activity_nav_view);
 
         tabTitleList = new ArrayList<>(Arrays.asList(getString(R.string.tab_friends), getString(R.string.tab_requests)));
 
@@ -39,7 +44,7 @@ public class SocialActivity extends AppCompatActivity {
 
         FloatingActionButton fabAddFriends = findViewById(R.id.fab_add_friends);
         fabAddFriends.setOnClickListener(v -> {
-            AddFriendFragment dialog =AddFriendFragment.newInstance(getAppAuthenticator().getCurrentUser());
+            AddFriendFragment dialog = AddFriendFragment.newInstance(getAppAuthenticator().getCurrentUser());
             dialog.show(getSupportFragmentManager(), getString(R.string.add_friend_title));
         });
 
@@ -50,4 +55,5 @@ public class SocialActivity extends AppCompatActivity {
         fragmentAdapter.addFragment(FriendsFragment.newInstance(getAppAuthenticator().getCurrentUser()));
         fragmentAdapter.addFragment(FriendRequestsFragment.newInstance(getAppAuthenticator().getCurrentUser()));
     }
+
 }
