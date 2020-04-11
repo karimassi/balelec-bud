@@ -6,6 +6,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.location.LocationRequest;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -80,8 +82,7 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
-                sync.assertEquals(karim.getDisplayName(), markerBuilder.getTitle());
-                sync.assertEquals(karimLocation, markerBuilder.getLocation());
+                assertNameAndLocation(markerBuilder, sync, karim, karimLocation);
                 sync.call();
                 return null;
             }
@@ -103,8 +104,7 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
-                sync.assertEquals(karim.getDisplayName(), markerBuilder.getTitle());
-                sync.assertEquals(karimLocation, markerBuilder.getLocation());
+                assertNameAndLocation(markerBuilder, sync, karim, karimLocation);
                 sync.call();
                 return location -> {
                     sync.call();
@@ -122,8 +122,19 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     @Test
     public void whenAFriendHaveNoLocationNothingIsShownOnTheMap() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
+        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(assertKarimThenAlexLocation(sync)));
+        sync.waitCall(2);
+        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, alex.getUid(), alexLocation);
+        sync.waitCall(3);
+        sync.assertCalled(3);
+        sync.assertNoFailedTests();
+    }
+
+    @NotNull
+    private MyMap assertKarimThenAlexLocation(TestAsyncUtils sync) {
+        return new MyMap() {
             private int times = 0;
+
             @Override
             public void setMyLocationEnabled(boolean locationEnabled) {
                 sync.call();
@@ -133,22 +144,20 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
                 if (times == 0) {
-                    sync.assertEquals(karim.getDisplayName(), markerBuilder.getTitle());
-                    sync.assertEquals(karimLocation, markerBuilder.getLocation());
+                    assertNameAndLocation(markerBuilder, sync, karim, karimLocation);
                 } else {
-                    sync.assertEquals(alex.getDisplayName(), markerBuilder.getTitle());
-                    sync.assertEquals(alexLocation, markerBuilder.getLocation());
+                    assertNameAndLocation(markerBuilder, sync, alex, alexLocation);
                 }
                 sync.call();
                 times += 1;
                 return null;
             }
-        }));
-        sync.waitCall(2);
-        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, alex.getUid(), alexLocation);
-        sync.waitCall(3);
-        sync.assertCalled(3);
-        sync.assertNoFailedTests();
+        };
+    }
+
+    private void assertNameAndLocation(MyMarker.Builder markerBuilder, TestAsyncUtils sync, User karim, Location karimLocation) {
+        sync.assertEquals(karim.getDisplayName(), markerBuilder.getTitle());
+        sync.assertEquals(karimLocation, markerBuilder.getLocation());
     }
 
     @Test

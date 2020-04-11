@@ -3,11 +3,11 @@ package ch.epfl.balelecbud.map;
 import android.app.PendingIntent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,7 +19,6 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
-import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
@@ -43,30 +42,17 @@ public class MapViewActivityTest extends BasicActivityTest {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewActivity.setMockCallback(googleMap -> {});
+                    MapViewActivity.setMockCallback(googleMap -> { });
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
-                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-
-                        }
+                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) { }
 
                         @Override
-                        public void removeLocationUpdates(PendingIntent intent) {
-
-                        }
+                        public void removeLocationUpdates(PendingIntent intent) { }
                     });
                     mockAuth.setCurrentUser(MockDatabaseWrapper.celine);
                 }
             };
-
-    private final Location celineLocation = new Location(1, 2);
-    private final Location karimLocation = new Location(2, 4);
-    private final double testLatitude = -12.12;
-    private final double testLongitude = -77.03;
-    private final Location testLocation = new Location(testLatitude, testLongitude);
-    private final LatLng testLatLng = testLocation.toLatLng();
-    private Location oldMapLocation;
-    private Location newMapLocation;
 
     @Test
     public void testMapViewIsNotNull() {
@@ -83,19 +69,7 @@ public class MapViewActivityTest extends BasicActivityTest {
     @Test
     public void whenLocationIfOffLocationOnMapIsDisable() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
-            @Override
-            public void setMyLocationEnabled(boolean locationEnabled) {
-                sync.assertFalse(locationEnabled);
-                sync.call();
-            }
-
-            @Override
-            public MyMarker addMarker(MyMarker.Builder markerBuilder) {
-                sync.fail();
-                return null;
-            }
-        }));
+        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(assertMapLocation(sync, false)));
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
@@ -105,10 +79,19 @@ public class MapViewActivityTest extends BasicActivityTest {
     public void whenLocationIfOnLocationOnMapIsDisable() throws Throwable {
         LocationUtil.enableLocation();
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
+        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(assertMapLocation(sync, true)));
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
+        LocationUtil.disableLocation();
+    }
+
+    @NonNull
+    private MyMap assertMapLocation(TestAsyncUtils sync, boolean expectedLocation) {
+        return new MyMap() {
             @Override
             public void setMyLocationEnabled(boolean locationEnabled) {
-                sync.assertTrue(locationEnabled);
+                sync.assertEquals(expectedLocation, locationEnabled);
                 sync.call();
             }
 
@@ -117,11 +100,7 @@ public class MapViewActivityTest extends BasicActivityTest {
                 sync.fail();
                 return null;
             }
-        }));
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
-        LocationUtil.disableLocation();
+        };
     }
 
     @Test

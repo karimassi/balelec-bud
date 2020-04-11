@@ -208,18 +208,20 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void addItem(final Object object) throws Throwable {
-        Log.d(TAG, "addItem() called with: object = [" + object + "]");
-        runOnUIThreadAndWait(() -> addItemAux(object));
+        runOnUiThreadWithLog("addItem", object, () -> addItemAux(object));
     }
 
     public void modifyItem(final Object object, final int index) throws Throwable {
-        Log.d(TAG, "modifyItem() called with: object = [" + object + "], index = [" + index + "]");
-        runOnUIThreadAndWait(() -> changeItemAux(object, index));
+        runOnUiThreadWithLog("modifyItem", object, () -> changeItemAux(object, index));
     }
 
     public void removeItem(final Object object, final int index) throws Throwable {
-        Log.d(TAG, "removeItem() called with: object = [" + object + "], index = [" + index + "]");
-        runOnUIThreadAndWait(() -> removeItemAux(object, index));
+        runOnUiThreadWithLog("removeItem", object, () -> removeItemAux(object, index));
+    }
+
+    private void runOnUiThreadWithLog(String functionName, Object object, Runnable runnable) throws Throwable {
+        Log.d(TAG, functionName + "() called with: object = [" + object + "]");
+        runOnUIThreadAndWait(runnable);
     }
 
     private void addItemAux(Object item) {
