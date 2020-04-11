@@ -17,18 +17,18 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
-public class FriendRequestsFragment extends Fragment {
+public class ReceivedFriendRequestsFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_friend_requests, container, false);
+        View view = inflater.inflate(R.layout.fragment_friend_requests, container, false);
 
         Context context = view.getContext();
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friend_requests);
-        FriendRequestData data = new FriendRequestData((User)getArguments().get("user"));
-        final RefreshableRecyclerViewAdapter<User, RequestViewHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(RequestViewHolder::new, data, R.layout.item_friend_request );
+        ReceivedFriendRequestData data = new ReceivedFriendRequestData((User) getArguments().get("user"));
+        final RefreshableRecyclerViewAdapter<User, ReceivedRequestViewHolder> adapter =
+                new RefreshableRecyclerViewAdapter<>(ReceivedRequestViewHolder::new, data, R.layout.item_friend_request);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
@@ -39,11 +39,11 @@ public class FriendRequestsFragment extends Fragment {
         return view;
     }
 
-    public static FriendRequestsFragment newInstance(User user) {
+    public static ReceivedFriendRequestsFragment newInstance(User user) {
 
         Bundle args = new Bundle();
         args.putParcelable("user", user);
-        FriendRequestsFragment fragment = new FriendRequestsFragment();
+        ReceivedFriendRequestsFragment fragment = new ReceivedFriendRequestsFragment();
         fragment.setArguments(args);
         return fragment;
     }
