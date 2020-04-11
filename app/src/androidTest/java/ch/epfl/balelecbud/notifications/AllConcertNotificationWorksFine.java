@@ -171,7 +171,6 @@ public class AllConcertNotificationWorksFine {
         mock.addItem(s);
         onView(getItemInSchedule(0, 3)).perform(click());
         runnable.run();
-//        device.waitForIdle();
 
         mock.addItem(s);
         onView(getItemInSchedule(0, 3)).check(switchChecked(switchStateAfter));

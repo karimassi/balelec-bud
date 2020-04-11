@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.user.models;
+package ch.epfl.balelecbud.models;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -14,12 +14,7 @@ public class FirebaseAuthenticator implements Authenticator {
     private static final Authenticator instance = new FirebaseAuthenticator();
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-    private FirebaseAuthenticator() {
-    }
-
-    public static Authenticator getInstance() {
-        return instance;
-    }
+    private FirebaseAuthenticator() { }
 
     @Override
     public CompletableFuture<User> signIn(String email, String password) {
@@ -40,5 +35,9 @@ public class FirebaseAuthenticator implements Authenticator {
     @Override
     public String getCurrentUid() {
         return mAuth.getCurrentUser().getUid();
+    }
+
+    public static Authenticator getInstance() {
+        return instance;
     }
 }
