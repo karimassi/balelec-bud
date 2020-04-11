@@ -24,7 +24,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.MapViewActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
@@ -175,26 +174,6 @@ public class LocationRequesterTest {
                 new String[] { }, new int[] { });
 
         onView(withId(R.id.locationSwitch)).check(switchClickable(before));
-    }
-
-    @Test
-    public void testSwitchOffDisablesLocationInMap() throws InterruptedException {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        LocationUtil.setLocationClient(new LocationClient() {
-            @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                sync.fail();
-            }
-
-            @Override
-            public void removeLocationUpdates(PendingIntent intent) {
-                sync.fail();
-            }
-        });
-        openMapActivity();
-        Assert.assertFalse(MapViewActivity.getLocationPermission());
-        sync.assertCalled(0);
-        sync.assertNoFailedTests();
     }
 
     private void openDrawer() {

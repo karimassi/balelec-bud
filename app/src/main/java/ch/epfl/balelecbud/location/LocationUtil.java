@@ -52,7 +52,6 @@ public final class LocationUtil {
     private static LocationRequest getLocationRequestInstance() {
         if (locationRequest == null)
             createLocationRequest();
-
         return locationRequest;
     }
 
@@ -133,6 +132,7 @@ public final class LocationUtil {
     }
 
     private static void changedLocationState(boolean status) {
+        Log.d(TAG, "changedLocationState() called with: status = [" + status + "]");
         Context context = BalelecbudApplication.getAppContext();
         if (status) {
             requestLocationUpdates(context);

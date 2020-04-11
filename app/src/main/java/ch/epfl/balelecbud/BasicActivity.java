@@ -3,7 +3,6 @@ package ch.epfl.balelecbud;
 import android.content.Intent;
 import android.view.MenuItem;
 
-import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,18 +11,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
-import ch.epfl.balelecbud.authentication.Authenticator;
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.friendship.SocialActivity;
+import ch.epfl.balelecbud.map.MapViewActivity;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
-public abstract class BasicActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.location.LocationUtil.disableLocation;
+import static ch.epfl.balelecbud.location.LocationUtil.isLocationActive;
 
-    private static Authenticator authenticator = FirebaseAuthenticator.getInstance();
-    private static DatabaseWrapper databaseWrapper = FirestoreDatabaseWrapper.getInstance();
+public abstract class BasicActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -91,28 +88,12 @@ public abstract class BasicActivity extends AppCompatActivity implements Navigat
         }
     }
 
-    private void signOut() {
-        getAuthenticator().signOut();
+    protected void signOut() {
+        getAppAuthenticator().signOut();
+        if (isLocationActive())
+            disableLocation();
         Intent intent = new Intent(this, LoginUserActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    @VisibleForTesting
-    public static void setAuthenticator(Authenticator auth) {
-        authenticator = auth;
-    }
-
-    @VisibleForTesting
-    public static void setDatabase(DatabaseWrapper db) {
-        databaseWrapper = db;
-    }
-
-    public Authenticator getAuthenticator() {
-        return authenticator;
-    }
-
-    public DatabaseWrapper getDatabase() {
-        return databaseWrapper;
     }
 }

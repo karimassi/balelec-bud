@@ -52,14 +52,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class AllConcertNotificationWorksFine {
 
-    private ConcertOfInterestDatabase db;
-    private UiDevice device;
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
-    private final Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
-            Timestamp.now(), Timestamp.now());
-    private final Slot s2 = new Slot(1, "mon artiste", "Scene set",
-            Timestamp.now(), Timestamp.now());
-
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
@@ -78,6 +71,10 @@ public class AllConcertNotificationWorksFine {
                     BalelecbudApplication.setAppDatabaseWrapper(mock);
                 }
             };
+    private final Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3",
+            Timestamp.now(), Timestamp.now());
+    private ConcertOfInterestDatabase db;
+    private UiDevice device;
 
     @Before
     public void setup() {
@@ -112,21 +109,29 @@ public class AllConcertNotificationWorksFine {
 
     @Test
     public void subscribeToAConcertScheduleANotification() throws Throwable {
-        checkSwitchAfter(() ->{
+        checkSwitchAfter(() -> {
             checkNotification();
             device.waitForWindowUpdate(null, 10000);
             openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
             Log.v("mySuperTag", "executed subscribeToAConcertScheduleANotification");
-        } , s1, false);
+        }, s, false);
     }
 
     @Test
     public void subscribeToAConcertKeepItSubscribed() throws Throwable {
-        checkSwitchAfter(() ->{
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        // schedule the notification to go off in 5 minutes,
+        // which leaves plenty of time for the test to finish and cancel it
+        cal.add(Calendar.MINUTE, 20);
+        Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
+                new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
+        checkSwitchAfter(() -> {
             openInfoActivityFrom(R.id.schedule_activity_drawer_layout, R.id.schedule_activity_nav_view);
             openScheduleActivityFrom(R.id.festival_info_activity_drawer_layout, R.id.festival_info_activity_nav_view);
             Log.v("mySuperTag", "executed subscribeToAConcertKeepItSubscribed");
-        }, s2, true);
+        }, s1, true);
+        onView(getItemInSchedule(0, 3)).perform(click());
     }
 
     @Test

@@ -12,7 +12,7 @@ import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 public class MockAuthenticator implements Authenticator {
 
-    private static final Authenticator instance = new MockAuthenticator();
+    private static final MockAuthenticator instance = new MockAuthenticator();
 
     private final Map<String, String> users = new HashMap<String, String>() {
         {
@@ -72,7 +72,7 @@ public class MockAuthenticator implements Authenticator {
         }
     }
 
-    public static Authenticator getInstance() {
+    public static MockAuthenticator getInstance() {
         return instance;
     }
 }

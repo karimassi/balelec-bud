@@ -28,11 +28,6 @@ public class LocationTest {
     }
 
     @Test
-    public void testToGeoPoint() {
-        assertThat(location.toGeoPoint(), is(geoPoint));
-    }
-
-    @Test
     public void testLocationFromLatLng() {
         assertThat(new Location(latLng), is(location));
     }
@@ -63,6 +58,10 @@ public class LocationTest {
         Assert.assertNotEquals(location, allDifferent);
     }
 
+    @Test
+    public void testToLatLng() {
+        assertThat(location.toLatLng(), is(latLng));
+    }
 
     @Test
     public void testEqualsTwoDifferentObjects() {

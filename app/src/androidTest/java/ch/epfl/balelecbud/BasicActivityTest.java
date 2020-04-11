@@ -59,7 +59,7 @@ public abstract class BasicActivityTest {
     @Test
     public void openMapActivityFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_map, R.id.map);
+        clickItem(R.id.activity_main_drawer_map, R.id.mapView);
     }
 
     @Test
@@ -112,6 +112,5 @@ public abstract class BasicActivityTest {
         this.activity_drawer_layout_id = activity_drawer_layout_id;
         this.activity_nav_view_id = activity_nav_view_id;
     }
-
 
 }

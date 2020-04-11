@@ -4,8 +4,8 @@
         AIzaSyCTmv_0J8w0DUXlEMg06_GsWYh3T0b6aow
     </string>
 
-    <string name="camera_target_lat">-33.796923</string>
-    <string name="camera_target_lng">150.922433</string>
+    <string name="camera_target_lat">46.518802</string>
+    <string name="camera_target_lng">6.567550</string>
     <string name="camera_zoom">15</string>
 
     <bool name="ui_rotate_gestures">true</bool>
@@ -13,7 +13,4 @@
     <bool name="ui_tilt_gestures">true</bool>
     <bool name="ui_zoom_controls">true</bool>
     <bool name="ui_zoom_gestures">true</bool>
-
-    <string name="default_lat">46.518802</string>
-    <string name="default_lng">6.567550</string>
 </resources>

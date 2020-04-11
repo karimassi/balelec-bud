@@ -28,7 +28,7 @@ public class TestAsyncUtils {
 
     public void waitCall(int shouldBe) throws InterruptedException {
         synchronized (this) {
-            this.wait(50);
+            this.wait(100);
             Log.d(TAG, "waitCall() called with: shouldBe = [" + shouldBe + "] and called = [" + called + "]");
             if (shouldBe != called) {
                 this.wait(1000);
