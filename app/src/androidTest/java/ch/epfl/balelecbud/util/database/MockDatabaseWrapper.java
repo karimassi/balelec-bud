@@ -34,6 +34,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
     public static final User celine =
             new User("celine@epfl.ch", "celine", MockAuthenticator.provideUid());
+    public static final User alex =
+            new User("alex@epfl.ch", "alex", MockAuthenticator.provideUid());
     private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
     private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
     public static Slot slot1;
@@ -51,10 +53,13 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private MockDatabaseWrapper() {
         users.put(karim.getUid(), karim);
         users.put(celine.getUid(), celine);
+        users.put(alex.getUid(), alex);
         friendships.put(karim.getUid(), new HashMap<>());
         friendships.put(celine.getUid(), new HashMap<>());
+        friendships.put(alex.getUid(), new HashMap<>());
         friendRequests.put(karim.getUid(), new HashMap<>());
         friendRequests.put(celine.getUid(), new HashMap<>());
+        friendRequests.put(alex.getUid(), new HashMap<>());
         List<Timestamp> timestamps = new LinkedList<>();
         for (int i = 0; i < 6; ++i) {
             Calendar c = Calendar.getInstance();
@@ -376,6 +381,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         for (Map m : friendRequests.values()) {
             m.clear();
         }
+        friendsLocationListener.clear();
     }
 
     public void resetDocument(String collectionName) {

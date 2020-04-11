@@ -6,6 +6,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.location.LocationRequest;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -22,6 +23,7 @@ import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.karim;
 import static org.junit.Assert.assertEquals;
@@ -31,6 +33,7 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final Location karimLocation = new Location(2, 4);
     private final Location newKarimLocation = new Location(1, 2);
+    private final Location alexLocation = new Location(3, 3);
 
     @Rule
     public final ActivityTestRule<MapViewActivity> mActivityRule =
@@ -54,9 +57,16 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
                     });
                     mockAuth.setCurrentUser(celine);
                     FriendshipUtils.acceptRequest(karim);
+                    FriendshipUtils.acceptRequest(alex);
                     mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), karimLocation);
                 }
             };
+
+    @After
+    public void cleanup() {
+        mockDB.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
+        mockDB.resetFriendshipsAndRequests();
+    }
 
     @Test
     public void whenHaveOneFriendOneMarkerOnTheMap() throws Throwable {
@@ -110,8 +120,40 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     }
 
     @Test
+    public void whenAFriendHaveNoLocationNothingIsShownOnTheMap() throws Throwable {
+        TestAsyncUtils sync = new TestAsyncUtils();
+        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
+            private int times = 0;
+            @Override
+            public void setMyLocationEnabled(boolean locationEnabled) {
+                sync.call();
+            }
+
+            @Override
+            public MyMarker addMarker(MyMarker.Builder markerBuilder) {
+                sync.assertNotNull(markerBuilder);
+                if (times == 0) {
+                    sync.assertEquals(karim.getDisplayName(), markerBuilder.getTitle());
+                    sync.assertEquals(karimLocation, markerBuilder.getLocation());
+                } else {
+                    sync.assertEquals(alex.getDisplayName(), markerBuilder.getTitle());
+                    sync.assertEquals(alexLocation, markerBuilder.getLocation());
+                }
+                sync.call();
+                times += 1;
+                return null;
+            }
+        }));
+        sync.waitCall(2);
+        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, alex.getUid(), alexLocation);
+        sync.waitCall(3);
+        sync.assertCalled(3);
+        sync.assertNoFailedTests();
+    }
+
+    @Test
     public void signOutClearListeners() {
-        assertEquals(1, mockDB.getFriendsLocationListenerCount());
+        assertEquals(2, mockDB.getFriendsLocationListenerCount());
         super.signOutFromDrawer();
         assertEquals(0, mockDB.getFriendsLocationListenerCount());
     }
