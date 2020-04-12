@@ -8,7 +8,7 @@ import org.junit.runners.JUnit4;
 public class GoogleMapAdapterTest {
     @Test
     public void googleMapAdapterWithNullMap() {
-        // check that no error is throw
+        // check that no error is thrown
         new GoogleMapAdapter(null);
     }
 
