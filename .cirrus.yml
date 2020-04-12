@@ -23,11 +23,9 @@ connected_check_task:
   prepare_codeclimate_script:
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - chmod +x ./cc-test-reporter
-  gradle_build_script:
-    ./gradlew build
     - ./cc-test-reporter before-build
   run_instrumented_tests_script:
-    ./gradlew connectedCheck jacocoTestReport
+    ./gradlew build connectedCheck jacocoTestReport
   report_codeclimate_script:
     # Report test coverage to Code Climate
     - export JACOCO_SOURCE_PATH=app/src/main/java/
