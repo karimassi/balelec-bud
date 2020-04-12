@@ -123,6 +123,11 @@ public class MapViewActivityTest extends BasicActivityTest {
         sync.assertCalled(1);
     }
 
+    @Test
+    public void testOnLowMemory() {
+        this.mActivityRule.getActivity().onLowMemory();
+    }
+
     @Override
     protected void setIds() {
         setIds(R.id.map_activity_drawer_layout, R.id.map_activity_nav_view);
