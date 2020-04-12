@@ -4,6 +4,7 @@ import com.google.android.gms.maps.GoogleMap;
 
 public class GoogleMapAdapter implements MyMap {
     private GoogleMap googleMap;
+
     public GoogleMapAdapter(GoogleMap googleMap) {
         this.googleMap = googleMap;
     }
@@ -15,6 +16,9 @@ public class GoogleMapAdapter implements MyMap {
 
     @Override
     public MyMarker addMarker(MyMarker.Builder markerBuilder) {
-        return new GoogleMarkerAdapter(googleMap.addMarker(markerBuilder.toGoogleMarkerOptions()));
+        if (markerBuilder != null)
+            return new GoogleMarkerAdapter(googleMap.addMarker(markerBuilder.toGoogleMarkerOptions()));
+        else
+            return null;
     }
 }
