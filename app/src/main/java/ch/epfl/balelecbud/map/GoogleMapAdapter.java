@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud.map;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class GoogleMapAdapter implements MyMap {
     private GoogleMap googleMap;
@@ -11,14 +12,17 @@ public class GoogleMapAdapter implements MyMap {
 
     @Override
     public void setMyLocationEnabled(boolean locationEnabled) {
-        this.googleMap.setMyLocationEnabled(locationEnabled);
+        GoogleMap map = this.googleMap;
+        map.setMyLocationEnabled(locationEnabled);
     }
 
     @Override
     public MyMarker addMarker(MyMarker.Builder markerBuilder) {
-        if (markerBuilder != null)
-            return new GoogleMarkerAdapter(googleMap.addMarker(markerBuilder.toGoogleMarkerOptions()));
-        else
+        if (markerBuilder != null) {
+            MarkerOptions markerOptions = markerBuilder.toGoogleMarkerOptions();
+            return new GoogleMarkerAdapter(googleMap.addMarker(markerOptions));
+        } else {
             return null;
+        }
     }
 }

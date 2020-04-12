@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import ch.epfl.balelecbud.models.Location;
+
 @RunWith(JUnit4.class)
 public class GoogleMapAdapterTest {
     @Test
@@ -24,7 +26,7 @@ public class GoogleMapAdapterTest {
 
     @Test(expected = NullPointerException.class)
     public void addMarkerWithNullMapThrowsNPE() {
-        new GoogleMapAdapter(null).addMarker(new MyMarker.Builder());
+        new GoogleMapAdapter(null).addMarker(new MyMarker.Builder().location(new Location(1, 2)));
     }
 
     @Test
