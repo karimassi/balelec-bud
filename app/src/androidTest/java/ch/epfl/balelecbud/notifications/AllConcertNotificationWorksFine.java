@@ -83,6 +83,8 @@ public class AllConcertNotificationWorksFine {
             device.findObject(By.text("ALLOW")).click();
             device.waitForWindowUpdate(null, 1_000);
         }
+        // quit the notifications center if it happens to be open
+        clearNotifications();
         this.db = Room.inMemoryDatabaseBuilder(
                 getApplicationContext(),
                 ConcertOfInterestDatabase.class
@@ -100,11 +102,9 @@ public class AllConcertNotificationWorksFine {
     private void clearNotifications() {
         device.openNotification();
         UiObject2 button = device.findObject(By.text("CLEAR ALL"));
-        if (button != null) {
-            button.click();
-        } else {
-            device.pressBack();
-        }
+        if (button != null) button.click();
+        device.pressBack();
+
     }
 
     @Test

@@ -13,6 +13,6 @@ public class GoogleMarkerAdapter implements MyMarker {
 
     @Override
     public void setLocation(Location location) {
-        this.marker.setPosition(location.toLatLng());
+        if (location != null) this.marker.setPosition(location.toLatLng());
     }
 }
