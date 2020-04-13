@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
@@ -203,13 +204,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private List<Map<String, Boolean>> filterMapValues(Map<String, Map<String, Boolean>> mapToFilter, List<MyQuery.WhereClause> clauses) {
         List<Map<String, Boolean>> values = new LinkedList<>(mapToFilter.values());
         for (MyQuery.WhereClause clause : clauses) {
-            List<Map<String, Boolean>> newValues = new LinkedList<>();
-            for (Map<String, Boolean> oldValue : values) {
-                if (oldValue.getOrDefault(clause.getLeftOperand(), false)) {
-                    newValues.add(oldValue);
-                }
-            }
-            values = newValues;
+            values = values.stream().filter(x -> x.getOrDefault(clause.getLeftOperand(), false)).collect(Collectors.toList());
         }
         return values;
     }
