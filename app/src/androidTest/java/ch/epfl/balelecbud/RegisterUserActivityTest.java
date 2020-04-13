@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
@@ -147,6 +148,12 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             @Override
             public void listen(String collectionName, DatabaseListener listener) {
             }
+
+            @Override
+            public void unregisterDocumentListener(String collectionName, String documentID) { }
+
+            @Override
+            public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) { }
 
             @Override
             public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {

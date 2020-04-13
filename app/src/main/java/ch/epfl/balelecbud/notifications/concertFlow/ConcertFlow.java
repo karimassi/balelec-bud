@@ -21,20 +21,29 @@ import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 public class ConcertFlow extends IntentService {
     private static final String TAG = ConcertFlow.class.getSimpleName();
-    private NotificationSchedulerInterface scheduler;
+    private static NotificationSchedulerInterface scheduler;
+    private static ConcertOfInterestDatabase mockDb = null;
+    private static Consumer<Intent> launcher = null;
     private ConcertOfInterestDAO concertOfInterestDAO;
     private ConcertOfInterestDatabase db;
-    private static ConcertOfInterestDatabase mockDb = null;
 
     public ConcertFlow() {
         super(TAG);
     }
 
-    private Consumer<Intent> launcher = ConcertFlow.this::startActivity;
+    @VisibleForTesting
+    public static void setMockDb(ConcertOfInterestDatabase concertDb) {
+        ConcertFlow.mockDb = concertDb;
+    }
 
     @VisibleForTesting
-    public void setLauncher(Consumer<Intent> launcher) {
-        this.launcher = launcher;
+    public static void setNotificationScheduler(NotificationSchedulerInterface scheduler) {
+        ConcertFlow.scheduler = scheduler;
+    }
+
+    @VisibleForTesting
+    public static void setLauncher(Consumer<Intent> launcher) {
+        ConcertFlow.launcher = launcher;
     }
 
     @Override
@@ -94,6 +103,8 @@ public class ConcertFlow extends IntentService {
         concertOfInterestDAO = db.getConcertOfInterestDAO();
         if (scheduler == null)
             scheduler = NotificationScheduler.getInstance();
+        if (launcher == null)
+            launcher = this::startActivity;
     }
 
     @Override
@@ -104,20 +115,10 @@ public class ConcertFlow extends IntentService {
             db.close();
     }
 
-    @VisibleForTesting
-    public static void setMockDb(ConcertOfInterestDatabase concertDb) {
-        mockDb = concertDb;
-    }
-
-    @VisibleForTesting
-    public void setNotificationScheduler(NotificationSchedulerInterface scheduler) {
-        this.scheduler = scheduler;
-    }
-
     private void getAllScheduledConcert(Intent callbackIntent) {
         Slot[] res = this.concertOfInterestDAO.getAllConcertOfInterest();
         Log.d(TAG, "getAllScheduledConcert: " + Arrays.toString(res));
-        this.launcher.accept(FlowUtil.packCallback(res, callbackIntent));
+        launcher.accept(FlowUtil.packCallback(res, callbackIntent));
     }
 
     private void scheduleNewConcert(final Slot newSlot) {

@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Switch;
@@ -9,8 +8,6 @@ import androidx.annotation.NonNull;
 
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.location.LocationUtil.Action;
-
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
@@ -73,14 +70,5 @@ public class WelcomeActivity extends BasicActivity {
                         WelcomeActivity.this.locationSwitch.setChecked(true));
             }
         };
-    }
-
-    private void signOut() {
-        getAppAuthenticator().signOut();
-        if (LocationUtil.isLocationActive())
-            LocationUtil.disableLocation();
-        Intent intent = new Intent(this, LoginUserActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

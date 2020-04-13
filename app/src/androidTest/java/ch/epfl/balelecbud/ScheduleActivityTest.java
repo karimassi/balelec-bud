@@ -5,7 +5,6 @@ import android.content.Intent;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +24,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
@@ -35,7 +33,6 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest extends BasicActivityTest {
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
-    UiDevice device;
 
     @Rule
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
@@ -70,7 +67,6 @@ public class ScheduleActivityTest extends BasicActivityTest {
                     break;
             }
         });
-        device = UiDevice.getInstance(getInstrumentation());
     }
 
     @Test
@@ -83,23 +79,18 @@ public class ScheduleActivityTest extends BasicActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
         mock.addItem(slot1);
-        device.waitForIdle();
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
         mock.addItem(slot2);
-        device.waitForIdle();
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
         mock.modifyItem(slot3, 0);
-        device.waitForIdle();
         checkSlot(0, slot3);
 
         mock.removeItem(slot3, 0);
-        Thread.sleep(1000);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
         mock.removeItem(slot2, 0);
-        Thread.sleep(1000);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
@@ -107,10 +98,8 @@ public class ScheduleActivityTest extends BasicActivityTest {
     public void testCaseForRecyclerItems() throws Throwable {
         mock.addItem(slot1);
         mock.addItem(slot2);
-        Thread.sleep(1000);
 
         checkSlot(0, slot1);
-
         checkSlot(1, slot2);
     }
 

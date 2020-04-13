@@ -1,7 +1,10 @@
 package ch.epfl.balelecbud.util.database;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -13,18 +16,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 
 public class FirestoreDatabaseWrapper implements DatabaseWrapper {
-
-    private final Map<DatabaseListener, ListenerRegistration> registrationMap;
-
+    private static final String TAG = FirestoreDatabaseWrapper.class.getSimpleName();
     private static final FirestoreDatabaseWrapper instance = new FirestoreDatabaseWrapper();
+    private final Map<DatabaseListener, ListenerRegistration> registrationMap = new HashMap<>();
+    private final Map<String, ListenerRegistration> registrations = new HashMap<>();
 
-    private FirestoreDatabaseWrapper() {
-        registrationMap = new HashMap<>();
+    public static FirestoreDatabaseWrapper getInstance() {
+        return instance;
     }
 
     @Override
@@ -52,6 +56,30 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
                     }
                 });
         registrationMap.put(listener, lr);
+    }
+
+    @Override
+    public void unregisterDocumentListener(String collectionName, String documentID) {
+        ListenerRegistration lr = registrations.remove(collectionName + "/" + documentID);
+        if (lr != null)
+            lr.remove();
+    }
+
+    @Override
+    public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) {
+        Log.d(TAG, "listenDocument() called with: collectionName = [" + collectionName + "], documentID = [" + documentID + "], type = [" + type + "]");
+        ListenerRegistration lr = getDocumentReference(collectionName + "/" + documentID)
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    Log.d(TAG, "eventListener called on: collectionName = [" + collectionName + "], documentID = [" + documentID + "]" +
+                            ", with document = [" + documentSnapshot + "], e = [" + e + "]" );
+                    if (documentSnapshot == null) {
+                        Log.w(TAG, "listenDocument: failed to add a SnapshotListener on file : " + documentID +
+                                " in collection : " + collectionName, e);
+                    } else {
+                        consumer.accept(documentSnapshot.toObject(type));
+                    }
+                });
+        registrations.put(collectionName + "/" + documentID, lr);
     }
 
     @Override
@@ -114,18 +142,17 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
         return future.thenApply(value -> value.toObjects(tClass));
     }
 
-    @Override
     public CompletableFuture<List<String>> queryIds(MyQuery query) {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
         return future.thenApply(value -> value.getDocuments().stream().map(DocumentSnapshot::getId).collect(Collectors.toList()));
     }
 
-    public static FirestoreDatabaseWrapper getInstance() {
-        return instance;
-    }
-
     private CollectionReference getCollectionReference(String collectionName) {
         return FirebaseFirestore.getInstance().collection(collectionName);
+    }
+
+    private DocumentReference getDocumentReference(String documentPath) {
+        return FirebaseFirestore.getInstance().document(documentPath);
     }
 }

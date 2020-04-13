@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -32,33 +33,37 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 
 public class MockDatabaseWrapper implements DatabaseWrapper {
+    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
+
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
     public static final User celine =
             new User("celine@epfl.ch", "celine", MockAuthenticator.provideUid());
+    public static final User alex =
+            new User("alex@epfl.ch", "alex", MockAuthenticator.provideUid());
     public static final User axel =
             new User("axel@epfl.ch", "celine", MockAuthenticator.provideUid());
     public static final User gaspard =
             new User("gaspard@epfl.ch", "gaspard", MockAuthenticator.provideUid());
 
-    private static final String TAG = "MockDB";
+    private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
 
     public static Slot slot1;
     public static Slot slot2;
     public static Slot slot3;
-
     private final List<DatabaseListener> listeners = new ArrayList<>();
-
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendships = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
     private final Map<String, Location> locations = new HashMap<>();
+    private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
 
     private MockDatabaseWrapper() {
         storeDocument(USERS_PATH, karim);
         storeDocument(USERS_PATH, celine);
+        storeDocument(USERS_PATH, alex);
         storeDocument(USERS_PATH, axel);
         storeDocument(USERS_PATH, gaspard);
         List<Timestamp> timestamps = new LinkedList<>();
@@ -73,8 +78,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
     }
 
-    private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
-
     public static MockDatabaseWrapper getInstance() {
         return instance;
     }
@@ -87,6 +90,33 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public void listen(String collectionName, DatabaseListener listener) {
         listeners.add(listener);
+    }
+
+    @Override
+    public void unregisterDocumentListener(String collectionName, String documentID) {
+        switch (collectionName) {
+            case DatabaseWrapper.LOCATIONS_PATH:
+                friendsLocationListener.remove(documentID);
+                break;
+            default:
+                throw new IllegalArgumentException("MockDataBaseWrapper.unregisterDocumentListener()" +
+                        " is not configure for collection = [" + collectionName + "]");
+        }
+    }
+
+    @Override
+    public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) {
+        switch (collectionName) {
+            case DatabaseWrapper.LOCATIONS_PATH:
+                friendsLocationListener.put(documentID, (Consumer<Location>) consumer);
+                if (locations.containsKey(documentID)) {
+                    ((Consumer<Location>) consumer).accept(locations.get(documentID));
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("MockDataBaseWrapper.listenDocument() is not configure" +
+                        " for collection = [" + collectionName + "]");
+        }
     }
 
     @Override
@@ -220,18 +250,20 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void addItem(final Object object) throws Throwable {
-        runOnUIThreadAndWait(() -> {
-            addItemAux(object);
-            Log.v(TAG, "added item " + object.toString());
-        });
+        runOnUiThreadWithLog("addItem", object, () -> addItemAux(object));
     }
 
     public void modifyItem(final Object object, final int index) throws Throwable {
-        runOnUIThreadAndWait(() -> changeItemAux(object, index));
+        runOnUiThreadWithLog("modifyItem", object, () -> changeItemAux(object, index));
     }
 
     public void removeItem(final Object object, final int index) throws Throwable {
-        runOnUIThreadAndWait(() -> removeItemAux(object, index));
+        runOnUiThreadWithLog("removeItem", object, () -> removeItemAux(object, index));
+    }
+
+    private void runOnUiThreadWithLog(String functionName, Object object, Runnable runnable) throws Throwable {
+        Log.d(TAG, functionName + "() called with: object = [" + object + "]");
+        runOnUIThreadAndWait(runnable);
     }
 
     private void addItemAux(Object item) {
@@ -285,7 +317,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type) {
+    public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName,
+                                                                  String fieldValue, Class<T> type) {
         if (DatabaseWrapper.USERS_PATH.equals(collectionName)) {
             for (User u : users.values()) {
                 if ("email".equals(fieldName)) {
@@ -300,6 +333,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public <T> void storeDocument(String collectionName, T document) {
+        Log.d(TAG, "storeDocument() called with: collectionName = [" + collectionName + "], document = [" + document + "]");
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
                 User newUser = (User) document;
@@ -336,6 +370,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.LOCATIONS_PATH:
                 locations.put(documentID, (Location) document);
+                if (friendsLocationListener.containsKey(documentID))
+                    friendsLocationListener.get(documentID).accept((Location) document);
                 break;
             default:
                 storeDocument(collectionName, document);
@@ -390,6 +426,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         for (Map m : friendRequests.values()) {
             m.clear();
         }
+        friendsLocationListener.clear();
     }
 
     public void resetDocument(String collectionName) {
@@ -408,4 +445,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
+    public int getFriendsLocationListenerCount() {
+        return this.friendsLocationListener.size();
+    }
 }
