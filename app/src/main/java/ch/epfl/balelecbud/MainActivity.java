@@ -6,8 +6,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.balelecbud.models.emergency.Emergency;
-
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
 public class MainActivity extends AppCompatActivity {

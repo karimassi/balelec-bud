@@ -47,18 +47,6 @@ public class EmergencyTest {
 
         e2 = new Emergency(EmergencyType.THEFT, "Help please","a user id",new Timestamp(0, 0));
         Assert.assertTrue(e1.equals(e2));
-
         Assert.assertFalse(e1.equals(new Object()));
-
     }
-
-
-
-
-
-
-
-
-
-
 }
