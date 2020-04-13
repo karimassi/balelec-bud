@@ -20,6 +20,8 @@ public interface DatabaseWrapper {
 
     
     <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
+
+    CompletableFuture<List<String>> queryIds(MyQuery query);
     
     <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type);
 

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 
@@ -35,21 +36,21 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     public void listen(String collectionName, final DatabaseListener listener) {
         ListenerRegistration lr = getCollectionReference(collectionName)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
-            if (e != null | listener == null) return;
+                    if (e != null | listener == null) return;
                     for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                switch (dc.getType()) {
-                    case ADDED:
-                        listener.onItemAdded(dc.getDocument().toObject(listener.getType()));
-                        break;
-                    case MODIFIED:
-                        listener.onItemChanged(dc.getDocument().toObject(listener.getType()), dc.getOldIndex());
-                        break;
-                    case REMOVED:
-                        listener.onItemRemoved(dc.getDocument().toObject(listener.getType()), dc.getOldIndex());
-                        break;
-                }
-            }
-        });
+                        switch (dc.getType()) {
+                            case ADDED:
+                                listener.onItemAdded(dc.getDocument().toObject(listener.getType()));
+                                break;
+                            case MODIFIED:
+                                listener.onItemChanged(dc.getDocument().toObject(listener.getType()), dc.getOldIndex());
+                                break;
+                            case REMOVED:
+                                listener.onItemRemoved(dc.getDocument().toObject(listener.getType()), dc.getOldIndex());
+                                break;
+                        }
+                    }
+                });
         registrationMap.put(listener, lr);
     }
 
@@ -107,10 +108,17 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass){
+    public <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass) {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
         return future.thenApply(value -> value.toObjects(tClass));
+    }
+
+    @Override
+    public CompletableFuture<List<String>> queryIds(MyQuery query) {
+        CompletableFuture<QuerySnapshot> future =
+                new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
+        return future.thenApply(value -> value.getDocuments().stream().map(DocumentSnapshot::getId).collect(Collectors.toList()));
     }
 
     public static FirestoreDatabaseWrapper getInstance() {

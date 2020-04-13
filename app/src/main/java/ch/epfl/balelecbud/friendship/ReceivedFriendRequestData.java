@@ -4,11 +4,11 @@ import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
-public class FriendRequestData extends RecyclerViewData<User, RequestViewHolder> {
+public class ReceivedFriendRequestData extends RecyclerViewData<User, ReceivedRequestViewHolder> {
 
     private final User currentUser;
 
-    public FriendRequestData(User user) {
+    public ReceivedFriendRequestData(User user) {
         super();
         currentUser = user;
     }
@@ -16,19 +16,19 @@ public class FriendRequestData extends RecyclerViewData<User, RequestViewHolder>
     @Override
     public void reload() {
         FriendshipUtils.getRequestsUids(currentUser)
-                .thenCompose( strings -> CompletableFutureUtils.unify(FriendshipUtils.getFriends(strings)))
+                .thenCompose(strings -> CompletableFutureUtils.unify(FriendshipUtils.getUsersFromUids(strings)))
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 
     @Override
-    public void bind(final int index, RequestViewHolder viewHolder) {
+    public void bind(final int index, ReceivedRequestViewHolder viewHolder) {
         viewHolder.friendName.setText(data.get(index).getDisplayName());
         viewHolder.acceptButton.setOnClickListener(v -> {
             FriendshipUtils.acceptRequest(data.get(index));
             remove(index);
         });
         viewHolder.deleteButton.setOnClickListener(v -> {
-            FriendshipUtils.deleteRequest(data.get(index));
+            FriendshipUtils.deleteRequest(data.get(index), currentUser);
             remove(index);
         });
     }
