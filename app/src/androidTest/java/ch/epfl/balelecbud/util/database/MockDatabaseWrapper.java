@@ -13,12 +13,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
@@ -30,14 +33,21 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 
 public class MockDatabaseWrapper implements DatabaseWrapper {
+    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
+
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
     public static final User celine =
             new User("celine@epfl.ch", "celine", MockAuthenticator.provideUid());
     public static final User alex =
             new User("alex@epfl.ch", "alex", MockAuthenticator.provideUid());
-    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
+    public static final User axel =
+            new User("axel@epfl.ch", "celine", MockAuthenticator.provideUid());
+    public static final User gaspard =
+            new User("gaspard@epfl.ch", "gaspard", MockAuthenticator.provideUid());
+
     private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
+
     public static Slot slot1;
     public static Slot slot2;
     public static Slot slot3;
@@ -51,15 +61,11 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
 
     private MockDatabaseWrapper() {
-        users.put(karim.getUid(), karim);
-        users.put(celine.getUid(), celine);
-        users.put(alex.getUid(), alex);
-        friendships.put(karim.getUid(), new HashMap<>());
-        friendships.put(celine.getUid(), new HashMap<>());
-        friendships.put(alex.getUid(), new HashMap<>());
-        friendRequests.put(karim.getUid(), new HashMap<>());
-        friendRequests.put(celine.getUid(), new HashMap<>());
-        friendRequests.put(alex.getUid(), new HashMap<>());
+        storeDocument(USERS_PATH, karim);
+        storeDocument(USERS_PATH, celine);
+        storeDocument(USERS_PATH, alex);
+        storeDocument(USERS_PATH, axel);
+        storeDocument(USERS_PATH, gaspard);
         List<Timestamp> timestamps = new LinkedList<>();
         for (int i = 0; i < 6; ++i) {
             Calendar c = Calendar.getInstance();
@@ -139,7 +145,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-    //highly commented because not everybody is familiar with reflection
     private <A> List<A> filterList(List<A> list, MyQuery.WhereClause clause) {
         List<A> newList = new LinkedList<>();
         if (list.isEmpty())
@@ -205,6 +210,43 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             default:
                 return resultOfComparison == 0;
         }
+    }
+
+    @Override
+    public CompletableFuture<List<String>> queryIds(MyQuery query) {
+        Map<String, Map<String, Boolean>> mapToQuery = getMapToQuery(query.getCollectionName());
+        List<Map<String, Boolean>> filteredValues = filterMapValues(mapToQuery, query.getWhereClauses());
+        Set<String> filteredKeys = filterKeys(mapToQuery, filteredValues);
+        return CompletableFuture.completedFuture(new LinkedList<>(filteredKeys));
+    }
+
+    private Map<String, Map<String, Boolean>> getMapToQuery(String name) {
+        switch (name) {
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
+                return friendRequests;
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
+                return friendships;
+            default:
+                throw new IllegalArgumentException("Unsupported collection name " + name);
+        }
+    }
+
+    private List<Map<String, Boolean>> filterMapValues(Map<String, Map<String, Boolean>> mapToFilter, List<MyQuery.WhereClause> clauses) {
+        List<Map<String, Boolean>> values = new LinkedList<>(mapToFilter.values());
+        for (MyQuery.WhereClause clause : clauses) {
+            values = values.stream().filter(x -> x.getOrDefault(clause.getLeftOperand(), false)).collect(Collectors.toList());
+        }
+        return values;
+    }
+
+    private Set<String> filterKeys(Map<String, Map<String, Boolean>> mapToFilter, List<Map<String, Boolean>> valuesToKeep) {
+        Set<String> filteredKeys = new HashSet<>();
+        for (String key : mapToFilter.keySet()) {
+            if (valuesToKeep.contains(mapToFilter.get(key))) {
+                filteredKeys.add(key);
+            }
+        }
+        return filteredKeys;
     }
 
     public void addItem(final Object object) throws Throwable {
@@ -291,6 +333,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public <T> void storeDocument(String collectionName, T document) {
+        Log.d(TAG, "storeDocument() called with: collectionName = [" + collectionName + "], document = [" + document + "]");
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
                 User newUser = (User) document;

@@ -25,6 +25,8 @@ public interface DatabaseWrapper {
     <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);
     
     <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
+
+    CompletableFuture<List<String>> queryIds(MyQuery query);
     
     <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type);
 

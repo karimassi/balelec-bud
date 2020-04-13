@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 
@@ -139,6 +140,12 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
         return future.thenApply(value -> value.toObjects(tClass));
+    }
+
+    public CompletableFuture<List<String>> queryIds(MyQuery query) {
+        CompletableFuture<QuerySnapshot> future =
+                new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
+        return future.thenApply(value -> value.getDocuments().stream().map(DocumentSnapshot::getId).collect(Collectors.toList()));
     }
 
     private CollectionReference getCollectionReference(String collectionName) {
