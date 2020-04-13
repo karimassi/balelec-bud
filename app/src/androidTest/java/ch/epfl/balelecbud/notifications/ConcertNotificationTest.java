@@ -50,7 +50,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class AllConcertNotificationWorksFine {
+public class ConcertNotificationTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
     @Rule

@@ -12,8 +12,7 @@ public class GoogleMapAdapter implements MyMap {
 
     @Override
     public void setMyLocationEnabled(boolean locationEnabled) {
-        GoogleMap map = this.googleMap;
-        map.setMyLocationEnabled(locationEnabled);
+        this.googleMap.setMyLocationEnabled(locationEnabled);
     }
 
     @Override
