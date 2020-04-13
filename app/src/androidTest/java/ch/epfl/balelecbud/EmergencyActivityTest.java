@@ -3,9 +3,7 @@ package ch.epfl.balelecbud;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.firebase.Timestamp;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.ExecutionException;
 
+import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.models.emergency.Emergency;
@@ -35,10 +34,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyActivityTest {
+public class EmergencyActivityTest extends BasicActivityTest {
 
 
     private final User user = MockDatabaseWrapper.karim;
+    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final Authenticator mockAuthenticator = MockAuthenticator.getInstance();
+
 
 
     @Rule
@@ -54,9 +56,9 @@ public class EmergencyActivityTest {
 
     @Before
     public void setup() {
-        MockDatabaseWrapper.getInstance().resetDocument(DatabaseWrapper.EMERGENCIES_PATH);
-        MockAuthenticator.getInstance().signOut();
-        MockAuthenticator.getInstance().setCurrentUser(user);
+        mockDB.resetDocument(DatabaseWrapper.EMERGENCIES_PATH);
+        mockAuthenticator.signOut();
+        mockAuthenticator.setCurrentUser(user);
     }
 
     @Test
@@ -74,8 +76,7 @@ public class EmergencyActivityTest {
     public void emergencyIsCorrectlySent() throws ExecutionException, InterruptedException {
 
         submitEmergency("Theft", "I lost something");
-
-        Emergency res = MockDatabaseWrapper.getInstance().getDocumentWithFieldCondition(DatabaseWrapper.EMERGENCIES_PATH, "category", "Theft", Emergency.class).get();
+        Emergency res = mockDB.getDocumentWithFieldCondition(DatabaseWrapper.EMERGENCIES_PATH, "category", "Theft", Emergency.class).get();
         assertThat(res, notNullValue());
         assertEquals(res.getMessage(), "I lost something");
     }
@@ -89,4 +90,7 @@ public class EmergencyActivityTest {
         onView(withId(R.id.buttonEmergencySubmit)).perform(click());
     }
 
+    @Override
+    protected void setIds() {
+    }
 }
