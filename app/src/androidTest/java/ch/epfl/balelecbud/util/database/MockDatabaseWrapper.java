@@ -292,7 +292,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 festivalInfos.add((FestivalInformation) document);
                 break;
             case DatabaseWrapper.EMERGENCIES_PATH:
-                emergencies.put("abc",(Emergency) document);
+                emergencies.put(generateRandomUid(),(Emergency) document);
                 break;
             default :
                 throw new IllegalArgumentException("Unsupported collection name " + collectionName);
