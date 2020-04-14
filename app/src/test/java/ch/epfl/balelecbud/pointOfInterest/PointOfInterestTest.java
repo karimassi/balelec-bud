@@ -11,7 +11,7 @@ public class PointOfInterestTest {
 
     private final PointOfInterest p1 =
             new PointOfInterest(new GeoPoint(24, 42),
-                    "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+                    "credit suisse", "atm");
 
     @Test
     public void testEmptyConstructor() {
@@ -29,9 +29,6 @@ public class PointOfInterestTest {
     }
 
     @Test
-    public void testGetPoiToken() { Assert.assertThat(p1.getPoiToken(), is("BXnkTQdLsOXoGJmMSeCS"));}
-
-    @Test
     public void testGetLocation() {
         Assert.assertThat(p1.getLocation(), is(new GeoPoint(24, 42)));
     }
@@ -39,33 +36,29 @@ public class PointOfInterestTest {
     @Test
     public void testEqualsTwoEqualPointOfInterest() {
         PointOfInterest p2 = new PointOfInterest(new GeoPoint(24, 42),
-                "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+                "credit suisse", "atm");
         Assert.assertEquals(p1, p2);
     }
 
     @Test
     public void testEqualsTwoNonEqualPointOfInterest() {
         PointOfInterest p2 = new PointOfInterest( new GeoPoint(22, 42),
-                "credit suisse", "atm", "BXnkTQdLsOXoGJmMSeCS");
+                "credit suisse", "atm");
         Assert.assertNotEquals(p1, p2);
     }
 
     @Test
     public void testEqualsDifferentPointOfInterest() {
         PointOfInterest p2 = new PointOfInterest( new GeoPoint(24, 42),
-                "BCV", "atm", "BXnkTQdLsOXoGJmMSeCS");
+                "BCV", "atm");
         Assert.assertNotEquals(p1, p2);
 
         p2 = new PointOfInterest( new GeoPoint(24, 42), "BCV",
-                "bancomat", "BXnkTQdLsOXoGJmMSeCS");
+                "bancomat");
         Assert.assertNotEquals(p1, p2);
 
         p2 = new PointOfInterest( new GeoPoint(24, 42),
-                "credit suisse", "atm", "0");
-        Assert.assertNotEquals(p1, p2);
-
-        p2 = new PointOfInterest( new GeoPoint(24, 42),
-                "credit suisse", "bancomat", "0");
+                "credit suisse", "bancomat");
         Assert.assertNotEquals(p1, p2);
     }
 

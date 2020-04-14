@@ -12,7 +12,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class PointOfInterestUtils {
 
-    private static final double RADIUS_METERS = 1.;
+    private static final double RADIUS_METERS = 3.;
     private static final double EARTH_RADIUS_METERS = 6371000.;
 
     public static CompletableFuture<Integer> getAmountNearPointOfInterest(PointOfInterest poi){

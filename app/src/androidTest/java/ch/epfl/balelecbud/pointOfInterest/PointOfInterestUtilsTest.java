@@ -7,6 +7,7 @@ import com.google.firebase.firestore.GeoPoint;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -101,25 +102,22 @@ public class PointOfInterestUtilsTest {
     @Test
     public void getAmountNearPOIReturnsExpectedAmount() throws ExecutionException, InterruptedException {
         db.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
+        ArrayList<Location> locations = Lists.newArrayList(new Location(46.51812, 6.56900),
+                new Location(46.51814, 6.56911));
 
-        for(int y = 0; y < 5; ++y){
-            for(int x = 0; x < 5; ++x){
-                db.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, Integer.toString(y * 5 + x), new Location(x, y));
-            }
+        int index = 0;
+        for (Location loc : locations) {
+            db.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, Integer.toString(index++), loc);
         }
 
         BalelecbudApplication.setAppDatabaseWrapper(db);
 
-        PointOfInterest p1 = new PointOfInterest(new GeoPoint(1,1),
-                "whatever", "also whatever");
-        PointOfInterest p2 = new PointOfInterest(new GeoPoint(4,4),
+        PointOfInterest p1 = new PointOfInterest(new GeoPoint(46.51808,6.56906),
                 "whatever", "also whatever");
 
         int res1 = PointOfInterestUtils.getAmountNearPointOfInterest(p1).get();
-        int res2 = PointOfInterestUtils.getAmountNearPointOfInterest(p2).get();
 
-        assertEquals(9, res1);
-        assertEquals(4, res2);
+        assertEquals(2, res1);
     }
 
     @Test
