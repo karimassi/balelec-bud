@@ -47,6 +47,14 @@
             android:name=".notifications.concertFlow.ConcertFlow"
             android:exported="false" />
 
+        <service
+            android:name=".cloudMessaging.CloudMessagingService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <receiver
             android:name=".notifications.concertSoon.NotificationProvider"
             android:exported="true">

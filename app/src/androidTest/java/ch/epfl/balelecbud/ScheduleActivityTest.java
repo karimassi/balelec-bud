@@ -8,6 +8,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,6 +75,9 @@ public class ScheduleActivityTest extends BasicActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
     }
 
+    //TODO: Ignores
+
+    @Ignore
     @Test
     public void testItemModification() throws Throwable {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
