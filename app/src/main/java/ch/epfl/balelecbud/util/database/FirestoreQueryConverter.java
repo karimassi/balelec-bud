@@ -16,7 +16,7 @@ public class FirestoreQueryConverter {
     private static Query addClauseTo(Query query, MyQuery.WhereClause clause){
         Object rightOperand = clause.getRightOperand();
         String leftOperand = clause.getLeftOperand();
-        switch (clause.getOp()){
+        switch (clause.getOp()) {
             case LESS_THAN: return query.whereLessThan(leftOperand, rightOperand);
             case LESS_EQUAL: return query.whereLessThanOrEqualTo(leftOperand, rightOperand);
             case GREATER_THAN: return query.whereGreaterThan(leftOperand, rightOperand);

@@ -31,9 +31,9 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
     private final PointOfInterest pointOfInterest1 = new PointOfInterest(
-            new GeoPoint(4, 20), "Bar IC", "Bar", "FUN101");
+            new GeoPoint(4, 20), "Bar IC", "Bar");
     private final PointOfInterest pointOfInterest2 = new PointOfInterest(
-            new GeoPoint(4, 22), "Bar EE", "Bar", "UNFUN101");
+            new GeoPoint(4, 22), "Bar EE", "Bar");
 
     @Before
     public void setup() {
@@ -79,7 +79,7 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
 
     private void modifyAndTest(int indexOfMod, boolean pointOfInterestIsModified) throws Throwable {
         PointOfInterest modified = new PointOfInterest(new GeoPoint(6.7, 55),
-                "Bar IC", "Bar", "SAD101");
+                "Bar IC", "Bar");
 
         mock.addItem(pointOfInterest1);
         mock.modifyItem(modified, indexOfMod);

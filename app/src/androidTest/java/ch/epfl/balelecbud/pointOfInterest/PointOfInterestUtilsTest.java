@@ -111,9 +111,9 @@ public class PointOfInterestUtilsTest {
         BalelecbudApplication.setAppDatabaseWrapper(db);
 
         PointOfInterest p1 = new PointOfInterest(new GeoPoint(1,1),
-                "whatever", "also whatever", "mega whatever");
+                "whatever", "also whatever");
         PointOfInterest p2 = new PointOfInterest(new GeoPoint(4,4),
-                "whatever", "also whatever", "mega whatever");
+                "whatever", "also whatever");
 
         int res1 = PointOfInterestUtils.getAmountNearPointOfInterest(p1).get();
         int res2 = PointOfInterestUtils.getAmountNearPointOfInterest(p2).get();
