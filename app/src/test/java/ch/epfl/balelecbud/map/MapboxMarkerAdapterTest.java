@@ -6,7 +6,7 @@ import ch.epfl.balelecbud.models.Location;
 
 import static org.junit.Assert.*;
 
-public class GoogleMarkerAdapterTest {
+public class MapboxMarkerAdapterTest {
     @Test
     public void googleMarkerAdapterWithNullMarker() {
         // check that no error is thrown

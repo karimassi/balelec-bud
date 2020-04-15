@@ -1,58 +1,77 @@
 package ch.epfl.balelecbud.map;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.maps.MapView;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.maps.MapView;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
+import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
-import static ch.epfl.balelecbud.location.LocationUtil.isLocationActive;
 
 public class MapViewActivity extends BasicActivity implements OnMapReadyCallback {
+
     private final static String TAG = MapViewActivity.class.getSimpleName();
-    private static com.google.android.gms.maps.OnMapReadyCallback mockCallback;
+    private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
     private MapView mapView;
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
 
+    private Map<MarkerType, Icon> icons;
+
     @VisibleForTesting
-    public static void setMockCallback(com.google.android.gms.maps.OnMapReadyCallback mockCallback) {
+    public static void setMockCallback(com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback) {
         MapViewActivity.mockCallback = mockCallback;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
 
-        mapView = findViewById(R.id.mapView);
+        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+
+        setContentView(R.layout.activity_map);
+        mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
-        if (mockCallback != null)
+
+        if (mockCallback != null) {
             mapView.getMapAsync(mockCallback);
-        else
-            mapView.getMapAsync(googleMap -> this.onMapReady(new GoogleMapAdapter(googleMap)));
+        }
+        else {
+            mapView.getMapAsync(mapboxMap -> this.onMapReady(new MapboxMapAdapter(mapboxMap)));
+        }
+
+        setupMapIcons();
 
         configureToolBar(R.id.map_activity_toolbar);
         configureDrawerLayout(R.id.map_activity_drawer_layout);
         configureNavigationView(R.id.map_activity_nav_view);
         requestFriendsLocations();
+
     }
 
     @Override
@@ -106,24 +125,25 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
         super.signOut();
     }
 
+    @Override
+    public void onMapReady(MyMap map) {
+        myMap = map;
+        myMap.initialiseMap(LocationUtil.isLocationActive());
+        displayWaitingFriends(myMap);
+    }
+
     private void unregisterListeners() {
         FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser())
                 .thenAccept(friendsIds -> friendsIds.forEach(id -> getAppDatabaseWrapper()
                         .unregisterDocumentListener(DatabaseWrapper.LOCATIONS_PATH, id)));
     }
 
-    @Override
-    public void onMapReady(MyMap map) {
-        myMap = map;
-        myMap.setMyLocationEnabled(isLocationActive());
-        displayWaitingFriends(myMap);
-    }
-
     public void displayWaitingFriends(MyMap map) {
         for (User friend : waitingFriendsLocation.keySet()) {
             friendsMarkers.put(friend, map.addMarker(new MyMarker.Builder()
                     .location(waitingFriendsLocation.get(friend))
-                    .title(friend.getDisplayName())));
+                    .title(friend.getDisplayName())
+                    .icon(icons.get(MarkerType.FRIEND))));
         }
         waitingFriendsLocation.clear();
     }
@@ -158,7 +178,17 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
         } else {
             friendsMarkers.put(friend, myMap.addMarker(new MyMarker.Builder()
                     .location(location)
-                    .title(friend.getDisplayName())));
+                    .title(friend.getDisplayName())
+                    .icon(icons.get(MarkerType.FRIEND))));
         }
+    }
+
+    private void setupMapIcons() {
+        icons = new HashMap<>();
+        IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
+        Drawable iconDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.map);
+        Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
+        Icon icon = iconFactory.fromBitmap(bitmap);
+        icons.put(MarkerType.FRIEND, icon);
     }
 }

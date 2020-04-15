@@ -73,7 +73,7 @@ public abstract class BasicActivityTest {
     public void openMapActivityFromDrawer() {
         MapViewActivity.setMockCallback(googleMap -> {});
         openDrawer();
-        clickItem(R.id.activity_main_drawer_map, R.id.mapView);
+        clickItem(R.id.activity_main_drawer_map, R.id.map_view);
     }
 
     @Test
