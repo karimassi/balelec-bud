@@ -32,7 +32,7 @@ import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
-public class MapViewActivity extends BasicActivity implements OnMapReadyCallback {
+public class MapViewActivity extends BasicActivity {
 
     private final static String TAG = MapViewActivity.class.getSimpleName();
     private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
@@ -62,7 +62,8 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
             mapView.getMapAsync(mockCallback);
         }
         else {
-            mapView.getMapAsync(mapboxMap -> this.onMapReady(new MapboxMapAdapter(mapboxMap)));
+            mapView.getMapAsync(
+                    mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
         }
 
         setupMapIcons();
@@ -125,7 +126,6 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
         super.signOut();
     }
 
-    @Override
     public void onMapReady(MyMap map) {
         myMap = map;
         myMap.initialiseMap(LocationUtil.isLocationActive());

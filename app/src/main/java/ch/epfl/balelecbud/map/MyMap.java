@@ -8,6 +8,4 @@ public interface MyMap {
 
     MyMarker addMarker(MyMarker.Builder markerBuilder);
 
-
-
 }

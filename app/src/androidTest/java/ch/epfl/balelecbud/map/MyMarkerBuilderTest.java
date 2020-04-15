@@ -41,7 +41,7 @@ public class MyMarkerBuilderTest  {
                         location(location).
                         toMapboxMarkerOptions();
         assertEquals(title, markerOptions.getTitle());
-        assertEquals(new LatLng(location.getLatitude(), location.getLongitude()), markerOptions.getPosition());
+        assertEquals(location.toLatLng(), markerOptions.getPosition());
     }
 
 }

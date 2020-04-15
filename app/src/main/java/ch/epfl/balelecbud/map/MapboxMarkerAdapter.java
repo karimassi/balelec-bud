@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.map;
 
 
 import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import ch.epfl.balelecbud.models.Location;
 
@@ -16,6 +15,6 @@ public class MapboxMarkerAdapter implements MyMarker {
 
     @Override
     public void setLocation(Location location) {
-        if (location != null) this.marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+        if (location != null) this.marker.setPosition(location.toLatLng());
     }
 }

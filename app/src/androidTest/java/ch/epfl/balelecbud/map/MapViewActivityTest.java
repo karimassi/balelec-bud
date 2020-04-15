@@ -42,7 +42,7 @@ public class MapViewActivityTest extends BasicActivityTest {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewActivity.setMockCallback(mapboxMap -> {});
+                    //MapViewActivity.setMockCallback(mapboxMap -> {});
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
                         public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) { }

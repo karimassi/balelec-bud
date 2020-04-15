@@ -41,9 +41,7 @@ public class MapboxMapAdapter implements MyMap {
             if (location != null) {
                 latLng = new LatLng(location);
             } else {
-                latLng = new LatLng();
-                latLng.setLatitude(ch.epfl.balelecbud.models.Location.DEFAULT_LOCATION.getLatitude());
-                latLng.setLongitude(ch.epfl.balelecbud.models.Location.DEFAULT_LOCATION.getLongitude());
+                latLng = ch.epfl.balelecbud.models.Location.DEFAULT_LOCATION.toLatLng();
             }
             mapboxMap.setCameraPosition(new CameraPosition.Builder().target(latLng).build());
         }

@@ -50,7 +50,7 @@ public interface MyMarker {
                 result = result.title(title);
             }
             if (location != null) {
-                result = result.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                result = result.position(location.toLatLng());
             }
             if (icon != null) {
                 result = result.icon(icon);
