@@ -10,17 +10,17 @@ public class GoogleMarkerAdapterTest {
     @Test
     public void googleMarkerAdapterWithNullMarker() {
         // check that no error is thrown
-        new GoogleMarkerAdapter(null);
+        new MapboxMarkerAdapter(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void setLocationWithNonNullLocation() {
-        new GoogleMarkerAdapter(null).setLocation(new Location(1, 2));
+        new MapboxMarkerAdapter(null).setLocation(new Location(1, 2));
     }
 
     @Test
     public void setLocationWithNullLocation() {
         // check that no error is thrown
-        new GoogleMarkerAdapter(null).setLocation(null);
+        new MapboxMarkerAdapter(null).setLocation(null);
     }
 }

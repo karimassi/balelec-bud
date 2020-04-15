@@ -16,12 +16,12 @@ public class GoogleMapAdapterTest {
 
     @Test(expected = NullPointerException.class)
     public void enableMyLocationWithNullMapThrowsNPE() {
-        new GoogleMapAdapter(null).setMyLocationEnabled(false);
+        new GoogleMapAdapter(null).enableUserLocation(false);
     }
 
     @Test(expected = NullPointerException.class)
     public void disableMyLocationWithNullMapThrowsNPE() {
-        new GoogleMapAdapter(null).setMyLocationEnabled(false);
+        new GoogleMapAdapter(null).enableUserLocation(false);
     }
 
     @Test(expected = NullPointerException.class)
