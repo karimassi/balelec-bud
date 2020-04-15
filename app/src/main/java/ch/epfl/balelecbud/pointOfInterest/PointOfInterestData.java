@@ -1,9 +1,9 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
-import java.util.LinkedList;
-import java.util.function.BiConsumer;
+import android.util.Log;
 
-import ch.epfl.balelecbud.models.Location;
+import java.util.LinkedList;
+
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
@@ -25,7 +25,11 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
         viewHolder.nameTextView.setText(data.get(index).getName());
         viewHolder.typeTextView.setText(data.get(index).getType());
         PointOfInterestUtils.getAmountNearPointOfInterest(data.get(index)).whenComplete((integer, throwable) -> {
-            viewHolder.amountNearPoiTextView.setText(String.valueOf(index));
+            if (throwable != null) {
+                Log.d(PointOfInterestUtils.class.getSimpleName(), throwable.getLocalizedMessage());
+            } else {
+                viewHolder.amountNearPoiTextView.setText(String.valueOf(integer));
+            }
         });
     }
 }

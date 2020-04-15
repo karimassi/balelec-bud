@@ -1,38 +1,31 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MyQuery;
-
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import uk.co.mgbramwell.geofire.android.GeoFire;
+import uk.co.mgbramwell.geofire.android.model.Distance;
+import uk.co.mgbramwell.geofire.android.model.DistanceUnit;
+import uk.co.mgbramwell.geofire.android.model.QueryLocation;
 
 public class PointOfInterestUtils {
-
-    private static final double RADIUS_METERS = 3.;
-    private static final double EARTH_RADIUS_METERS = 6371000.;
 
     public static CompletableFuture<Integer> getAmountNearPointOfInterest(PointOfInterest poi){
         double poiLongitude = poi.getLocation().getLongitude();
         double poiLatitude = poi.getLocation().getLatitude();
 
-        double dY = 360 * RADIUS_METERS / EARTH_RADIUS_METERS;
-        double dX = dY * Math.cos(Math.toRadians(poiLatitude));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference myCollection = db.collection(DatabaseWrapper.POINT_OF_INTEREST_PATH);
+        GeoFire geoFire = new GeoFire(myCollection);
 
-        double minLatitude = poiLatitude - dY;
-        double maxLatitude = poiLatitude + dY;
-        double minLongitude = poiLongitude - dX;
-        double maxLongitude = poiLongitude + dX;
-        List<MyQuery.WhereClause> clauses = new LinkedList<>();
-        clauses.add(new MyQuery.WhereClause("longitude", MyQuery.WhereClause.Operator.GREATER_EQUAL, minLongitude));
-        clauses.add(new MyQuery.WhereClause("latitude", MyQuery.WhereClause.Operator.GREATER_EQUAL, minLatitude));
-        clauses.add(new MyQuery.WhereClause("longitude", MyQuery.WhereClause.Operator.LESS_EQUAL, maxLongitude));
-        clauses.add(new MyQuery.WhereClause("latitude", MyQuery.WhereClause.Operator.LESS_EQUAL, maxLatitude));
-        MyQuery query = new MyQuery(DatabaseWrapper.LOCATIONS_PATH, clauses);
-        CompletableFuture<List<Location>> myFuture = getAppDatabaseWrapper().query(query, Location.class);
-        return myFuture.thenApply(List::size);
+        QueryLocation queryLocation = QueryLocation.fromDegrees(poiLatitude, poiLongitude);
+        Distance searchDistance = new Distance(0.002, DistanceUnit.KILOMETERS);
+
+        return new TaskToCompletableFutureAdapter<>(geoFire.query().whereNearTo(queryLocation, searchDistance).build().get()).thenApply(QuerySnapshot::size);
     }
 }
