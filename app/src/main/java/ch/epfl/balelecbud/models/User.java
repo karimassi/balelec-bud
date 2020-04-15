@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class User implements Parcelable {
@@ -14,6 +15,8 @@ public class User implements Parcelable {
     private String email;
     private String displayName;
     private String uid;
+
+    private String token;
 
     public User() { }
 
@@ -39,6 +42,16 @@ public class User implements Parcelable {
 
     public String getUid() {
         return uid;
+    }
+
+    //TODO: token uid map instead
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public static boolean isAUserStored(SharedPreferences preferences) {
