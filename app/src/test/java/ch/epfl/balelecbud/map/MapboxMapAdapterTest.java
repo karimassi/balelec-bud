@@ -1,5 +1,9 @@
 package ch.epfl.balelecbud.map;
 
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -8,6 +12,7 @@ import ch.epfl.balelecbud.models.Location;
 
 @RunWith(JUnit4.class)
 public class MapboxMapAdapterTest {
+
     @Test
     public void mapboxMapAdapterWithNullMapDoesNotThrowNPE() {
         // check that no error is thrown
