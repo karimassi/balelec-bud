@@ -35,13 +35,26 @@ public class MyMarkerBuilderTest  {
 
     @Test
     public void canConvertToMapboxMarkerOption() {
-        MarkerOptions markerOptions =
-                new MyMarker.Builder().
-                        title(title).
-                        location(location).
-                        toMapboxMarkerOptions();
+        MarkerOptions markerOptions = new MyMarker.Builder().
+                title(title).location(location).icon(null).
+                toMapboxMarkerOptions();
         assertEquals(title, markerOptions.getTitle());
         assertEquals(location.toLatLng(), markerOptions.getPosition());
+
+        markerOptions = new MyMarker.Builder().
+                location(location).
+                toMapboxMarkerOptions();
+        assertEquals(location.toLatLng(), markerOptions.getPosition());
+
+        markerOptions = new MyMarker.Builder().
+                title(title).
+                toMapboxMarkerOptions();
+        assertEquals(title, markerOptions.getTitle());
+
+        markerOptions = new MyMarker.Builder().
+                title(null).location(null).icon(null).
+                toMapboxMarkerOptions();
+        assertEquals(markerOptions, new MarkerOptions());
     }
 
 }

@@ -6,8 +6,12 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
+
+import ch.epfl.balelecbud.BalelecbudApplication;
 
 import static ch.epfl.balelecbud.models.Location.DEFAULT_LOCATION;
 
@@ -30,8 +34,12 @@ public class MapboxMapAdapter implements MyMap {
     public void enableUserLocation(boolean appLocationEnabled) {
         LatLng latLng = DEFAULT_LOCATION.toLatLng();
         if (appLocationEnabled) {
-            MyLocationComponent locationComponent = new MapboxLocationComponentAdapter(mapboxMap, true);
-            Location location = locationComponent.getLastKnownLocation();
+            LocationComponent locationComponent = mapboxMap.getLocationComponent();
+            locationComponent.activateLocationComponent(
+                    LocationComponentActivationOptions.builder(BalelecbudApplication.getAppContext(), mapboxMap.getStyle()).build());
+            locationComponent.setLocationComponentEnabled(true);
+
+            Location location = mapboxMap.getLocationComponent().getLastKnownLocation();
             latLng = (location != null) ? new LatLng(location) : latLng;
         }
         mapboxMap.setCameraPosition(new CameraPosition.Builder().target(latLng).build());
@@ -39,13 +47,13 @@ public class MapboxMapAdapter implements MyMap {
 
     @Override
     public MyMarker addMarker(MyMarker.Builder markerBuilder) {
-        return (markerBuilder == null) ? null : new MapboxMarkerAdapter(mapboxMap.addMarker(markerBuilder.toMapboxMarkerOptions()));
+        return (markerBuilder != null) ? new MapboxMarkerAdapter(mapboxMap.addMarker(markerBuilder.toMapboxMarkerOptions())) : null;
     }
 
     @Override
     public void initialiseMap(boolean appLocationEnabled) {
         mapboxMap.setLatLngBoundsForCameraTarget(RESTRICTED_BOUNDS_AREA);
-        mapboxMap.setStyle(Style.LIGHT, style -> enableUserLocation(appLocationEnabled));
         mapboxMap.setMinZoomPreference(14);
+        mapboxMap.setStyle(Style.LIGHT, style -> enableUserLocation(appLocationEnabled));
     }
 }
