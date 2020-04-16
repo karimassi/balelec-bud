@@ -7,6 +7,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/activity_main_drawer_home"
+            android:icon="@mipmap/info"
+            android:title="Home" />
+        <item
             android:id="@+id/activity_main_drawer_info"
             android:icon="@mipmap/info"
             android:title="Information" />

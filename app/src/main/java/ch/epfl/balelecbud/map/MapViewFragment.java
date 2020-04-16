@@ -2,9 +2,14 @@ package ch.epfl.balelecbud.map;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.MapView;
 
@@ -13,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.models.Location;
@@ -24,63 +28,65 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 import static ch.epfl.balelecbud.location.LocationUtil.isLocationActive;
 
-public class MapViewActivity extends BasicActivity implements OnMapReadyCallback {
-    private final static String TAG = MapViewActivity.class.getSimpleName();
+public class MapViewFragment extends Fragment implements OnMapReadyCallback {
+    private final static String TAG = MapViewFragment.class.getSimpleName();
     private static com.google.android.gms.maps.OnMapReadyCallback mockCallback;
     private MapView mapView;
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
+    private Bundle savedInstance;
 
     @VisibleForTesting
     public static void setMockCallback(com.google.android.gms.maps.OnMapReadyCallback mockCallback) {
-        MapViewActivity.mockCallback = mockCallback;
+        MapViewFragment.mockCallback = mockCallback;
+    }
+
+    public static MapViewFragment newInstance() {
+        return (new MapViewFragment());
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        savedInstance = savedInstanceState;
+        return inflater.inflate(R.layout.activity_map, container, false);
+    }
 
-        mapView = findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView = getView().findViewById(R.id.mapView);
+        mapView.onCreate(savedInstance);
         if (mockCallback != null)
             mapView.getMapAsync(mockCallback);
         else
             mapView.getMapAsync(googleMap -> this.onMapReady(new GoogleMapAdapter(googleMap)));
 
-        configureToolBar(R.id.map_activity_toolbar);
-        configureDrawerLayout(R.id.map_activity_drawer_layout);
-        configureNavigationView(R.id.map_activity_nav_view);
         requestFriendsLocations();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         mapView.onStart();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         mapView.onResume();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         mapView.onPause();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         mapView.onStop();
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
@@ -92,24 +98,9 @@ public class MapViewActivity extends BasicActivity implements OnMapReadyCallback
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        if (getAppAuthenticator().getCurrentUser() != null) {
-            unregisterListeners();
-        }
-    }
-
-    @Override
-    protected void signOut() {
-        unregisterListeners();
-        super.signOut();
-    }
-
-    private void unregisterListeners() {
-        FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser())
-                .thenAccept(friendsIds -> friendsIds.forEach(id -> getAppDatabaseWrapper()
-                        .unregisterDocumentListener(DatabaseWrapper.LOCATIONS_PATH, id)));
     }
 
     @Override

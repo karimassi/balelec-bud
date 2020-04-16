@@ -419,6 +419,12 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
+    @Override
+    public void unregisterListeners() {
+        listeners.clear();
+        friendsLocationListener.clear();
+    }
+
     public void resetFriendshipsAndRequests() {
         for (Map m : friendships.values()) {
             m.clear();

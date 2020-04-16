@@ -19,17 +19,16 @@ import ch.epfl.balelecbud.location.LocationUtil;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
-public class WelcomeActivityTest extends BasicActivityTest {
+public class WelcomeFragmentTest extends RootActivityTest {
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
@@ -56,10 +55,12 @@ public class WelcomeActivityTest extends BasicActivityTest {
         }
     }
 
-    @Override
-    protected void setIds() {
-        setIds(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
+    @Before
+    public final void openSocialFragment(){
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_home, R.id.activity_home_linear_layout);
     }
+
     @Test
     public void testToggleLocationIsDisplayed() {
         onView(withId(R.id.locationSwitch)).check(matches(isDisplayed()));

@@ -17,7 +17,6 @@ import java.util.Map;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
-import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
@@ -42,7 +41,7 @@ import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class SocialActivityTest extends BasicActivityTest {
+public class SocialFragmentTest extends RootActivityTest {
 
     private final User currentUser = MockDatabaseWrapper.karim;
     private final User otherUser = MockDatabaseWrapper.celine;
@@ -53,7 +52,7 @@ public class SocialActivityTest extends BasicActivityTest {
     private final MockDatabaseWrapper mockDb = MockDatabaseWrapper.getInstance();
 
     @Rule
-    public final ActivityTestRule<SocialActivity> mActivityRule = new ActivityTestRule<SocialActivity>(SocialActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppAuthenticator(mockAuth);
@@ -62,6 +61,12 @@ public class SocialActivityTest extends BasicActivityTest {
             mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);
         }
     };
+
+    @Before
+    public final void openSocialFragment(){
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_social, R.id.activity_social_linear_layout);
+    }
 
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {
         selectTab(tab);
@@ -297,10 +302,5 @@ public class SocialActivityTest extends BasicActivityTest {
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
-    }
-
-    @Override
-    protected void setIds() {
-        setIds(R.id.social_activity_drawer_layout, R.id.social_activity_nav_view);
     }
 }

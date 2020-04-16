@@ -1,63 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
+<LinearLayout android:id="@+id/activity_poi_linear_layout"
 xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/poi_activity_drawer_layout"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-android:fitsSystemWindows="true"
+tools:context=".PointOfInterestFragment"
+android:gravity="center"
 android:background="@color/blek_blue"
-tools:openDrawer="start"
-tools:context="ch.epfl.balelecbud.PointOfInterestActivity">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/poi_activity_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/blek_blue"
-        app:theme="@style/ToolBarStyle" />
+xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-android:layout_height="match_parent"
-android:layout_width="match_parent"
-android:id="@+id/swipe_refresh_layout_point_of_interest"
-xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/pointOfInterestRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layoutManager="LinearLayoutManager"
-        tools:context=".PointOfInterestActivity"
-        tools:listitem="@layout/item_point_of_interest" />
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/swipe_refresh_layout_point_of_interest"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+            <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/pointOfInterestRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                app:layoutManager="LinearLayoutManager"
+                tools:context=".PointOfInterestFragment"
+                tools:listitem="@layout/item_point_of_interest" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
-
-<com.google.android.material.navigation.NavigationView
-    android:id="@+id/poi_activity_nav_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    android:background="@color/blek_blue"
-    app:headerLayout="@layout/root_activity_nav_header"
-    app:itemTextAppearance="@style/blek_font_style"
-    app:menu="@menu/root_activity_menu_header"
-    app:itemIconTint="@color/blek_orange" />
-</androidx.drawerlayout.widget.DrawerLayout>
 

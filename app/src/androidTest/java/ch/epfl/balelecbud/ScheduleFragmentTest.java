@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -31,11 +32,11 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
 
 @RunWith(AndroidJUnit4.class)
-public class ScheduleActivityTest extends BasicActivityTest {
+public class ScheduleFragmentTest extends RootActivityTest {
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Rule
-    public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
@@ -43,7 +44,7 @@ public class ScheduleActivityTest extends BasicActivityTest {
 
         @Override
         protected Intent getActivityIntent() {
-            Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
+            Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleFragment.class);
             FlowUtil.packCallback(new Slot[]{}, intent);
             return intent;
         }
@@ -51,8 +52,14 @@ public class ScheduleActivityTest extends BasicActivityTest {
     };
 
     @Before
+    public final void openScheduleFragment(){
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
+    }
+
+    @Before
     public void setup() {
-        mActivityRule.getActivity().setIntentLauncher(intent -> {
+        ScheduleAdapter.setIntentLauncher(intent -> {
             if (intent.getAction() == null)
                 Assert.fail();
 
@@ -119,7 +126,7 @@ public class ScheduleActivityTest extends BasicActivityTest {
         TestAsyncUtils sync = new TestAsyncUtils();
         mock.addItem(slot1);
 
-        mActivityRule.getActivity().setIntentLauncher(intent -> {
+        ScheduleAdapter.setIntentLauncher(intent -> {
             if (intent.getAction() == null)
                 sync.fail();
             String action = intent.getAction();
@@ -141,10 +148,5 @@ public class ScheduleActivityTest extends BasicActivityTest {
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
-    }
-
-    @Override
-    protected void setIds() {
-        setIds(R.id.schedule_activity_drawer_layout, R.id.schedule_activity_nav_view);
     }
 }

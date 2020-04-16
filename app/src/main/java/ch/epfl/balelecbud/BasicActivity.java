@@ -11,8 +11,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
-import ch.epfl.balelecbud.friendship.SocialActivity;
-import ch.epfl.balelecbud.map.MapViewActivity;
+import ch.epfl.balelecbud.friendship.SocialFragment;
+import ch.epfl.balelecbud.map.MapViewFragment;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
@@ -31,26 +31,25 @@ public abstract class BasicActivity extends AppCompatActivity implements Navigat
         int id = item.getItemId();
         switch (id) {
             case R.id.activity_main_drawer_info:
-                startActivity(new Intent(this, FestivalInformationActivity.class));
+                startActivity(new Intent(this, FestivalInformationFragment.class));
                 break;
             case R.id.activity_main_drawer_schedule:
-                //startActivity(new Intent(this, ScheduleActivity.class));
                 Intent intent = new Intent(this, ConcertFlow.class);
                 intent.setAction(FlowUtil.GET_ALL_CONCERT);
-                intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(this, ScheduleActivity.class));
+                intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(this, RootActivity.class));
                 startService(intent);
                 break;
             case R.id.activity_main_drawer_poi:
-                startActivity(new Intent(this, PointOfInterestActivity.class));
+                startActivity(new Intent(this, PointOfInterestFragment.class));
                 break;
             case R.id.activity_main_drawer_map:
-                startActivity(new Intent(this, MapViewActivity.class));
+                startActivity(new Intent(this, MapViewFragment.class));
                 break;
             case R.id.activity_main_drawer_transport:
-                startActivity(new Intent(this, TransportActivity.class));
+                startActivity(new Intent(this, TransportFragment.class));
                 break;
             case R.id.activity_main_drawer_social:
-                startActivity(new Intent(this, SocialActivity.class));
+                startActivity(new Intent(this, SocialFragment.class));
                 break;
             case R.id.sign_out_button:
                 signOut();

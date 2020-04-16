@@ -1,8 +1,12 @@
 package ch.epfl.balelecbud;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -13,27 +17,30 @@ import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
-public class FestivalInformationActivity extends BasicActivity {
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_festival_info);
+public class FestivalInformationFragment extends Fragment {
 
-        RecyclerView recyclerView = findViewById(R.id.festivalInfoRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    public static FestivalInformationFragment newInstance() {
+        return (new FestivalInformationFragment());
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        return inflater.inflate(R.layout.activity_festival_info, container, false);
+    }
+
+    @Override public void onStart() {
+        super.onStart();
+        RecyclerView recyclerView = getActivity().findViewById(R.id.festivalInfoRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // Not sure about this one
         recyclerView.setHasFixedSize(true);
 
         RecyclerViewData<FestivalInformation, FestivalInformationHolder> data = new FestivalInformationData();
         RefreshableRecyclerViewAdapter<FestivalInformation, FestivalInformationHolder> adapter =
                 new RefreshableRecyclerViewAdapter<>(FestivalInformationHolder::new, data, R.layout.item_festival_info);
         recyclerView.setAdapter(adapter);
-        SwipeRefreshLayout refreshLayout = findViewById(R.id.swipe_refresh_layout_festival_info);
+        SwipeRefreshLayout refreshLayout = getView().findViewById(R.id.swipe_refresh_layout_festival_info);
         adapter.setOnRefreshListener(refreshLayout);
-        
-        configureToolBar(R.id.festival_info_activity_toolbar);
-        configureDrawerLayout(R.id.festival_info_activity_drawer_layout);
-        configureNavigationView(R.id.festival_info_activity_nav_view);
     }
 
 }

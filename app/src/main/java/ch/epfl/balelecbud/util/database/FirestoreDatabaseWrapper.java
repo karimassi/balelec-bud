@@ -155,4 +155,12 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     private DocumentReference getDocumentReference(String documentPath) {
         return FirebaseFirestore.getInstance().document(documentPath);
     }
+
+    @Override
+    public void unregisterListeners() {
+        for(ListenerRegistration l : registrationMap.values())
+            l.remove();
+        for(ListenerRegistration l : registrations.values())
+            l.remove();
+    }
 }

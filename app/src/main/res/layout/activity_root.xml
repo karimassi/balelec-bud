@@ -7,9 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/blek_main_root"
     tools:openDrawer="start"
-    tools:context="ch.epfl.balelecbud.WelcomeActivity">
+    tools:context="ch.epfl.balelecbud.RootActivity">
 
     <!-- 1 | MainActivity RootView -->
     <LinearLayout
@@ -31,13 +30,6 @@
             android:id="@+id/root_activity_frame_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <Switch
-                android:id="@+id/locationSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="@string/toggle_location_view" />
         </FrameLayout>
     </LinearLayout>
 
@@ -49,7 +41,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:background="@color/blek_blue"
-        app:headerLayout="@layout/root_activity_nav_header"
+        app:headerLayout="@layout/activity_root_nav_header"
         app:itemTextAppearance="@style/blek_font_style"
         app:menu="@menu/root_activity_menu_header"
         app:itemIconTint="@color/blek_orange" />

@@ -57,7 +57,7 @@ public class LoginUserActivity extends AppCompatActivity {
     }
 
     private void onAuthComplete() {
-        Intent intent = new Intent(this, WelcomeActivity.class);
+        Intent intent = new Intent(this, RootActivity.class);
         startActivity(intent);
         finish();
     }

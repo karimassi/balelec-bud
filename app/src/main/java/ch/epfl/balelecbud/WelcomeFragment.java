@@ -2,30 +2,42 @@ package ch.epfl.balelecbud;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.location.LocationUtil.Action;
 
-public class WelcomeActivity extends BasicActivity {
-    private static final String TAG = WelcomeActivity.class.getSimpleName();
+public class WelcomeFragment extends Fragment {
+    private static final String TAG = RootActivity.class.getSimpleName();
     private Switch locationSwitch;
+    private FragmentActivity activity;
+
+    public static WelcomeFragment newInstance() {
+        return (new WelcomeFragment());
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
 
-        this.configureToolBar(R.id.root_activity_toolbar);
-        this.configureDrawerLayout(R.id.root_activity_drawer_layout);
-        this.configureNavigationView(R.id.root_activity_nav_view);
+    @Override
+    public void onStart() {
+        super.onStart();
+        activity = this.getActivity();
         setUpLocation();
     }
 
     private void setUpLocation() {
-        this.locationSwitch = findViewById(R.id.locationSwitch);
+        this.locationSwitch = getView().findViewById(R.id.locationSwitch); // Not sure about this
         this.locationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Log.d(TAG, "Location switched: ON");
@@ -35,7 +47,7 @@ public class WelcomeActivity extends BasicActivity {
                 LocationUtil.disableLocation();
             }
         });
-        LocationUtil.requestLocationPermission(this);
+        LocationUtil.requestLocationPermission(activity); // Not sure about this
     }
 
     @Override
@@ -54,20 +66,20 @@ public class WelcomeActivity extends BasicActivity {
     private Action onPermissionNotGranted(final String logText) {
         return () -> {
             Log.i(TAG, "onRequestPermissionsResult: " + logText);
-            WelcomeActivity.this.locationSwitch.setClickable(false);
-            WelcomeActivity.this.runOnUiThread(() ->
-                    WelcomeActivity.this.locationSwitch.setChecked(false));
+            locationSwitch.setClickable(false);
+            activity.runOnUiThread(() ->
+                    locationSwitch.setChecked(false));
         };
     }
 
     private Action onPermissionGranted() {
         return () -> {
             Log.i(TAG, "onRequestPermissionsResult: Permission granted");
-            WelcomeActivity.this.locationSwitch.setClickable(true);
+            locationSwitch.setClickable(true);
             if (LocationUtil.isLocationActive()) {
                 Log.d(TAG, "onPermissionGranted: location was active");
-                WelcomeActivity.this.runOnUiThread(() ->
-                        WelcomeActivity.this.locationSwitch.setChecked(true));
+                activity.runOnUiThread(() ->
+                        locationSwitch.setChecked(true));
             }
         };
     }

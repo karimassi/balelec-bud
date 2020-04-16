@@ -42,4 +42,5 @@ public interface DatabaseWrapper {
 
     void deleteDocumentWithID(String collectionName, String documentID);
 
+    void unregisterListeners();
 }

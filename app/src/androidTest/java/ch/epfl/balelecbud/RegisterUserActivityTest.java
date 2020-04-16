@@ -135,7 +135,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     @Test
     public void testCanRegister() {
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
-        intended(hasComponent(WelcomeActivity.class.getName()));
+        intended(hasComponent(RootActivity.class.getName()));
     }
 
     @Test
@@ -200,6 +200,11 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
             @Override
             public void deleteDocumentWithID(String collectionName, String documentID) {
+            }
+
+            @Override
+            public void unregisterListeners() {
+
             }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");

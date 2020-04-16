@@ -1,28 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout
+<LinearLayout android:id="@+id/activity_social_linear_layout"
 xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/social_activity_drawer_layout"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-android:fitsSystemWindows="true"
+tools:context=".friendship.SocialFragment"
+android:gravity="center"
 android:background="@color/blek_blue"
-tools:openDrawer="start"
-tools:context="ch.epfl.balelecbud.friendship.SocialActivity">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/social_activity_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/blek_blue"
-        app:theme="@style/ToolBarStyle" />
+xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
@@ -73,16 +58,3 @@ tools:context="ch.epfl.balelecbud.friendship.SocialActivity">
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
-
-<com.google.android.material.navigation.NavigationView
-    android:id="@+id/social_activity_nav_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    android:background="@color/blek_blue"
-    app:headerLayout="@layout/root_activity_nav_header"
-    app:itemTextAppearance="@style/blek_font_style"
-    app:menu="@menu/root_activity_menu_header"
-    app:itemIconTint="@color/blek_orange" />
-</androidx.drawerlayout.widget.DrawerLayout>

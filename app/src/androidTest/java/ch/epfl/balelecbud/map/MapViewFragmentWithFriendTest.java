@@ -12,7 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.BasicActivityTest;
+import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
@@ -30,7 +30,7 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.karim;
 import static org.junit.Assert.assertEquals;
 
-public class MapViewActivityWithFriendTest extends BasicActivityTest {
+public class MapViewFragmentWithFriendTest extends RootActivityTest {
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final Location karimLocation = new Location(2, 4);
@@ -38,14 +38,14 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     private final Location alexLocation = new Location(3, 3);
 
     @Rule
-    public final ActivityTestRule<MapViewActivity> mActivityRule =
-            new ActivityTestRule<MapViewActivity>(MapViewActivity.class) {
+    public final ActivityTestRule<MapViewFragment> mActivityRule =
+            new ActivityTestRule<MapViewFragment>(MapViewFragment.class) {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewActivity.setMockCallback(googleMap -> {});
+                    MapViewFragment.setMockCallback(googleMap -> {});
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
                         public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {

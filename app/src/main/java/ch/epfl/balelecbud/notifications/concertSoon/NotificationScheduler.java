@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 public class NotificationScheduler implements NotificationSchedulerInterface {
@@ -51,7 +51,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
         //what should be launched when notification clicked
-        Intent intent = new Intent(context, WelcomeActivity.class);
+        Intent intent = new Intent(context, RootActivity.class);
         int notificationId = slot.getId();
         PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(activity);

@@ -14,7 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.BasicActivityTest;
+import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
@@ -30,19 +31,19 @@ import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
-public class MapViewActivityTest extends BasicActivityTest {
+public class MapViewFragmentTest extends RootActivityTest {
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
 
     @Rule
-    public final ActivityTestRule<MapViewActivity> mActivityRule =
-            new ActivityTestRule<MapViewActivity>(MapViewActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewActivity.setMockCallback(googleMap -> { });
+                    MapViewFragment.setMockCallback(googleMap -> { });
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
                         public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) { }
@@ -56,7 +57,7 @@ public class MapViewActivityTest extends BasicActivityTest {
 
     @Test
     public void testMapViewIsNotNull() {
-        MapViewActivity mActivity = mActivityRule.getActivity();
+        RootActivity mActivity = mActivityRule.getActivity();
         View viewById = mActivity.findViewById(R.id.mapView);
         assertNotNull(viewById);
     }

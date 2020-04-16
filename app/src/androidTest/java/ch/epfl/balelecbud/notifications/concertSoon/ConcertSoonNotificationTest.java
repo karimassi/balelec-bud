@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import java.util.Calendar;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -33,9 +33,8 @@ import static junit.framework.TestCase.assertNull;
 @RunWith(AndroidJUnit4.class)
 public class ConcertSoonNotificationTest {
 
-    //activity does not matter so chose WelcomeActivity
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule = new ActivityTestRule<>(WelcomeActivity.class);
+    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class);
 
     @Before
     public void setup() {

@@ -17,7 +17,7 @@ import org.junit.Test;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
-import ch.epfl.balelecbud.map.MapViewActivity;
+import ch.epfl.balelecbud.map.MapViewFragment;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -29,7 +29,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
 import static org.junit.Assert.assertFalse;
 
-public abstract class BasicActivityTest {
+public class RootActivityTest {
 
     private int activity_drawer_layout_id;
     private int activity_nav_view_id;
@@ -42,7 +42,7 @@ public abstract class BasicActivityTest {
         MockAuthenticator.getInstance().setCurrentUser(alex);
         BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
         device = UiDevice.getInstance(getInstrumentation());
-        setIds();
+        setIds(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
     }
 
     @Test
@@ -71,7 +71,7 @@ public abstract class BasicActivityTest {
 
     @Test
     public void openMapActivityFromDrawer() {
-        MapViewActivity.setMockCallback(googleMap -> {});
+        MapViewFragment.setMockCallback(googleMap -> {});
         openDrawer();
         clickItem(R.id.activity_main_drawer_map, R.id.mapView);
     }
@@ -123,19 +123,17 @@ public abstract class BasicActivityTest {
         Espresso.pressBack();
     }
 
-    private void openDrawer() {
+    protected void openDrawer() {
         onView(withId(activity_drawer_layout_id)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
         device.waitForIdle();
         onView(withId(activity_nav_view_id)).check(matches(isDisplayed()));
     }
 
-    private void clickItem(int itemId, int viewToDisplayId) {
+    protected void clickItem(int itemId, int viewToDisplayId) {
         onView(withId(activity_nav_view_id)).perform(NavigationViewActions.navigateTo(itemId));
         device.waitForIdle();
         onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
     }
-
-    protected abstract void setIds();
 
     protected void setIds(int activity_drawer_layout_id, int activity_nav_view_id) {
         this.activity_drawer_layout_id = activity_drawer_layout_id;

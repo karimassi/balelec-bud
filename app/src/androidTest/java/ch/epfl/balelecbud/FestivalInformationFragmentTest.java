@@ -25,9 +25,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class FestivalInformationActivityTest extends BasicActivityTest {
+public class FestivalInformationFragmentTest extends RootActivityTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
+
+    @Before
+    public final void openInfoFragment(){
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_info, R.id.festivalInfoRecyclerView);
+    }
 
     @Before
     public void setup() {
@@ -35,7 +41,7 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
     }
 
     @Rule
-    public final ActivityTestRule<FestivalInformationActivity> mActivityRule = new ActivityTestRule<FestivalInformationActivity>(FestivalInformationActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
@@ -111,10 +117,5 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {
         viewInteraction.check(matches(hasDescendant(withText(information.getTitle()))));
         viewInteraction.check(matches(hasDescendant(withText(information.getInformation()))));
-    }
-
-    @Override
-    protected void setIds() {
-        setIds(R.id.festival_info_activity_drawer_layout, R.id.festival_info_activity_nav_view);
     }
 }

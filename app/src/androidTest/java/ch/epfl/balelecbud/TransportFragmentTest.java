@@ -5,6 +5,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,16 +27,22 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class TransportActivityTest {
+public class TransportFragmentTest extends RootActivityTest {
 
     @Rule
-    public final ActivityTestRule<TransportActivity> mActivityRule = new ActivityTestRule<TransportActivity>(TransportActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             super.beforeActivityLaunched();
             BalelecbudApplication.setHttpClient(MockHttpClient.getInstance());
         }
     };
+
+    @Before
+    public final void openTransportFragment(){
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_transport, R.id.activity_transport_linear_layout);
+    }
 
     private TransportStation lausanne = new TransportStation(Location.DEFAULT_LOCATION, "0", "Lausanne", 100);
 

@@ -30,13 +30,13 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
 
-    private Consumer<Intent> intentLauncher;
+    private static Consumer<Intent> intentLauncher;
 
     private final Activity mainActivity;
 
     @VisibleForTesting
-    public void setIntentLauncher(Consumer<Intent> intentLauncher) {
-        this.intentLauncher = intentLauncher;
+    public static void setIntentLauncher(Consumer<Intent> intentLauncher) {
+        ScheduleAdapter.intentLauncher = intentLauncher;
     }
 
     private final List<Slot> slots;

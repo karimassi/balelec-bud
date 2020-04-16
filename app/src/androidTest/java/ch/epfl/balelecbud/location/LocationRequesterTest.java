@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -45,8 +45,8 @@ public class LocationRequesterTest {
     }
 
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
