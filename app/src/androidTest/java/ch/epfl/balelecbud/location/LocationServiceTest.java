@@ -108,7 +108,7 @@ public class LocationServiceTest {
         android.location.Location location = generateAndroidLocation(24, 42);
 
         ls.onHandleIntent(getIntent(location));
-        checkStoredOnDB(new Location(location));
+        checkStoredOnDB(new Location(location.getLatitude(), location.getLongitude()));
     }
 
     @Test
@@ -116,11 +116,11 @@ public class LocationServiceTest {
         android.location.Location location1 = generateAndroidLocation(12, 34);
 
         ls.onHandleIntent(getIntent(location1));
-        checkStoredOnDB(new Location(location1));
+        checkStoredOnDB(new Location(location1.getLatitude(), location1.getLongitude()));
 
         android.location.Location location2 = generateAndroidLocation(13.4, 54.2);
 
         ls.onHandleIntent(getIntent(location2));
-        checkStoredOnDB(new Location(location2));
+        checkStoredOnDB(new Location(location2.getLatitude(), location2.getLongitude()));
     }
 }

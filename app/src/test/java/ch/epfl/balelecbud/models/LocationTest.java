@@ -1,35 +1,21 @@
 package ch.epfl.balelecbud.models;
 
-import android.location.LocationProvider;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import com.google.firebase.firestore.GeoPoint;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-@RunWith(AndroidJUnit4.class)
 public class LocationTest {
 
     private final Location location = new Location(2,1);
     private final Location sameLocation = new Location(2,1);
     private final GeoPoint geoPoint = new GeoPoint(2, 1);
     private final LatLng latLng = new LatLng(2, 1);
-
-    private android.location.Location createAndroidLocation(double latitude, double longitude) {
-        android.location.Location androidLocation = new android.location.Location("");
-        androidLocation.setLatitude(latitude);
-        androidLocation.setLongitude(longitude);
-        return androidLocation;
-    }
 
     @Test
     public void testEmptyConstructor() {
@@ -46,12 +32,6 @@ public class LocationTest {
         assertThat(new Location(latLng), is(location));
     }
 
-    @Test
-    public void testLocationFromAndroidLocation() {
-        assertThat(createAndroidLocation(1,2).getLatitude(), is(1.));
-        assertThat(new Location(createAndroidLocation(1.,2.)), is(location));
-    }
-    
     @Test
     public void testGetLatitude() {
         assertThat(location.getLatitude(), is(2.));
