@@ -6,8 +6,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Objects;
 
@@ -52,8 +52,8 @@ public class Location implements Parcelable {
     }
 
     public Location(LatLng latLng) {
-        this.latitude = latLng.latitude;
-        this.longitude = latLng.longitude;
+        this.latitude = latLng.getLatitude();
+        this.longitude = latLng.getLongitude();
     }
 
     public double getLongitude() {

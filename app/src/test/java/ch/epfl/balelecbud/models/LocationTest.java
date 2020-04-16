@@ -1,7 +1,7 @@
 package ch.epfl.balelecbud.models;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.junit.Assert;
 import org.junit.Test;
