@@ -48,14 +48,6 @@ public class Location implements Parcelable {
         geoFireLocation = in.readDouble();
     }
 
-    public Location(GeoPoint geoPoint) {
-        this(geoPoint.getLatitude(), geoPoint.getLongitude());
-    }
-
-    public Location(LatLng latLng) {
-        this(latLng.getLatitude(), latLng.getLongitude());
-    }
-
     public double getLongitude() {
         return longitude;
     }
@@ -64,7 +56,7 @@ public class Location implements Parcelable {
         return latitude;
     }
 
-    public Double getGeoFireLocation() {
+    public double getGeoFireLocation() {
         return geoFireLocation;
     }
 

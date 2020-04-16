@@ -21,7 +21,7 @@ public class PointOfInterestUtils {
         double poiLongitude = poi.getLocation().getLongitude();
         double poiLatitude = poi.getLocation().getLatitude();
 
-        MyGeoClause geoClause = new MyGeoClause(poiLongitude, poiLatitude, SEARCH_RADIUS_IN_KM);
+        MyGeoClause geoClause = new MyGeoClause(poiLatitude, poiLongitude, SEARCH_RADIUS_IN_KM);
 
         return getAppDatabaseWrapper().query(new MyQuery(DatabaseWrapper.LOCATIONS_PATH, geoClause), Location.class).thenApply(List::size);
     }
