@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.map;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
@@ -55,6 +56,7 @@ public class MyMarkerBuilderTest  {
                 title(null).location(null).icon(null).
                 toMapboxMarkerOptions();
         assertEquals(markerOptions, new MarkerOptions());
+
     }
 
 }

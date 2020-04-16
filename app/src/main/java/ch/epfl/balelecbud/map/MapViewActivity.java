@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.maps.MapView;
 
 import java.util.HashMap;
@@ -131,6 +132,7 @@ public class MapViewActivity extends BasicActivity {
         myMap.initialiseMap(LocationUtil.isLocationActive());
         displayWaitingFriends(myMap);
     }
+
 
     private void unregisterListeners() {
         FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser())

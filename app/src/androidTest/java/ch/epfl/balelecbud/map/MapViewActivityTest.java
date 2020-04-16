@@ -90,12 +90,6 @@ public class MapViewActivityTest extends BasicActivityTest {
     private MyMap assertMapLocation(TestAsyncUtils sync, boolean expectedLocation) {
         return new MyMap() {
             @Override
-            public void enableUserLocation(boolean locationEnabled) {
-                sync.assertEquals(expectedLocation, locationEnabled);
-                sync.call();
-            }
-
-            @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.fail();
                 return null;
@@ -103,7 +97,8 @@ public class MapViewActivityTest extends BasicActivityTest {
 
             @Override
             public void initialiseMap(boolean locationEnabled) {
-                enableUserLocation(locationEnabled);
+                sync.assertEquals(expectedLocation, locationEnabled);
+                sync.call();
             }
         };
     }
@@ -113,11 +108,6 @@ public class MapViewActivityTest extends BasicActivityTest {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
-            public void enableUserLocation(boolean locationEnabled) {
-                sync.call();
-            }
-
-            @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.fail();
                 return null;
@@ -125,7 +115,7 @@ public class MapViewActivityTest extends BasicActivityTest {
 
             @Override
             public void initialiseMap(boolean locationEnabled) {
-                enableUserLocation(locationEnabled);
+                sync.call();
             }
         }));
         sync.waitCall(1);

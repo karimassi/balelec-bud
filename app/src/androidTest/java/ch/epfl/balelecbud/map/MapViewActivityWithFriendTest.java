@@ -78,11 +78,6 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
-            public void enableUserLocation(boolean locationEnabled) {
-                sync.call();
-            }
-
-            @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
                 assertNameAndLocation(markerBuilder, sync, karim, karimLocation);
@@ -92,7 +87,7 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
 
             @Override
             public void initialiseMap(boolean locationEnabled) {
-                enableUserLocation(locationEnabled);
+                sync.call();
             }
         }));
         sync.waitCall(2);
@@ -104,11 +99,6 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     public void whenFriendLocationUpdateMarkerMoved() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
-            @Override
-            public void enableUserLocation(boolean locationEnabled) {
-                sync.call();
-            }
-
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
@@ -122,7 +112,7 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
 
             @Override
             public void initialiseMap(boolean locationEnabled) {
-                enableUserLocation(locationEnabled);
+                sync.call();
             }
         }));
         sync.waitCall(2);
@@ -147,12 +137,6 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     private MyMap assertKarimThenAlexLocation(TestAsyncUtils sync) {
         return new MyMap() {
             private int times = 0;
-
-            @Override
-            public void enableUserLocation(boolean locationEnabled) {
-                sync.call();
-            }
-
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
@@ -168,7 +152,7 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
 
             @Override
             public void initialiseMap(boolean locationEnabled) {
-                enableUserLocation(locationEnabled);
+                sync.call();
             }
         };
     }

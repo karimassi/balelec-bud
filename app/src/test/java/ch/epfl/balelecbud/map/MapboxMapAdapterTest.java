@@ -20,16 +20,6 @@ public class MapboxMapAdapterTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void enableMyLocationWithNullMapThrowsNPE() {
-        new MapboxMapAdapter(null).enableUserLocation(true);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void disableMyLocationWithNullMapThrowsNPE() {
-        new MapboxMapAdapter(null).enableUserLocation(false);
-    }
-
-    @Test(expected = NullPointerException.class)
     public void addMarkerWithNullMapThrowsNPE() {
         new MapboxMapAdapter(null).addMarker(new MyMarker.Builder().location(new Location(1, 2)));
     }
