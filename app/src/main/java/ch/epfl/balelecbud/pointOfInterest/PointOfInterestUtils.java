@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyGeoClause;
@@ -22,7 +23,7 @@ public class PointOfInterestUtils {
 
         MyGeoClause geoClause = new MyGeoClause(poiLongitude, poiLatitude, SEARCH_RADIUS_IN_KM);
 
-        return getAppDatabaseWrapper().queryIds(new MyQuery(DatabaseWrapper.LOCATIONS_PATH, geoClause)).thenApply(List::size);
+        return getAppDatabaseWrapper().query(new MyQuery(DatabaseWrapper.LOCATIONS_PATH, geoClause), Location.class).thenApply(List::size);
     }
 
     public static CompletableFuture<List<PointOfInterestUtils.PoiAffluenceTuple>> computeAffluence(List<PointOfInterest> pointOfInterests) {
