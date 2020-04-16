@@ -42,13 +42,16 @@ public class MapViewActivityTest extends BasicActivityTest {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewActivity.setMockCallback(mapboxMap -> {});
+                    MapViewActivity.setMockCallback(mapboxMap -> {
+                    });
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
-                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) { }
+                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                        }
 
                         @Override
-                        public void removeLocationUpdates(PendingIntent intent) { }
+                        public void removeLocationUpdates(PendingIntent intent) {
+                        }
                     });
                     mockAuth.setCurrentUser(MockDatabaseWrapper.celine);
                 }
@@ -125,7 +128,7 @@ public class MapViewActivityTest extends BasicActivityTest {
 
     @Test
     public void testOnLowMemory() throws Throwable {
-        runOnUIThreadAndWait( () -> this.mActivityRule.getActivity().onLowMemory() );
+        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onLowMemory());
 
     }
 

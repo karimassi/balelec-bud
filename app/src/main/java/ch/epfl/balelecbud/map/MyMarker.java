@@ -3,7 +3,6 @@ package ch.epfl.balelecbud.map;
 
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import ch.epfl.balelecbud.models.Location;
 

@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.maps.MapView;
 
 import java.util.HashMap;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
@@ -61,8 +59,7 @@ public class MapViewActivity extends BasicActivity {
 
         if (mockCallback != null) {
             mapView.getMapAsync(mockCallback);
-        }
-        else {
+        } else {
             mapView.getMapAsync(
                     mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
         }

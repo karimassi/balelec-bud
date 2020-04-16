@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import ch.epfl.balelecbud.models.Location;
 
-import static org.junit.Assert.*;
-
 public class MapboxMarkerAdapterTest {
     @Test
     public void mapboxMarkerAdapterWithNullMarker() {

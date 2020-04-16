@@ -37,9 +37,6 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final Location karimLocation = new Location(2, 4);
-    private final Location newKarimLocation = new Location(1, 2);
-    private final Location alexLocation = new Location(3, 3);
-
     @Rule
     public final ActivityTestRule<MapViewActivity> mActivityRule =
             new ActivityTestRule<MapViewActivity>(MapViewActivity.class) {
@@ -48,7 +45,8 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewActivity.setMockCallback(mapboxMap -> {});
+                    MapViewActivity.setMockCallback(mapboxMap -> {
+                    });
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
                         public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -66,6 +64,8 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
                     mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), karimLocation);
                 }
             };
+    private final Location newKarimLocation = new Location(1, 2);
+    private final Location alexLocation = new Location(3, 3);
 
     @After
     public void cleanup() {
@@ -137,6 +137,7 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     private MyMap assertKarimThenAlexLocation(TestAsyncUtils sync) {
         return new MyMap() {
             private int times = 0;
+
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
