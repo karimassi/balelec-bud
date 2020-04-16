@@ -7,8 +7,7 @@ import com.google.firebase.firestore.Query;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ch.epfl.balelecbud.util.database.MyQuery.WhereClause;
-import ch.epfl.balelecbud.util.database.MyQuery.WhereClause.Operator;
+import ch.epfl.balelecbud.util.database.MyWhereClause.Operator;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -18,18 +17,18 @@ public class FirestoreQueryConvertTest {
     private final String leftOperandName = "myLeftOperandName";
     private final Integer rightOperandValue = 12;
 
-    private final WhereClause clauseLessThan =
-            new WhereClause(leftOperandName, Operator.LESS_THAN, rightOperandValue);
-    private final WhereClause clauseLessEquals =
-            new WhereClause(leftOperandName, Operator.LESS_EQUAL, rightOperandValue);
-    private final WhereClause clauseGreaterThan =
-            new WhereClause(leftOperandName, Operator.GREATER_THAN, rightOperandValue);
-    private final WhereClause clauseGreaterEquals =
-            new WhereClause(leftOperandName, Operator.GREATER_EQUAL, rightOperandValue);
-    private final WhereClause clauseEquals =
-            new WhereClause(leftOperandName, Operator.EQUAL, rightOperandValue);
+    private final MyWhereClause clauseLessThan =
+            new MyWhereClause(leftOperandName, Operator.LESS_THAN, rightOperandValue);
+    private final MyWhereClause clauseLessEquals =
+            new MyWhereClause(leftOperandName, Operator.LESS_EQUAL, rightOperandValue);
+    private final MyWhereClause clauseGreaterThan =
+            new MyWhereClause(leftOperandName, Operator.GREATER_THAN, rightOperandValue);
+    private final MyWhereClause clauseGreaterEquals =
+            new MyWhereClause(leftOperandName, Operator.GREATER_EQUAL, rightOperandValue);
+    private final MyWhereClause clauseEquals =
+            new MyWhereClause(leftOperandName, Operator.EQUAL, rightOperandValue);
 
-    private void checkQuery(WhereClause clause, Operator operator) {
+    private void checkQuery(MyWhereClause clause, Operator operator) {
         MyQuery myQuery = new MyQuery(collectionName, Lists.newArrayList(clause));
         Query convertedQuery = FirestoreQueryConverter.convert(myQuery);
         Query pendingQuery = FirebaseFirestore.getInstance().collection(collectionName);

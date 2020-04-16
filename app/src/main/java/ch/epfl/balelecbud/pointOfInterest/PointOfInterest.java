@@ -4,6 +4,8 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.Objects;
+
 public class PointOfInterest {
     private String name;
     private String type;
@@ -35,5 +37,10 @@ public class PointOfInterest {
                 && ((PointOfInterest) obj).getName().equals(name)
                 && ((PointOfInterest) obj).getType().equals(type)
                 && ((PointOfInterest) obj).getLocation().equals(location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type, location);
     }
 }

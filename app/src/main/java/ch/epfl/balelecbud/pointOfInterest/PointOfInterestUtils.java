@@ -1,31 +1,46 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
+import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import uk.co.mgbramwell.geofire.android.GeoFire;
-import uk.co.mgbramwell.geofire.android.model.Distance;
-import uk.co.mgbramwell.geofire.android.model.DistanceUnit;
-import uk.co.mgbramwell.geofire.android.model.QueryLocation;
+import ch.epfl.balelecbud.util.database.MyGeoClause;
+import ch.epfl.balelecbud.util.database.MyQuery;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class PointOfInterestUtils {
 
-    public static CompletableFuture<Integer> getAmountNearPointOfInterest(PointOfInterest poi){
+    private static final double SEARCH_RADIUS_IN_KM = 0.05;
+
+    public static CompletableFuture<Integer> getAmountNearPointOfInterest(PointOfInterest poi) {
+
         double poiLongitude = poi.getLocation().getLongitude();
         double poiLatitude = poi.getLocation().getLatitude();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference myCollection = db.collection(DatabaseWrapper.POINT_OF_INTEREST_PATH);
-        GeoFire geoFire = new GeoFire(myCollection);
+        MyGeoClause geoClause = new MyGeoClause(poiLongitude, poiLatitude, SEARCH_RADIUS_IN_KM);
 
-        QueryLocation queryLocation = QueryLocation.fromDegrees(poiLatitude, poiLongitude);
-        Distance searchDistance = new Distance(0.002, DistanceUnit.KILOMETERS);
+        return getAppDatabaseWrapper().queryIds(new MyQuery(DatabaseWrapper.LOCATIONS_PATH, geoClause)).thenApply(List::size);
+    }
 
-        return new TaskToCompletableFutureAdapter<>(geoFire.query().whereNearTo(queryLocation, searchDistance).build().get()).thenApply(QuerySnapshot::size);
+    public static CompletableFuture<List<PointOfInterestUtils.PoiAffluenceTuple>> computeAffluence(List<PointOfInterest> pointOfInterests) {
+        List<CompletableFuture<PointOfInterestUtils.PoiAffluenceTuple>> results = new LinkedList<>();
+        for (PointOfInterest poi : pointOfInterests) {
+            results.add(PointOfInterestUtils.getAmountNearPointOfInterest(poi).thenApply(affluence -> new PointOfInterestUtils.PoiAffluenceTuple(poi, affluence)));
+        }
+        return CompletableFutureUtils.unify(results);
+    }
+
+    static class PoiAffluenceTuple {
+
+        final PointOfInterest poi;
+        final int affluence;
+
+        PoiAffluenceTuple(PointOfInterest poi, int affluence) {
+            this.poi = poi;
+            this.affluence = affluence;
+        }
     }
 }

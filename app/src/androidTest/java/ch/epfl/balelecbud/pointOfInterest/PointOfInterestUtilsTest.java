@@ -20,6 +20,7 @@ import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -41,14 +42,14 @@ public class PointOfInterestUtilsTest {
         }
     }
 
-    private List<Location> getResList(List<MyQuery.WhereClause> clauses)
+    private List<Location> getResList(List<MyWhereClause> clauses)
             throws InterruptedException, ExecutionException {
         MyQuery query = new MyQuery(DatabaseWrapper.LOCATIONS_PATH, clauses);
         CompletableFuture<List<Location>> result = db.query(query, Location.class);
         return result.get();
     }
 
-    private void checkFilter(List<MyQuery.WhereClause> clauses, Location... expected)
+    private void checkFilter(List<MyWhereClause> clauses, Location... expected)
             throws InterruptedException, ExecutionException {
         Set<Location> res = Sets.newHashSet(getResList(clauses));
         Set<Location> expectedSet = Sets.newHashSet(expected);
@@ -57,45 +58,45 @@ public class PointOfInterestUtilsTest {
 
     @Test
     public void queryFiltersEqualsThan() throws ExecutionException, InterruptedException {
-        checkFilter(Collections.singletonList(new MyQuery.WhereClause(
-                "longitude", MyQuery.WhereClause.Operator.EQUAL, (double) 2))
+        checkFilter(Collections.singletonList(new MyWhereClause(
+                "longitude", MyWhereClause.Operator.EQUAL, (double) 2))
                 , l2, l4);
     }
 
     @Test
     public void queryFiltersLessThan() throws ExecutionException, InterruptedException {
-        checkFilter(Collections.singletonList(new MyQuery.WhereClause(
-                        "longitude", MyQuery.WhereClause.Operator.LESS_THAN, (double) 2))
+        checkFilter(Collections.singletonList(new MyWhereClause(
+                        "longitude", MyWhereClause.Operator.LESS_THAN, (double) 2))
                 , l1, l3);
     }
 
     @Test
     public void queryFiltersLessEquals() throws ExecutionException, InterruptedException {
-        checkFilter(Collections.singletonList(new MyQuery.WhereClause(
-                        "longitude", MyQuery.WhereClause.Operator.LESS_EQUAL, (double) 2))
+        checkFilter(Collections.singletonList(new MyWhereClause(
+                        "longitude", MyWhereClause.Operator.LESS_EQUAL, (double) 2))
                 , l1, l2, l3, l4);
     }
 
     @Test
     public void queryFiltersGreaterThan() throws ExecutionException, InterruptedException {
-        checkFilter(Collections.singletonList(new MyQuery.WhereClause(
-                        "longitude", MyQuery.WhereClause.Operator.GREATER_THAN, (double) 1))
+        checkFilter(Collections.singletonList(new MyWhereClause(
+                        "longitude", MyWhereClause.Operator.GREATER_THAN, (double) 1))
                 , l2, l4);
     }
 
     @Test
     public void queryFiltersGreaterEquals() throws ExecutionException, InterruptedException {
-        checkFilter(Collections.singletonList(new MyQuery.WhereClause(
-                        "longitude", MyQuery.WhereClause.Operator.GREATER_EQUAL, (double) 1))
+        checkFilter(Collections.singletonList(new MyWhereClause(
+                        "longitude", MyWhereClause.Operator.GREATER_EQUAL, (double) 1))
                 , l1, l2, l3, l4);
     }
 
     @Test
     public void queryCompoundsMultipleClauses() throws ExecutionException, InterruptedException {
-        MyQuery.WhereClause clause1 =
-                new MyQuery.WhereClause("longitude", MyQuery.WhereClause.Operator.GREATER_THAN, (double) 1);
-        MyQuery.WhereClause clause2 =
-                new MyQuery.WhereClause("latitude", MyQuery.WhereClause.Operator.GREATER_THAN, (double) 1);
+        MyWhereClause clause1 =
+                new MyWhereClause("longitude", MyWhereClause.Operator.GREATER_THAN, (double) 1);
+        MyWhereClause clause2 =
+                new MyWhereClause("latitude", MyWhereClause.Operator.GREATER_THAN, (double) 1);
         checkFilter(Arrays.asList(clause1, clause2), l4);
     }
 
