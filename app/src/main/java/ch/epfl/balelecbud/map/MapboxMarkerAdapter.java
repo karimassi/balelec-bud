@@ -1,13 +1,15 @@
 package ch.epfl.balelecbud.map;
 
-import com.google.android.gms.maps.model.Marker;
+
+import com.mapbox.mapboxsdk.annotations.Marker;
 
 import ch.epfl.balelecbud.models.Location;
 
-public class GoogleMarkerAdapter implements MyMarker {
+public class MapboxMarkerAdapter implements MyMarker {
+
     private Marker marker;
 
-    public GoogleMarkerAdapter(Marker marker) {
+    public MapboxMarkerAdapter(Marker marker) {
         this.marker = marker;
     }
 

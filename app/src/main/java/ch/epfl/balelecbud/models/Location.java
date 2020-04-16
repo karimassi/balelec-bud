@@ -6,8 +6,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Objects;
 
@@ -48,16 +48,12 @@ public class Location implements Parcelable {
         geoFireLocation = in.readDouble();
     }
 
-    public Location(android.location.Location location) {
-        this(location.getLatitude(), location.getLongitude());
-    }
-
     public Location(GeoPoint geoPoint) {
         this(geoPoint.getLatitude(), geoPoint.getLongitude());
     }
 
     public Location(LatLng latLng) {
-        this(latLng.latitude, latLng.longitude);
+        this(latLng.getLatitude(), latLng.getLongitude());
     }
 
     public double getLongitude() {
