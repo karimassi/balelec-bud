@@ -126,7 +126,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         for (Object elem : listToQuery) {
             list.add(tClass.cast(elem));
         }
-        for (MyQuery.WhereClause clause : query.getWhereClauses()) {
+        for (MyWhereClause clause : query.getWhereClauses()) {
             list = filterList(list, clause);
         }
         return CompletableFuture.completedFuture(list);
@@ -145,7 +145,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-    private <A> List<A> filterList(List<A> list, MyQuery.WhereClause clause) {
+    private <A> List<A> filterList(List<A> list, MyWhereClause clause) {
         List<A> newList = new LinkedList<>();
         if (list.isEmpty())
             return list;
@@ -164,9 +164,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return newList;
     }
 
-    private <A> void filterELem(MyQuery.WhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
+    private <A> void filterELem(MyWhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
         try {
-            if (op == MyQuery.WhereClause.Operator.EQUAL) {
+            if (op == MyWhereClause.Operator.EQUAL) {
                 if (Objects.equals(field.get(elem), rightOperand)) {
                     newList.add(elem);
                 }
@@ -185,7 +185,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     @NonNull
-    private Field getField(MyQuery.WhereClause clause, Class clazz) {
+    private Field getField(MyWhereClause clause, Class clazz) {
         Field field;
         try {
             field = clazz.getDeclaredField(clause.getLeftOperand());
@@ -197,7 +197,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return field;
     }
 
-    private boolean evaluateResult(MyQuery.WhereClause.Operator op, int resultOfComparison) {
+    private boolean evaluateResult(MyWhereClause.Operator op, int resultOfComparison) {
         switch (op) {
             case LESS_THAN:
                 return resultOfComparison < 0;
@@ -231,9 +231,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-    private List<Map<String, Boolean>> filterMapValues(Map<String, Map<String, Boolean>> mapToFilter, List<MyQuery.WhereClause> clauses) {
+    private List<Map<String, Boolean>> filterMapValues(Map<String, Map<String, Boolean>> mapToFilter, List<MyWhereClause> clauses) {
         List<Map<String, Boolean>> values = new LinkedList<>(mapToFilter.values());
-        for (MyQuery.WhereClause clause : clauses) {
+        for (MyWhereClause clause : clauses) {
             values = values.stream().filter(x -> x.getOrDefault(clause.getLeftOperand(), false)).collect(Collectors.toList());
         }
         return values;

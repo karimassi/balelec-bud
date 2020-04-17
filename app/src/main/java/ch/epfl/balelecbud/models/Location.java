@@ -27,33 +27,25 @@ public class Location implements Parcelable {
     public static Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
     private Double longitude;
     private Double latitude;
+    private Double geoFireLocation;
 
     public Location() {
     }
 
-    public Location(double latitude, double longitude) {
+    public Location(double latitude, double longitude, double geoFireLocation) {
         this.longitude = longitude;
         this.latitude = latitude;
+        this.geoFireLocation = geoFireLocation;
+    }
+
+    public Location(double latitude, double longitude) {
+        this(latitude, longitude, (latitude + 90) * 180 + longitude);
     }
 
     protected Location(Parcel in) {
         latitude = in.readDouble();
         longitude = in.readDouble();
-    }
-
-    public Location(android.location.Location location) {
-        this.longitude = location.getLongitude();
-        this.latitude = location.getLatitude();
-    }
-
-    public Location(GeoPoint geoPoint) {
-        this.latitude = geoPoint.getLatitude();
-        this.longitude = geoPoint.getLongitude();
-    }
-
-    public Location(LatLng latLng) {
-        this.latitude = latLng.getLatitude();
-        this.longitude = latLng.getLongitude();
+        geoFireLocation = in.readDouble();
     }
 
     public double getLongitude() {
@@ -62,6 +54,10 @@ public class Location implements Parcelable {
 
     public double getLatitude() {
         return latitude;
+    }
+
+    public double getGeoFireLocation() {
+        return geoFireLocation;
     }
 
     public LatLng toLatLng() {
@@ -98,6 +94,7 @@ public class Location implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeDouble(geoFireLocation);
     }
 
 }
