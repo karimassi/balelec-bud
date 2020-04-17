@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.annotation.VisibleForTesting;
 
+
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;

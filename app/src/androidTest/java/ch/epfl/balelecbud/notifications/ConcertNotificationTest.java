@@ -108,9 +108,6 @@ public class ConcertNotificationTest {
 
     }
 
-    //TODO: Ignores
-
-    @Ignore
     @Test
     public void subscribeToAConcertScheduleANotification() throws Throwable {
         checkSwitchAfter(() -> {
@@ -121,7 +118,6 @@ public class ConcertNotificationTest {
         }, s, false);
     }
 
-    @Ignore
     @Test
     public void subscribeToAConcertKeepItSubscribed() throws Throwable {
         Calendar cal = Calendar.getInstance();
@@ -139,7 +135,6 @@ public class ConcertNotificationTest {
         onView(getItemInSchedule(0, 3)).perform(click());
     }
 
-    @Ignore
     @Test
     public void unsubscribeToAConcertCancelNotification() throws Throwable {
         String expectedTitle = getApplicationContext().getString(R.string.concert_soon_notification_title);

@@ -1,17 +1,11 @@
 package ch.epfl.balelecbud.friendship;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -22,10 +16,7 @@ import java.util.List;
 
 import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.cloudMessaging.CloudMessagingService;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
-import ch.epfl.balelecbud.schedule.models.Slot;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
@@ -59,30 +50,6 @@ public class SocialActivity extends BasicActivity {
             AddFriendFragment dialog = AddFriendFragment.newInstance(getAppAuthenticator().getCurrentUser());
             dialog.show(getSupportFragmentManager(), getString(R.string.add_friend_title));
         });
-
-        //TODO: all modifs
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Bundle bundle = intent.getExtras();
-                String title = (String) bundle.get("title");
-
-                new AlertDialog.Builder(context).setMessage(title).create().show();
-            }
-        };
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver,
-                new IntentFilter(CloudMessagingService.SEND_NOTIFICATION_ACTION));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     private void setupFragmentAdapter() {

@@ -75,9 +75,6 @@ public class ScheduleActivityTest extends BasicActivityTest {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
     }
 
-    //TODO: Ignores
-
-    @Ignore
     @Test
     public void testItemModification() throws Throwable {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));

@@ -9,14 +9,15 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import ch.epfl.balelecbud.MainActivity;
 import ch.epfl.balelecbud.WelcomeActivity;
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class CloudMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "CloudMessaging.CloudMessagingService";
-    public static final String SEND_MESSAGE_ACTION = "SEND_MESSAGE_ACTION";
+    private static final String TAG = CloudMessagingService.class.getSimpleName();
     public static final String SEND_NOTIFICATION_ACTION = "SEND_NOTIFICATION_ACTION";
 
     @Override
@@ -24,48 +25,46 @@ public class CloudMessagingService extends FirebaseMessagingService {
         super.onNewToken(s);
         Log.d(TAG, "The token refreshed: " + s);
 
-        FirebaseAuthenticator.getInstance().getCurrentUser().setToken(s);
+        String currentUid = getAppAuthenticator().getCurrentUid();
+
+        getAppDatabaseWrapper().getCustomDocument(DatabaseWrapper.TOKENS_PATH,
+                    currentUid, String.class).whenComplete((t, throwable) -> {
+                        if(t!= null) {
+                            getAppDatabaseWrapper()
+                                    .deleteDocumentWithID(DatabaseWrapper.TOKENS_PATH, currentUid);
+                        }
+        });
+
+        getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.TOKENS_PATH, currentUid, s);
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        //TODO: token to uid
-        String senderUid = remoteMessage.getFrom();
+        String title = "";
+        String body = "";
+        String type = "";
 
         if(remoteMessage.getData().size() > 0) {
-            //TODO: set message type + get => idea: do a class w/ fun that do the notif by type + var
-            String messageReceived = remoteMessage.getData().get("message");
-
-            Log.d(TAG, "Received message: " + messageReceived);
-
-            passMessageToActivity(messageReceived, senderUid);
+            Log.d(TAG, "Received Message");
+            title = remoteMessage.getData().get(Message.DATA_KEY_TITLE);
+            body = remoteMessage.getData().get(Message.DATA_KEY_BODY);
+            type = remoteMessage.getData().get(Message.DATA_KEY_TYPE);
         }
         else if(remoteMessage.getNotification() != null) {
-            String title = remoteMessage.getNotification().getTitle();
-            String body = remoteMessage.getNotification().getBody();
-
-            Log.d(TAG, "Received notification: " + title);
-
-            passNotificationToActivity(title, body, senderUid);
+            Log.d(TAG, "Received Notification");
+            title = remoteMessage.getNotification().getTitle();
+            body = remoteMessage.getNotification().getBody();
         }
+        passNotificationToActivity(title, body, type);
     }
 
-    private void passMessageToActivity(String message, String uid) {
+    private void passNotificationToActivity(String title, String body, String type) {
         Intent intent = new Intent(this, WelcomeActivity.class);
-        intent.putExtra("message", message)
-                .putExtra("from", uid)
-                .setAction(SEND_MESSAGE_ACTION);
-
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    private void passNotificationToActivity(String title, String body, String uid) {
-        Intent intent = new Intent(this, WelcomeActivity.class);
-        intent.putExtra("title", title)
-                .putExtra("body", body)
-                .putExtra("from", uid)
+        intent.putExtra(Message.DATA_KEY_TITLE, title)
+                .putExtra(Message.DATA_KEY_BODY, body)
+                .putExtra(Message.DATA_KEY_TYPE, type)
                 .setAction(SEND_NOTIFICATION_ACTION);
 
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
