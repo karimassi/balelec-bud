@@ -29,11 +29,11 @@ public class EmergencyNumberActivityTest extends BasicActivityTest {
 
     final EmergencyNumber num1 = new EmergencyNumber("To much alcool","Seek assistance");
     final EmergencyNumber num2 = new EmergencyNumber("Lost","Check your location on the map");
-    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
+    //private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Before
     public void setup(){
-        mock.resetDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH);
+       // mock.resetDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH);
     }
 
     @Test
