@@ -1,26 +1,19 @@
 package ch.epfl.balelecbud;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.balelecbud.emergency.models.EmergencyNumbers;
+import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
 
 public class EmergencyNumbersActivity extends BasicActivity {
     public static final int PERMISSION_TO_CALL_CODE = 991;
@@ -66,7 +59,7 @@ public class EmergencyNumbersActivity extends BasicActivity {
                 return;
             }
             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                EmergencyNumbers number = documentSnapshot.toObject(EmergencyNumbers.class);
+                EmergencyNumber number = documentSnapshot.toObject(EmergencyNumber.class);
                 repertoryMap.put(number.getName(), number.getNumber());
             }
 
