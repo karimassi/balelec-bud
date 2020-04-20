@@ -33,6 +33,7 @@ public class EmergencyActivity extends BasicActivity {
         setContentView(R.layout.activity_emergency);
         this.configureDrawerLayout(R.id.emergency_activity_drawer_layout);
         this.configureNavigationView(R.id.emergency_activity_nav_view);
+        this.configureToolBar(R.id.emergency_activity_toolbar);
         mShowEmergencyDialog = findViewById(R.id.buttonAskForHelp);
         InitiateViewWithValues();
     }
