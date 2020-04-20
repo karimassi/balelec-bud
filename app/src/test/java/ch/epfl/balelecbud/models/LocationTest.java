@@ -1,7 +1,7 @@
 package ch.epfl.balelecbud.models;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,11 +25,6 @@ public class LocationTest {
     @Test
     public void testLocationFromGeoPoint() {
         assertThat(new Location(geoPoint), is(location));
-    }
-
-    @Test
-    public void testToGeoPoint() {
-        assertThat(location.toGeoPoint(), is(geoPoint));
     }
 
     @Test
@@ -63,6 +58,10 @@ public class LocationTest {
         Assert.assertNotEquals(location, allDifferent);
     }
 
+    @Test
+    public void testToLatLng() {
+        assertThat(location.toLatLng(), is(latLng));
+    }
 
     @Test
     public void testEqualsTwoDifferentObjects() {

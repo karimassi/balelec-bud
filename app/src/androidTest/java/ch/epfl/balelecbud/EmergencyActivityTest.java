@@ -92,5 +92,6 @@ public class EmergencyActivityTest extends BasicActivityTest {
 
     @Override
     protected void setIds() {
+        setIds(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
     }
 }

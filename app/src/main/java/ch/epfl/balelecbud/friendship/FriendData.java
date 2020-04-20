@@ -16,7 +16,7 @@ public class FriendData extends RecyclerViewData<User, FriendViewHolder> {
     @Override
     public void reload() {
         FriendshipUtils.getFriendsUids(currentUser)
-                .thenCompose( strings -> CompletableFutureUtils.unify(FriendshipUtils.getFriends(strings)))
+                .thenCompose(strings -> CompletableFutureUtils.unify(FriendshipUtils.getUsersFromUids(strings)))
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 

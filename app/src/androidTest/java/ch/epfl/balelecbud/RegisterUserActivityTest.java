@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.util.database.DatabaseListener;
@@ -60,17 +61,17 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     @Rule
     public final ActivityTestRule<RegisterUserActivity> mActivityRule =
             new ActivityTestRule<RegisterUserActivity>(RegisterUserActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            MockAuthenticator.getInstance().signOut();
-            Intents.init();
-        }
+                @Override
+                protected void beforeActivityLaunched() {
+                    MockAuthenticator.getInstance().signOut();
+                    Intents.init();
+                }
 
-        @Override
-        protected void afterActivityFinished() {
-            Intents.release();
-        }
-    };
+                @Override
+                protected void afterActivityFinished() {
+                    Intents.release();
+                }
+            };
 
     @Before
     public void setUp() throws Throwable {
@@ -141,13 +142,26 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     public void testCanRegisterFailDB() {
         BalelecbudApplication.setAppDatabaseWrapper(new DatabaseWrapper() {
             @Override
-            public void unregisterListener(DatabaseListener listener) { }
+            public void unregisterListener(DatabaseListener listener) {
+            }
 
             @Override
-            public void listen(String collectionName, DatabaseListener listener) { }
+            public void listen(String collectionName, DatabaseListener listener) {
+            }
+
+            @Override
+            public void unregisterDocumentListener(String collectionName, String documentID) { }
+
+            @Override
+            public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) { }
 
             @Override
             public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
+                return null;
+            }
+
+            @Override
+            public CompletableFuture<List<String>> queryIds(MyQuery query) {
                 return null;
             }
 
@@ -170,10 +184,12 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             }
 
             @Override
-            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) { }
+            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
+            }
 
             @Override
-            public <T> void storeDocument(String collectionName, T document) { }
+            public <T> void storeDocument(String collectionName, T document) {
+            }
 
             @Override
             public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
@@ -183,7 +199,8 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             }
 
             @Override
-            public void deleteDocumentWithID(String collectionName, String documentID) { }
+            public void deleteDocumentWithID(String collectionName, String documentID) {
+            }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
         intended(hasComponent(RegisterUserActivity.class.getName()));

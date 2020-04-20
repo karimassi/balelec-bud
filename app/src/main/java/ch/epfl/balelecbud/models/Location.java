@@ -6,19 +6,30 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Objects;
 
 public class Location implements Parcelable {
 
+    public static final Creator<Location> CREATOR = new Creator<Location>() {
+        @Override
+        public Location createFromParcel(Parcel in) {
+            return new Location(in);
+        }
+
+        @Override
+        public Location[] newArray(int size) {
+            return new Location[size];
+        }
+    };
+    public static Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
     private Double longitude;
     private Double latitude;
 
-    public static Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
-
-    public Location() { }
+    public Location() {
+    }
 
     public Location(double latitude, double longitude) {
         this.longitude = longitude;
@@ -41,8 +52,8 @@ public class Location implements Parcelable {
     }
 
     public Location(LatLng latLng) {
-        this.latitude = latLng.latitude;
-        this.longitude = latLng.longitude;
+        this.latitude = latLng.getLatitude();
+        this.longitude = latLng.getLongitude();
     }
 
     public double getLongitude() {
@@ -53,8 +64,8 @@ public class Location implements Parcelable {
         return latitude;
     }
 
-    public GeoPoint toGeoPoint() {
-        return new GeoPoint(latitude, longitude);
+    public LatLng toLatLng() {
+        return new LatLng(latitude, longitude);
     }
 
     @Override
@@ -78,23 +89,10 @@ public class Location implements Parcelable {
         return "Location(lat = " + latitude.toString() + ", long = " + longitude.toString() + ")";
     }
 
-    public static final Creator<Location> CREATOR = new Creator<Location>() {
-        @Override
-        public Location createFromParcel(Parcel in) {
-            return new Location(in);
-        }
-
-        @Override
-        public Location[] newArray(int size) {
-            return new Location[size];
-        }
-    };
-
     @Override
     public int describeContents() {
         return 0;
     }
-
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

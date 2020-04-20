@@ -17,13 +17,13 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 public class FriendshipUtils {
 
     public static void addFriend(User friend) {
-        Map<String,Boolean> toStore = new HashMap<>();
+        Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(getAppAuthenticator().getCurrentUser().getUid(), true);
         getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, friend.getUid(), toStore);
     }
 
     public static void removeFriend(User friend) {
-        Map<String,Object> updates = new HashMap<>();
+        Map<String, Object> updates = new HashMap<>();
         updates.put(friend.getUid(), FieldValue.delete());
         getAppDatabaseWrapper().updateDocument(DatabaseWrapper.FRIENDSHIPS_PATH,
                 getAppAuthenticator().getCurrentUser().getUid(), updates);
@@ -34,7 +34,7 @@ public class FriendshipUtils {
     }
 
     public static void acceptRequest(User sender) {
-        Map<String,Boolean> toStore = new HashMap<>();
+        Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(sender.getUid(), true);
         getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH,
                 getAppAuthenticator().getCurrentUser().getUid(), toStore);
@@ -43,17 +43,17 @@ public class FriendshipUtils {
         toStore.put(getAppAuthenticator().getCurrentUser().getUid(), true);
         getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, sender.getUid(), toStore);
 
-        deleteRequest(sender);
+        deleteRequest(sender, getAppAuthenticator().getCurrentUser());
     }
 
-    public static void deleteRequest(User sender) {
-        Map<String,Object> updates = new HashMap<>();
+    public static void deleteRequest(User sender, User receiver) {
+        Map<String, Object> updates = new HashMap<>();
         updates.put(sender.getUid(), FieldValue.delete());
         getAppDatabaseWrapper().updateDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH,
-                getAppAuthenticator().getCurrentUser().getUid(), updates);
+                receiver.getUid(), updates);
     }
 
-    public static List<CompletableFuture<User>> getFriends(List<String> uidList) {
+    public static List<CompletableFuture<User>> getUsersFromUids(List<String> uidList) {
         final List<CompletableFuture<User>> cfs = new ArrayList<>();
         for (String uid : uidList) {
             cfs.add(FriendshipUtils.getUserFromUid(uid));

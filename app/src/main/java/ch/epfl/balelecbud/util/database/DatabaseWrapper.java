@@ -3,6 +3,8 @@ package ch.epfl.balelecbud.util.database;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.Map;
+import java.util.function.Consumer;
+
 public interface DatabaseWrapper {
 
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
@@ -19,8 +21,13 @@ public interface DatabaseWrapper {
 
     void listen(String collectionName, DatabaseListener listener);
 
+    void unregisterDocumentListener(String collectionName, String documentID);
+
+    <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);
     
     <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
+
+    CompletableFuture<List<String>> queryIds(MyQuery query);
     
     <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type);
 

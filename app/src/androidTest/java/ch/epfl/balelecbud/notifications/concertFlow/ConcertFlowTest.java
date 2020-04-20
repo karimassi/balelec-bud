@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +22,7 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
 
@@ -33,18 +33,16 @@ public class ConcertFlowTest {
 
     @Before
     public void setup() {
-        this.flow = new ConcertFlow();
         this.db = Room.inMemoryDatabaseBuilder(
-                ApplicationProvider.getApplicationContext(),
+                getApplicationContext(),
                 ConcertOfInterestDatabase.class
         ).build();
         ConcertFlow.setMockDb(db);
         setDummyNotificationScheduler();
-        flow.onCreate();
     }
 
     private void setDummyNotificationScheduler() {
-        this.flow.setNotificationScheduler(new NotificationSchedulerInterface() {
+        ConcertFlow.setNotificationScheduler(new NotificationSchedulerInterface() {
             @Override
             public void scheduleNotification(Context context, Slot slot) { }
 
@@ -55,15 +53,15 @@ public class ConcertFlowTest {
 
     @After
     public void tearDown() {
-        flow.onDestroy();
         Assert.assertTrue(this.db.isOpen());
+        this.db.clearAllTables();
         this.db.close();
     }
 
     @Test
     public void notificationSchedulerIsCalledWhenNewConcertOfInterestAdded() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        this.flow.setNotificationScheduler(new NotificationSchedulerInterface() {
+        ConcertFlow.setNotificationScheduler(new NotificationSchedulerInterface() {
             @Override
             public void scheduleNotification(Context context, Slot slot) {
                 sync.assertEquals(slot1, slot);
@@ -75,7 +73,7 @@ public class ConcertFlowTest {
                 sync.fail();
             }
         });
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot1));
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
@@ -84,10 +82,10 @@ public class ConcertFlowTest {
     @Test
     public void notificationSchedulerIsCalledWhenMultipleNewConcertOfInterestAdded() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        flow.setNotificationScheduler(getScheduler(sync, s -> sync.fail()));
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        ConcertFlow.setNotificationScheduler(getScheduler(sync, s -> sync.fail()));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot1));
         sync.waitCall(1);
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot2));
         sync.waitCall(2);
         sync.assertCalled(2);
         sync.assertNoFailedTests();
@@ -96,15 +94,15 @@ public class ConcertFlowTest {
     @Test
     public void notificationsUnscheduledWhenConcertRemoved() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        flow.setNotificationScheduler(getScheduler(sync, slot -> {
+        ConcertFlow.setNotificationScheduler(getScheduler(sync, slot -> {
             sync.assertEquals(slot1, slot);
             sync.call();
         }));
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot1));
         sync.waitCall(1);
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot2));
         sync.waitCall(2);
-        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        getApplicationContext().startService(FlowUtil.packCancelIntentWithSlot(getApplicationContext(), slot1));
         sync.waitCall(3);
         sync.assertCalled(3);
         sync.assertNoFailedTests();
@@ -134,22 +132,22 @@ public class ConcertFlowTest {
 
     @Test
     public void addedConcertsAreInTheList() throws InterruptedException {
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot1));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot2));
         launchAndCheck(2, true, true);
     }
 
     @Test
     public void removedConcertAreNotInTheList() throws InterruptedException {
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
-        flow.onHandleIntent(FlowUtil.packSubscribeIntentWithSlot(ApplicationProvider.getApplicationContext(), slot2));
-        flow.onHandleIntent(FlowUtil.packCancelIntentWithSlot(ApplicationProvider.getApplicationContext(), slot1));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot1));
+        getApplicationContext().startService(FlowUtil.packSubscribeIntentWithSlot(getApplicationContext(), slot2));
+        getApplicationContext().startService(FlowUtil.packCancelIntentWithSlot(getApplicationContext(), slot1));
         launchAndCheck( 1, false, true);
     }
 
     private void launchAndCheck(int size, boolean containsSlot1, boolean containsSlot2) throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        flow.setLauncher(intent -> {
+        ConcertFlow.setLauncher(intent -> {
             List<Slot> slots = FlowUtil.unpackCallback(intent);
             sync.assertNotNull(slots);
             sync.assertEquals(size, slots.size());
@@ -157,10 +155,10 @@ public class ConcertFlowTest {
             sync.assertEquals(containsSlot2, slots.contains(slot2));
             sync.call();
         });
-        Intent intent = new Intent();
+        Intent intent = new Intent(getApplicationContext(), ConcertFlow.class);
         intent.setAction(FlowUtil.GET_ALL_CONCERT);
         intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent());
-        flow.onHandleIntent(intent);
+        getApplicationContext().startService(intent);
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();

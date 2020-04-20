@@ -40,5 +40,4 @@ public class FirebaseAuthenticator implements Authenticator {
     public static Authenticator getInstance() {
         return instance;
     }
-
 }

@@ -22,7 +22,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 
-public class EmergencyActivity extends AppCompatActivity {
+public class EmergencyActivity extends BasicActivity {
 
     private Button mShowEmergencyDialog;
 
@@ -31,6 +31,8 @@ public class EmergencyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency);
+        this.configureDrawerLayout(R.id.emergency_activity_drawer_layout);
+        this.configureNavigationView(R.id.emergency_activity_nav_view);
         mShowEmergencyDialog = findViewById(R.id.buttonAskForHelp);
         InitiateViewWithValues();
     }

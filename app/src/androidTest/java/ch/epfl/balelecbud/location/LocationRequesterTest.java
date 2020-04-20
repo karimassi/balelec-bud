@@ -4,11 +4,8 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.view.Gravity;
 import android.widget.Switch;
 
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
@@ -24,21 +21,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.MapViewActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchClickable;
 
-@SdkSuppress(minSdkVersion = Build.VERSION_CODES.N_MR1, maxSdkVersion = (Build.VERSION_CODES.Q - 1))
+@SdkSuppress(maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
 public class LocationRequesterTest {
     private static final long TIMEOUT = 1000;
@@ -175,40 +168,5 @@ public class LocationRequesterTest {
                 new String[] { }, new int[] { });
 
         onView(withId(R.id.locationSwitch)).check(switchClickable(before));
-    }
-
-    @Test
-    public void testSwitchOffDisablesLocationInMap() throws InterruptedException {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        LocationUtil.setLocationClient(new LocationClient() {
-            @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                sync.fail();
-            }
-
-            @Override
-            public void removeLocationUpdates(PendingIntent intent) {
-                sync.fail();
-            }
-        });
-        openMapActivity();
-        Assert.assertFalse(MapViewActivity.getLocationPermission());
-        sync.assertCalled(0);
-        sync.assertNoFailedTests();
-    }
-
-    private void openDrawer() {
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-    }
-
-    private void clickItem(int itemId) {
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
-    }
-
-    private void openMapActivity() throws InterruptedException {
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_map);
-        Thread.sleep(1000);
     }
 }

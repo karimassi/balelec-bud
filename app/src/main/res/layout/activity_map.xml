@@ -3,13 +3,14 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
+xmlns:mapbox="http://schemas.android.com/apk/res-auto"
 android:id="@+id/map_activity_drawer_layout"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:fitsSystemWindows="true"
 android:background="@color/blek_blue"
 tools:openDrawer="start"
-tools:context="ch.epfl.balelecbud.MapViewActivity">
+tools:context="ch.epfl.balelecbud.map.MapViewActivity">
 
 <!-- 1 | MainActivity RootView -->
 <LinearLayout
@@ -24,27 +25,25 @@ tools:context="ch.epfl.balelecbud.MapViewActivity">
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/blek_blue"
-        app:theme="@style/ToolBarStyle" />
+        app:theme="@style/ToolBarStyle"
+        app:title="@string/map_view" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:id="@+id/map"
+        <com.mapbox.mapboxsdk.maps.MapView
+            android:id="@+id/map_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            map:cameraTargetLat="@string/camera_target_lat"
-            map:cameraTargetLng="@string/camera_target_lng"
-            map:cameraZoom="@string/camera_zoom"
-            map:mapType="normal"
-            map:uiRotateGestures="@bool/ui_rotate_gestures"
-            map:uiScrollGestures="@bool/ui_scroll_gestures"
-            map:uiTiltGestures="@bool/ui_tilt_gestures"
-            map:uiZoomControls="@bool/ui_zoom_controls"
-            map:uiZoomGestures="@bool/ui_zoom_gestures" />
+            mapbox:layout_constraintBottom_toBottomOf="parent"
+            mapbox:layout_constraintEnd_toEndOf="parent"
+            mapbox:layout_constraintStart_toStartOf="parent"
+            mapbox:layout_constraintTop_toTopOf="parent"
+            mapbox:mapbox_cameraZoom="12">
+        </com.mapbox.mapboxsdk.maps.MapView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- FrameLayout for our fragments -->
 </LinearLayout>

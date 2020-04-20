@@ -3,10 +3,7 @@ package ch.epfl.balelecbud.notifications;
 import android.app.PendingIntent;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
-import android.widget.Switch;
 
-import androidx.annotation.InspectableProperty;
 import androidx.room.Room;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
@@ -20,11 +17,8 @@ import androidx.test.uiautomator.Until;
 import com.google.android.gms.location.LocationRequest;
 import com.google.firebase.Timestamp;
 
-import org.hamcrest.Matcher;
-import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,21 +44,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
-import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class AllConcertNotificationWorksFine {
+public class ConcertNotificationTest {
 
-    private ConcertOfInterestDatabase db;
-    private UiDevice device;
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
-    private final Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3",
-            Timestamp.now(), Timestamp.now());
-
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
@@ -83,6 +71,10 @@ public class AllConcertNotificationWorksFine {
                     BalelecbudApplication.setAppDatabaseWrapper(mock);
                 }
             };
+    private final Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3",
+            Timestamp.now(), Timestamp.now());
+    private ConcertOfInterestDatabase db;
+    private UiDevice device;
 
     @Before
     public void setup() {
@@ -91,6 +83,8 @@ public class AllConcertNotificationWorksFine {
             device.findObject(By.text("ALLOW")).click();
             device.waitForWindowUpdate(null, 1_000);
         }
+        // quit the notifications center if it happens to be open
+        clearNotifications();
         this.db = Room.inMemoryDatabaseBuilder(
                 getApplicationContext(),
                 ConcertOfInterestDatabase.class
@@ -108,31 +102,36 @@ public class AllConcertNotificationWorksFine {
     private void clearNotifications() {
         device.openNotification();
         UiObject2 button = device.findObject(By.text("CLEAR ALL"));
-        if (button != null) {
-            button.click();
-        } else {
-            device.pressBack();
-        }
+        if (button != null) button.click();
+        device.pressBack();
+
     }
 
     @Test
     public void subscribeToAConcertScheduleANotification() throws Throwable {
-        checkSwitchAfter(() ->{
+        checkSwitchAfter(() -> {
             checkNotification();
             device.waitForWindowUpdate(null, 10000);
             openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
             Log.v("mySuperTag", "executed subscribeToAConcertScheduleANotification");
-        } , s, false);
+        }, s, false);
     }
 
     @Test
     public void subscribeToAConcertKeepItSubscribed() throws Throwable {
-
-        checkSwitchAfter(() ->{
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        // schedule the notification to go off in 5 minutes,
+        // which leaves plenty of time for the test to finish and cancel it
+        cal.add(Calendar.MINUTE, 20);
+        Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
+                new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
+        checkSwitchAfter(() -> {
             openInfoActivityFrom(R.id.schedule_activity_drawer_layout, R.id.schedule_activity_nav_view);
             openScheduleActivityFrom(R.id.festival_info_activity_drawer_layout, R.id.festival_info_activity_nav_view);
             Log.v("mySuperTag", "executed subscribeToAConcertKeepItSubscribed");
-        }, s, true);
+        }, s1, true);
+        onView(getItemInSchedule(0, 3)).perform(click());
     }
 
     @Test
@@ -170,13 +169,10 @@ public class AllConcertNotificationWorksFine {
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
         mock.addItem(s);
-        Thread.sleep(1000);
         onView(getItemInSchedule(0, 3)).perform(click());
         runnable.run();
-        device.waitForIdle();
 
         mock.addItem(s);
-        Thread.sleep(1000);
         onView(getItemInSchedule(0, 3)).check(switchChecked(switchStateAfter));
     }
 
