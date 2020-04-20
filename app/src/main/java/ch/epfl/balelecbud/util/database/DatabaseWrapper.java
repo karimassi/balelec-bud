@@ -16,11 +16,8 @@ public interface DatabaseWrapper {
     String LOCATIONS_PATH = "locations";
     String FRIENDSHIPS_PATH = "friendships";
     String FRIEND_REQUESTS_PATH = "friendRequests";
-<<<<<<< HEAD
     String EMERGENCY_NUMBER_PATH = "emergencyNumbers";
-=======
     String EMERGENCIES_PATH = "emergencies";
->>>>>>> d350f63230cea32b55eba05c01a8e62640eb95b4
 
     void unregisterListener(DatabaseListener listener);
 
