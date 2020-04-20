@@ -28,6 +28,6 @@ public class SocialAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;
+        return fragmentList.size();
     }
 }

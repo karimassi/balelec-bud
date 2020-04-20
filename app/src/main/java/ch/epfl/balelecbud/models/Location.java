@@ -6,43 +6,46 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Objects;
 
 public class Location implements Parcelable {
 
+    public static final Creator<Location> CREATOR = new Creator<Location>() {
+        @Override
+        public Location createFromParcel(Parcel in) {
+            return new Location(in);
+        }
+
+        @Override
+        public Location[] newArray(int size) {
+            return new Location[size];
+        }
+    };
+    public static Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
     private Double longitude;
     private Double latitude;
+    private Double geoFireLocation;
 
-    public static Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
+    public Location() {
+    }
 
-    public Location() { }
-
-    public Location(double latitude, double longitude) {
+    public Location(double latitude, double longitude, double geoFireLocation) {
         this.longitude = longitude;
         this.latitude = latitude;
+        this.geoFireLocation = geoFireLocation;
+    }
+
+    public Location(double latitude, double longitude) {
+        this(latitude, longitude, (latitude + 90) * 180 + longitude);
     }
 
     protected Location(Parcel in) {
         latitude = in.readDouble();
         longitude = in.readDouble();
-    }
-
-    public Location(android.location.Location location) {
-        this.longitude = location.getLongitude();
-        this.latitude = location.getLatitude();
-    }
-
-    public Location(GeoPoint geoPoint) {
-        this.latitude = geoPoint.getLatitude();
-        this.longitude = geoPoint.getLongitude();
-    }
-
-    public Location(LatLng latLng) {
-        this.latitude = latLng.latitude;
-        this.longitude = latLng.longitude;
+        geoFireLocation = in.readDouble();
     }
 
     public double getLongitude() {
@@ -53,8 +56,12 @@ public class Location implements Parcelable {
         return latitude;
     }
 
-    public GeoPoint toGeoPoint() {
-        return new GeoPoint(latitude, longitude);
+    public double getGeoFireLocation() {
+        return geoFireLocation;
+    }
+
+    public LatLng toLatLng() {
+        return new LatLng(latitude, longitude);
     }
 
     @Override
@@ -78,28 +85,16 @@ public class Location implements Parcelable {
         return "Location(lat = " + latitude.toString() + ", long = " + longitude.toString() + ")";
     }
 
-    public static final Creator<Location> CREATOR = new Creator<Location>() {
-        @Override
-        public Location createFromParcel(Parcel in) {
-            return new Location(in);
-        }
-
-        @Override
-        public Location[] newArray(int size) {
-            return new Location[size];
-        }
-    };
-
     @Override
     public int describeContents() {
         return 0;
     }
 
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeDouble(geoFireLocation);
     }
 
 }

@@ -2,6 +2,8 @@
     <string name="app_name">BalelecBud</string>
     <string name="title_activity_authentication">Sign in</string>
 
+    <string name="mapbox_access_token">pk.eyJ1Ijoia2FyaW1hc3NpIiwiYSI6ImNrOTEzd2FqMzA3Z3EzbmxoYWdvb3Z4ZWIifQ.0S1QH5SG3ZXXC1ofSSbadQ</string>
+
     <string name="title_activity_map">MapActivity</string>
     <string name="map_view">Map View</string>
 
@@ -34,24 +36,28 @@
     <string name="emergency_solution">What to do: </string>
     <string name="social_view">Social</string>
     <string name="festival_info_view">Information</string>
-  
+
     <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it !</string>
-  
+
     <string name="transport_view">Transport</string>
     <string name="toggle_location_view">Toggle Location</string>
     <string name="schedule_view">Schedule</string>
     <string name="point_of_interest">Points of interest</string>
- 
+    <string name="navigation_drawer_open">Open Drawer</string>
+    <string name="navigation_drawer_close">Close Drawer</string>
+
     <string name="concert_soon_channel_name">Concert Soon Channel</string>
     <string name="concert_soon_notification_title">A concert is starting soon</string>
     <string name="concert_soon_channel_description">A channel to convey information about concerts starting soon</string>
 
 
-<!--  SOCIAL FEATURES  -->
+    <!--  SOCIAL FEATURES  -->
 
     <!--   TAB NAMES -->
     <string name="tab_friends">Friends</string>
-    <string name="tab_requests">Friend requests</string>
+    <string name="tab_received_requests">Received requests</string>
+    <string name="tab_sent_requests">Sent requests</string>
+
 
     <!-- DIALOG   -->
     <string name="add_friend_title">Add a friend</string>
@@ -68,6 +74,12 @@
     <string name="accept_request">Accept</string>
     <string name="reject_request">Delete</string>
     <string name="require_name">Name required!</string>
+
+    <!--  RECEIVED REQUEST ITEM  -->
+    <string name="cancel_request">Cancel</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

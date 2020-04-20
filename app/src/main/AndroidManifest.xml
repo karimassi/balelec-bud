@@ -37,7 +37,7 @@
         <activity android:name=".ScheduleActivity" />
         <activity android:name=".friendship.SocialActivity"/>
         <activity
-            android:name=".MapViewActivity"
+            android:name=".map.MapViewActivity"
             android:label="@string/title_activity_map"
             android:parentActivityName=".WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />

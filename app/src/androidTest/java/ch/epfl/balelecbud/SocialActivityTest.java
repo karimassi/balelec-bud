@@ -42,11 +42,12 @@ import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class SocialActivityTest {
+public class SocialActivityTest extends BasicActivityTest {
 
     private final User currentUser = MockDatabaseWrapper.karim;
     private final User otherUser = MockDatabaseWrapper.celine;
-    private final User newFriend = new User("test@gmail.com", "testUser", MockAuthenticator.provideUid());;
+    private final User newFriend = MockDatabaseWrapper.axel;
+    private final User requestedUser = MockDatabaseWrapper.gaspard;
 
     private final Authenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabaseWrapper mockDb = MockDatabaseWrapper.getInstance();
@@ -72,7 +73,7 @@ public class SocialActivityTest {
     }
 
     private void createFriendship(User user) {
-        Map<String,Boolean> toStore= new HashMap<>();
+        Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(user.getUid(), true);
         mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, currentUser.getUid(), toStore);
 
@@ -81,10 +82,10 @@ public class SocialActivityTest {
         mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, user.getUid(), toStore);
     }
 
-    private void createRequestFromUser(User user) {
-        Map<String,Boolean> toStore= new HashMap<>();
-        toStore.put(user.getUid(), true);
-        mockDb.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, currentUser.getUid(), toStore);
+    private void createRequest(User from, User to) {
+        Map<String, Boolean> toStore = new HashMap<>();
+        toStore.put(from.getUid(), true);
+        mockDb.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, to.getUid(), toStore);
     }
 
     private void selectTab(int position) {
@@ -96,7 +97,8 @@ public class SocialActivityTest {
     public void setup() {
         mockDb.resetFriendshipsAndRequests();
         createFriendship(otherUser);
-        createRequestFromUser(newFriend);
+        createRequest(newFriend, currentUser);
+        createRequest(currentUser, requestedUser);
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
     }
 
@@ -146,7 +148,7 @@ public class SocialActivityTest {
     }
 
     @Test
-    public void requestsShownTest() {
+    public void receivedRequestsShownTest() {
         selectTab(1);
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(1)));
         onView(new RecyclerViewMatcher(R.id.recycler_view_friend_requests).atPosition(0))
@@ -155,11 +157,20 @@ public class SocialActivityTest {
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(1)));
     }
 
+    @Test
+    public void sentRequestsShownTest() {
+        selectTab(2);
+        onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(1)));
+        onView(new RecyclerViewMatcher(R.id.recycler_view_sent_request).atPosition(0))
+                .check(matches(hasDescendant(withText(requestedUser.getDisplayName()))));
+        onView(withId(R.id.swipe_refresh_layout_sent_requests)).perform(swipeDown());
+        onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(1)));
+    }
 
     @Test
-    public void requestsAddedUpdatesListAfterRefresh() {
+    public void receivedRequestsAddedUpdatesListAfterRefresh() {
         selectTab(1);
-        createRequestFromUser(otherUser);
+        createRequest(otherUser, currentUser);
 
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(1)));
         onView(new RecyclerViewMatcher(R.id.recycler_view_friend_requests).atPosition(0))
@@ -172,17 +183,47 @@ public class SocialActivityTest {
     }
 
     @Test
-    public void requestRemovedUpdatesListAfterRefresh() {
+    public void sentRequestsAddedUpdatesListAfterRefresh() {
+        selectTab(2);
+        createRequest(currentUser, otherUser);
+
+        onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(1)));
+        onView(new RecyclerViewMatcher(R.id.recycler_view_sent_request).atPosition(0))
+                .check(matches(hasDescendant(withText(requestedUser.getDisplayName()))));
+
+        onView(withId(R.id.swipe_refresh_layout_sent_requests)).perform(swipeDown());
+
+        onView(new RecyclerViewMatcher(R.id.recycler_view_sent_request).atPosition(1))
+                .check(matches(hasDescendant(withText(otherUser.getDisplayName()))));
+    }
+
+
+    @Test
+    public void receivedRequestRemovedUpdatesListAfterRefresh() {
         selectTab(1);
-        FriendshipUtils.deleteRequest(newFriend);
+        FriendshipUtils.deleteRequest(newFriend, currentUser);
         onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));
+    }
+
+    @Test
+    public void sentRequestRemovedUpdatesListAfterRefresh() {
+        selectTab(2);
+        FriendshipUtils.deleteRequest(currentUser, requestedUser);
+        onView(withId(R.id.swipe_refresh_layout_sent_requests)).perform(swipeDown());
+        onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(0)));
     }
 
     @Test
     public void buttonDeleteRequestUpdatesList() {
         onTabClickOnChildAndSwipe(1, R.id.recycler_view_friend_requests,
                 R.id.button_request_item_delete_request, R.id.swipe_refresh_layout_friend_requests);
+    }
+
+    @Test
+    public void buttonCancelRequestUpdatesList() {
+        onTabClickOnChildAndSwipe(2, R.id.recycler_view_sent_request,
+                R.id.button_sent_request_item_cancel, R.id.swipe_refresh_layout_sent_requests);
     }
 
     @Test
@@ -246,16 +287,20 @@ public class SocialActivityTest {
         TestAsyncUtils sync = new TestAsyncUtils();
         mockDb.getDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, otherUser.getUid())
                 .whenComplete((stringObjectMap, throwable) -> {
-            if (stringObjectMap != null) {
-                sync.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
-            }
-            else {
-                sync.fail();
-            }
-            sync.call();
-        });
+                    if (stringObjectMap != null) {
+                        sync.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
+                    } else {
+                        sync.fail();
+                    }
+                    sync.call();
+                });
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
+    }
+
+    @Override
+    protected void setIds() {
+        setIds(R.id.social_activity_drawer_layout, R.id.social_activity_nav_view);
     }
 }

@@ -17,7 +17,8 @@ import ch.epfl.balelecbud.schedule.ScheduleAdapter;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
-public class ScheduleActivity extends AppCompatActivity {
+public class ScheduleActivity extends BasicActivity {
+    
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
     private ScheduleAdapter mAdapter;
 
@@ -25,17 +26,21 @@ public class ScheduleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-        Log.d(TAG, "onCreate: Creation of the activity");
+        Log.v(TAG, "onCreate: Creation of the activity");
         RecyclerView rvSchedule = findViewById(R.id.scheduleRecyclerView);
         List<Slot> slots = FlowUtil.unpackCallback(getIntent());
-        mAdapter = new ScheduleAdapter(this, slots == null ?
-                Collections.emptyList() : slots);
+        mAdapter = new ScheduleAdapter(this, slots);
         rvSchedule.setLayoutManager(new LinearLayoutManager(this));
         rvSchedule.setAdapter(mAdapter);
+
+        this.configureToolBar(R.id.schedule_activity_toolbar);
+        this.configureDrawerLayout(R.id.schedule_activity_drawer_layout);
+        this.configureNavigationView(R.id.schedule_activity_nav_view);
     }
 
     @VisibleForTesting
     public void setIntentLauncher(Consumer<Intent> intentLauncher) {
         this.mAdapter.setIntentLauncher(intentLauncher);
     }
+
 }

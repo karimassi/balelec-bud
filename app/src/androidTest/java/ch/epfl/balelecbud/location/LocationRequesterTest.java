@@ -21,7 +21,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.MapViewActivity;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
@@ -32,7 +31,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchClickable;
 
-@SdkSuppress(minSdkVersion = Build.VERSION_CODES.N_MR1, maxSdkVersion = (Build.VERSION_CODES.Q - 1))
+@SdkSuppress(maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
 public class LocationRequesterTest {
     private static final long TIMEOUT = 1000;
@@ -169,25 +168,5 @@ public class LocationRequesterTest {
                 new String[] { }, new int[] { });
 
         onView(withId(R.id.locationSwitch)).check(switchClickable(before));
-    }
-
-    @Test
-    public void testSwitchOffDisablesLocationInMap() {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        LocationUtil.setLocationClient(new LocationClient() {
-            @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                sync.fail();
-            }
-
-            @Override
-            public void removeLocationUpdates(PendingIntent intent) {
-                sync.fail();
-            }
-        });
-        onView(withId(R.id.mapButton)).perform(click());
-        Assert.assertFalse(MapViewActivity.getLocationPermission());
-        sync.assertCalled(0);
-        sync.assertNoFailedTests();
     }
 }

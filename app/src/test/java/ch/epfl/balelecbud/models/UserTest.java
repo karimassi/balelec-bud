@@ -3,6 +3,8 @@ package ch.epfl.balelecbud.models;
 import org.junit.Assert;
 import org.junit.Test;
 
+import ch.epfl.balelecbud.models.User;
+
 import static org.hamcrest.core.Is.is;
 
 public class UserTest {

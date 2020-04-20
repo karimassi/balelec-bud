@@ -67,6 +67,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             @Override
             public void notifyItemInserted(int position) {
                 ScheduleAdapter.this.notifyItemInserted(position);
+                Log.d(TAG, "notified item inserted at " + position);
             }
 
             @Override

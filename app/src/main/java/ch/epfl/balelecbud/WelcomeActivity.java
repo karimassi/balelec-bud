@@ -1,23 +1,15 @@
 package ch.epfl.balelecbud;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.location.LocationUtil.Action;
-import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
-import ch.epfl.balelecbud.util.intents.FlowUtil;
 
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
     private Switch locationSwitch;
 
@@ -26,35 +18,10 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        bindActivityToButton(FestivalInformationActivity.class, findViewById(R.id.infoButton));
-        bindActivityToButton(ScheduleActivity.class, findViewById(R.id.scheduleButton));
-        bindActivityToButton(MapViewActivity.class, findViewById(R.id.mapButton));
-        bindActivityToButton(TransportActivity.class, findViewById(R.id.transportButton));
-        bindActivityToButton(PointOfInterestActivity.class, findViewById(R.id.poiButton));
-        bindActivityToButton(SocialActivity.class, findViewById(R.id.socialButton));
-        bindScheduleActivityToButton();
-        final Button signOutButton = findViewById(R.id.buttonSignOut);
-        signOutButton.setOnClickListener(v -> signOut());
-
-
+        this.configureToolBar(R.id.root_activity_toolbar);
+        this.configureDrawerLayout(R.id.root_activity_drawer_layout);
+        this.configureNavigationView(R.id.root_activity_nav_view);
         setUpLocation();
-    }
-
-    private void bindScheduleActivityToButton() {
-        Button button = findViewById(R.id.scheduleButton);
-        button.setOnClickListener(v -> {
-            Intent intent = new Intent(WelcomeActivity.this, ConcertFlow.class);
-            intent.setAction(FlowUtil.GET_ALL_CONCERT);
-            intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(WelcomeActivity.this, ScheduleActivity.class));
-            startService(intent);
-        });
-    }
-
-    private void bindActivityToButton(final Class activityToOpen, Button button) {
-        button.setOnClickListener(v -> {
-            Intent intent = new Intent(WelcomeActivity.this, activityToOpen);
-            startActivity(intent);
-        });
     }
 
     private void setUpLocation() {
@@ -103,14 +70,5 @@ public class WelcomeActivity extends AppCompatActivity {
                         WelcomeActivity.this.locationSwitch.setChecked(true));
             }
         };
-    }
-
-    private void signOut() {
-        getAppAuthenticator().signOut();
-        if (LocationUtil.isLocationActive())
-            LocationUtil.disableLocation();
-        Intent intent = new Intent(this, LoginUserActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

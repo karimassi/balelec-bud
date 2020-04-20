@@ -6,6 +6,11 @@ import android.view.ViewGroup;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.jetbrains.annotations.NotNull;
+
+import ch.epfl.balelecbud.R;
+
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public class CustomMatcher {
     public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
@@ -25,5 +30,9 @@ public class CustomMatcher {
                 return parentMatcher.matches(view.getParent()) && group.getChildAt(childPosition).equals(view);
             }
         };
+    }
+    @NotNull
+    public static Matcher<View> getItemInSchedule(int itemPosition, int infoPosition) {
+        return nthChildOf(nthChildOf(nthChildOf(withId(R.id.scheduleRecyclerView), itemPosition), 1), infoPosition);
     }
 }
