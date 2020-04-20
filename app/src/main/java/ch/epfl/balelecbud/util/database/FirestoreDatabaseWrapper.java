@@ -101,6 +101,7 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
         return result.thenApply(DocumentSnapshot::getData);
     }
 
+
     @Override
     public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName,
                                                                   String fieldName,

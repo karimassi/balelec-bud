@@ -9,6 +9,8 @@ import com.google.firebase.Timestamp;
 import org.junit.Assert;
 
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -28,6 +31,7 @@ import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
@@ -59,6 +63,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
     private final List<EmergencyInfo> emergencyInfos = new ArrayList<>();
+    private final Map<String, Emergency> emergencies = new HashMap<>();
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
 
@@ -144,7 +149,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return emergencyInfos;
             case DatabaseWrapper.LOCATIONS_PATH:
                 return new LinkedList(locations.values());
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                return new LinkedList(emergencies.values());
             default:
+
                 throw new IllegalArgumentException("Unsupported collection name " + name);
         }
     }
@@ -299,6 +307,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return CompletableFuture.completedFuture((T) friendRequests.get(documentID));
             case DatabaseWrapper.LOCATIONS_PATH:
                 return CompletableFuture.completedFuture((T) locations.get(documentID));
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                return CompletableFuture.completedFuture((T) emergencies.get(documentID));
             default:
                 return CompletableFuture.completedFuture(null);
         }
@@ -320,19 +330,36 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return CompletableFuture.completedFuture(result);
     }
 
+
     @Override
     public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName,
                                                                   String fieldValue, Class<T> type) {
-        if (DatabaseWrapper.USERS_PATH.equals(collectionName)) {
-            for (User u : users.values()) {
-                if ("email".equals(fieldName)) {
-                    if (u.getEmail().equals(fieldValue)) {
-                        return CompletableFuture.completedFuture((T) u);
+        switch (collectionName) {
+            case DatabaseWrapper.USERS_PATH:
+                for (User u : users.values()) {
+                    if ("email".equals(fieldName)) {
+                        if (u.getEmail().equals(fieldValue)) {
+                            return CompletableFuture.completedFuture((T) u);
+                        }
                     }
                 }
-            }
+
+                break;
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                for (Emergency u : emergencies.values()) {
+
+                    if ("category".equals(fieldName)) {
+                        if (u.getCategory().toString().equals(fieldValue)) {
+                            return CompletableFuture.completedFuture((T) u);
+                        }
+                    }
+                }
+                break;
+            default:
         }
+
         return CompletableFuture.completedFuture(null);
+
     }
 
     @Override
@@ -353,6 +380,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.add((FestivalInformation) document);
+                break;
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                emergencies.put(generateRandomUid(), (Emergency) document);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported collection name " + collectionName);
@@ -408,6 +438,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.EMERGENCY_INFO_PATH:
                 emergencyInfos.remove(document);
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                emergencies.remove(document);
                 break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName" + collectionName);
@@ -453,9 +485,19 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.EMERGENCY_INFO_PATH:
                 emergencyInfos.clear();
                 break;
-            default :
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                emergencies.clear();
+                break;
+            default:
                 throw new IllegalArgumentException("unsupported collectionName");
         }
+    }
+
+    public String generateRandomUid() {
+        byte[] array = new byte[20]; // length is bounded by 7
+        new Random().nextBytes(array);
+        String generatedString = new String(array, StandardCharsets.UTF_8);
+        return generatedString;
     }
 
     public int getFriendsLocationListenerCount() {
