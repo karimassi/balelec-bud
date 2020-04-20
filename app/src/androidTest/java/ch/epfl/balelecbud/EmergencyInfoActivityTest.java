@@ -29,7 +29,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyInfoActivityTest {
+public class EmergencyInfoActivityTest extends BasicActivityTest{
 
     final EmergencyInfo info1 = new EmergencyInfo("To much alcool","Seek assistance");
     final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
@@ -111,5 +111,10 @@ public class EmergencyInfoActivityTest {
     private void testInfoInView(ViewInteraction viewInteraction, EmergencyInfo information) {
         viewInteraction.check(matches(hasDescendant(withText(information.getName()))));
         viewInteraction.check(matches(hasDescendant(withText(information.getInstruction()))));
+    }
+
+    @Override
+    protected void setIds() {
+        setIds(R.id.emergency_info_activity_drawer_layout, R.id.emergency_info_activity_nav_view);
     }
 }

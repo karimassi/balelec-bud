@@ -13,11 +13,15 @@ import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
-public class EmergencyInfoActivity extends AppCompatActivity {
+public class EmergencyInfoActivity extends BasicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_info);
+
+        configureToolBar(R.id.emergency_info_activity_toolbar);
+        configureDrawerLayout(R.id.emergency_info_activity_drawer_layout);
+        configureNavigationView(R.id.emergency_info_activity_nav_view);
 
         RecyclerView recyclerView = findViewById(R.id.emergencyInfoRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

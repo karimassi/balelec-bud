@@ -30,7 +30,7 @@ import java.util.Map;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyNumbers;
 
-public class EmergencyNumbersActivity extends AppCompatActivity {
+public class EmergencyNumbersActivity extends BasicActivity {
     public static final int PERMISSION_TO_CALL_CODE = 991;
     private boolean callPermissionGranted;
     private ListView numbersListView;
@@ -45,6 +45,11 @@ public class EmergencyNumbersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_numbers);
+        configureToolBar(R.id.emergency_numbers_activity_toolbar);
+        configureDrawerLayout(R.id.emergency_numbers_activity_drawer_layout);
+        configureNavigationView(R.id.emergency_numbers_activity_nav_view);
+
+
         numbersListView = findViewById(R.id.numbersListView);
         arrayAdapter = new ArrayAdapter(
                 this,

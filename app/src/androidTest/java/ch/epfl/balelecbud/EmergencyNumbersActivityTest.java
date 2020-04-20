@@ -16,7 +16,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyNumbersActivityTest {
+public class EmergencyNumbersActivityTest extends BasicActivityTest {
     @Rule
     public final ActivityTestRule<EmergencyNumbersActivity> mActivityRule =
             new ActivityTestRule<>(EmergencyNumbersActivity.class);
@@ -33,5 +33,10 @@ public class EmergencyNumbersActivityTest {
         onView(withId(R.id.numbersListView)).check(matches(isDisplayed()));
     }
 
+    @Override
+    protected void setIds() {
+        setIds(R.id.emergency_numbers_activity_drawer_layout, R.id.emergency_numbers_activity_nav_view);
+
+    }
 }
 
