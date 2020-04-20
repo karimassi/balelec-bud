@@ -55,49 +55,45 @@ public class EmergencyNumbersActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        emergencyNumbersRef.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w("EmergencyNumbers DB","empty collection");
-                    return;
-                }
-                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                    EmergencyNumbers number = documentSnapshot.toObject(EmergencyNumbers.class);
-                    repertoryMap.put(number.getName(), number.getNumber());
-                }
-
-                List<String> numberList = new ArrayList<String>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
-                arrayAdapter = new ArrayAdapter(EmergencyNumbersActivity.this, android.R.layout.simple_list_item_1, numberList);
-                numbersListView.setAdapter(arrayAdapter);
-
-                numbersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @SuppressLint("MissingPermission")
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position,
-                                            long id) {
-                        String entry = (String) parent.getAdapter().getItem(position);
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + repertoryMap.get(entry)));
-
-                        String permissions[] = {Manifest.permission.CALL_PHONE};
-
-                        if(ActivityCompat.checkSelfPermission(EmergencyNumbersActivity.this,
-                                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                            callPermissionGranted = false;
-                            ActivityCompat.requestPermissions(EmergencyNumbersActivity.this,
-                                    permissions,
-                                    PERMISSION_TO_CALL_CODE);
-                            if(callPermissionGranted){
-                                startActivity(intent);
-                            }
-                        }else{
-                            startActivity(intent);
-                        }
-
-                    }
-                });
-
+        emergencyNumbersRef.addSnapshotListener(this, (queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                Log.w("EmergencyNumbers DB","empty collection");
+                return;
             }
+            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                EmergencyNumbers number = documentSnapshot.toObject(EmergencyNumbers.class);
+                repertoryMap.put(number.getName(), number.getNumber());
+            }
+
+            List<String> numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
+            arrayAdapter = new ArrayAdapter(EmergencyNumbersActivity.this, android.R.layout.simple_list_item_1, numberList);
+            numbersListView.setAdapter(arrayAdapter);
+
+            makeListClickable();
+
+        });
+    }
+
+    private void makeListClickable() {
+        numbersListView.setOnItemClickListener((parent, view, position, id) -> {
+            String entry = (String) parent.getAdapter().getItem(position);
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + repertoryMap.get(entry)));
+
+            String permissions[] = {Manifest.permission.CALL_PHONE};
+
+            if(ActivityCompat.checkSelfPermission(EmergencyNumbersActivity.this,
+                    Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                callPermissionGranted = false;
+                ActivityCompat.requestPermissions(EmergencyNumbersActivity.this,
+                        permissions,
+                        PERMISSION_TO_CALL_CODE);
+                if(callPermissionGranted){
+                    startActivity(intent);
+                }
+            }else{
+                startActivity(intent);
+            }
+
         });
     }
 
@@ -106,7 +102,6 @@ public class EmergencyNumbersActivity extends AppCompatActivity {
                                            String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_TO_CALL_CODE: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     callPermissionGranted = true;
