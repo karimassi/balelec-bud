@@ -14,6 +14,7 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 public class MapViewActivity extends BasicActivity {
 
     private final static String TAG = MapViewActivity.class.getSimpleName();
-    private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
+    private static OnMapReadyCallback mockCallback;
     private MapView mapView;
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
@@ -43,7 +44,7 @@ public class MapViewActivity extends BasicActivity {
     private Map<MarkerType, Icon> icons;
 
     @VisibleForTesting
-    public static void setMockCallback(com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback) {
+    public static void setMockCallback(OnMapReadyCallback mockCallback) {
         MapViewActivity.mockCallback = mockCallback;
     }
 

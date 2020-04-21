@@ -42,6 +42,10 @@ public class Location implements Parcelable {
         this(latitude, longitude, (latitude + 90) * 180 + longitude);
     }
 
+    public Location(GeoPoint geoPoint) {
+        this(geoPoint.getLatitude(), geoPoint.getLongitude());
+    }
+
     protected Location(Parcel in) {
         latitude = in.readDouble();
         longitude = in.readDouble();
