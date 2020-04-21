@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Assert;
 
@@ -49,6 +50,11 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             new User("axel@epfl.ch", "celine", MockAuthenticator.provideUid());
     public static final User gaspard =
             new User("gaspard@epfl.ch", "gaspard", MockAuthenticator.provideUid());
+
+    public static final PointOfInterest pointOfInterest1 = new PointOfInterest(
+            new GeoPoint(4, 20), "Bar IC", "Bar");
+    public static final PointOfInterest pointOfInterest2 = new PointOfInterest(
+            new GeoPoint(5, 22), "Bar EE", "Bar");
 
     private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
 

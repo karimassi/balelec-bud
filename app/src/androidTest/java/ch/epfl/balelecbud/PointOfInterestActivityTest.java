@@ -12,7 +12,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -25,15 +24,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest1;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest2;
 
 @RunWith(AndroidJUnit4.class)
 public class PointOfInterestActivityTest extends BasicActivityTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
-    private final PointOfInterest pointOfInterest1 = new PointOfInterest(
-            new GeoPoint(4, 20), "Bar IC", "Bar");
-    private final PointOfInterest pointOfInterest2 = new PointOfInterest(
-            new GeoPoint(4, 22), "Bar EE", "Bar");
 
     @Before
     public void setup() {
