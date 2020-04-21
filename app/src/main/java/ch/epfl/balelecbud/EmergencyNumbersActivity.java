@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class EmergencyNumbersActivity extends BasicActivity {
     public static final int PERMISSION_TO_CALL_CODE = 991;
@@ -37,6 +40,8 @@ public class EmergencyNumbersActivity extends BasicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BalelecbudApplication.getAppDatabaseWrapper();
+
         setContentView(R.layout.activity_emergency_numbers);
         configureToolBar(R.id.emergency_numbers_activity_toolbar);
         configureDrawerLayout(R.id.emergency_numbers_activity_drawer_layout);
