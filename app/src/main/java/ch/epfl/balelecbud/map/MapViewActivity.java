@@ -40,6 +40,7 @@ public class MapViewActivity extends BasicActivity {
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
+    private Location defaultLocation;
 
     private Map<MarkerType, Icon> icons;
 
@@ -64,6 +65,9 @@ public class MapViewActivity extends BasicActivity {
             mapView.getMapAsync(
                     mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
         }
+
+        Location location = getIntent().getParcelableExtra("location");
+        defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
 
         setupMapIcons();
 
@@ -127,7 +131,7 @@ public class MapViewActivity extends BasicActivity {
 
     public void onMapReady(MyMap map) {
         myMap = map;
-        myMap.initialiseMap(LocationUtil.isLocationActive());
+        myMap.initialiseMap(LocationUtil.isLocationActive(), this.defaultLocation);
         displayWaitingFriends(myMap);
     }
 
