@@ -32,6 +32,7 @@ public class EmergencyNumbersActivity extends BasicActivity {
     private ListView numbersListView;
     private ArrayAdapter arrayAdapter;
     private Map<String, String> repertoryMap = new HashMap<String, String>();
+    List<String> numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference emergencyNumbersRef = db.collection("emergencyNumbers");
@@ -52,7 +53,8 @@ public class EmergencyNumbersActivity extends BasicActivity {
         arrayAdapter = new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
-                new ArrayList<String>());
+                numberList);
+        numbersListView.setAdapter(arrayAdapter);
     }
 
     @Override
@@ -68,10 +70,8 @@ public class EmergencyNumbersActivity extends BasicActivity {
                 repertoryMap.put(number.getName(), number.getNumber());
             }
 
-            List<String> numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
-            arrayAdapter = new ArrayAdapter(EmergencyNumbersActivity.this, android.R.layout.simple_list_item_1, numberList);
-            numbersListView.setAdapter(arrayAdapter);
-
+            numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
+            arrayAdapter.notifyDataSetChanged();
             makeListClickable();
 
         });
