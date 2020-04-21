@@ -19,6 +19,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
+import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
@@ -27,6 +28,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
@@ -99,8 +101,9 @@ public class MapViewActivityTest extends BasicActivityTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.assertEquals(expectedLocation, locationEnabled);
+                sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }
         };
@@ -117,7 +120,7 @@ public class MapViewActivityTest extends BasicActivityTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.call();
             }
         }));
