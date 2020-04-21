@@ -75,6 +75,9 @@
     <!--  RECEIVED REQUEST ITEM  -->
     <string name="cancel_request">Cancel</string>
 
+    <!-- POI -->
+    <string name="go_to_map">Go to map</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
