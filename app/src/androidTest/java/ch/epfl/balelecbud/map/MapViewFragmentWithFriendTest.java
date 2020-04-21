@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.map;
 
 import android.app.PendingIntent;
 
+import androidx.test.espresso.Root;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.location.LocationRequest;
@@ -12,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -38,8 +40,8 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
     private final Location alexLocation = new Location(3, 3);
 
     @Rule
-    public final ActivityTestRule<MapViewFragment> mActivityRule =
-            new ActivityTestRule<MapViewFragment>(MapViewFragment.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
@@ -165,10 +167,5 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
         assertEquals(2, mockDB.getFriendsLocationListenerCount());
         super.signOutFromDrawer();
         assertEquals(0, mockDB.getFriendsLocationListenerCount());
-    }
-
-    @Override
-    protected void setIds() {
-        setIds(R.id.map_activity_drawer_layout, R.id.map_activity_nav_view);
     }
 }
