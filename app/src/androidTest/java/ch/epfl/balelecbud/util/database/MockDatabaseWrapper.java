@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
+import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
@@ -62,6 +63,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
     private final List<EmergencyInfo> emergencyInfos = new ArrayList<>();
+    private final Map<String, EmergencyNumber> emergencyNumbers = new HashMap<>();
     private final Map<String, Emergency> emergencies = new HashMap<>();
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
@@ -150,6 +152,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return new LinkedList(locations.values());
             case DatabaseWrapper.EMERGENCIES_PATH:
                 return new LinkedList(emergencies.values());
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                return new LinkedList(emergencyNumbers.values());
             default:
 
                 throw new IllegalArgumentException("Unsupported collection name " + name);
@@ -308,6 +312,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return CompletableFuture.completedFuture((T) locations.get(documentID));
             case DatabaseWrapper.EMERGENCIES_PATH:
                 return CompletableFuture.completedFuture((T) emergencies.get(documentID));
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                return CompletableFuture.completedFuture((T) emergencyNumbers.get(documentID));
             default:
                 return CompletableFuture.completedFuture(null);
         }
@@ -383,6 +389,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.put(generateRandomUid(), (Emergency) document);
                 break;
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                emergencyNumbers.put(generateRandomUid(), (EmergencyNumber) document);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported collection name " + collectionName);
         }
@@ -437,6 +446,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.EMERGENCY_INFO_PATH:
                 emergencyInfos.remove(document);
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                emergencyNumbers.remove(document);
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.remove(document);
                 break;
@@ -486,6 +497,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.clear();
+                break;
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                emergencyNumbers.clear();
                 break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName");
