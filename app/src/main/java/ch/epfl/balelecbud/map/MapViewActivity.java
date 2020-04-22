@@ -193,7 +193,7 @@ public class MapViewActivity extends BasicActivity {
                     for (PointOfInterest poi : pointOfInterests) {
                         poiMarkers.put(poi, myMap.addMarker(new MyMarker.Builder()
                             .location(poi.getLocation())
-                            .icon(icons.get(getMarkerType(poi.getType())))
+                            .icon(icons.get(MarkerType.getMarkerType(poi.getType())))
                             .title(poi.getName())));
                     }
         });
@@ -209,23 +209,6 @@ public class MapViewActivity extends BasicActivity {
             Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
             Icon icon = iconFactory.fromBitmap(bitmap);
             icons.put(t, icon);
-        }
-    }
-
-    private MarkerType getMarkerType(PointOfInterestType poiType) {
-        switch (poiType) {
-            case BAR:
-                return MarkerType.BAR;
-            case FOOD:
-                return MarkerType.FOOD;
-            case ATM:
-                return MarkerType.ATM;
-            case STAGE:
-                return MarkerType.STAGE;
-            case FIRST_AID:
-                return MarkerType.FIRST_AID;
-            default:
-                return MarkerType.NOTYPE;
         }
     }
 }
