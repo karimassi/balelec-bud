@@ -71,7 +71,6 @@ public class MapViewActivity extends BasicActivity {
         }
 
         setupMapIcons();
-
         configureToolBar(R.id.map_activity_toolbar);
         configureDrawerLayout(R.id.map_activity_drawer_layout);
         configureNavigationView(R.id.map_activity_nav_view);
