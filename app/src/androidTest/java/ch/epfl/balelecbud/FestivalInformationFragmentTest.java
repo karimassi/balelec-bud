@@ -5,13 +5,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
-import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
@@ -23,6 +21,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
 
 @RunWith(AndroidJUnit4.class)
 public class FestivalInformationFragmentTest extends RootActivityTest {
@@ -31,8 +30,8 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
 
     @Before
     public final void openInfoFragment(){
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_info, R.id.festivalInfoRecyclerView);
+        RootActivityTest.openDrawer();
+        RootActivityTest.clickItem(R.id.activity_main_drawer_info, R.id.festivalInfoRecyclerView);
     }
 
     @Before
@@ -54,35 +53,12 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
     }
 
     @Test
-    public void testCanAddInfoToDatabase() {
+    public void testCanAddInfoToDatabase(){
         final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
         mock.storeDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info);
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
-    }
-
-    @Ignore("Currently modifying info does not make sens")
-    @Test
-    public void testCanModifyInfoFromDatabase() throws Throwable {
-        final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
-        final FestivalInformation infoModified = new FestivalInformation("Modified", "Hello it's a me, new");
-
-        mock.addItem(info);
-        mock.modifyItem(infoModified, 0);
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), infoModified);
-    }
-
-    @Ignore("Currently modifying info does not make sens")
-    @Test
-    public void testCantModifyInfoFromDatabaseThatIsNotThere() throws Throwable {
-        final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
-        final FestivalInformation infoModified = new FestivalInformation();
-
-        mock.addItem(info);
-        mock.modifyItem(infoModified, 2);
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
+        testInfoInView(onView(nthChildOf(withId(R.id.festivalInfoRecyclerView), 0)), info);
+        //testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
     }
 
     @Test
@@ -95,23 +71,19 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
 
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
 
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(1)), info2);
+        //testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
+        //testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(1)), info2);
+        testInfoInView(onView(nthChildOf(withId(R.id.festivalInfoRecyclerView), 0)), info1);
+        testInfoInView(onView(nthChildOf(withId(R.id.festivalInfoRecyclerView), 1)), info2);
         onView(withId(R.id.festivalInfoRecyclerView)).check(matches(hasChildCount(2)));
 
         mock.deleteDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info2);
 
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
 
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
+        //testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
+        testInfoInView(onView(nthChildOf(withId(R.id.festivalInfoRecyclerView), 0)), info1);
         onView(withId(R.id.festivalInfoRecyclerView)).check(matches(hasChildCount(1)));
-    }
-
-    @Ignore("What this should do is unclear")
-    @Test
-    public void testCantDeleteInfoFromEmptyDatabase() throws Throwable {
-        final FestivalInformation info = new FestivalInformation();
-        mock.removeItem(info, 0);
     }
 
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {

@@ -1,15 +1,20 @@
 package ch.epfl.balelecbud.map;
 
-import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 
 import ch.epfl.balelecbud.models.Location;
 
 public interface MyMarker {
+
     void setLocation(Location location);
 
     class Builder {
+
         private Location location;
         private String title;
+        private Icon icon;
 
         public Builder location(Location location) {
             this.location = location;
@@ -21,6 +26,11 @@ public interface MyMarker {
             return this;
         }
 
+        public Builder icon(Icon icon) {
+            this.icon = icon;
+            return this;
+        }
+
         public Location getLocation() {
             return this.location;
         }
@@ -29,8 +39,24 @@ public interface MyMarker {
             return this.title;
         }
 
-        MarkerOptions toGoogleMarkerOptions() {
-            return new MarkerOptions().title(this.title).position(this.location.toLatLng());
+        public Icon getIcon() {
+            return icon;
         }
+
+        MarkerOptions toMapboxMarkerOptions() {
+            MarkerOptions result = new MarkerOptions();
+            if (title != null) {
+                result = result.title(title);
+            }
+            if (location != null) {
+                result = result.position(location.toLatLng());
+            }
+            if (icon != null) {
+                result = result.icon(icon);
+            }
+            return result;
+        }
+
+
     }
 }

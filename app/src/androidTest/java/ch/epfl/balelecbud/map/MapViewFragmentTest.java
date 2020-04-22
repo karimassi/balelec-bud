@@ -43,13 +43,16 @@ public class MapViewFragmentTest extends RootActivityTest {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewFragment.setMockCallback(googleMap -> { });
+                    MapViewFragment.setMockCallback(mapboxMap -> {
+                    });
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
-                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) { }
+                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+                        }
 
                         @Override
-                        public void removeLocationUpdates(PendingIntent intent) { }
+                        public void removeLocationUpdates(PendingIntent intent) {
+                        }
                     });
                     mockAuth.setCurrentUser(MockDatabaseWrapper.celine);
                 }
@@ -58,17 +61,17 @@ public class MapViewFragmentTest extends RootActivityTest {
     @Test
     public void testMapViewIsNotNull() {
         RootActivity mActivity = mActivityRule.getActivity();
-        View viewById = mActivity.findViewById(R.id.mapView);
+        View viewById = mActivity.findViewById(R.id.map_view);
         assertNotNull(viewById);
     }
 
     @Test
     public void testMapIsDisplayed() {
-        onView(withId(R.id.mapView)).check(matches(isDisplayed()));
+        onView(withId(R.id.map_view)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void whenLocationIfOffLocationOnMapIsDisable() throws Throwable {
+    public void whenLocationIsOffLocationOnMapIsDisabled() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(assertMapLocation(sync, false)));
         sync.waitCall(1);
@@ -91,15 +94,15 @@ public class MapViewFragmentTest extends RootActivityTest {
     private MyMap assertMapLocation(TestAsyncUtils sync, boolean expectedLocation) {
         return new MyMap() {
             @Override
-            public void setMyLocationEnabled(boolean locationEnabled) {
-                sync.assertEquals(expectedLocation, locationEnabled);
-                sync.call();
-            }
-
-            @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.fail();
                 return null;
+            }
+
+            @Override
+            public void initialiseMap(boolean locationEnabled) {
+                sync.assertEquals(expectedLocation, locationEnabled);
+                sync.call();
             }
         };
     }
@@ -109,14 +112,14 @@ public class MapViewFragmentTest extends RootActivityTest {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
-            public void setMyLocationEnabled(boolean locationEnabled) {
-                sync.call();
-            }
-
-            @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.fail();
                 return null;
+            }
+
+            @Override
+            public void initialiseMap(boolean locationEnabled) {
+                sync.call();
             }
         }));
         sync.waitCall(1);
@@ -125,12 +128,8 @@ public class MapViewFragmentTest extends RootActivityTest {
     }
 
     @Test
-    public void testOnLowMemory() {
-        this.mActivityRule.getActivity().onLowMemory();
-    }
+    public void testOnLowMemory() throws Throwable {
+        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onLowMemory());
 
-    @Override
-    protected void setIds() {
-        setIds(R.id.map_activity_drawer_layout, R.id.map_activity_nav_view);
     }
 }

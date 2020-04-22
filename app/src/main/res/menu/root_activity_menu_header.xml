@@ -38,6 +38,10 @@
             android:id="@+id/sign_out_button"
             android:icon="@mipmap/signout"
             android:title="Sign Out" />
+        <item
+            android:id="@+id/activity_main_drawer_emergency"
+            android:icon="@mipmap/info"
+            android:title="Emergency" />
     </group>
 
 </menu>

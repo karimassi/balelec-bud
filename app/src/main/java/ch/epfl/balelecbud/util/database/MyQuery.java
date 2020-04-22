@@ -3,66 +3,41 @@ package ch.epfl.balelecbud.util.database;
 import com.google.common.collect.Lists;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-
-import ch.epfl.balelecbud.util.StringUtils;
 
 public class MyQuery {
 
     private final String collectionName;
-    private final List<WhereClause> whereClauses;
+    private final List<MyWhereClause> whereClauses;
+    private final MyGeoClause geoClause;
 
-    public MyQuery(String collectionName, WhereClause whereClause){
+    public MyQuery(String collectionName, MyWhereClause whereClause) {
         this(collectionName, Lists.newArrayList(whereClause));
     }
 
-    public MyQuery(String collectionName, List<WhereClause> whereClauses) {
+    public MyQuery(String collectionName, MyGeoClause geoClause) {
+        this(collectionName, Collections.emptyList(), geoClause);
+    }
+
+    public MyQuery(String collectionName, List<MyWhereClause> whereClauses) {
+        this(collectionName, whereClauses, null);
+    }
+
+    public MyQuery(String collectionName, List<MyWhereClause> whereClauses, MyGeoClause geoClause) {
         this.collectionName = collectionName;
         this.whereClauses = whereClauses;
+        this.geoClause = geoClause;
     }
 
     public String getCollectionName() {
         return collectionName;
     }
 
-    public List<WhereClause> getWhereClauses() {
+    public List<MyWhereClause> getWhereClauses() {
         return whereClauses;
     }
 
-    public static class WhereClause {
-
-        private final Operator op;
-        private final Object rightOperand;
-        private final String leftOperand;
-
-        public WhereClause(String leftOperand, Operator op, Object rightOperand) {
-            this.op = op;
-            this.rightOperand = rightOperand;
-            this.leftOperand = leftOperand;
-        }
-
-        public Operator getOp() {
-            return op;
-        }
-
-        public Object getRightOperand() {
-            return rightOperand;
-        }
-
-        public String getLeftOperand() {
-            return leftOperand;
-        }
-
-        public enum Operator {
-            LESS_THAN,
-            LESS_EQUAL,
-            GREATER_THAN,
-            GREATER_EQUAL,
-            EQUAL
-        }
-
+    public MyGeoClause getGeoClause() {
+        return geoClause;
     }
-
-
 }

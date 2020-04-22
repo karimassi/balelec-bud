@@ -9,6 +9,8 @@ import com.google.firebase.Timestamp;
 import org.junit.Assert;
 
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -27,6 +30,7 @@ import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
@@ -57,6 +61,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
+    private final Map<String, Emergency> emergencies = new HashMap<>();
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
 
@@ -126,7 +131,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         for (Object elem : listToQuery) {
             list.add(tClass.cast(elem));
         }
-        for (MyQuery.WhereClause clause : query.getWhereClauses()) {
+        for (MyWhereClause clause : query.getWhereClauses()) {
             list = filterList(list, clause);
         }
         return CompletableFuture.completedFuture(list);
@@ -140,12 +145,15 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return pointOfInterests;
             case DatabaseWrapper.LOCATIONS_PATH:
                 return new LinkedList(locations.values());
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                return new LinkedList(emergencies.values());
             default:
+
                 throw new IllegalArgumentException("Unsupported collection name " + name);
         }
     }
 
-    private <A> List<A> filterList(List<A> list, MyQuery.WhereClause clause) {
+    private <A> List<A> filterList(List<A> list, MyWhereClause clause) {
         List<A> newList = new LinkedList<>();
         if (list.isEmpty())
             return list;
@@ -164,9 +172,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return newList;
     }
 
-    private <A> void filterELem(MyQuery.WhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
+    private <A> void filterELem(MyWhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
         try {
-            if (op == MyQuery.WhereClause.Operator.EQUAL) {
+            if (op == MyWhereClause.Operator.EQUAL) {
                 if (Objects.equals(field.get(elem), rightOperand)) {
                     newList.add(elem);
                 }
@@ -185,7 +193,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     @NonNull
-    private Field getField(MyQuery.WhereClause clause, Class clazz) {
+    private Field getField(MyWhereClause clause, Class clazz) {
         Field field;
         try {
             field = clazz.getDeclaredField(clause.getLeftOperand());
@@ -197,7 +205,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return field;
     }
 
-    private boolean evaluateResult(MyQuery.WhereClause.Operator op, int resultOfComparison) {
+    private boolean evaluateResult(MyWhereClause.Operator op, int resultOfComparison) {
         switch (op) {
             case LESS_THAN:
                 return resultOfComparison < 0;
@@ -231,9 +239,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-    private List<Map<String, Boolean>> filterMapValues(Map<String, Map<String, Boolean>> mapToFilter, List<MyQuery.WhereClause> clauses) {
+    private List<Map<String, Boolean>> filterMapValues(Map<String, Map<String, Boolean>> mapToFilter, List<MyWhereClause> clauses) {
         List<Map<String, Boolean>> values = new LinkedList<>(mapToFilter.values());
-        for (MyQuery.WhereClause clause : clauses) {
+        for (MyWhereClause clause : clauses) {
             values = values.stream().filter(x -> x.getOrDefault(clause.getLeftOperand(), false)).collect(Collectors.toList());
         }
         return values;
@@ -295,6 +303,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return CompletableFuture.completedFuture((T) friendRequests.get(documentID));
             case DatabaseWrapper.LOCATIONS_PATH:
                 return CompletableFuture.completedFuture((T) locations.get(documentID));
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                return CompletableFuture.completedFuture((T) emergencies.get(documentID));
             default:
                 return CompletableFuture.completedFuture(null);
         }
@@ -316,19 +326,36 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return CompletableFuture.completedFuture(result);
     }
 
+
     @Override
     public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName,
                                                                   String fieldValue, Class<T> type) {
-        if (DatabaseWrapper.USERS_PATH.equals(collectionName)) {
-            for (User u : users.values()) {
-                if ("email".equals(fieldName)) {
-                    if (u.getEmail().equals(fieldValue)) {
-                        return CompletableFuture.completedFuture((T) u);
+        switch (collectionName) {
+            case DatabaseWrapper.USERS_PATH:
+                for (User u : users.values()) {
+                    if ("email".equals(fieldName)) {
+                        if (u.getEmail().equals(fieldValue)) {
+                            return CompletableFuture.completedFuture((T) u);
+                        }
                     }
                 }
-            }
+
+                break;
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                for (Emergency u : emergencies.values()) {
+
+                    if ("category".equals(fieldName)) {
+                        if (u.getCategory().toString().equals(fieldValue)) {
+                            return CompletableFuture.completedFuture((T) u);
+                        }
+                    }
+                }
+                break;
+            default:
         }
+
         return CompletableFuture.completedFuture(null);
+
     }
 
     @Override
@@ -346,6 +373,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.add((FestivalInformation) document);
+                break;
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                emergencies.put(generateRandomUid(), (Emergency) document);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported collection name " + collectionName);
@@ -399,6 +429,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 pointOfInterests.remove(document);
                 break;
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                emergencies.remove(document);
+                break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName" + collectionName);
         }
@@ -446,9 +479,20 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.clear();
                 break;
+
+            case DatabaseWrapper.EMERGENCIES_PATH:
+                emergencies.clear();
+                break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName");
         }
+    }
+
+    public String generateRandomUid() {
+        byte[] array = new byte[20]; // length is bounded by 7
+        new Random().nextBytes(array);
+        String generatedString = new String(array, StandardCharsets.UTF_8);
+        return generatedString;
     }
 
     public int getFriendsLocationListenerCount() {

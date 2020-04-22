@@ -32,7 +32,7 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
 
 @RunWith(AndroidJUnit4.class)
-public class ScheduleFragmentTest extends RootActivityTest {
+public class ScheduleFragmentTest extends RootActivityTest{
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
     @Rule
@@ -44,7 +44,7 @@ public class ScheduleFragmentTest extends RootActivityTest {
 
         @Override
         protected Intent getActivityIntent() {
-            Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleFragment.class);
+            Intent intent = new Intent(ApplicationProvider.getApplicationContext(), RootActivity.class);
             FlowUtil.packCallback(new Slot[]{}, intent);
             return intent;
         }

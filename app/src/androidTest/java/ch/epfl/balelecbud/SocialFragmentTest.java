@@ -63,9 +63,14 @@ public class SocialFragmentTest extends RootActivityTest {
     };
 
     @Before
-    public final void openSocialFragment(){
+    public final void openSocialFragmentAndSetup(){
+        mockDb.resetFriendshipsAndRequests();
+        createFriendship(otherUser);
+        createRequest(newFriend, currentUser);
+        createRequest(currentUser, requestedUser);
         openDrawer();
         clickItem(R.id.activity_main_drawer_social, R.id.activity_social_linear_layout);
+        onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
     }
 
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {
@@ -97,16 +102,6 @@ public class SocialFragmentTest extends RootActivityTest {
         onView(withId(R.id.tabs_social)).perform(clickTabWithPosition(position));
         SystemClock.sleep(500);
     }
-
-    @Before
-    public void setup() {
-        mockDb.resetFriendshipsAndRequests();
-        createFriendship(otherUser);
-        createRequest(newFriend, currentUser);
-        createRequest(currentUser, requestedUser);
-        onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
-    }
-
 
     @Test
     public void viewPagerShownTest() {

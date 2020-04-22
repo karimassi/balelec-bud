@@ -17,6 +17,7 @@ import java.util.List;
 
 import ch.epfl.balelecbud.friendship.SocialFragment;
 import ch.epfl.balelecbud.map.MapViewFragment;
+import ch.epfl.balelecbud.map.MyMap;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
@@ -36,18 +37,20 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private Fragment fragmentInfo;
     private ScheduleFragment fragmentSchedule;
     private Fragment fragmentPoi;
-    private Fragment fragmentMap;
+    private MapViewFragment fragmentMap;
     private Fragment fragmentTransport;
     private Fragment fragmentSocial;
     private Fragment fragmentHome;
+    private Fragment fragmentEmergency;
 
     private static final int FRAGMENT_HOME = 0;
     private static final int FRAGMENT_INFO = 1;
-    private static final int FRAGMENT_SCHEDULE= 2;
+    private static final int FRAGMENT_SCHEDULE = 2;
     private static final int FRAGMENT_POI = 3;
     private static final int FRAGMENT_MAP = 4;
     private static final int FRAGMENT_TRANSPORT = 5;
     private static final int FRAGMENT_SOCIAL = 6;
+    private static final int FRAGMENT_EMERGENCY = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,25 +62,25 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         this.configureNavigationView(R.id.root_activity_nav_view);
 
         List<Slot> slots = FlowUtil.unpackCallback(getIntent());
-        if(slots != null){
-            if (!fragmentSchedule.isVisible()){
+        if (slots != null) {
+            if (!fragmentSchedule.isVisible()) {
                 fragmentSchedule.setSlots(slots);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.root_activity_frame_layout, fragmentSchedule).commit();
             }
+        } else {
+            this.showFirstFragment();
         }
-
-        this.showFirstFragment();
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
-            case R.id.activity_main_drawer_home :
+        switch (id) {
+            case R.id.activity_main_drawer_home:
                 this.showFragment(FRAGMENT_HOME);
                 break;
-            case R.id.activity_main_drawer_info :
+            case R.id.activity_main_drawer_info:
                 this.showFragment(FRAGMENT_INFO);
                 break;
             case R.id.activity_main_drawer_schedule:
@@ -95,6 +98,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_social:
                 this.showFragment(FRAGMENT_SOCIAL);
                 break;
+            case R.id.activity_main_drawer_emergency:
+                this.showFragment(FRAGMENT_EMERGENCY);
+                break;
             case R.id.sign_out_button:
                 signOut();
                 break;
@@ -105,12 +111,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void showFragment(int fragmentIdentifier){
-        switch (fragmentIdentifier){
-            case FRAGMENT_HOME :
+    private void showFragment(int fragmentIdentifier) {
+        switch (fragmentIdentifier) {
+            case FRAGMENT_HOME:
                 this.showHomeFragment();
                 break;
-            case FRAGMENT_INFO :
+            case FRAGMENT_INFO:
                 this.showInfoFragment();
                 break;
             case FRAGMENT_SCHEDULE:
@@ -128,22 +134,26 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case FRAGMENT_SOCIAL:
                 this.showSocialFragment();
                 break;
+            case FRAGMENT_EMERGENCY:
+                this.showEmergencyFragment();
+                break;
             default:
                 break;
         }
     }
 
-    private void showHomeFragment(){
+    private void showHomeFragment() {
         if (this.fragmentHome == null) this.fragmentHome = WelcomeFragment.newInstance();
-        this.startTransactionFragment(this.fragmentHome);
+        this.startTransactionFragment(this.fragmentHome, "HOME");
     }
 
-    private void showInfoFragment(){
-        if (this.fragmentInfo == null) this.fragmentInfo = FestivalInformationFragment.newInstance();
-        this.startTransactionFragment(this.fragmentInfo);
+    private void showInfoFragment() {
+        if (this.fragmentInfo == null)
+            this.fragmentInfo = FestivalInformationFragment.newInstance();
+        this.startTransactionFragment(this.fragmentInfo, "INFO");
     }
 
-    private void showScheduleFragment(){
+    private void showScheduleFragment() {
         if (this.fragmentSchedule == null) this.fragmentSchedule = ScheduleFragment.newInstance();
         Intent intent = new Intent(this, ConcertFlow.class);
         intent.setAction(FlowUtil.GET_ALL_CONCERT);
@@ -151,36 +161,43 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         startService(intent);
     }
 
-    private void showPoiFragment(){
+    private void showPoiFragment() {
         if (this.fragmentPoi == null) this.fragmentPoi = PointOfInterestFragment.newInstance();
-        this.startTransactionFragment(this.fragmentPoi);
+        this.startTransactionFragment(this.fragmentPoi, "POI");
     }
 
-    private void showMapFragment(){
+    private void showMapFragment() {
         if (this.fragmentMap == null) this.fragmentMap = MapViewFragment.newInstance();
-        this.startTransactionFragment(this.fragmentMap);
+        this.startTransactionFragment(this.fragmentMap, "MAP");
     }
 
-    private void showTransportFragment(){
-        if (this.fragmentTransport == null) this.fragmentTransport = TransportFragment.newInstance();
-        this.startTransactionFragment(this.fragmentTransport);
+    private void showTransportFragment() {
+        if (this.fragmentTransport == null)
+            this.fragmentTransport = TransportFragment.newInstance();
+        this.startTransactionFragment(this.fragmentTransport, "TRANSPORT");
     }
 
-    private void showSocialFragment(){
+    private void showSocialFragment() {
         if (this.fragmentSocial == null) this.fragmentSocial = SocialFragment.newInstance();
-        this.startTransactionFragment(this.fragmentSocial);
+        this.startTransactionFragment(this.fragmentSocial, "SOCIAL");
     }
 
-    private void startTransactionFragment(Fragment fragment){
-        if (!fragment.isVisible()){
+    private void showEmergencyFragment() {
+        if (this.fragmentEmergency == null)
+            this.fragmentEmergency = EmergencyFragment.newInstance();
+        this.startTransactionFragment(this.fragmentEmergency, "EMERGENCY");
+    }
+
+    private void startTransactionFragment(Fragment fragment, String tag) {
+        if (!fragment.isVisible()) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.root_activity_frame_layout, fragment).commit();
         }
     }
 
-    private void showFirstFragment(){
+    private void showFirstFragment() {
         Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.root_activity_frame_layout);
-        if (visibleFragment == null){
+        if (visibleFragment == null) {
             this.showFragment(FRAGMENT_HOME);
             this.navigationView.getMenu().getItem(0).setChecked(true);
         }
@@ -219,5 +236,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this, LoginUserActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void onMapReady(MyMap map) {
+        fragmentMap.onMapReady(map);
     }
 }

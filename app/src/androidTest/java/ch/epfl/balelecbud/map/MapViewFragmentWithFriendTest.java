@@ -2,7 +2,7 @@ package ch.epfl.balelecbud.map;
 
 import android.app.PendingIntent;
 
-import androidx.test.espresso.Root;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.location.LocationRequest;
@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.RootActivityTest;
-import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.location.LocationClient;
@@ -32,13 +32,11 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.karim;
 import static org.junit.Assert.assertEquals;
 
+@RunWith(AndroidJUnit4.class)
 public class MapViewFragmentWithFriendTest extends RootActivityTest {
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final Location karimLocation = new Location(2, 4);
-    private final Location newKarimLocation = new Location(1, 2);
-    private final Location alexLocation = new Location(3, 3);
-
     @Rule
     public final ActivityTestRule<RootActivity> mActivityRule =
             new ActivityTestRule<RootActivity>(RootActivity.class) {
@@ -47,7 +45,8 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewFragment.setMockCallback(googleMap -> {});
+                    MapViewFragment.setMockCallback(mapboxMap -> {
+                    });
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
                         public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -65,6 +64,8 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
                     mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), karimLocation);
                 }
             };
+    private final Location newKarimLocation = new Location(1, 2);
+    private final Location alexLocation = new Location(3, 3);
 
     @After
     public void cleanup() {
@@ -77,16 +78,16 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
-            public void setMyLocationEnabled(boolean locationEnabled) {
-                sync.call();
-            }
-
-            @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
                 assertNameAndLocation(markerBuilder, sync, karim, karimLocation);
                 sync.call();
                 return null;
+            }
+
+            @Override
+            public void initialiseMap(boolean locationEnabled) {
+                sync.call();
             }
         }));
         sync.waitCall(2);
@@ -99,11 +100,6 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
         TestAsyncUtils sync = new TestAsyncUtils();
         runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
-            public void setMyLocationEnabled(boolean locationEnabled) {
-                sync.call();
-            }
-
-            @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
                 assertNameAndLocation(markerBuilder, sync, karim, karimLocation);
@@ -112,6 +108,11 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
                     sync.call();
                     sync.assertEquals(newKarimLocation, location);
                 };
+            }
+
+            @Override
+            public void initialiseMap(boolean locationEnabled) {
+                sync.call();
             }
         }));
         sync.waitCall(2);
@@ -138,11 +139,6 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
             private int times = 0;
 
             @Override
-            public void setMyLocationEnabled(boolean locationEnabled) {
-                sync.call();
-            }
-
-            @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
                 if (times == 0) {
@@ -153,6 +149,11 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
                 sync.call();
                 times += 1;
                 return null;
+            }
+
+            @Override
+            public void initialiseMap(boolean locationEnabled) {
+                sync.call();
             }
         };
     }

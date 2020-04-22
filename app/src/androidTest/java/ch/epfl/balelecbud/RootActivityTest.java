@@ -3,7 +3,6 @@ package ch.epfl.balelecbud;
 import android.app.PendingIntent;
 import android.view.Gravity;
 
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.uiautomator.UiDevice;
@@ -29,11 +28,8 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
 import static org.junit.Assert.assertFalse;
 
-public class RootActivityTest {
-
-    private int activity_drawer_layout_id;
-    private int activity_nav_view_id;
-    private UiDevice device;
+public abstract class RootActivityTest {
+    private static UiDevice device = UiDevice.getInstance(getInstrumentation());
 
 
     @Before
@@ -41,8 +37,6 @@ public class RootActivityTest {
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         MockAuthenticator.getInstance().setCurrentUser(alex);
         BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
-        device = UiDevice.getInstance(getInstrumentation());
-        setIds(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
     }
 
     @Test
@@ -73,7 +67,7 @@ public class RootActivityTest {
     public void openMapActivityFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {});
         openDrawer();
-        clickItem(R.id.activity_main_drawer_map, R.id.mapView);
+        clickItem(R.id.activity_main_drawer_map, R.id.map_view);
     }
 
     @Test
@@ -93,7 +87,7 @@ public class RootActivityTest {
     @Test
     public void signOutFromDrawer() {
         openDrawer();
-        onView(withId(activity_nav_view_id)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
         onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
@@ -111,33 +105,29 @@ public class RootActivityTest {
         });
         LocationUtil.enableLocation();
         openDrawer();
-        onView(withId(activity_nav_view_id)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
         assertFalse(LocationUtil.isLocationActive());
     }
 
     @Test
     public void testBackPress() {
         openDrawer();
-        Espresso.pressBack();
-        onView(withId(activity_drawer_layout_id)).check(matches(isClosed(Gravity.LEFT)));
-        Espresso.pressBack();
+        device.pressBack();
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
+        device.pressBack();
     }
 
-    protected void openDrawer() {
-        onView(withId(activity_drawer_layout_id)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+    public static void openDrawer() {
+        device.pressBack();
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
         device.waitForIdle();
-        onView(withId(activity_nav_view_id)).check(matches(isDisplayed()));
+        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
     }
 
-    protected void clickItem(int itemId, int viewToDisplayId) {
-        onView(withId(activity_nav_view_id)).perform(NavigationViewActions.navigateTo(itemId));
+    public static void clickItem(int itemId, int viewToDisplayId) {
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
         device.waitForIdle();
         onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
-    }
-
-    protected void setIds(int activity_drawer_layout_id, int activity_nav_view_id) {
-        this.activity_drawer_layout_id = activity_drawer_layout_id;
-        this.activity_nav_view_id = activity_nav_view_id;
     }
 
 }

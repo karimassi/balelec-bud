@@ -7,28 +7,23 @@
     tools:context=".map.MapViewFragment"
     android:gravity="center"
     android:background="@color/blek_blue"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto">
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cameraTargetLat="@string/camera_target_lat"
-        app:cameraTargetLng="@string/camera_target_lng"
-        app:cameraZoom="@string/camera_zoom"
-        app:mapType="normal"
-        app:uiRotateGestures="@bool/ui_rotate_gestures"
-        app:uiScrollGestures="@bool/ui_scroll_gestures"
-        app:uiTiltGestures="@bool/ui_tilt_gestures"
-        app:uiZoomControls="@bool/ui_zoom_controls"
-        app:uiZoomGestures="@bool/ui_zoom_gestures"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toTopOf="parent"
+        mapbox:mapbox_cameraZoom="12">
+    </com.mapbox.mapboxsdk.maps.MapView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

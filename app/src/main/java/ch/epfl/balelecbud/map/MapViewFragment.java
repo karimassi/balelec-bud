@@ -1,5 +1,8 @@
 package ch.epfl.balelecbud.map;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,10 +11,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.maps.MapView;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.maps.MapView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,25 +26,26 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
+import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
-import static ch.epfl.balelecbud.location.LocationUtil.isLocationActive;
 
-public class MapViewFragment extends Fragment implements OnMapReadyCallback {
+public class MapViewFragment extends Fragment {
     private final static String TAG = MapViewFragment.class.getSimpleName();
-    private static com.google.android.gms.maps.OnMapReadyCallback mockCallback;
+    private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
     private MapView mapView;
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
-    private Bundle savedInstance;
+
+    private Map<MarkerType, Icon> icons;
 
     @VisibleForTesting
-    public static void setMockCallback(com.google.android.gms.maps.OnMapReadyCallback mockCallback) {
+    public static void setMockCallback(com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback) {
         MapViewFragment.mockCallback = mockCallback;
     }
 
@@ -49,21 +56,25 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        savedInstance = savedInstanceState;
-        return inflater.inflate(R.layout.activity_map, container, false);
+        Mapbox.getInstance(getActivity(), getString(R.string.mapbox_access_token));
+        View inflatedView = inflater.inflate(R.layout.activity_map, container, false);
+        mapView = inflatedView.findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
+        if (mockCallback != null) {
+            mapView.getMapAsync(mockCallback);
+        } else {
+            mapView.getMapAsync(
+                    mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
+        }
+
+        setupMapIcons();
+        requestFriendsLocations();
+        return inflatedView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mapView = getView().findViewById(R.id.mapView);
-        mapView.onCreate(savedInstance);
-        if (mockCallback != null)
-            mapView.getMapAsync(mockCallback);
-        else
-            mapView.getMapAsync(googleMap -> this.onMapReady(new GoogleMapAdapter(googleMap)));
-
-        requestFriendsLocations();
         mapView.onStart();
     }
 
@@ -101,20 +112,30 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        if (getAppAuthenticator().getCurrentUser() != null) {
+            unregisterListeners();
+        }
     }
 
-    @Override
     public void onMapReady(MyMap map) {
         myMap = map;
-        myMap.setMyLocationEnabled(isLocationActive());
+        myMap.initialiseMap(LocationUtil.isLocationActive());
         displayWaitingFriends(myMap);
+    }
+
+
+    private void unregisterListeners() {
+        FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser())
+                .thenAccept(friendsIds -> friendsIds.forEach(id -> getAppDatabaseWrapper()
+                        .unregisterDocumentListener(DatabaseWrapper.LOCATIONS_PATH, id)));
     }
 
     public void displayWaitingFriends(MyMap map) {
         for (User friend : waitingFriendsLocation.keySet()) {
             friendsMarkers.put(friend, map.addMarker(new MyMarker.Builder()
                     .location(waitingFriendsLocation.get(friend))
-                    .title(friend.getDisplayName())));
+                    .title(friend.getDisplayName())
+                    .icon(icons.get(MarkerType.FRIEND))));
         }
         waitingFriendsLocation.clear();
     }
@@ -149,7 +170,17 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
         } else {
             friendsMarkers.put(friend, myMap.addMarker(new MyMarker.Builder()
                     .location(location)
-                    .title(friend.getDisplayName())));
+                    .title(friend.getDisplayName())
+                    .icon(icons.get(MarkerType.FRIEND))));
         }
+    }
+
+    private void setupMapIcons() {
+        icons = new HashMap<>();
+        IconFactory iconFactory = IconFactory.getInstance(getActivity());
+        Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.map);
+        Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
+        Icon icon = iconFactory.fromBitmap(bitmap);
+        icons.put(MarkerType.FRIEND, icon);
     }
 }
