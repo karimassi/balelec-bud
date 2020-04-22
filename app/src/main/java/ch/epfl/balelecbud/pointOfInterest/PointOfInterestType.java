@@ -1,7 +1,7 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
 public enum PointOfInterestType {
-    BAR("Bar"), FOOD("Food"), FIRST_AID("First aid"), ATM("ATM"), WC("wc"), STAGE("Stage");
+    BAR("Bar"), FOOD("Food"), FIRST_AID("First aid"), ATM("ATM"), WC("WC"), STAGE("Stage");
 
     private String type;
     PointOfInterestType(String type) {

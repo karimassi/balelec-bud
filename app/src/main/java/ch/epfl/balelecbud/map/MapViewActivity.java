@@ -15,7 +15,9 @@ import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.maps.MapView;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -26,7 +28,10 @@ import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
@@ -38,6 +43,7 @@ public class MapViewActivity extends BasicActivity {
     private MapView mapView;
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
+    private Map<PointOfInterest, MyMarker> poiMarkers = new HashMap<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
 
     private Map<MarkerType, Icon> icons;
@@ -70,7 +76,7 @@ public class MapViewActivity extends BasicActivity {
         configureDrawerLayout(R.id.map_activity_drawer_layout);
         configureNavigationView(R.id.map_activity_nav_view);
         requestFriendsLocations();
-
+        displayPointsOfInterests();
     }
 
     @Override
@@ -182,12 +188,45 @@ public class MapViewActivity extends BasicActivity {
         }
     }
 
+    private void displayPointsOfInterests() {
+        getAppDatabaseWrapper().query(new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>()),
+                PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
+                    for (PointOfInterest poi : pointOfInterests) {
+                        poiMarkers.put(poi, myMap.addMarker(new MyMarker.Builder()
+                            .location(poi.getLocation())
+                            .icon(icons.get(getMarkerType(poi.getType())))
+                            .title(poi.getName())));
+                    }
+        });
+    }
+
     private void setupMapIcons() {
-        icons = new HashMap<>();
         IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
-        Drawable iconDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.map);
-        Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
-        Icon icon = iconFactory.fromBitmap(bitmap);
-        icons.put(MarkerType.FRIEND, icon);
+        icons = new HashMap<>();
+        List<Integer> iconIds = Arrays.asList(R.drawable.friend_icon, R.drawable.poi_bar_icon,
+                R.drawable.poi_food_icon, R.drawable.poi_firstaid, R.drawable.poi_atm, R.drawable.poi_stage, R.drawable.map, R.drawable.map);
+        for (MarkerType t : MarkerType.values()) {
+            Drawable iconDrawable = ContextCompat.getDrawable(getApplicationContext(), iconIds.get(t.ordinal()));
+            Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
+            Icon icon = iconFactory.fromBitmap(bitmap);
+            icons.put(t, icon);
+        }
+    }
+
+    private MarkerType getMarkerType(PointOfInterestType poiType) {
+        switch (poiType) {
+            case BAR:
+                return MarkerType.BAR;
+            case FOOD:
+                return MarkerType.FOOD;
+            case ATM:
+                return MarkerType.ATM;
+            case STAGE:
+                return MarkerType.STAGE;
+            case FIRST_AID:
+                return MarkerType.FIRST_AID;
+            default:
+                return MarkerType.NOTYPE;
+        }
     }
 }
