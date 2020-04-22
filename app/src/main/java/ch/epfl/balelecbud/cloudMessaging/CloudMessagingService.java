@@ -17,22 +17,22 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class CloudMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = CloudMessagingService.class.getSimpleName();
     public static final String SEND_NOTIFICATION_ACTION = "SEND_NOTIFICATION_ACTION";
+    private static final String TAG = CloudMessagingService.class.getSimpleName();
 
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         Log.d(TAG, "The token refreshed: " + s);
 
-        String currentUid = getAppAuthenticator().getCurrentUid();
+        String currentUid = getAppAuthenticator().getCurrentUser().getUid();
 
         getAppDatabaseWrapper().getCustomDocument(DatabaseWrapper.TOKENS_PATH,
-                    currentUid, String.class).whenComplete((t, throwable) -> {
-                        if(t!= null) {
-                            getAppDatabaseWrapper()
-                                    .deleteDocumentWithID(DatabaseWrapper.TOKENS_PATH, currentUid);
-                        }
+                currentUid, String.class).whenComplete((t, throwable) -> {
+            if (t != null) {
+                getAppDatabaseWrapper()
+                        .deleteDocumentWithID(DatabaseWrapper.TOKENS_PATH, currentUid);
+            }
         });
 
         getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.TOKENS_PATH, currentUid, s);
@@ -46,13 +46,12 @@ public class CloudMessagingService extends FirebaseMessagingService {
         String body = "";
         String type = "";
 
-        if(remoteMessage.getData().size() > 0) {
+        if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Received Message");
             title = remoteMessage.getData().get(Message.DATA_KEY_TITLE);
             body = remoteMessage.getData().get(Message.DATA_KEY_BODY);
             type = remoteMessage.getData().get(Message.DATA_KEY_TYPE);
-        }
-        else if(remoteMessage.getNotification() != null) {
+        } else if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Received Notification");
             title = remoteMessage.getNotification().getTitle();
             body = remoteMessage.getNotification().getBody();
