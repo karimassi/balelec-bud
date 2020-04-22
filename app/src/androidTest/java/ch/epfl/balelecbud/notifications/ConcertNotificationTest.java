@@ -32,6 +32,7 @@ import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
+import ch.epfl.balelecbud.schedule.SlotData;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -49,7 +50,6 @@ import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ConcertNotificationTest {
@@ -89,19 +89,16 @@ public class ConcertNotificationTest {
         clearNotifications();
 
         mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
-
+        SlotData.setIntentLauncher(null);
         this.db = Room.inMemoryDatabaseBuilder(
                 getApplicationContext(),
                 ConcertOfInterestDatabase.class
         ).build();
         ConcertFlow.setMockDb(db);
-
     }
 
     @After
     public void tearDown() {
-        assertTrue(this.db.isOpen());
-        db.clearAllTables();
         this.db.close();
         clearNotifications();
     }
@@ -128,7 +125,7 @@ public class ConcertNotificationTest {
     public void subscribeToAConcertKeepItSubscribed() throws Throwable {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(System.currentTimeMillis());
-        // schedule the notification to go off in 5 minutes,
+        // schedule the notification to go off in 45 minutes,
         // which leaves plenty of time for the test to finish and cancel it
         cal.add(Calendar.MINUTE, 60);
         Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
@@ -178,11 +175,9 @@ public class ConcertNotificationTest {
 
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
-//        refreshRecyclerView();
         onView(getItemInSchedule(0, 3)).perform(click());
         runnable.run();
 
-        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, s);
         refreshRecyclerView();
         onView(getItemInSchedule(0, 3)).check(switchChecked(switchStateAfter));
     }
