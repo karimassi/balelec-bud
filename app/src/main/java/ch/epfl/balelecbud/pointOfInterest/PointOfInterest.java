@@ -6,20 +6,22 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Objects;
 
+import ch.epfl.balelecbud.models.Location;
+
 public class PointOfInterest {
     private String name;
-    private String type;
-    private GeoPoint location;
+    private PointOfInterestType type;
+    private Location location;
 
     public PointOfInterest(){ }
 
-    public PointOfInterest(GeoPoint location, String name, String type) {
+    public PointOfInterest(Location location, String name, PointOfInterestType type) {
         this.location = location;
         this.name = name;
         this.type = type;
     }
 
-    public GeoPoint getLocation() {
+    public Location getLocation() {
         return location;
     }
 
@@ -27,7 +29,7 @@ public class PointOfInterest {
         return name;
     }
 
-    public String getType() {
+    public PointOfInterestType getType() {
         return type;
     }
 

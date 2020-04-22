@@ -4,8 +4,6 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.firebase.firestore.GeoPoint;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -14,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -31,9 +30,9 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
     private final PointOfInterest pointOfInterest1 = new PointOfInterest(
-            new GeoPoint(4, 20), "Bar IC", "Bar");
+            new Location(4, 20), "Bar IC", PointOfInterestType.BAR);
     private final PointOfInterest pointOfInterest2 = new PointOfInterest(
-            new GeoPoint(4, 22), "Bar EE", "Bar");
+            new Location(4, 22), "Bar EE", PointOfInterestType.BAR);
 
     @Before
     public void setup() {
@@ -78,8 +77,8 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
     }
 
     private void modifyAndTest(int indexOfMod, boolean pointOfInterestIsModified) throws Throwable {
-        PointOfInterest modified = new PointOfInterest(new GeoPoint(6.7, 55),
-                "Bar IC", "Bar");
+        PointOfInterest modified = new PointOfInterest(new Location(6.7, 55),
+                "Bar IC", PointOfInterestType.BAR);
 
         mock.addItem(pointOfInterest1);
         mock.modifyItem(modified, indexOfMod);
@@ -120,7 +119,7 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
 
     private void testInfoInView(ViewInteraction viewInteraction, PointOfInterest poi) {
         viewInteraction.check(matches(hasDescendant(withText(poi.getName()))));
-        viewInteraction.check(matches(hasDescendant(withText(poi.getType()))));
+        viewInteraction.check(matches(hasDescendant(withText(poi.getType().toString()))));
     }
 
     @Override
