@@ -1,6 +1,8 @@
 package ch.epfl.balelecbud;
 
 import androidx.test.rule.ActivityTestRule;
+
+import android.os.SystemClock;
 import android.view.View;
 
 import org.junit.Before;
@@ -8,7 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -18,12 +19,14 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry;
-import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.EasyMock2Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -40,7 +43,9 @@ public class EmergencyNumberActivityTest extends BasicActivityTest {
 
     @Before
     public void setup(){
+
         mock.resetDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH);
+        mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num1);
     }
 
     @Test
@@ -56,21 +61,17 @@ public class EmergencyNumberActivityTest extends BasicActivityTest {
     }
 
     @Test
-    public void testAddingNumbersToDisplay() {
+    public void testElementDisplayed() {
 
-        mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num1);
-        onView(withText(num1.getNumber())).check(matches(isDisplayed()));
+        //SystemClock.sleep(5000);
 
+        onData(anything())
+                .inAdapterView(withId(R.id.numbersListView))
+                .atPosition(0)
+                //.onChildView(withId(android.R.layout.simple_list_item_1))
+                .check(matches(withText((num1.getName()))));
     }
 
-    @Test
-    public void removingNumbersToDisplay() {
-        mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num1);
-        mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num2);
-        onView(withText(num2.getNumber())).check(matches(isDisplayed()));
-        mock.deleteDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num2);
-        onView(withText(num2.getNumber())).check(doesNotExist());
-    }
 
     @Override
     protected void setIds() {

@@ -37,8 +37,7 @@ public class EmergencyNumbersActivity extends BasicActivity {
     private Map<String, String> repertoryMap = new HashMap<String, String>();
     List<String> numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference emergencyNumbersRef = db.collection("emergencyNumbers");
+
 
 
     @Override
@@ -68,7 +67,8 @@ public class EmergencyNumbersActivity extends BasicActivity {
                 repertoryMap.put(number.getName(), number.getNumber());
             }
         });
-            numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
+            numberList.clear();
+            numberList.addAll(new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0]))));
             arrayAdapter.notifyDataSetChanged();
             makeListClickable();
 
