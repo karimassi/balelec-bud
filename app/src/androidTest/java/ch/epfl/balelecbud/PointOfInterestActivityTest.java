@@ -7,12 +7,10 @@ import androidx.test.rule.ActivityTestRule;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -65,29 +63,6 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
                 atPosition(0)), pointOfInterest1);
     }
 
-    @Ignore("modifying currently does not make sense")
-    @Test
-    public void testCanModifyFromDatabase() throws Throwable {
-        modifyAndTest(0, true);
-    }
-
-    @Ignore("modifying currently does not make sense")
-    @Test
-    public void testCantModifyFromDataThatIsNotThere() throws Throwable {
-        modifyAndTest(2, false);
-    }
-
-    private void modifyAndTest(int indexOfMod, boolean pointOfInterestIsModified) throws Throwable {
-        PointOfInterest modified = new PointOfInterest(new GeoPoint(6.7, 55),
-                "Bar IC", "Bar");
-
-        mock.addItem(pointOfInterest1);
-        mock.modifyItem(modified, indexOfMod);
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(0)), (pointOfInterestIsModified ? modified : pointOfInterest1));
-    }
-
     @Test
     public void testCanDeleteFromDatabase() {
         mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
@@ -110,12 +85,6 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
 
     private void refreshRecyclerView() {
         onView(withId(R.id.swipe_refresh_layout_point_of_interest)).perform(swipeDown());
-    }
-
-    @Ignore("Not clear what this should do")
-    @Test
-    public void testCantDeleteFromEmptyDatabase() throws Throwable {
-        mock.removeItem(pointOfInterest1, 0);
     }
 
     private void testInfoInView(ViewInteraction viewInteraction, PointOfInterest poi) {

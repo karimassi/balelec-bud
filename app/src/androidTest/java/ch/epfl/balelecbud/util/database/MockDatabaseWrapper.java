@@ -9,7 +9,6 @@ import com.google.firebase.Timestamp;
 import org.junit.Assert;
 
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,8 +33,6 @@ import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
-import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
-
 public class MockDatabaseWrapper implements DatabaseWrapper {
     private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
 
@@ -55,7 +52,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public static Slot slot1;
     public static Slot slot2;
     public static Slot slot3;
-    private final List<DatabaseListener> listeners = new ArrayList<>();
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendships = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
@@ -86,16 +82,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     public static MockDatabaseWrapper getInstance() {
         return instance;
-    }
-
-    @Override
-    public void unregisterListener(DatabaseListener listener) {
-        listeners.remove(listener);
-    }
-
-    @Override
-    public void listen(String collectionName, DatabaseListener listener) {
-        listeners.add(listener);
     }
 
     @Override
@@ -258,41 +244,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             }
         }
         return filteredKeys;
-    }
-
-    public void addItem(final Object object) throws Throwable {
-        runOnUiThreadWithLog("addItem", object, () -> addItemAux(object));
-    }
-
-    public void modifyItem(final Object object, final int index) throws Throwable {
-        runOnUiThreadWithLog("modifyItem", object, () -> changeItemAux(object, index));
-    }
-
-    public void removeItem(final Object object, final int index) throws Throwable {
-        runOnUiThreadWithLog("removeItem", object, () -> removeItemAux(object, index));
-    }
-
-    private void runOnUiThreadWithLog(String functionName, Object object, Runnable runnable) throws Throwable {
-        Log.d(TAG, functionName + "() called with: object = [" + object + "]");
-        runOnUIThreadAndWait(runnable);
-    }
-
-    private void addItemAux(Object item) {
-        for (DatabaseListener l : listeners) {
-            l.onItemAdded(item);
-        }
-    }
-
-    private void changeItemAux(Object item, int position) {
-        for (DatabaseListener l : listeners) {
-            l.onItemChanged(item, position);
-        }
-    }
-
-    private void removeItemAux(Object item, int position) {
-        for (DatabaseListener l : listeners) {
-            l.onItemRemoved(item, position);
-        }
     }
 
     @Override
