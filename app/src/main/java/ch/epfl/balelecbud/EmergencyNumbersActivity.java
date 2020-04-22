@@ -18,11 +18,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
+import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
@@ -60,22 +63,17 @@ public class EmergencyNumbersActivity extends BasicActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        emergencyNumbersRef.addSnapshotListener(this, (queryDocumentSnapshots, e) -> {
-            if (e != null) {
-                Log.w("EmergencyNumbers DB","empty collection");
-                return;
-            }
-            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                EmergencyNumber number = documentSnapshot.toObject(EmergencyNumber.class);
+        BalelecbudApplication.getAppDatabaseWrapper().query( new MyQuery(DatabaseWrapper. EMERGENCY_NUMBER_PATH, new LinkedList<>()), EmergencyNumber.class).whenComplete((res, err) -> {
+            for (EmergencyNumber number : res) {
                 repertoryMap.put(number.getName(), number.getNumber());
             }
-
+        });
             numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
             arrayAdapter.notifyDataSetChanged();
             makeListClickable();
 
-        });
     }
+
 
     private void makeListClickable() {
         numbersListView.setOnItemClickListener((parent, view, position, id) -> {
