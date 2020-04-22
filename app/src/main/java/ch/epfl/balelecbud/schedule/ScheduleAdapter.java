@@ -7,8 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -27,7 +25,7 @@ import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
-public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder> {
+public class ScheduleAdapter extends RecyclerView.Adapter<SlotHolder> {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
 
     private Consumer<Intent> intentLauncher;
@@ -41,22 +39,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     private final List<Slot> slots;
     private final List<Slot> subscribedConcertAtLaunch;
-
-    static class ScheduleViewHolder extends RecyclerView.ViewHolder {
-        final TextView timeSlotView;
-        final TextView artistNameView;
-        final TextView sceneNameView;
-        final Switch subscribeSwitch;
-
-        ScheduleViewHolder(View itemView) {
-            super(itemView);
-
-            timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);
-            artistNameView = itemView.findViewById(R.id.ScheduleArtistName);
-            sceneNameView = itemView.findViewById(R.id.ScheduleSceneName);
-            subscribeSwitch = itemView.findViewById(R.id.ScheduleSubscribeSwitch);
-        }
-    }
 
     public ScheduleAdapter(Activity activity, List<Slot> subscribedConcertAtLaunch) {
         Log.d(TAG, "ScheduleAdapter: with concerts = " + subscribedConcertAtLaunch.toString());
@@ -87,15 +69,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
 
     @NonNull
     @Override
-    public ScheduleAdapter.ScheduleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SlotHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View scheduleView = inflater.inflate(R.layout.item_schedule, parent, false);
-        return new ScheduleViewHolder(scheduleView);
+        return new SlotHolder(scheduleView);
     }
 
     @Override
-    public void onBindViewHolder(final ScheduleAdapter.ScheduleViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final SlotHolder viewHolder, int position) {
         final Slot slot = slots.get(position);
         viewHolder.timeSlotView.setText(slot.getTimeSlot());
         viewHolder.artistNameView.setText(slot.getArtistName());

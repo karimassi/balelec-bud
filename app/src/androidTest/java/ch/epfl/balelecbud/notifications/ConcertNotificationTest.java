@@ -33,11 +33,13 @@ import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -85,16 +87,21 @@ public class ConcertNotificationTest {
         }
         // quit the notifications center if it happens to be open
         clearNotifications();
+
+        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
+
         this.db = Room.inMemoryDatabaseBuilder(
                 getApplicationContext(),
                 ConcertOfInterestDatabase.class
         ).build();
         ConcertFlow.setMockDb(db);
+
     }
 
     @After
     public void tearDown() {
         assertTrue(this.db.isOpen());
+        db.clearAllTables();
         this.db.close();
         clearNotifications();
     }
@@ -123,7 +130,7 @@ public class ConcertNotificationTest {
         cal.setTimeInMillis(System.currentTimeMillis());
         // schedule the notification to go off in 5 minutes,
         // which leaves plenty of time for the test to finish and cancel it
-        cal.add(Calendar.MINUTE, 20);
+        cal.add(Calendar.MINUTE, 60);
         Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
                 new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
         checkSwitchAfter(() -> {
@@ -147,10 +154,10 @@ public class ConcertNotificationTest {
         Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
                 new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
 
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, s1);
 
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
-        mock.addItem(s1);
         assertNotNull(device.wait(Until.hasObject(By.text(s1.getArtistName())), 1000));
         onView(getItemInSchedule(0, 3)).perform(click());
         onView(getItemInSchedule(0, 3)).perform(click());
@@ -166,13 +173,17 @@ public class ConcertNotificationTest {
     }
 
     private void checkSwitchAfter(Runnable runnable, Slot s, boolean switchStateAfter) throws Throwable {
+
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, s);
+
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
-        mock.addItem(s);
+//        refreshRecyclerView();
         onView(getItemInSchedule(0, 3)).perform(click());
         runnable.run();
 
-        mock.addItem(s);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, s);
+        refreshRecyclerView();
         onView(getItemInSchedule(0, 3)).check(switchChecked(switchStateAfter));
     }
 
@@ -207,6 +218,10 @@ public class ConcertNotificationTest {
         openDrawerFrom(layout_id, nav_id);
         clickItemFrom(R.id.activity_main_drawer_info, nav_id);
         device.waitForIdle(10000);
+    }
+
+    private void refreshRecyclerView() {
+        onView(withId(R.id.swipe_refresh_layout_schedule)).perform(swipeDown());
     }
 
 }

@@ -57,6 +57,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
+    private final List<Slot> slots = new ArrayList<>();
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
 
@@ -140,6 +141,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return pointOfInterests;
             case DatabaseWrapper.LOCATIONS_PATH:
                 return new LinkedList(locations.values());
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                return slots;
             default:
                 throw new IllegalArgumentException("Unsupported collection name " + name);
         }
@@ -347,6 +350,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.add((FestivalInformation) document);
                 break;
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.add((Slot) document);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported collection name " + collectionName);
         }
@@ -399,6 +405,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 pointOfInterests.remove(document);
                 break;
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.remove(document);
+                break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName" + collectionName);
         }
@@ -439,6 +448,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.clear();
+                break;
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.clear();
                 break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName");
