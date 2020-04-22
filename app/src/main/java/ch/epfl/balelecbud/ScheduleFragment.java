@@ -10,11 +10,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
-import ch.epfl.balelecbud.schedule.ScheduleAdapter;
+import ch.epfl.balelecbud.schedule.SlotData;
+import ch.epfl.balelecbud.schedule.SlotHolder;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
 public class ScheduleFragment extends Fragment {
     
@@ -37,13 +40,17 @@ public class ScheduleFragment extends Fragment {
         super.onStart();
         activity = this.getActivity();
         Log.v(TAG, "onCreate: Creation of the activity");
-
         RecyclerView rvSchedule = getView().findViewById(R.id.scheduleRecyclerView);
 
-        ScheduleAdapter mAdapter = new ScheduleAdapter(activity, slots);
-        rvSchedule.setLayoutManager(new LinearLayoutManager(activity));
-        rvSchedule.setHasFixedSize(true);
-        rvSchedule.setAdapter(mAdapter);
+        SlotData data = new SlotData(getActivity(), slots);
+        RefreshableRecyclerViewAdapter<Slot, SlotHolder> adapter = new RefreshableRecyclerViewAdapter<>(
+                SlotHolder::new, data, R.layout.item_schedule);
+
+        rvSchedule.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvSchedule.setAdapter(adapter);
+
+        SwipeRefreshLayout refreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_schedule);
+        adapter.setOnRefreshListener(refreshLayout);
     }
 
     public void setSlots(List<Slot> slots){
