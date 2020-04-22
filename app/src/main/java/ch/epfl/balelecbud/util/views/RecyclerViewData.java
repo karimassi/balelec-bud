@@ -30,6 +30,12 @@ public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
         rvAdapter.notifyItemRangeChanged(index, data.size());
     }
 
+    public void clearAll(){
+        int oldSize = data.size();
+        data.clear();
+        rvAdapter.notifyItemRangeRemoved(0, oldSize);
+    }
+
     public List<A> getData() {
         return Collections.unmodifiableList(new LinkedList<>(data));
     }
