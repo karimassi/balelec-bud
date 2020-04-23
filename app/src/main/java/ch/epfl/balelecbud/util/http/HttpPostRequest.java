@@ -15,10 +15,10 @@ public class HttpPostRequest extends CompletableFuture<JsonElement> {
 
     private static final String TAG = HttpGetRequest.class.getSimpleName();
 
-    private JsonObjectRequest getRequest;
+    private JsonObjectRequest postRequest;
 
     public HttpPostRequest(String url, JSONObject request) {
-        getRequest = new JsonObjectRequest(Request.Method.POST, url, request,
+        postRequest = new JsonObjectRequest(Request.Method.POST, url, request,
                 response -> {
                     complete(JsonParser.parseString(response.toString()));
                 },
@@ -29,8 +29,8 @@ public class HttpPostRequest extends CompletableFuture<JsonElement> {
         );
     }
 
-    public JsonObjectRequest getGetRequest() {
-        return getRequest;
+    public JsonObjectRequest getPostRequest() {
+        return postRequest;
     }
 
 }

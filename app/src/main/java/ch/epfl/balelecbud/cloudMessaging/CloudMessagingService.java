@@ -39,8 +39,21 @@ public class CloudMessagingService extends FirebaseMessagingService {
     }
 
     @Override
+    public void onMessageSent(@NonNull String s) {
+        super.onMessageSent(s);
+        Log.d(TAG, "Message sent: " + s);
+    }
+
+    @Override
+    public void onSendError(@NonNull String s, @NonNull Exception e) {
+        super.onSendError(s, e);
+        Log.d(TAG, "Error sending message: " + s + ". Exception is: " + e.toString());
+    }
+
+    @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        Log.d(TAG, "onMessageReceived!");
 
         String title = "";
         String body = "";
