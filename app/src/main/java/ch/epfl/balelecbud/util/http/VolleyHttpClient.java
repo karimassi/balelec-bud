@@ -10,7 +10,6 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 
-
 public class VolleyHttpClient implements HttpClient {
 
     private static final HttpClient instance = new VolleyHttpClient();
@@ -30,7 +29,8 @@ public class VolleyHttpClient implements HttpClient {
 
     @Override
     public CompletableFuture<JsonElement> post(String url, JSONObject r) {
-        HttpPostRequest request = new HttpPostRequest(url, r);
+        HttpPostRequest request = null;
+        request = new HttpPostRequest(url, r);
         queue.add(request.getPostRequest());
         return request;
     }
