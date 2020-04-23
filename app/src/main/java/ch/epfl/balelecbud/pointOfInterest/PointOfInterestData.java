@@ -27,7 +27,7 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
     @Override
     public void bind(int index, PointOfInterestHolder viewHolder) {
         viewHolder.nameTextView.setText(data.get(index).getName());
-        viewHolder.typeTextView.setText(data.get(index).getType());
+        viewHolder.typeTextView.setText(data.get(index).getType().toString());
         viewHolder.amountNearPoiTextView.setText(String.valueOf(lastRecordedAffluence.get(index)));
     }
 

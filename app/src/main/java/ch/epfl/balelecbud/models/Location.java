@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.firebase.firestore.GeoPoint;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Objects;
