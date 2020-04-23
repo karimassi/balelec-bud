@@ -56,21 +56,40 @@ public class EmergencyNumbersActivity extends BasicActivity {
                 this,
                 android.R.layout.simple_list_item_1,
                 numberList);
+
         numbersListView.setAdapter(arrayAdapter);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+//        arrayAdapter = new ArrayAdapter(
+//                this,
+//                android.R.layout.simple_list_item_1,
+//                numberList);
+//        numbersListView.setAdapter(arrayAdapter);
         BalelecbudApplication.getAppDatabaseWrapper().query( new MyQuery(DatabaseWrapper. EMERGENCY_NUMBER_PATH, new LinkedList<>()), EmergencyNumber.class).whenComplete((res, err) -> {
             for (EmergencyNumber number : res) {
                 repertoryMap.put(number.getName(), number.getNumber());
+                Log.d("numer", number.getName());
             }
-        });
-            numberList.clear();
-            numberList.addAll(new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0]))));
-            arrayAdapter.notifyDataSetChanged();
+            numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
+
+            arrayAdapter = new ArrayAdapter(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    numberList);
+            numbersListView.setAdapter(arrayAdapter);
+
             makeListClickable();
+
+        });
+            //numberList.clear();
+            numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
+           // arrayAdapter.notifyDataSetChanged();
+
+
 
     }
 

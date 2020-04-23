@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
+
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.util.StringUtils.isEmailValid;
 
@@ -57,7 +59,7 @@ public class LoginUserActivity extends AppCompatActivity {
     }
 
     private void onAuthComplete() {
-        Intent intent = new Intent(this, WelcomeActivity.class);
+        Intent intent = new Intent(this, EmergencyNumbersActivity.class);
         startActivity(intent);
         finish();
     }

@@ -33,20 +33,22 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 @RunWith(AndroidJUnit4.class)
 public class EmergencyNumberActivityTest extends BasicActivityTest {
-    @Rule
-    public final ActivityTestRule<EmergencyNumbersActivity> mActivityRule =
-            new ActivityTestRule<>(EmergencyNumbersActivity.class);
 
-    final EmergencyNumber num1 = new EmergencyNumber("To much alcool","115");
-    final EmergencyNumber num2 = new EmergencyNumber("Lost","1234");
+
+    final EmergencyNumber num1 = new EmergencyNumber("Help","115");
+    final EmergencyNumber num2 = new EmergencyNumber("More help","1234");
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
-    @Before
-    public void setup(){
 
-        mock.resetDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH);
-        mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num1);
-    }
+    @Rule
+    public final ActivityTestRule<EmergencyNumbersActivity> mActivityRule = new ActivityTestRule<EmergencyNumbersActivity>(EmergencyNumbersActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            BalelecbudApplication.setAppDatabaseWrapper(mock);
+            mock.resetDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH);
+            mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num1);
+        }
+    };
 
     @Test
     public void testListViewIsNonNull() {
@@ -63,13 +65,13 @@ public class EmergencyNumberActivityTest extends BasicActivityTest {
     @Test
     public void testElementDisplayed() {
 
-        //SystemClock.sleep(5000);
+        SystemClock.sleep(2000);
 
         onData(anything())
                 .inAdapterView(withId(R.id.numbersListView))
                 .atPosition(0)
-                //.onChildView(withId(android.R.layout.simple_list_item_1))
-                .check(matches(withText((num1.getName()))));
+                .check(matches(withText(num1.getName())));
+
     }
 
 
