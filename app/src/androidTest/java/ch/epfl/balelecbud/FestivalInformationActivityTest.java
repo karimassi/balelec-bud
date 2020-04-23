@@ -5,7 +5,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,30 +54,6 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
     }
 
-    @Ignore("Currently modifying info does not make sens")
-    @Test
-    public void testCanModifyInfoFromDatabase() throws Throwable {
-        final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
-        final FestivalInformation infoModified = new FestivalInformation("Modified", "Hello it's a me, new");
-
-        mock.addItem(info);
-        mock.modifyItem(infoModified, 0);
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), infoModified);
-    }
-
-    @Ignore("Currently modifying info does not make sens")
-    @Test
-    public void testCantModifyInfoFromDatabaseThatIsNotThere() throws Throwable {
-        final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
-        final FestivalInformation infoModified = new FestivalInformation();
-
-        mock.addItem(info);
-        mock.modifyItem(infoModified, 2);
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
-    }
-
     @Test
     public void testCanDeleteInfoFromDatabase() {
         final FestivalInformation info1 = new FestivalInformation("Bad", "Hello it's a me, bad");
@@ -99,13 +74,6 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
         onView(withId(R.id.festivalInfoRecyclerView)).check(matches(hasChildCount(1)));
-    }
-
-    @Ignore("What this should do is unclear")
-    @Test
-    public void testCantDeleteInfoFromEmptyDatabase() throws Throwable {
-        final FestivalInformation info = new FestivalInformation();
-        mock.removeItem(info, 0);
     }
 
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {

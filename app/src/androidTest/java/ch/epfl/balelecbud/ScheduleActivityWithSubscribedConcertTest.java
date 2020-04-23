@@ -11,13 +11,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.schedule.SlotData;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
@@ -32,6 +36,9 @@ public class ScheduleActivityWithSubscribedConcertTest {
         @Override
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
+            SlotData.setIntentLauncher(intent -> { });
+            //refreshRecyclerView();
+            mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
         }
 
         @Override
@@ -44,14 +51,14 @@ public class ScheduleActivityWithSubscribedConcertTest {
 
     @Before
     public void setUpMockIntentLauncher() {
-        this.mActivityRule.getActivity().setIntentLauncher(intent -> {
-        });
+        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
+        refreshRecyclerView();
     }
 
     @Test
     public void testUnSubscribeToAConcert() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        mActivityRule.getActivity().setIntentLauncher(intent -> {
+        SlotData.setIntentLauncher(intent -> {
             if (intent.getAction() == null)
                 sync.fail();
 
@@ -67,9 +74,11 @@ public class ScheduleActivityWithSubscribedConcertTest {
                     break;
             }
         });
-        mock.addItem(slot1);
-        mock.addItem(slot2);
-        Thread.sleep(1000);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
+
+        refreshRecyclerView();
+
         onView(getItemInSchedule(0, 3)).perform(click());
         sync.waitCall(1);
         sync.assertCalled(1);
@@ -78,13 +87,18 @@ public class ScheduleActivityWithSubscribedConcertTest {
 
     @Test
     public void testSubscribedConcertIsChecked() throws Throwable {
-        mock.addItem(slot1);
-        mock.addItem(slot2);
-        Thread.sleep(1000);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
+
+        refreshRecyclerView();
 
         onView(getItemInSchedule(0, 3))
                 .check(switchChecked(true));
         onView(getItemInSchedule(1, 3))
                 .check(switchChecked(false));
+    }
+
+    private void refreshRecyclerView() {
+        onView(withId(R.id.swipe_refresh_layout_schedule)).perform(swipeDown());
     }
 }

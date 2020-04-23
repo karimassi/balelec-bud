@@ -19,10 +19,6 @@ public interface DatabaseWrapper {
     String EMERGENCY_NUMBER_PATH = "emergencyNumbers";
     String EMERGENCIES_PATH = "emergencies";
 
-    void unregisterListener(DatabaseListener listener);
-
-    void listen(String collectionName, DatabaseListener listener);
-
     void unregisterDocumentListener(String collectionName, String documentID);
 
     <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);

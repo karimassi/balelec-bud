@@ -35,8 +35,6 @@ import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
-import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
-
 public class MockDatabaseWrapper implements DatabaseWrapper {
     private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
 
@@ -56,7 +54,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public static Slot slot1;
     public static Slot slot2;
     public static Slot slot3;
-    private final List<DatabaseListener> listeners = new ArrayList<>();
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendships = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
@@ -64,6 +61,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
     private final List<EmergencyInfo> emergencyInfos = new ArrayList<>();
     private final Map<String, EmergencyNumber> emergencyNumbers = new HashMap<>();
+    private final List<Slot> slots = new ArrayList<>();
     private final Map<String, Emergency> emergencies = new HashMap<>();
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
@@ -88,16 +86,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     public static MockDatabaseWrapper getInstance() {
         return instance;
-    }
-
-    @Override
-    public void unregisterListener(DatabaseListener listener) {
-        listeners.remove(listener);
-    }
-
-    @Override
-    public void listen(String collectionName, DatabaseListener listener) {
-        listeners.add(listener);
     }
 
     @Override
@@ -150,6 +138,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return emergencyInfos;
             case DatabaseWrapper.LOCATIONS_PATH:
                 return new LinkedList(locations.values());
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                return slots;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 return new LinkedList(emergencies.values());
             case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
@@ -264,41 +254,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return filteredKeys;
     }
 
-    public void addItem(final Object object) throws Throwable {
-        runOnUiThreadWithLog("addItem", object, () -> addItemAux(object));
-    }
-
-    public void modifyItem(final Object object, final int index) throws Throwable {
-        runOnUiThreadWithLog("modifyItem", object, () -> changeItemAux(object, index));
-    }
-
-    public void removeItem(final Object object, final int index) throws Throwable {
-        runOnUiThreadWithLog("removeItem", object, () -> removeItemAux(object, index));
-    }
-
-    private void runOnUiThreadWithLog(String functionName, Object object, Runnable runnable) throws Throwable {
-        Log.d(TAG, functionName + "() called with: object = [" + object + "]");
-        runOnUIThreadAndWait(runnable);
-    }
-
-    private void addItemAux(Object item) {
-        for (DatabaseListener l : listeners) {
-            l.onItemAdded(item);
-        }
-    }
-
-    private void changeItemAux(Object item, int position) {
-        for (DatabaseListener l : listeners) {
-            l.onItemChanged(item, position);
-        }
-    }
-
-    private void removeItemAux(Object item, int position) {
-        for (DatabaseListener l : listeners) {
-            l.onItemRemoved(item, position);
-        }
-    }
-
     @Override
     public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
         switch (collectionName) {
@@ -386,6 +341,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.add((FestivalInformation) document);
                 break;
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.add((Slot) document);
+                break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.put(generateRandomUid(), (Emergency) document);
                 break;
@@ -448,6 +406,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 emergencyInfos.remove(document);
             case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
                 emergencyNumbers.remove(document);
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.remove(document);
+                break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.remove(document);
                 break;
@@ -494,6 +455,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.EMERGENCY_INFO_PATH:
                 emergencyInfos.clear();
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.clear();
                 break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.clear();

@@ -3,7 +3,6 @@ package ch.epfl.balelecbud.util.database;
 import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -14,7 +13,6 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -24,38 +22,10 @@ import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     private static final String TAG = FirestoreDatabaseWrapper.class.getSimpleName();
     private static final FirestoreDatabaseWrapper instance = new FirestoreDatabaseWrapper();
-    private final Map<DatabaseListener, ListenerRegistration> registrationMap = new HashMap<>();
     private final Map<String, ListenerRegistration> registrations = new HashMap<>();
 
     public static FirestoreDatabaseWrapper getInstance() {
         return instance;
-    }
-
-    @Override
-    public void unregisterListener(DatabaseListener listener) {
-        Objects.requireNonNull(registrationMap.remove(listener)).remove();
-    }
-
-    @Override
-    public void listen(String collectionName, final DatabaseListener listener) {
-        ListenerRegistration lr = getCollectionReference(collectionName)
-                .addSnapshotListener((queryDocumentSnapshots, e) -> {
-                    if (e != null | listener == null) return;
-                    for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                        switch (dc.getType()) {
-                            case ADDED:
-                                listener.onItemAdded(dc.getDocument().toObject(listener.getType()));
-                                break;
-                            case MODIFIED:
-                                listener.onItemChanged(dc.getDocument().toObject(listener.getType()), dc.getOldIndex());
-                                break;
-                            case REMOVED:
-                                listener.onItemRemoved(dc.getDocument().toObject(listener.getType()), dc.getOldIndex());
-                                break;
-                        }
-                    }
-                });
-        registrationMap.put(listener, lr);
     }
 
     @Override
