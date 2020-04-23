@@ -63,8 +63,8 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
     @Ignore("Currently modifying info does not make sens")
     @Test
     public void testCanModifyInfoFromDatabase() throws Throwable {
-        mock.addItem(info1);
-        mock.modifyItem(info2, 0);
+        mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info1);
+        mock.updateDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, 0, info2 );
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), info2);
     }
@@ -74,8 +74,8 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
     public void testCantModifyInfoFromDatabaseThatIsNotThere() throws Throwable {
         final EmergencyInfo emergencyInfoModified = new EmergencyInfo();
 
-        mock.addItem(info1);
-        mock.modifyItem(emergencyInfoModified, 2);
+        mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info1);
+        mock.updateDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, 0, emergencyInfoModified);
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), emergencyInfoModified);
     }
@@ -105,7 +105,7 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
     @Test
     public void testCantDeleteInfoFromEmptyDatabase() throws Throwable {
         final EmergencyInfo info = new EmergencyInfo();
-        mock.removeItem(info, 0);
+        mock.deleteDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info);
     }
 
     private void testInfoInView(ViewInteraction viewInteraction, EmergencyInfo information) {

@@ -394,6 +394,13 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
+    public void updateDocument(String collectionName, int documentID, Object update) {
+        switch (collectionName) {
+            case DatabaseWrapper.EMERGENCY_INFO_PATH:
+                emergencyInfos.set(documentID, (EmergencyInfo) update);
+        }
+    }
+
     public void deleteDocument(String collectionName, Object document) {
         switch (collectionName) {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
