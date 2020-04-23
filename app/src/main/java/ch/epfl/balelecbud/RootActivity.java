@@ -67,8 +67,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         if (slots != null) {
             if (!fragmentSchedule.isVisible()) {
                 fragmentSchedule.setSlots(slots);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.root_activity_frame_layout, fragmentSchedule).commit();
+                startTransactionFragment(fragmentSchedule, "SCHEDULE");
             }
         } else {
             this.showFirstFragment();
@@ -193,7 +192,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private void startTransactionFragment(Fragment fragment, String tag) {
         if (!fragment.isVisible()) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.root_activity_frame_layout, fragment).commit();
+                    .replace(R.id.root_activity_frame_layout, fragment)
+                    .setPrimaryNavigationFragment(fragmentHome)
+                    .addToBackStack(tag).commit();
         }
     }
 
@@ -227,6 +228,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         // 5 - Handle back click to close menu
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
         }
     }
 
