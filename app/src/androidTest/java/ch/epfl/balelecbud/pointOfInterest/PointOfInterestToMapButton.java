@@ -48,7 +48,8 @@ public class PointOfInterestToMapButton {
                     mockBd.resetDocument(POINT_OF_INTEREST_PATH);
                     mockBd.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest1);
                     mockBd.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest2);
-                    MapViewActivity.setMockCallback(mapboxMap -> {});
+                    MapViewActivity.setMockCallback(mapboxMap -> {
+                    });
                 }
             };
 
@@ -58,22 +59,25 @@ public class PointOfInterestToMapButton {
         onView(withId(R.id.map_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_poi));
     }
 
-    @Test
-    public void opensTheMapWhenClickOnAPOI1Button() {
-        onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), 0), 5)).perform(click());
+    private void clickOnButtonAndCheckMapOpen(int i) {
+        onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), i), 5)).perform(click());
         onView(withId(R.id.map_view)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void opensTheMapWhenClickOnAPOI1Button() {
+        clickOnButtonAndCheckMapOpen(0);
+    }
+
 
     @Test
     public void opensTheMapWhenClickOnAPOI2Button() {
-        onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), 1), 5)).perform(click());
-        onView(withId(R.id.map_view)).check(matches(isDisplayed()));
+        clickOnButtonAndCheckMapOpen(1);
     }
 
-    @Test
-    public void mapOpensToTheCorrectLocationForPOI1() throws InterruptedException {
+    private void clickOnButtonAndCheckMapOpenAtCorrectLocation(int i, PointOfInterest pointOfInterest1) throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), 0), 5)).perform(click());
+        onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), i), 5)).perform(click());
         mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
             public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
@@ -92,23 +96,12 @@ public class PointOfInterestToMapButton {
     }
 
     @Test
-    public void mapOpensToTheCorrectLocationForPOI2() throws InterruptedException {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), 1), 5)).perform(click());
-        mActivityRule.getActivity().onMapReady(new MyMap() {
-            @Override
-            public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
-                sync.assertThat(defaultLocation, is(pointOfInterest2.getLocation()));
-                sync.call();
-            }
+    public void mapOpensToTheCorrectLocationForPOI1() throws InterruptedException {
+        clickOnButtonAndCheckMapOpenAtCorrectLocation(0, pointOfInterest1);
+    }
 
-            @Override
-            public MyMarker addMarker(MyMarker.Builder markerBuilder) {
-                return null;
-            }
-        });
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
+    @Test
+    public void mapOpensToTheCorrectLocationForPOI2() throws InterruptedException {
+        clickOnButtonAndCheckMapOpenAtCorrectLocation(1, pointOfInterest2);
     }
 }
