@@ -14,6 +14,6 @@ public class MarkerTypeTest {
         Assert.assertEquals(MarkerType.FIRST_AID, MarkerType.getMarkerType(PointOfInterestType.FIRST_AID));
         Assert.assertEquals(MarkerType.FOOD, MarkerType.getMarkerType(PointOfInterestType.FOOD));
         Assert.assertEquals(MarkerType.STAGE, MarkerType.getMarkerType(PointOfInterestType.STAGE));
-        Assert.assertEquals(MarkerType.NOTYPE, MarkerType.getMarkerType(PointOfInterestType.WC));
+        Assert.assertEquals(MarkerType.NO_TYPE, MarkerType.getMarkerType(PointOfInterestType.WC));
     }
 }

@@ -12,7 +12,7 @@ public enum MarkerType {
     ATM("ATM", R.drawable.poi_atm),
     STAGE("Stage", R.drawable.poi_stage),
     WC("WC", R.drawable.poi_wc),
-    NOTYPE("None", R.drawable.map);
+    NO_TYPE("None", R.drawable.map);
 
     private String type;
     private int drawableId;
@@ -43,8 +43,10 @@ public enum MarkerType {
                 return MarkerType.STAGE;
             case FIRST_AID:
                 return MarkerType.FIRST_AID;
+            case WC:
+                return MarkerType.WC;
             default:
-                return MarkerType.NOTYPE;
+                return MarkerType.NO_TYPE;
         }
     }
 }
