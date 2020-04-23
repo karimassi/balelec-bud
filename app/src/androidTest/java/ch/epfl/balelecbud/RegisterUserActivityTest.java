@@ -21,7 +21,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.util.database.DatabaseListener;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
@@ -141,14 +140,6 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     @Test
     public void testCanRegisterFailDB() {
         BalelecbudApplication.setAppDatabaseWrapper(new DatabaseWrapper() {
-            @Override
-            public void unregisterListener(DatabaseListener listener) {
-            }
-
-            @Override
-            public void listen(String collectionName, DatabaseListener listener) {
-            }
-
             @Override
             public void unregisterDocumentListener(String collectionName, String documentID) { }
 

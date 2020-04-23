@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -13,13 +14,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.schedule.SlotData;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -40,6 +44,22 @@ public class ScheduleActivityTest extends BasicActivityTest {
         @Override
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
+            SlotData.setIntentLauncher(intent -> {
+                if (intent.getAction() == null)
+                    Assert.fail();
+
+                String action = intent.getAction();
+                switch (action) {
+                    case FlowUtil.ACK_CONCERT:
+                    case FlowUtil.GET_ALL_CONCERT:
+                        Assert.fail();
+                        break;
+                    case FlowUtil.SUBSCRIBE_CONCERT:
+                    case FlowUtil.CANCEL_CONCERT:
+                        break;
+                }
+            });
+
         }
 
         @Override
@@ -53,21 +73,8 @@ public class ScheduleActivityTest extends BasicActivityTest {
 
     @Before
     public void setup() {
-        mActivityRule.getActivity().setIntentLauncher(intent -> {
-            if (intent.getAction() == null)
-                Assert.fail();
-
-            String action = intent.getAction();
-            switch (action) {
-                case FlowUtil.ACK_CONCERT:
-                case FlowUtil.GET_ALL_CONCERT:
-                    Assert.fail();
-                    break;
-                case FlowUtil.SUBSCRIBE_CONCERT:
-                case FlowUtil.CANCEL_CONCERT:
-                    break;
-            }
-        });
+        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
+        refreshRecyclerView();
     }
 
     @Test
@@ -79,26 +86,35 @@ public class ScheduleActivityTest extends BasicActivityTest {
     public void testItemModification() throws Throwable {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
-        mock.addItem(slot1);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
+
+        refreshRecyclerView();
+
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        mock.addItem(slot2);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
+
+        refreshRecyclerView();
+
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 
-        mock.modifyItem(slot3, 0);
-        checkSlot(0, slot3);
+        mock.deleteDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
+        refreshRecyclerView();
 
-        mock.removeItem(slot3, 0);
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        mock.removeItem(slot2, 0);
+        mock.deleteDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
+        refreshRecyclerView();
+
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-        mock.addItem(slot1);
-        mock.addItem(slot2);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
+
+        refreshRecyclerView();
 
         checkSlot(0, slot1);
         checkSlot(1, slot2);
@@ -118,9 +134,11 @@ public class ScheduleActivityTest extends BasicActivityTest {
     @Test
     public void testCanSubscribeToAConcert() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        mock.addItem(slot1);
+        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
 
-        mActivityRule.getActivity().setIntentLauncher(intent -> {
+        refreshRecyclerView();
+
+        SlotData.setIntentLauncher(intent -> {
             if (intent.getAction() == null)
                 sync.fail();
             String action = intent.getAction();
@@ -142,6 +160,10 @@ public class ScheduleActivityTest extends BasicActivityTest {
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
+    }
+
+    private void refreshRecyclerView() {
+        onView(withId(R.id.swipe_refresh_layout_schedule)).perform(swipeDown());
     }
 
     @Override

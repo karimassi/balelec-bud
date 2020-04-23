@@ -18,10 +18,6 @@ public interface DatabaseWrapper {
     String FRIEND_REQUESTS_PATH = "friendRequests";
     String EMERGENCIES_PATH = "emergencies";
 
-    void unregisterListener(DatabaseListener listener);
-
-    void listen(String collectionName, DatabaseListener listener);
-
     void unregisterDocumentListener(String collectionName, String documentID);
 
     <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);
