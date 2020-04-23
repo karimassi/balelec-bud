@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ch.epfl.balelecbud.map.MapViewActivity;
-import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
@@ -38,11 +37,11 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
     public void bind(int index, PointOfInterestHolder viewHolder) {
         PointOfInterest poi = data.get(index);
         viewHolder.nameTextView.setText(poi.getName());
-        viewHolder.typeTextView.setText(poi.getType());
+        viewHolder.typeTextView.setText(poi.getType().toString());
         viewHolder.amountNearPoiTextView.setText(String.valueOf(lastRecordedAffluence.get(index)));
         viewHolder.goToMapButton.setOnClickListener(v -> {
             Intent intent = new Intent(activity, MapViewActivity.class);
-            intent.putExtra("location", new Location(poi.getLocation()));
+            intent.putExtra("location", poi.getLocation());
             activity.startActivity(intent);
         });
     }

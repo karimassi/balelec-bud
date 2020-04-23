@@ -14,7 +14,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class PointOfInterestUtils {
 
-    private static final double SEARCH_RADIUS_IN_KM = 0.05;
+    private static final double SEARCH_RADIUS_IN_KM = 0.003;
 
     public static CompletableFuture<Integer> getAmountNearPointOfInterest(PointOfInterest poi) {
 

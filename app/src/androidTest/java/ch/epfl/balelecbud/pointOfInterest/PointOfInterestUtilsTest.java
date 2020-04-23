@@ -113,8 +113,8 @@ public class PointOfInterestUtilsTest {
 
         BalelecbudApplication.setAppDatabaseWrapper(db);
 
-        PointOfInterest p1 = new PointOfInterest(new GeoPoint(46.51808,6.56906),
-                "whatever", "also whatever");
+        PointOfInterest p1 = new PointOfInterest(new Location(46.51808,6.56906),
+                "whatever", PointOfInterestType.STAGE);
 
         int res1 = PointOfInterestUtils.getAmountNearPointOfInterest(p1).get();
 

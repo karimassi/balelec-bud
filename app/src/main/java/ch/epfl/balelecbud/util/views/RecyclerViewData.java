@@ -37,7 +37,7 @@ public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
     }
 
     public List<A> getData() {
-        return Collections.unmodifiableList(data);
+        return Collections.unmodifiableList(new LinkedList<>(data));
     }
 
     public int size(){

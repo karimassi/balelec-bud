@@ -72,12 +72,6 @@ public class LocationTest {
     public void testToString() {
         Assert.assertEquals("Location(lat = 2.0, long = 1.0)", location.toString());
     }
-
-    @Test
-    public void testGeoPointConstructor() {
-        assertThat(new Location(geoPoint), is(location));
-    }
-
 }
 
    

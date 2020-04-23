@@ -5,12 +5,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Assert;
 
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,13 +31,10 @@ import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
-import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
-
 public class MockDatabaseWrapper implements DatabaseWrapper {
-    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
-
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
     public static final User celine =
@@ -50,23 +45,22 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             new User("axel@epfl.ch", "celine", MockAuthenticator.provideUid());
     public static final User gaspard =
             new User("gaspard@epfl.ch", "gaspard", MockAuthenticator.provideUid());
-
     public static final PointOfInterest pointOfInterest1 = new PointOfInterest(
-            new GeoPoint(4, 20), "Bar IC", "Bar");
+            new Location(4, 20), "Bar IC", PointOfInterestType.BAR);
     public static final PointOfInterest pointOfInterest2 = new PointOfInterest(
-            new GeoPoint(5, 22), "Bar EE", "Bar");
-
+            new Location(4, 22), "Bar EE", PointOfInterestType.BAR);
+    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
     private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
 
     public static Slot slot1;
     public static Slot slot2;
     public static Slot slot3;
-    private final List<DatabaseListener> listeners = new ArrayList<>();
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendships = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
+    private final List<Slot> slots = new ArrayList<>();
     private final Map<String, Emergency> emergencies = new HashMap<>();
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
@@ -91,16 +85,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     public static MockDatabaseWrapper getInstance() {
         return instance;
-    }
-
-    @Override
-    public void unregisterListener(DatabaseListener listener) {
-        listeners.remove(listener);
-    }
-
-    @Override
-    public void listen(String collectionName, DatabaseListener listener) {
-        listeners.add(listener);
     }
 
     @Override
@@ -151,6 +135,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return pointOfInterests;
             case DatabaseWrapper.LOCATIONS_PATH:
                 return new LinkedList(locations.values());
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                return slots;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 return new LinkedList(emergencies.values());
             default:
@@ -263,41 +249,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         return filteredKeys;
     }
 
-    public void addItem(final Object object) throws Throwable {
-        runOnUiThreadWithLog("addItem", object, () -> addItemAux(object));
-    }
-
-    public void modifyItem(final Object object, final int index) throws Throwable {
-        runOnUiThreadWithLog("modifyItem", object, () -> changeItemAux(object, index));
-    }
-
-    public void removeItem(final Object object, final int index) throws Throwable {
-        runOnUiThreadWithLog("removeItem", object, () -> removeItemAux(object, index));
-    }
-
-    private void runOnUiThreadWithLog(String functionName, Object object, Runnable runnable) throws Throwable {
-        Log.d(TAG, functionName + "() called with: object = [" + object + "]");
-        runOnUIThreadAndWait(runnable);
-    }
-
-    private void addItemAux(Object item) {
-        for (DatabaseListener l : listeners) {
-            l.onItemAdded(item);
-        }
-    }
-
-    private void changeItemAux(Object item, int position) {
-        for (DatabaseListener l : listeners) {
-            l.onItemChanged(item, position);
-        }
-    }
-
-    private void removeItemAux(Object item, int position) {
-        for (DatabaseListener l : listeners) {
-            l.onItemRemoved(item, position);
-        }
-    }
-
     @Override
     public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
         switch (collectionName) {
@@ -380,6 +331,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.add((FestivalInformation) document);
                 break;
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.add((Slot) document);
+                break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.put(generateRandomUid(), (Emergency) document);
                 break;
@@ -435,6 +389,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 pointOfInterests.remove(document);
                 break;
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.remove(document);
+                break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.remove(document);
                 break;
@@ -479,7 +436,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.clear();
                 break;
-
+            case DatabaseWrapper.CONCERT_SLOTS_PATH:
+                slots.clear();
+                break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.clear();
                 break;

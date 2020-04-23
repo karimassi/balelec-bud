@@ -77,7 +77,7 @@ public class PointOfInterestToMapButton {
         mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
             public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
-                sync.assertThat(defaultLocation, is(new Location(pointOfInterest1.getLocation())));
+                sync.assertThat(defaultLocation, is(pointOfInterest1.getLocation()));
                 sync.call();
             }
 
@@ -98,7 +98,7 @@ public class PointOfInterestToMapButton {
         mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
             public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
-                sync.assertThat(defaultLocation, is(new Location(pointOfInterest2.getLocation())));
+                sync.assertThat(defaultLocation, is(pointOfInterest2.getLocation()));
                 sync.call();
             }
 
