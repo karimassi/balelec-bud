@@ -2,10 +2,8 @@ package ch.epfl.balelecbud;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,24 +26,16 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
-    @Before
-    public final void openInfoFragment(){
-        RootActivityTest.openDrawer();
-        RootActivityTest.clickItem(R.id.activity_main_drawer_info, R.id.festivalInfoRecyclerView);
+    @Override
+    protected void setUpBeforeActivityLaunched() {
+        super.setUpBeforeActivityLaunched();
+        cleanUp();
     }
 
-    @Before
-    public void setup() {
+    @After
+    public void cleanUp() {
         mock.resetDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH);
     }
-
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppDatabaseWrapper(mock);
-        }
-    };
 
     @Test
     public void testFestivalInfoRecyclerViewIsDisplayed() {
@@ -53,7 +43,7 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
     }
 
     @Test
-    public void testCanAddInfoToDatabase(){
+    public void testCanAddInfoToDatabase() {
         final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
         mock.storeDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info);
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
@@ -89,5 +79,15 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {
         viewInteraction.check(matches(hasDescendant(withText(information.getTitle()))));
         viewInteraction.check(matches(hasDescendant(withText(information.getInformation()))));
+    }
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_info;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.festivalInfoRecyclerView;
     }
 }

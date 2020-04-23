@@ -38,12 +38,14 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
+    public static final User camille =
+            new User("camille@epfl.ch", "camille", MockAuthenticator.provideUid());
     public static final User celine =
             new User("celine@epfl.ch", "celine", MockAuthenticator.provideUid());
     public static final User alex =
             new User("alex@epfl.ch", "alex", MockAuthenticator.provideUid());
     public static final User axel =
-            new User("axel@epfl.ch", "celine", MockAuthenticator.provideUid());
+            new User("axel@epfl.ch", "axel", MockAuthenticator.provideUid());
     public static final User gaspard =
             new User("gaspard@epfl.ch", "gaspard", MockAuthenticator.provideUid());
 
@@ -65,6 +67,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private MockDatabaseWrapper() {
         storeDocument(USERS_PATH, karim);
         storeDocument(USERS_PATH, celine);
+        storeDocument(USERS_PATH, camille);
         storeDocument(USERS_PATH, alex);
         storeDocument(USERS_PATH, axel);
         storeDocument(USERS_PATH, gaspard);

@@ -2,13 +2,10 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -36,48 +33,41 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
 public class ScheduleFragmentTest extends RootActivityTest{
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppDatabaseWrapper(mock);
-            SlotData.setIntentLauncher(intent -> {
-                if (intent.getAction() == null)
-                    Assert.fail();
-
-                String action = intent.getAction();
-                switch (action) {
-                    case FlowUtil.ACK_CONCERT:
-                    case FlowUtil.GET_ALL_CONCERT:
-                        Assert.fail();
-                        break;
-                    case FlowUtil.SUBSCRIBE_CONCERT:
-                    case FlowUtil.CANCEL_CONCERT:
-                        break;
-                }
-            });
-
-        }
-
-        @Override
-        protected Intent getActivityIntent() {
-            Intent intent = new Intent(ApplicationProvider.getApplicationContext(), RootActivity.class);
-            FlowUtil.packCallback(new Slot[]{}, intent);
-            return intent;
-        }
-
-    };
-
-    @Before
-    public final void openScheduleFragment(){
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
+    @Override
+    protected Intent addInfoToActivityIntent(Intent intent) {
+        FlowUtil.packCallback(new Slot[]{}, intent);
+        return intent;
     }
 
-    @Before
-    public void setup() {
-        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
+    @Override
+    protected void setUpBeforeActivityLaunched() {
+        super.setUpBeforeActivityLaunched();
+        SlotData.setIntentLauncher(intent -> {
+            if (intent.getAction() == null)
+                Assert.fail();
+
+            String action = intent.getAction();
+            switch (action) {
+                case FlowUtil.ACK_CONCERT:
+                case FlowUtil.GET_ALL_CONCERT:
+                    Assert.fail();
+                    break;
+                case FlowUtil.SUBSCRIBE_CONCERT:
+                case FlowUtil.CANCEL_CONCERT:
+                    break;
+            }
+        });
+        cleanUp();
+    }
+
+    @Override
+    protected void openFragmentUnderTest() {
         refreshRecyclerView();
+    }
+
+    @After
+    public void cleanUp() {
+        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
     }
 
     @Test
@@ -86,7 +76,7 @@ public class ScheduleFragmentTest extends RootActivityTest{
     }
 
     @Test
-    public void testItemModification() throws Throwable {
+    public void testItemModification() {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
         mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
@@ -113,7 +103,7 @@ public class ScheduleFragmentTest extends RootActivityTest{
     }
 
     @Test
-    public void testCaseForRecyclerItems() throws Throwable {
+    public void testCaseForRecyclerItems() {
         mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
         mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
 
@@ -166,5 +156,15 @@ public class ScheduleFragmentTest extends RootActivityTest{
 
     private void refreshRecyclerView() {
         onView(withId(R.id.swipe_refresh_layout_schedule)).perform(swipeDown());
+    }
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_schedule;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.scheduleRecyclerView;
     }
 }
