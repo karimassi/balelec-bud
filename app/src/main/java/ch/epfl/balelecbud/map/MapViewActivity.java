@@ -173,6 +173,8 @@ public class MapViewActivity extends BasicActivity {
 
     private void updateFriendLocation(User friend, Location location) {
         Log.d(TAG, "updateFriendLocation() called with: friend = [" + friend + "], location = [" + location + "]");
+        if (location == null)
+            return;
         if (myMap == null) {
             waitingFriendsLocation.put(friend, location);
         } else if (friendsMarkers.containsKey(friend)) {
