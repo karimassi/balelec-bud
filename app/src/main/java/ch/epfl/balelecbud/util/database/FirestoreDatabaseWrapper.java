@@ -129,8 +129,6 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public void unregisterListeners() {
-        for(ListenerRegistration l : registrationMap.values())
-            l.remove();
         for(ListenerRegistration l : registrations.values())
             l.remove();
     }

@@ -414,7 +414,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     @Override
     public void unregisterListeners() {
-        listeners.clear();
         friendsLocationListener.clear();
     }
 

@@ -31,7 +31,6 @@ import static org.junit.Assert.assertFalse;
 public abstract class RootActivityTest {
     private static UiDevice device = UiDevice.getInstance(getInstrumentation());
 
-
     @Before
     public void passIDsToBasicActivityTest() {
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());

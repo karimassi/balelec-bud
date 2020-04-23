@@ -9,11 +9,13 @@ import com.google.android.gms.location.LocationRequest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -71,6 +73,12 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
     public void cleanup() {
         mockDB.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
         mockDB.resetFriendshipsAndRequests();
+    }
+
+    @Before
+    public final void openMapFragment(){
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_map, R.id.map_view);
     }
 
     @Test

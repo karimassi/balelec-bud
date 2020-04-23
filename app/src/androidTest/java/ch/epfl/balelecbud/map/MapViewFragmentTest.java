@@ -9,6 +9,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.location.LocationRequest;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,6 +58,12 @@ public class MapViewFragmentTest extends RootActivityTest {
                     mockAuth.setCurrentUser(MockDatabaseWrapper.celine);
                 }
             };
+
+    @Before
+    public final void openMapFragment(){
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_map, R.id.map_view);
+    }
 
     @Test
     public void testMapViewIsNotNull() {
