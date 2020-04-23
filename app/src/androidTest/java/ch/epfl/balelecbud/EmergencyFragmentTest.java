@@ -65,6 +65,7 @@ public class EmergencyFragmentTest extends RootActivityTest {
 
     private void submitEmergency(String category, String message) {
         onView(withId(R.id.buttonAskForHelp)).perform(click());
+        waitIdle();
         onView(withId(R.id.spinnerEmergencyCategories)).perform(click());
         onView(withText(category)).inRoot(isPlatformPopup()).perform(click());
         onView(withId(R.id.textEmergencyMessage)).perform(typeText(message)).perform(closeSoftKeyboard());

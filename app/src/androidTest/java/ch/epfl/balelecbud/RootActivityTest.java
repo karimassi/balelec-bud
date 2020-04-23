@@ -147,14 +147,16 @@ public abstract class RootActivityTest {
 
     @Test
     public void signOutDisableLocation() {
+        LocationUtil.enableLocation();
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) { }
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+            }
 
             @Override
-            public void removeLocationUpdates(PendingIntent intent) { }
+            public void removeLocationUpdates(PendingIntent intent) {
+            }
         });
-        LocationUtil.enableLocation();
         openDrawer();
         onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
         assertFalse(LocationUtil.isLocationActive());
@@ -164,8 +166,10 @@ public abstract class RootActivityTest {
     public void testBackPress() {
         openDrawer();
         device.pressBack();
+        device.waitForIdle();
         onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
         device.pressBack();
+        device.waitForIdle();
     }
 
     public void openDrawer() {
