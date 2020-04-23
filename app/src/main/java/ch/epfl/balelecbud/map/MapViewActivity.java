@@ -15,7 +15,6 @@ import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.maps.MapView;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +28,6 @@ import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
-import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
 
@@ -202,10 +200,8 @@ public class MapViewActivity extends BasicActivity {
     private void setupMapIcons() {
         IconFactory iconFactory = IconFactory.getInstance(getApplicationContext());
         icons = new HashMap<>();
-        List<Integer> iconIds = Arrays.asList(R.drawable.friend_icon, R.drawable.poi_bar_icon,
-                R.drawable.poi_food_icon, R.drawable.poi_firstaid, R.drawable.poi_atm, R.drawable.poi_stage, R.drawable.map, R.drawable.map);
         for (MarkerType t : MarkerType.values()) {
-            Drawable iconDrawable = ContextCompat.getDrawable(getApplicationContext(), iconIds.get(t.ordinal()));
+            Drawable iconDrawable = ContextCompat.getDrawable(getApplicationContext(), t.getDrawableId());
             Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
             Icon icon = iconFactory.fromBitmap(bitmap);
             icons.put(t, icon);

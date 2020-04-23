@@ -1,22 +1,34 @@
 package ch.epfl.balelecbud.map;
 
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 
 public enum MarkerType {
 
-    FRIEND("Friend"), BAR("Bar"), FOOD("Food"), FIRST_AID("First aid"), ATM("ATM"), STAGE("Stage"), WC("WC"), NOTYPE("None");
+    FRIEND("Friend", R.drawable.friend_icon),
+    BAR("Bar", R.drawable.poi_bar_icon),
+    FOOD("Food", R.drawable.poi_food_icon),
+    FIRST_AID("First aid", R.drawable.poi_firstaid),
+    ATM("ATM", R.drawable.poi_atm),
+    STAGE("Stage", R.drawable.poi_stage),
+    WC("WC", R.drawable.poi_wc),
+    NOTYPE("None", R.drawable.map);
 
     private String type;
+    private int drawableId;
 
-    MarkerType(String type) {
+    MarkerType(String type, int drawableId) {
         this.type = type;
+        this.drawableId = drawableId;
     }
 
     @Override
     public String toString() {
         return type;
+    }
 
-
+    public int getDrawableId() {
+        return drawableId;
     }
 
     public static MarkerType getMarkerType(PointOfInterestType pointOfInterestType) {

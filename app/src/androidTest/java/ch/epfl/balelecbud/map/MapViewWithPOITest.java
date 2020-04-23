@@ -14,11 +14,9 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
@@ -26,9 +24,7 @@ import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.karim;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewWithPOITest {
@@ -36,11 +32,6 @@ public class MapViewWithPOITest {
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
 
     private final PointOfInterest atm = new PointOfInterest(new Location(1, 2), "credit suisse", PointOfInterestType.ATM);
-    private final PointOfInterest bar = new PointOfInterest(new Location(4, 5), "bar ic", PointOfInterestType.BAR);
-    private final PointOfInterest food = new PointOfInterest(new Location(1, 3), "kebab", PointOfInterestType.FOOD);
-    private final PointOfInterest help = new PointOfInterest(new Location(1, 2), "first aid", PointOfInterestType.FIRST_AID);
-    private final PointOfInterest stage = new PointOfInterest(new Location(13, 29), "grande scene", PointOfInterestType.STAGE);
-    private final PointOfInterest wc = new PointOfInterest(new Location(13, 2), "WC", PointOfInterestType.WC);
 
     @Rule
     public final ActivityTestRule<MapViewActivity> mActivityRule =
@@ -65,11 +56,6 @@ public class MapViewWithPOITest {
                     });
                     mockAuth.setCurrentUser(celine);
                     mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, atm);
-//                    mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, bar);
-//                    mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, food);
-//                    mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, wc);
-//                    mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, help);
-//                    mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, stage);
                 }
             };
 
@@ -81,6 +67,7 @@ public class MapViewWithPOITest {
     private void assertNameAndLocation(MyMarker.Builder markerBuilder, TestAsyncUtils sync, PointOfInterest poi) {
         sync.assertEquals(poi.getName(), markerBuilder.getTitle());
         sync.assertEquals(poi.getLocation(), markerBuilder.getLocation());
+        sync.assertEquals(poi.getType(), PointOfInterestType.ATM);
     }
 
     @Test
