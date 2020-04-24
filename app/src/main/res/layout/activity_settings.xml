@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_activity_drawer_layout"
+    android:id="@+id/settings_activity_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -20,7 +20,7 @@
 
         <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/root_activity_toolbar"
+            android:id="@+id/settings_activity_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/blek_blue"
@@ -28,7 +28,7 @@
 
         <!-- FrameLayout for our fragments -->
         <FrameLayout
-            android:id="@+id/root_activity_frame_layout"
+            android:id="@+id/settings_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -37,7 +37,7 @@
 
     <!-- 2 | NavigationView -->
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/root_activity_nav_view"
+        android:id="@+id/settings_activity_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

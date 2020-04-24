@@ -6,6 +6,8 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 
 import ch.epfl.balelecbud.models.Location;
 
+import static java.util.Objects.requireNonNull;
+
 public interface MyMarker {
 
     void setLocation(Location location);
@@ -17,7 +19,7 @@ public interface MyMarker {
         private Icon icon;
 
         public Builder location(Location location) {
-            this.location = location;
+            this.location = requireNonNull(location);
             return this;
         }
 
@@ -48,9 +50,7 @@ public interface MyMarker {
             if (title != null) {
                 result = result.title(title);
             }
-            if (location != null) {
-                result = result.position(location.toLatLng());
-            }
+            result = result.position(requireNonNull(location).toLatLng());
             if (icon != null) {
                 result = result.icon(icon);
             }
