@@ -89,8 +89,8 @@ public class MapViewWithPOITest {
                 sync.call();
             }
         }));
-        sync.waitCall(1);
-        sync.assertCalled(1);
+        sync.waitCall(2);
+        sync.assertCalled(2);
         sync.assertNoFailedTests();
     }
 
