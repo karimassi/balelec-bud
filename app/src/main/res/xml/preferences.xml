@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SwitchPreferenceCompat
-        app:key="LOCATION_ENABLE_KEY"
-        app:title="Enable location usage"/>
+        app:key="@string/location_enable_key"
+        app:title="@string/location_enable_title"/>
 
     <Preference
-        app:key="locationInfo"
-        app:title="Location usage is not allowed"
-        app:summary="Click here to allow it"/>
+        app:key="@string/location_info_key"
+        app:title="@string/location_info_title"
+        app:summary="@string/location_info_summary"/>
 
 </PreferenceScreen>

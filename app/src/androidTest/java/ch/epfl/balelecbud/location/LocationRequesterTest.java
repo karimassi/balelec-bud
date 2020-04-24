@@ -21,6 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.settings.SettingsActivity;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
@@ -36,12 +37,15 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 @SdkSuppress(maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
 public class LocationRequesterTest {
+    private static String LOCATION_ENABLE_TITLE;
+    private static String LOCATION_INFO_TITLE;
+
     private static final long TIMEOUT = 1000;
     private UiDevice device;
 
     private void grantPermission() {
-        if (this.device.hasObject(By.text("Location usage is not allowed"))) {
-            this.device.findObject(By.text("Location usage is not allowed")).click();
+        if (this.device.hasObject(By.text(LOCATION_INFO_TITLE))) {
+            this.device.findObject(By.text(LOCATION_INFO_TITLE)).click();
             this.device.waitForWindowUpdate(null, TIMEOUT);
             this.device.findObject(By.text("ALLOW")).click();
             this.device.waitForWindowUpdate(null, TIMEOUT);
@@ -55,6 +59,7 @@ public class LocationRequesterTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     setDumLocationClient();
+
                 }
             };
 
@@ -76,22 +81,20 @@ public class LocationRequesterTest {
     public void setUp() {
         this.device = UiDevice.getInstance(getInstrumentation());
         this.device.waitForWindowUpdate(null, TIMEOUT);
-        //openSettingsActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
+        LOCATION_ENABLE_TITLE = mActivityRule.getActivity().getString(R.string.location_enable_title);
+        LOCATION_INFO_TITLE = mActivityRule.getActivity().getString(R.string.location_info_title);
+
         grantPermission();
-        //onData(PreferenceMatchers.withKey(LocationUtil.LOCATION_ENABLE_KEY)).check(matches(isDisplayed()));
 
         if (LocationUtil.isLocationActive())
-            clickOn("Enable location usage");
-        //onData(allOf(is(instanceOf(Preference.class)), withKey(LocationUtil.LOCATION_ENABLE_KEY))).onChildView(withClassName(is(SwitchCompat.class.getName()))).perform(click());
-        //onView(withId(R.id.locationSwitch)).perform(click());
+            clickOn(LOCATION_ENABLE_TITLE);
     }
 
     @After
     public void tearDown() {
         setDumLocationClient();
         if (LocationUtil.isLocationActive())
-            clickOn("Enable location usage");
-        //onView(withId(R.id.locationSwitch)).perform(click());
+            clickOn(LOCATION_ENABLE_TITLE);
     }
 
     @Test
@@ -111,9 +114,7 @@ public class LocationRequesterTest {
             }
         });
         Assert.assertFalse(LocationUtil.isLocationActive());
-        //onView(withId(R.id.locationSwitch)).check(switchClickable(true));
-        clickOn("Enable location usage");
-        //onView(withId(R.id.locationSwitch)).perform(click());
+        clickOn(LOCATION_ENABLE_TITLE);
         Assert.assertTrue(LocationUtil.isLocationActive());
         sync.assertCalled(1);
         sync.assertNoFailedTests();
@@ -136,11 +137,9 @@ public class LocationRequesterTest {
                 sync.call();
             }
         });
-        clickOn("Enable location usage");
-        clickOn("Enable location usage");
+        clickOn(LOCATION_ENABLE_TITLE);
+        clickOn(LOCATION_ENABLE_TITLE);
 
-        //onView(withId(R.id.locationSwitch)).perform(click());
-        //onView(withId(R.id.locationSwitch)).perform(click());
         Assert.assertFalse(LocationUtil.isLocationActive());
         sync.assertCalled(2);
         sync.assertNoFailedTests();
@@ -152,9 +151,9 @@ public class LocationRequesterTest {
                 permissions,
                 permissionStatus);
         if (b) {
-            checkDisplayed("Enable location usage");
+            checkDisplayed(LOCATION_ENABLE_TITLE);
         } else {
-            checkDisplayed("Location usage is not allowed");
+            checkDisplayed(LOCATION_INFO_TITLE);
         }
     }
 

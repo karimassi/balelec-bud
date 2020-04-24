@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.LocationRequest;
 
@@ -27,7 +26,6 @@ public final class LocationUtil {
     public final static int LOCATION_PERMISSIONS_REQUEST_CODE = 34;
     private final static long UPDATE_INTERVAL = 60_000;
     private final static long MAX_WAIT_TIME = UPDATE_INTERVAL;
-    public final static String LOCATION_ENABLE_KEY = "LOCATION_ENABLE_KEY";
     private static LocationRequest locationRequest;
     private static LocationClient client;
 
@@ -111,11 +109,11 @@ public final class LocationUtil {
     /**
      * Check if the location service is activated or not
      *
-     * @return        the location service status
+     * @return the location service status
      */
     public static boolean isLocationActive() {
         Context ctx = BalelecbudApplication.getAppContext();
-        return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(LOCATION_ENABLE_KEY, false);
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(ctx.getString(R.string.location_enable_key), false);
     }
 
     /**
@@ -137,11 +135,11 @@ public final class LocationUtil {
         updateLocation(status);
         Context ctx = BalelecbudApplication.getAppContext();
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
-        editor.putBoolean(LOCATION_ENABLE_KEY, status);
+        editor.putBoolean(ctx.getString(R.string.location_enable_key), status);
         editor.apply();
     }
 
-    public static void updateLocation(boolean status){
+    public static void updateLocation(boolean status) {
         Context ctx = BalelecbudApplication.getAppContext();
         if (status) {
             requestLocationUpdates(ctx);
