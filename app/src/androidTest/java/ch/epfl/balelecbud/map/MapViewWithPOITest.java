@@ -25,6 +25,7 @@ import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewWithPOITest {
@@ -83,7 +84,8 @@ public class MapViewWithPOITest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+                sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }
         }));

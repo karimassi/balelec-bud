@@ -4,8 +4,8 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.widget.Switch;
 
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
@@ -22,35 +22,44 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.settings.SettingsActivity;
+import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchClickable;
 
 @SdkSuppress(maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
 public class LocationRequesterTest {
+    private static String LOCATION_ENABLE_TITLE;
+    private static String LOCATION_INFO_TITLE;
+
     private static final long TIMEOUT = 1000;
     private UiDevice device;
 
     private void grantPermission() {
-        if (this.device.hasObject(By.text("ALLOW"))) {
+        if (this.device.hasObject(By.text(LOCATION_INFO_TITLE))) {
+            this.device.findObject(By.text(LOCATION_INFO_TITLE)).click();
+            this.device.waitForWindowUpdate(null, TIMEOUT);
             this.device.findObject(By.text("ALLOW")).click();
             this.device.waitForWindowUpdate(null, TIMEOUT);
         }
     }
 
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
+    public final ActivityTestRule<SettingsActivity> mActivityRule =
+            new ActivityTestRule<SettingsActivity>(SettingsActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     setDumLocationClient();
+
                 }
             };
 
@@ -72,16 +81,20 @@ public class LocationRequesterTest {
     public void setUp() {
         this.device = UiDevice.getInstance(getInstrumentation());
         this.device.waitForWindowUpdate(null, TIMEOUT);
+        LOCATION_ENABLE_TITLE = mActivityRule.getActivity().getString(R.string.location_enable_title);
+        LOCATION_INFO_TITLE = mActivityRule.getActivity().getString(R.string.location_info_title);
+
         grantPermission();
+
         if (LocationUtil.isLocationActive())
-            onView(withId(R.id.locationSwitch)).perform(click());
+            clickOn(LOCATION_ENABLE_TITLE);
     }
 
     @After
     public void tearDown() {
         setDumLocationClient();
         if (LocationUtil.isLocationActive())
-            onView(withId(R.id.locationSwitch)).perform(click());
+            clickOn(LOCATION_ENABLE_TITLE);
     }
 
     @Test
@@ -101,8 +114,7 @@ public class LocationRequesterTest {
             }
         });
         Assert.assertFalse(LocationUtil.isLocationActive());
-        onView(withId(R.id.locationSwitch)).check(switchClickable(true));
-        onView(withId(R.id.locationSwitch)).perform(click());
+        clickOn(LOCATION_ENABLE_TITLE);
         Assert.assertTrue(LocationUtil.isLocationActive());
         sync.assertCalled(1);
         sync.assertNoFailedTests();
@@ -125,8 +137,9 @@ public class LocationRequesterTest {
                 sync.call();
             }
         });
-        onView(withId(R.id.locationSwitch)).perform(click());
-        onView(withId(R.id.locationSwitch)).perform(click());
+        clickOn(LOCATION_ENABLE_TITLE);
+        clickOn(LOCATION_ENABLE_TITLE);
+
         Assert.assertFalse(LocationUtil.isLocationActive());
         sync.assertCalled(2);
         sync.assertNoFailedTests();
@@ -137,36 +150,40 @@ public class LocationRequesterTest {
                 LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
                 permissions,
                 permissionStatus);
-        onView(withId(R.id.locationSwitch)).check(switchClickable(b));
+        if (b) {
+            checkDisplayed(LOCATION_ENABLE_TITLE);
+        } else {
+            checkDisplayed(LOCATION_INFO_TITLE);
+        }
     }
 
     @Test
     public void whenPermissionGrantedCanSwitchOnLocation() {
         checkPermissionAfterResult(
-                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                new int[] { PackageManager.PERMISSION_GRANTED}, true);
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                new int[]{PackageManager.PERMISSION_GRANTED}, true);
     }
 
     @Test
     public void whenPermissionDeniedCannotSwitchOnLocation() {
         checkPermissionAfterResult(
-                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                new int[] { PackageManager.PERMISSION_DENIED }, false);
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                new int[]{PackageManager.PERMISSION_DENIED}, false);
     }
 
     @Test
     public void whenPermissionCanceledCannotSwitchOnLocation() {
-        checkPermissionAfterResult(new String[] { }, new int[] { }, false);
+        checkPermissionAfterResult(new String[]{}, new int[]{}, false);
     }
 
-    @Test
-    public void whenPermissionIsForAnOtherActivitySwitchStateNotChanged() {
-        Switch locationSwitch = this.mActivityRule.getActivity().findViewById(R.id.locationSwitch);
-        boolean before = locationSwitch.isClickable();
+    private void clickOn(String title) {
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(
+                        hasDescendant(withText(title)), click()));
+    }
 
-        this.mActivityRule.getActivity().onRequestPermissionsResult(0,
-                new String[] { }, new int[] { });
-
-        onView(withId(R.id.locationSwitch)).check(switchClickable(before));
+    private void checkDisplayed(String text) {
+        onView(new RecyclerViewMatcher(androidx.preference.R.id.recycler_view).
+                atPosition(0)).check(matches(hasDescendant(withText(text))));
     }
 }

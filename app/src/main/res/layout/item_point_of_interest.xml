@@ -27,8 +27,15 @@
         android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/text_view_poi_amout_nearby"
+        android:id="@+id/text_view_poi_amount_nearby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/go_to_map"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/go_to_map" />
 
 </LinearLayout>

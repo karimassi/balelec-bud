@@ -47,14 +47,24 @@ public class MyMarkerBuilderTest {
 
         markerOptions = new MyMarker.Builder().
                 title(title).
+                location(location).
                 toMapboxMarkerOptions();
         assertEquals(title, markerOptions.getTitle());
 
         markerOptions = new MyMarker.Builder().
-                title(null).location(null).icon(null).
+                title(null).location(location).icon(null).
                 toMapboxMarkerOptions();
-        assertEquals(markerOptions, new MarkerOptions());
-
+        assertEquals(markerOptions, new MarkerOptions().setPosition(location.toLatLng()));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void markerCannotHaveNullLocation() {
+        new MyMarker.Builder()
+                .location(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void markerCannotHaveUnInitializedLocation() {
+        new MyMarker.Builder().toMapboxMarkerOptions();
+    }
 }
