@@ -31,11 +31,10 @@ import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 public class MockDatabaseWrapper implements DatabaseWrapper {
-    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
-
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
     public static final User celine =
@@ -46,7 +45,11 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             new User("axel@epfl.ch", "celine", MockAuthenticator.provideUid());
     public static final User gaspard =
             new User("gaspard@epfl.ch", "gaspard", MockAuthenticator.provideUid());
-
+    public static final PointOfInterest pointOfInterest1 = new PointOfInterest(
+            new Location(4, 20), "Bar IC", PointOfInterestType.BAR);
+    public static final PointOfInterest pointOfInterest2 = new PointOfInterest(
+            new Location(4, 22), "Bar EE", PointOfInterestType.BAR);
+    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
     private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
 
     public static Slot slot1;
