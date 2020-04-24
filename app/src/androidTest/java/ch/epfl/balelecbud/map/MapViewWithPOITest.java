@@ -32,7 +32,8 @@ public class MapViewWithPOITest {
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
 
-    private final PointOfInterest atm = new PointOfInterest(new Location(1, 2), "credit suisse", PointOfInterestType.ATM);
+    private final PointOfInterest atm = new PointOfInterest(new Location(1, 2),
+            "credit suisse", PointOfInterestType.ATM);
 
     @Rule
     public final ActivityTestRule<MapViewActivity> mActivityRule =
@@ -68,7 +69,7 @@ public class MapViewWithPOITest {
     private void assertNameAndLocation(MyMarker.Builder markerBuilder, TestAsyncUtils sync, PointOfInterest poi) {
         sync.assertEquals(poi.getName(), markerBuilder.getTitle());
         sync.assertEquals(poi.getLocation(), markerBuilder.getLocation());
-        sync.assertEquals(poi.getType(), PointOfInterestType.ATM);
+        sync.assertEquals(MarkerType.getMarkerType(poi.getType()), MarkerType.ATM);
     }
 
     @Test
@@ -93,6 +94,4 @@ public class MapViewWithPOITest {
         sync.assertCalled(2);
         sync.assertNoFailedTests();
     }
-
-
 }

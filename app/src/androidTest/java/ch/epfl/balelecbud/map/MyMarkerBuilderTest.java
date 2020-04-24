@@ -28,14 +28,14 @@ public class MyMarkerBuilderTest {
     }
 
     @Test
-    public void canSetIcon() {
-        assertNull(new MyMarker.Builder().icon(null).getIcon());
+    public void canSetType() {
+        assertNull(new MyMarker.Builder().type(null).getType());
     }
 
     @Test
     public void canConvertToMapboxMarkerOption() {
         MarkerOptions markerOptions = new MyMarker.Builder().
-                title(title).location(location).icon(null).
+                title(title).location(location).type(null).
                 toMapboxMarkerOptions();
         assertEquals(title, markerOptions.getTitle());
         assertEquals(location.toLatLng(), markerOptions.getPosition());
@@ -52,7 +52,7 @@ public class MyMarkerBuilderTest {
         assertEquals(title, markerOptions.getTitle());
 
         markerOptions = new MyMarker.Builder().
-                title(null).location(location).icon(null).
+                title(null).location(location).type(null).
                 toMapboxMarkerOptions();
         assertEquals(markerOptions, new MarkerOptions().setPosition(location.toLatLng()));
     }
