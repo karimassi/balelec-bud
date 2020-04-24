@@ -26,7 +26,7 @@ public class PointOfInterestActivity extends BasicActivity {
         RecyclerView recyclerView = findViewById(R.id.pointOfInterestRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        RecyclerViewData<PointOfInterest, PointOfInterestHolder> data = new PointOfInterestData();
+        RecyclerViewData<PointOfInterest, PointOfInterestHolder> data = new PointOfInterestData(this);
         RefreshableRecyclerViewAdapter<PointOfInterest, PointOfInterestHolder> adapter = new RefreshableRecyclerViewAdapter<>(
                 PointOfInterestHolder::new, data, R.layout.item_point_of_interest);
         recyclerView.setAdapter(adapter);

@@ -14,6 +14,7 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,17 +38,18 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 public class MapViewActivity extends BasicActivity {
 
     private final static String TAG = MapViewActivity.class.getSimpleName();
-    private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
+    private static OnMapReadyCallback mockCallback;
     private MapView mapView;
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
     private Map<PointOfInterest, MyMarker> poiMarkers = new HashMap<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
+    private Location defaultLocation;
 
     private Map<MarkerType, Icon> icons;
 
     @VisibleForTesting
-    public static void setMockCallback(com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback) {
+    public static void setMockCallback(OnMapReadyCallback mockCallback) {
         MapViewActivity.mockCallback = mockCallback;
     }
 
@@ -67,6 +69,9 @@ public class MapViewActivity extends BasicActivity {
             mapView.getMapAsync(
                     mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
         }
+
+        Location location = getIntent().getParcelableExtra("location");
+        defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
 
         setupMapIcons();
         configureToolBar(R.id.map_activity_toolbar);
@@ -129,7 +134,7 @@ public class MapViewActivity extends BasicActivity {
 
     public void onMapReady(MyMap map) {
         myMap = map;
-        myMap.initialiseMap(LocationUtil.isLocationActive());
+        myMap.initialiseMap(LocationUtil.isLocationActive(), this.defaultLocation);
         displayWaitingFriends(myMap);
     }
 

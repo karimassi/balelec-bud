@@ -7,8 +7,9 @@ import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import ch.epfl.balelecbud.models.Location;
+
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
-import static ch.epfl.balelecbud.models.Location.DEFAULT_LOCATION;
 
 public class MapboxMapAdapter implements MyMap {
 
@@ -31,14 +32,14 @@ public class MapboxMapAdapter implements MyMap {
     }
 
     @Override
-    public void initialiseMap(boolean appLocationEnabled) {
+    public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
         mapboxMap.setLatLngBoundsForCameraTarget(RESTRICTED_BOUNDS_AREA);
         mapboxMap.setMinZoomPreference(14);
         mapboxMap.setStyle(Style.LIGHT, style -> {
             mapboxMap.getLocationComponent().activateLocationComponent(LocationComponentActivationOptions.builder(getAppContext(), style).build());
             mapboxMap.getLocationComponent().setLocationComponentEnabled(appLocationEnabled);
         });
-        mapboxMap.setCameraPosition(new CameraPosition.Builder().target(DEFAULT_LOCATION.toLatLng()).build());
+        mapboxMap.setCameraPosition(new CameraPosition.Builder().target(defaultLocation.toLatLng()).build());
     }
 
 }
