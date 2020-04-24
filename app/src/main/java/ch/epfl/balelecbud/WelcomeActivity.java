@@ -6,14 +6,8 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 
-import java.util.concurrent.CompletableFuture;
-
-import ch.epfl.balelecbud.cloudMessaging.Message;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.location.LocationUtil.Action;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();

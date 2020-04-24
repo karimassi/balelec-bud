@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import ch.epfl.balelecbud.cloudMessaging.Message;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestData;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestHolder;
@@ -32,6 +33,10 @@ public class PointOfInterestActivity extends BasicActivity {
         recyclerView.setAdapter(adapter);
         SwipeRefreshLayout refreshLayout = findViewById(R.id.swipe_refresh_layout_point_of_interest);
         adapter.setOnRefreshListener(refreshLayout);
-    }
 
+        String title = "You received a friend request!";
+        String body = " sent you a friend request";
+        Message m = new Message(Message.MESSAGE_TYPE_FRIENDSHIP, title, body);
+        m.sendMessage(BalelecbudApplication.getAppAuthenticator().getCurrentUid());
+    }
 }

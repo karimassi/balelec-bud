@@ -9,6 +9,7 @@ import androidx.annotation.VisibleForTesting;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
+import ch.epfl.balelecbud.notifications.NotificationGeneral;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 import ch.epfl.balelecbud.util.http.HttpClient;
@@ -59,6 +60,7 @@ public class BalelecbudApplication extends Application {
         if (httpClient == null)
             httpClient = VolleyHttpClient.getInstance();
         NotificationScheduler.getInstance().createNotificationChannel(appContext);
+        NotificationGeneral.getInstance().createNotificationChannel(appContext);
     }
 
     @VisibleForTesting
