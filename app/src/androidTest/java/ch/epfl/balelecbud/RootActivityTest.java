@@ -5,12 +5,12 @@ import android.view.Gravity;
 
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 
 import com.google.android.gms.location.LocationRequest;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -36,6 +36,10 @@ public abstract class RootActivityTest {
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         MockAuthenticator.getInstance().setCurrentUser(alex);
         BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        if (device.hasObject(By.text("ALLOW"))) {
+            device.findObject(By.text("ALLOW")).click();
+            device.waitForWindowUpdate(null, 1000);
+        }
     }
 
     @Test
@@ -75,8 +79,6 @@ public abstract class RootActivityTest {
         clickItem(R.id.activity_main_drawer_transport, R.id.transport_fragment_container);
     }
 
-    @Ignore("ignore for now because since stuff is not mocked this fails, could create hacky fix now " +
-            "but will do something nice later instead")
     @Test
     public void openSocialActivityFromDrawer() {
         openDrawer();
