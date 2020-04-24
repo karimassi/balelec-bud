@@ -104,9 +104,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         switch (collectionName) {
             case DatabaseWrapper.LOCATIONS_PATH:
                 friendsLocationListener.put(documentID, (Consumer<Location>) consumer);
-                if (locations.containsKey(documentID)) {
-                    ((Consumer<Location>) consumer).accept(locations.get(documentID));
-                }
+                ((Consumer<Location>) consumer).accept(locations.get(documentID));
                 break;
             default:
                 throw new IllegalArgumentException("MockDataBaseWrapper.listenDocument() is not configure" +
