@@ -78,13 +78,13 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     debugImplementation 'androidx.fragment:fragment-testing:1.2.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     def room_version = "2.2.4"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
-
 }
 
 tasks.withType(Test) {

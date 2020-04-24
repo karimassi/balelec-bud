@@ -26,6 +26,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
+import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
@@ -60,6 +62,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
+    private final List<EmergencyInfo> emergencyInfos = new ArrayList<>();
+    private final Map<String, EmergencyNumber> emergencyNumbers = new HashMap<>();
     private final List<Slot> slots = new ArrayList<>();
     private final Map<String, Emergency> emergencies = new HashMap<>();
     private final Map<String, Location> locations = new HashMap<>();
@@ -131,12 +135,16 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return festivalInfos;
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 return pointOfInterests;
+            case DatabaseWrapper.EMERGENCY_INFO_PATH :
+                return emergencyInfos;
             case DatabaseWrapper.LOCATIONS_PATH:
                 return new LinkedList(locations.values());
             case DatabaseWrapper.CONCERT_SLOTS_PATH:
                 return slots;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 return new LinkedList(emergencies.values());
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                return new LinkedList(emergencyNumbers.values());
             default:
 
                 throw new IllegalArgumentException("Unsupported collection name " + name);
@@ -260,6 +268,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 return CompletableFuture.completedFuture((T) locations.get(documentID));
             case DatabaseWrapper.EMERGENCIES_PATH:
                 return CompletableFuture.completedFuture((T) emergencies.get(documentID));
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                return CompletableFuture.completedFuture((T) emergencyNumbers.get(documentID));
             default:
                 return CompletableFuture.completedFuture(null);
         }
@@ -326,6 +336,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 pointOfInterests.add((PointOfInterest) document);
                 break;
+            case DatabaseWrapper.EMERGENCY_INFO_PATH:
+                emergencyInfos.add((EmergencyInfo) document);
+                break;
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.add((FestivalInformation) document);
                 break;
@@ -334,6 +347,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.put(generateRandomUid(), (Emergency) document);
+                break;
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                emergencyNumbers.put(generateRandomUid(), (EmergencyNumber) document);
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported collection name " + collectionName);
@@ -379,6 +395,13 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
+    public void updateDocument(String collectionName, int documentID, Object update) {
+        switch (collectionName) {
+            case DatabaseWrapper.EMERGENCY_INFO_PATH:
+                emergencyInfos.set(documentID, (EmergencyInfo) update);
+        }
+    }
+
     public void deleteDocument(String collectionName, Object document) {
         switch (collectionName) {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
@@ -387,6 +410,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.POINT_OF_INTEREST_PATH:
                 pointOfInterests.remove(document);
                 break;
+            case DatabaseWrapper.EMERGENCY_INFO_PATH:
+                emergencyInfos.remove(document);
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                emergencyNumbers.remove(document);
             case DatabaseWrapper.CONCERT_SLOTS_PATH:
                 slots.remove(document);
                 break;
@@ -434,11 +461,16 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
                 festivalInfos.clear();
                 break;
+            case DatabaseWrapper.EMERGENCY_INFO_PATH:
+                emergencyInfos.clear();
             case DatabaseWrapper.CONCERT_SLOTS_PATH:
                 slots.clear();
                 break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.clear();
+                break;
+            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
+                emergencyNumbers.clear();
                 break;
             default:
                 throw new IllegalArgumentException("unsupported collectionName");

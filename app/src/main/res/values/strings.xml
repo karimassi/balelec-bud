@@ -31,6 +31,9 @@
     <string name="require_password_repeated">Repeat password!</string>
     <string name="location">Location</string>
     <string name="festival_information">Festival Information</string>
+
+    <string name="emergency_tile">Case: </string>
+    <string name="emergency_solution">What to do: </string>
     <string name="social_view">Social</string>
     <string name="festival_info_view">Information</string>
 
