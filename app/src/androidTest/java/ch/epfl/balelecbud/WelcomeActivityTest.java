@@ -60,9 +60,4 @@ public class WelcomeActivityTest extends BasicActivityTest {
     protected void setIds() {
         setIds(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
     }
-    @Test
-    public void testToggleLocationIsDisplayed() {
-        onView(withId(R.id.locationSwitch)).check(matches(isDisplayed()));
-        onView(withId(R.id.locationSwitch)).perform(click());
-    }
 }
