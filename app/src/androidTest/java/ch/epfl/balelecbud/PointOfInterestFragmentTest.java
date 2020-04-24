@@ -2,12 +2,10 @@ package ch.epfl.balelecbud;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import com.google.firebase.firestore.GeoPoint;
 
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,26 +31,16 @@ public class PointOfInterestFragmentTest extends RootActivityTest {
     private final PointOfInterest pointOfInterest2 = new PointOfInterest(
             new GeoPoint(4, 22), "Bar EE", "Bar");
 
-    @Before
-    public void setup() {
+    @Override
+    protected void setUpBeforeActivityLaunched() {
+        super.setUpBeforeActivityLaunched();
+        cleanUp();
+    }
+
+    @After
+    public void cleanUp() {
         mock.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
-        refreshRecyclerView();
     }
-
-    @Before
-    public final void openPoiFragment(){
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_poi, R.id.pointOfInterestRecyclerView);
-    }
-
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule =
-            new ActivityTestRule<RootActivity>(RootActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppDatabaseWrapper(mock);
-        }
-    };
 
     @Test
     public void testPointOfInterestRecyclerViewIsDisplayed() {
@@ -96,5 +84,15 @@ public class PointOfInterestFragmentTest extends RootActivityTest {
     private void testInfoInView(ViewInteraction viewInteraction, PointOfInterest poi) {
         viewInteraction.check(matches(hasDescendant(withText(poi.getName()))));
         viewInteraction.check(matches(hasDescendant(withText(poi.getType()))));
+    }
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_poi;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.pointOfInterestRecyclerView;
     }
 }

@@ -4,10 +4,8 @@ import android.os.SystemClock;
 
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -51,26 +49,21 @@ public class SocialFragmentTest extends RootActivityTest {
     private final Authenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabaseWrapper mockDb = MockDatabaseWrapper.getInstance();
 
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppAuthenticator(mockAuth);
-            BalelecbudApplication.setAppDatabaseWrapper(mockDb);
-            mockAuth.setCurrentUser(currentUser);
-            mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);
-        }
-    };
+    @Override
+    protected void setUpBeforeActivityLaunched() {
+        super.setUpBeforeActivityLaunched();
+        mockAuth.signOut();
+        mockAuth.setCurrentUser(currentUser);
+        mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);
+        cleanUp();
+    }
 
-    @Before
-    public final void openSocialFragmentAndSetup(){
+    @After
+    private void cleanUp() {
         mockDb.resetFriendshipsAndRequests();
         createFriendship(otherUser);
         createRequest(newFriend, currentUser);
         createRequest(currentUser, requestedUser);
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_social, R.id.activity_social_linear_layout);
-        onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
     }
 
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {
@@ -297,5 +290,15 @@ public class SocialFragmentTest extends RootActivityTest {
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
+    }
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_social;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.activity_social_linear_layout;
     }
 }

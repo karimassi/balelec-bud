@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +17,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.List;
 
 import ch.epfl.balelecbud.friendship.SocialFragment;
+import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.map.MapViewFragment;
 import ch.epfl.balelecbud.map.MyMap;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
@@ -40,7 +42,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private MapViewFragment fragmentMap;
     private Fragment fragmentTransport;
     private Fragment fragmentSocial;
-    private Fragment fragmentHome;
+    private WelcomeFragment fragmentHome;
     private Fragment fragmentEmergency;
 
     private static final int FRAGMENT_HOME = 0;
@@ -65,8 +67,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         if (slots != null) {
             if (!fragmentSchedule.isVisible()) {
                 fragmentSchedule.setSlots(slots);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.root_activity_frame_layout, fragmentSchedule).commit();
+                startTransactionFragment(fragmentSchedule, "SCHEDULE");
             }
         } else {
             this.showFirstFragment();
@@ -191,7 +192,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private void startTransactionFragment(Fragment fragment, String tag) {
         if (!fragment.isVisible()) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.root_activity_frame_layout, fragment).commit();
+                    .replace(R.id.root_activity_frame_layout, fragment)
+                    .setPrimaryNavigationFragment(fragmentHome)
+                    .addToBackStack(tag).commit();
         }
     }
 
@@ -225,6 +228,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         // 5 - Handle back click to close menu
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             this.drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
         }
     }
 
@@ -240,5 +245,13 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
 
     public void onMapReady(MyMap map) {
         fragmentMap.onMapReady(map);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE) {
+            fragmentHome.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

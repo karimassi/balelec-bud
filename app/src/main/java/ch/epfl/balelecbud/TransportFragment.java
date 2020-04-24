@@ -43,6 +43,7 @@ public class TransportFragment extends Fragment implements OnRecyclerViewInterac
         fragment.setInteractionListener(this);
         activity.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.transport_fragment_container, fragment)
+                .setPrimaryNavigationFragment(fragment)
                 .commit();
     }
 

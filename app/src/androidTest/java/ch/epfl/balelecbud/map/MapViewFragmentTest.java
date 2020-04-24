@@ -1,28 +1,18 @@
 package ch.epfl.balelecbud.map;
 
-import android.app.PendingIntent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.location.LocationRequest;
-
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.RootActivityTest;
-import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -33,37 +23,6 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewFragmentTest extends RootActivityTest {
-    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
-    private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
-
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule =
-            new ActivityTestRule<RootActivity>(RootActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    super.beforeActivityLaunched();
-                    BalelecbudApplication.setAppDatabaseWrapper(mockDB);
-                    BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewFragment.setMockCallback(mapboxMap -> {
-                    });
-                    LocationUtil.setLocationClient(new LocationClient() {
-                        @Override
-                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-                        }
-
-                        @Override
-                        public void removeLocationUpdates(PendingIntent intent) {
-                        }
-                    });
-                    mockAuth.setCurrentUser(MockDatabaseWrapper.celine);
-                }
-            };
-
-    @Before
-    public final void openMapFragment(){
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_map, R.id.map_view);
-    }
 
     @Test
     public void testMapViewIsNotNull() {
@@ -137,6 +96,15 @@ public class MapViewFragmentTest extends RootActivityTest {
     @Test
     public void testOnLowMemory() throws Throwable {
         runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onLowMemory());
+    }
 
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_map;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.map_view;
     }
 }

@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import ch.epfl.balelecbud.location.LocationUtil;
-import ch.epfl.balelecbud.location.LocationUtil.Action;
 
 public class WelcomeFragment extends Fragment {
     private static final String TAG = RootActivity.class.getSimpleName();
@@ -47,7 +46,7 @@ public class WelcomeFragment extends Fragment {
                 LocationUtil.disableLocation();
             }
         });
-        LocationUtil.requestLocationPermission(activity); // Not sure about this
+        LocationUtil.requestLocationPermission(this);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class WelcomeFragment extends Fragment {
         }
     }
 
-    private Action onPermissionNotGranted(final String logText) {
+    private Runnable onPermissionNotGranted(final String logText) {
         return () -> {
             Log.i(TAG, "onRequestPermissionsResult: " + logText);
             locationSwitch.setClickable(false);
@@ -72,7 +71,7 @@ public class WelcomeFragment extends Fragment {
         };
     }
 
-    private Action onPermissionGranted() {
+    private Runnable onPermissionGranted() {
         return () -> {
             Log.i(TAG, "onRequestPermissionsResult: Permission granted");
             locationSwitch.setClickable(true);

@@ -2,12 +2,9 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,34 +28,37 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
 public class ScheduleFragmentWithSubscribedConcertTest extends RootActivityTest {
     private MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppDatabaseWrapper(mock);
-            SlotData.setIntentLauncher(intent -> { });
-            //refreshRecyclerView();
-            mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
-        }
+    @Override
+    protected void setUpBeforeActivityLaunched() {
+        super.setUpBeforeActivityLaunched();
+        cleanUp();
+        SlotData.setIntentLauncher(intent -> { });
+    }
 
-        @Override
-        protected Intent getActivityIntent() {
-            Intent intent = new Intent(ApplicationProvider.getApplicationContext(), RootActivity.class);
-            FlowUtil.packCallback(new Slot[]{slot1}, intent);
-            return intent;
-        }
-    };
-
-    @Before
-    public void setUpMockIntentLauncher() {
-        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
+    @Override
+    protected void openFragmentUnderTest() {
         refreshRecyclerView();
     }
 
-    @Before
-    public final void openScheduleFragment(){
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
+    @After
+    public void cleanUp() {
+        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
+    }
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_schedule;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.scheduleRecyclerView;
+    }
+
+    @Override
+    protected Intent addInfoToActivityIntent(Intent intent) {
+        FlowUtil.packCallback(new Slot[]{slot1}, intent);
+        return intent;
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ScheduleFragmentWithSubscribedConcertTest extends RootActivityTest 
     }
 
     @Test
-    public void testSubscribedConcertIsChecked() throws Throwable {
+    public void testSubscribedConcertIsChecked() {
         mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
         mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
 

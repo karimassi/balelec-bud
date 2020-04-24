@@ -1,27 +1,16 @@
 package ch.epfl.balelecbud.map;
 
-import android.app.PendingIntent;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-
-import com.google.android.gms.location.LocationRequest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
-import ch.epfl.balelecbud.location.LocationClient;
-import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
@@ -39,46 +28,23 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final Location karimLocation = new Location(2, 4);
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule =
-            new ActivityTestRule<RootActivity>(RootActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    super.beforeActivityLaunched();
-                    BalelecbudApplication.setAppDatabaseWrapper(mockDB);
-                    BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewFragment.setMockCallback(mapboxMap -> {
-                    });
-                    LocationUtil.setLocationClient(new LocationClient() {
-                        @Override
-                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-
-                        }
-
-                        @Override
-                        public void removeLocationUpdates(PendingIntent intent) {
-
-                        }
-                    });
-                    mockAuth.setCurrentUser(celine);
-                    FriendshipUtils.acceptRequest(karim);
-                    FriendshipUtils.acceptRequest(alex);
-                    mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), karimLocation);
-                }
-            };
     private final Location newKarimLocation = new Location(1, 2);
     private final Location alexLocation = new Location(3, 3);
 
-    @After
-    public void cleanup() {
-        mockDB.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
-        mockDB.resetFriendshipsAndRequests();
+    @Override
+    protected void setUpBeforeActivityLaunched() {
+        super.setUpBeforeActivityLaunched();
+        cleanUp();
+        mockAuth.setCurrentUser(celine);
+        FriendshipUtils.acceptRequest(karim);
+        FriendshipUtils.acceptRequest(alex);
+        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), karimLocation);
     }
 
-    @Before
-    public final void openMapFragment(){
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_map, R.id.map_view);
+    @After
+    public void cleanUp() {
+        mockDB.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
+        mockDB.resetFriendshipsAndRequests();
     }
 
     @Test
@@ -176,5 +142,15 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
         assertEquals(2, mockDB.getFriendsLocationListenerCount());
         super.signOutFromDrawer();
         assertEquals(0, mockDB.getFriendsLocationListenerCount());
+    }
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_map;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.map_view;
     }
 }
