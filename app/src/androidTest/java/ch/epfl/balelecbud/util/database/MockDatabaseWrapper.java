@@ -58,6 +58,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendships = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
+    private final Map<String, Map<String, String>> tokens = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
     private final List<Slot> slots = new ArrayList<>();
@@ -138,7 +139,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.EMERGENCIES_PATH:
                 return new LinkedList(emergencies.values());
             default:
-
                 throw new IllegalArgumentException("Unsupported collection name " + name);
         }
     }
@@ -275,6 +275,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 result.putAll(friendRequests.get(documentID));
                 break;
+            case DatabaseWrapper.TOKENS_PATH:
+                result.putAll(tokens.get(documentID));
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported collectionName " + collectionName);
         }
@@ -361,6 +364,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 if (friendsLocationListener.containsKey(documentID))
                     friendsLocationListener.get(documentID).accept((Location) document);
                 break;
+            case DatabaseWrapper.TOKENS_PATH:
+                tokens.put(documentID, (Map<String, String>) document);
+                break;
             default:
                 storeDocument(collectionName, document);
         }
@@ -410,6 +416,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 friendRequests.remove(documentID);
                 break;
+            case DatabaseWrapper.TOKENS_PATH:
+                tokens.remove(documentID);
+                break;
         }
     }
 
@@ -440,6 +449,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.clear();
                 break;
+            case DatabaseWrapper.TOKENS_PATH:
+                tokens.clear();
             default:
                 throw new IllegalArgumentException("unsupported collectionName");
         }

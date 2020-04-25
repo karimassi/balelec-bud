@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -13,7 +14,6 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
-
 
 public class MockHttpClient implements HttpClient {
 
@@ -41,7 +41,17 @@ public class MockHttpClient implements HttpClient {
 
     @Override
     public CompletableFuture<JsonElement> post(String url, JSONObject request) {
-        return null;
+        URL u;
+        try {
+            u = new URL(url);
+            return CompletableFuture.completedFuture((JsonElement) request.get(u.getPath()));
+        } catch (MalformedURLException e) {
+            Log.d(this.getClass().getSimpleName(), "Could not parse URL");
+        } catch (JSONException e) {
+            Log.d(this.getClass().getSimpleName(), "Could not get member for request");
+            e.printStackTrace();
+        }
+        return CompletableFutureUtils.getExceptionalFuture("Received an invalid URL");
     }
 
     public static HttpClient getInstance() {
