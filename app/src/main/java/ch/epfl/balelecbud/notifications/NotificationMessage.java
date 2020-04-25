@@ -16,21 +16,20 @@ import java.util.Map;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.cloudMessaging.Message;
-import ch.epfl.balelecbud.friendship.SocialActivity;
 
-public class NotificationGeneral implements NotificationInterface<Map<String, String>> {
+public class NotificationMessage implements NotificationInterface<Map<String, String>> {
 
-    private static final String CHANNEL_ID = "GENERAL_CHANNEL_ID";
+    private static final String CHANNEL_ID = "MESSAGE_CHANNEL_ID";
 
-    private static NotificationGeneral singleInstance;
+    private static NotificationMessage singleInstance;
 
-    private NotificationGeneral() {
+    private NotificationMessage() {
 
     }
 
-    public static NotificationGeneral getInstance() {
+    public static NotificationMessage getInstance() {
         if(singleInstance == null) {
-            singleInstance = new NotificationGeneral();
+            singleInstance = new NotificationMessage();
         }
         return singleInstance;
     }
@@ -39,8 +38,12 @@ public class NotificationGeneral implements NotificationInterface<Map<String, St
     public void scheduleNotification(Context context, Map<String, String> object) {
         int notificationId = object.hashCode();
 
+        String type = object.get(Message.DATA_KEY_TYPE);
+
+        Intent intent = getIntent(context, type);
+
         PendingIntent activity = PendingIntent.getActivity(context, notificationId,
-                new Intent(context, WelcomeActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         android.app.Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(object.get(Message.DATA_KEY_TITLE))
@@ -56,6 +59,10 @@ public class NotificationGeneral implements NotificationInterface<Map<String, St
         notificationManager.notify(notificationId, notification);
     }
 
+    private Intent getIntent(Context context, String type) {
+        return new Intent(context, WelcomeActivity.class);
+    }
+
     @Override
     public void cancelNotification(Context context, Map<String, String> object) {
 
@@ -64,7 +71,7 @@ public class NotificationGeneral implements NotificationInterface<Map<String, St
     public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    context.getString(R.string.friendship_channel_name),
+                    context.getString(R.string.message_channel_name),
                     NotificationManager.IMPORTANCE_DEFAULT);
 
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);

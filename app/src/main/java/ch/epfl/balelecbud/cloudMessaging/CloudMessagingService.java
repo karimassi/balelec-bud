@@ -10,13 +10,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.epfl.balelecbud.WelcomeActivity;
-import ch.epfl.balelecbud.friendship.SocialActivity;
-import ch.epfl.balelecbud.notifications.NotificationGeneral;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import ch.epfl.balelecbud.notifications.NotificationMessage;
 
 public class CloudMessagingService extends FirebaseMessagingService {
 
@@ -27,14 +21,7 @@ public class CloudMessagingService extends FirebaseMessagingService {
         super.onNewToken(s);
         Log.d(TAG, "The token refreshed: " + s);
 
-        String uid = getAppAuthenticator().getCurrentUser().getUid();
-        getAppDatabaseWrapper().getDocument(DatabaseWrapper.TOKENS_PATH,
-                uid).whenCompleteAsync((t, throwable) -> {
-            if (t.get("token") != null) {
-                getAppDatabaseWrapper().deleteDocumentWithID(DatabaseWrapper.TOKENS_PATH, uid);
-            }
-        });
-        getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.TOKENS_PATH, uid, s);
+        Message.setToken(s);
     }
 
     @Override
@@ -49,25 +36,14 @@ public class CloudMessagingService extends FirebaseMessagingService {
             message.put(Message.DATA_KEY_TITLE, remoteMessage.getData().get(Message.DATA_KEY_TITLE));
             message.put(Message.DATA_KEY_BODY, remoteMessage.getData().get(Message.DATA_KEY_BODY));
             message.put(Message.DATA_KEY_TYPE, remoteMessage.getData().get(Message.DATA_KEY_TYPE));
-        }
-        else if (remoteMessage.getNotification() != null) {
+        } else if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Received Notification");
             message.put(Message.DATA_KEY_TITLE, remoteMessage.getNotification().getTitle());
             message.put(Message.DATA_KEY_BODY, remoteMessage.getNotification().getBody());
-            message.put(Message.DATA_KEY_TYPE, "default");
+            message.put(Message.DATA_KEY_TYPE, Message.MESSAGE_TYPE_GENERAL);
         }
-        sendNotification(message);
-    }
+        Log.d(TAG, "About to send notification with title: " + message.get(Message.DATA_KEY_TITLE));
 
-    private void sendNotification(Map<String, String> message) {
-        switch (message.get(Message.DATA_KEY_TYPE)) {
-            case Message.MESSAGE_TYPE_FRIENDSHIP:
-                NotificationGeneral.getInstance()
-                        .scheduleNotification(this, message);
-            case Message.MESSAGE_TYPE_FRIEND_REQUEST:
-                NotificationGeneral.getInstance()
-                        .scheduleNotification(this, message);
-            default: break;
-        }
+        NotificationMessage.getInstance().scheduleNotification(this, message);
     }
 }
