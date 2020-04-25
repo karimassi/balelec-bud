@@ -65,7 +65,5 @@ public interface MyMarker {
             }
             return result;
         }
-
-
     }
 }

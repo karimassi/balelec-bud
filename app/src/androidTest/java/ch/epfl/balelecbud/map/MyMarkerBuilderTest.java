@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import ch.epfl.balelecbud.models.Location;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
@@ -55,6 +56,9 @@ public class MyMarkerBuilderTest {
                 title(null).location(location).type(null).
                 toMapboxMarkerOptions();
         assertEquals(markerOptions, new MarkerOptions().setPosition(location.toLatLng()));
+
+        markerOptions = new MyMarker.Builder().location(location).type(MarkerType.ATM).toMapboxMarkerOptions();
+        assertNotNull(markerOptions.getIcon());
     }
 
     @Test(expected = NullPointerException.class)
