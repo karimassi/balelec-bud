@@ -1,11 +1,17 @@
 package ch.epfl.balelecbud.map;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
-import com.mapbox.mapboxsdk.annotations.Icon;
+import androidx.core.content.ContextCompat;
+
+import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 
 import ch.epfl.balelecbud.models.Location;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static java.util.Objects.requireNonNull;
 
 public interface MyMarker {
@@ -16,7 +22,7 @@ public interface MyMarker {
 
         private Location location;
         private String title;
-        private Icon icon;
+        private MarkerType type;
 
         public Builder location(Location location) {
             this.location = requireNonNull(location);
@@ -28,8 +34,8 @@ public interface MyMarker {
             return this;
         }
 
-        public Builder icon(Icon icon) {
-            this.icon = icon;
+        public Builder type(MarkerType type) {
+            this.type = type;
             return this;
         }
 
@@ -41,8 +47,8 @@ public interface MyMarker {
             return this.title;
         }
 
-        public Icon getIcon() {
-            return icon;
+        public MarkerType getType() {
+            return this.type;
         }
 
         MarkerOptions toMapboxMarkerOptions() {
@@ -51,12 +57,13 @@ public interface MyMarker {
                 result = result.title(title);
             }
             result = result.position(requireNonNull(location).toLatLng());
-            if (icon != null) {
-                result = result.icon(icon);
+            if (type != null) {
+                Drawable iconDrawable = ContextCompat.getDrawable(getAppContext(), type.getDrawableId());
+                Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
+                IconFactory iconFactory = IconFactory.getInstance(getAppContext());
+                result = result.icon(iconFactory.fromBitmap(bitmap));
             }
             return result;
         }
-
-
     }
 }

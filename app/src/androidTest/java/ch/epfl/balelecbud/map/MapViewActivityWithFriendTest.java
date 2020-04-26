@@ -158,9 +158,10 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
         };
     }
 
-    private void assertNameAndLocation(MyMarker.Builder markerBuilder, TestAsyncUtils sync, User karim, Location karimLocation) {
-        sync.assertEquals(karim.getDisplayName(), markerBuilder.getTitle());
-        sync.assertEquals(karimLocation, markerBuilder.getLocation());
+    private void assertNameAndLocation(MyMarker.Builder markerBuilder, TestAsyncUtils sync, User user, Location userLocation) {
+        sync.assertEquals(user.getDisplayName(), markerBuilder.getTitle());
+        sync.assertEquals(userLocation, markerBuilder.getLocation());
+        sync.assertEquals(MarkerType.FRIEND, markerBuilder.getType());
     }
 
     @Test
