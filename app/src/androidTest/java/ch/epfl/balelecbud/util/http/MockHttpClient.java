@@ -48,8 +48,7 @@ public class MockHttpClient implements HttpClient {
         } catch (MalformedURLException e) {
             Log.d(this.getClass().getSimpleName(), "Could not parse URL");
         } catch (JSONException e) {
-            Log.d(this.getClass().getSimpleName(), "Could not get member for request");
-            e.printStackTrace();
+            Log.d(this.getClass().getSimpleName(), "Could not get from JsonObject");
         }
         return CompletableFutureUtils.getExceptionalFuture("Received an invalid URL");
     }

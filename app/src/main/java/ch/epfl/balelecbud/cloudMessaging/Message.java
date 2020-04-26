@@ -2,6 +2,8 @@ package ch.epfl.balelecbud.cloudMessaging;
 
 import android.util.Log;
 
+import androidx.annotation.VisibleForTesting;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +29,7 @@ public class Message {
     public static final String DATA_KEY_BODY = "body";
     public static final String DATA_KEY_TYPE = "type";
 
-    private static String token;
+    private static String token = null;
 
     private String type;
     private String title;
@@ -68,13 +70,6 @@ public class Message {
                 });
     }
 
-    static void setToken(String newToken) {
-        if(newToken != null) {
-            Log.d(TAG, "Storing new token temporarily");
-            token = newToken;
-        }
-    }
-
     public static void setTokenToDatabase() {
         User user = getAppAuthenticator().getCurrentUser();
         if(user != null) {
@@ -89,5 +84,17 @@ public class Message {
                 token = null;
             }
         }
+    }
+
+    static void setToken(String newToken) {
+        if(newToken != null) {
+            Log.d(TAG, "Storing new token temporarily");
+            token = newToken;
+        }
+    }
+
+    @VisibleForTesting
+    protected static String getToken() {
+        return token;
     }
 }
