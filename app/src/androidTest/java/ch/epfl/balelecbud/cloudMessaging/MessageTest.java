@@ -26,7 +26,6 @@ public class MessageTest {
 
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
-    private final HttpClient mockHttpClient = MockHttpClient.getInstance();
     private final User user = MockDatabaseWrapper.celine;
     private final String token = MockDatabaseWrapper.token;
 
@@ -38,18 +37,11 @@ public class MessageTest {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    BalelecbudApplication.setHttpClient(mockHttpClient);
                     mockAuth.signOut();
                     mockAuth.setCurrentUser(user);
                     Message.setToken(token);
                 }
             };
-
-    @Test
-    public void sendMessageTest() {
-        Message message = new Message(Message.MESSAGE_TYPE_GENERAL, "Title", "Body");
-        message.sendMessage(user.getUid());
-    }
 
     @Test
     public void setTokenToDatabaseTest() {

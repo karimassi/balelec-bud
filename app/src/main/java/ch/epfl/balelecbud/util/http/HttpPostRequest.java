@@ -18,7 +18,7 @@ import ch.epfl.balelecbud.R;
 
 public class HttpPostRequest extends CompletableFuture<JsonElement> {
 
-    private static final String TAG = HttpGetRequest.class.getSimpleName();
+    private static final String TAG = HttpPostRequest.class.getSimpleName();
 
     private JsonObjectRequest postRequest;
 

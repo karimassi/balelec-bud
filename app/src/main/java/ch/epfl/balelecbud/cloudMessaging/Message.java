@@ -22,7 +22,7 @@ public class Message {
 
     private static final String TAG = CloudMessagingService.class.getSimpleName();
 
-    private static final String BASE_URL = "https://fcm.googleapis.com/fcm/send";
+    public static final String BASE_URL = "https://fcm.googleapis.com/fcm/send";
 
     public static final String MESSAGE_TYPE_GENERAL = "GENERAL";
     public static final String DATA_KEY_TITLE = "title";

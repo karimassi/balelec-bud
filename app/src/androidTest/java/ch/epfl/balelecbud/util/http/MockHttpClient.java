@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.util.http;
 
 import android.util.Log;
 
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,8 +12,13 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.cloudMessaging.CloudMessagingService;
+import ch.epfl.balelecbud.cloudMessaging.CloudMessagingServiceTest;
+import ch.epfl.balelecbud.cloudMessaging.Message;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 
 public class MockHttpClient implements HttpClient {
@@ -41,20 +47,29 @@ public class MockHttpClient implements HttpClient {
 
     @Override
     public CompletableFuture<JsonElement> post(String url, JSONObject request) {
-        URL u;
         try {
-            u = new URL(url);
-            return CompletableFuture.completedFuture((JsonElement) request.get(u.getPath()));
-        } catch (MalformedURLException e) {
-            Log.d(this.getClass().getSimpleName(), "Could not parse URL");
+            setupMessage(url, request);
+            return new HttpPostRequest(url, request);
         } catch (JSONException e) {
-            Log.d(this.getClass().getSimpleName(), "Could not get from JsonObject");
+            e.printStackTrace();
         }
         return CompletableFutureUtils.getExceptionalFuture("Received an invalid URL");
     }
 
     public static HttpClient getInstance() {
         return instance;
+    }
+
+    private void setupMessage(String url, JSONObject request) throws JSONException {
+        if(url.equals(Message.BASE_URL)) {
+            Map<String, String> message = new HashMap<>();
+            JSONObject data = (JSONObject) request.get("data");
+            message.put(Message.DATA_KEY_TITLE, (String) data.get(Message.DATA_KEY_TITLE));
+            message.put(Message.DATA_KEY_BODY, (String) data.get(Message.DATA_KEY_BODY));
+            RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
+                    .setMessageType((String) data.get(Message.DATA_KEY_TYPE)).build();
+            CloudMessagingServiceTest.cloudMessagingService.onMessageReceived(rm);
+        }
     }
 
     private void setupStations() {
@@ -100,5 +115,4 @@ public class MockHttpClient implements HttpClient {
         result.add("stationboard", stationBoard);
         responseStations.getAsJsonObject().add("/v1/stationboard", result);
     }
-
 }
