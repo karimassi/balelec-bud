@@ -22,15 +22,12 @@ public class PicturesActivity extends BasicActivity {
         configureDrawerLayout(R.id.pictures_activity_drawer_layout);
         configureNavigationView(R.id.pictures_activity_nav_view);
 
-        Button cameraButton = (Button)findViewById(R.id.takePicBtn);
-        imageView = (ImageView)findViewById(R.id.imageView);
+        Button cameraButton = findViewById(R.id.takePicBtn);
+        imageView = findViewById(R.id.imageView);
 
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 0);
-            }
+        cameraButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, 0);
         });
 
     }
