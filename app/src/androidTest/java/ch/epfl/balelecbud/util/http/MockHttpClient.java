@@ -40,7 +40,7 @@ public class MockHttpClient implements HttpClient {
 
     @Override
     public CompletableFuture<JsonElement> post(String url, JSONObject request) {
-        return null;
+        return CompletableFuture.completedFuture(new JsonObject());
     }
 
     public static HttpClient getInstance() {

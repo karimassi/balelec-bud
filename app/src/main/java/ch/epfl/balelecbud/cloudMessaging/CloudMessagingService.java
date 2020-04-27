@@ -9,13 +9,16 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.notifications.NotificationMessage;
+import ch.epfl.balelecbud.util.http.HttpPostRequest;
 
 public class CloudMessagingService extends FirebaseMessagingService implements MessagingService {
+
+    private static final String BASE_URL = "https://fcm.googleapis.com/fcm/send";
+    private static final String FCM_KEY = "key=AAAAIEByxFA:APA91bHhnxIzhsfli52m8kq9uP9VWvIB972DTJYz85_ndFCzeDEzEDdgiYVjrVo8yM9npWNH5VchrfNqWw--1-SXB35YS7HIX04_-_9FmiUdJAlYzrRnN2B9q__7t9hXWsIC_rkzgRiv";
 
     private static final String TAG = CloudMessagingService.class.getSimpleName();
     private static final CloudMessagingService instance = new CloudMessagingService();
@@ -25,7 +28,7 @@ public class CloudMessagingService extends FirebaseMessagingService implements M
         super.onNewToken(s);
         Log.d(TAG, "The token refreshed: " + s);
 
-        Message.setToken(s);
+        TokenUtil.setToken(s);
     }
 
     @Override
@@ -39,27 +42,17 @@ public class CloudMessagingService extends FirebaseMessagingService implements M
     @Override
     public void sendMessage(JSONObject send) {
         Log.d(TAG, "Sending the message to the server");
-        BalelecbudApplication.getHttpClient().post(Message.BASE_URL, send);
+        HttpPostRequest.setAuthorizationKey(FCM_KEY);
+        BalelecbudApplication.getHttpClient().post(BASE_URL, send);
     }
 
     @Override
     public void receiveMessage(RemoteMessage remoteMessage) {
-        Map<String, String> message = new HashMap<>();
-
-        if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Received Message");
-            message.put(Message.DATA_KEY_TITLE, remoteMessage.getData().get(Message.DATA_KEY_TITLE));
-            message.put(Message.DATA_KEY_BODY, remoteMessage.getData().get(Message.DATA_KEY_BODY));
-            message.put(Message.DATA_KEY_TYPE, remoteMessage.getData().get(Message.DATA_KEY_TYPE));
-        } else if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Received Notification");
-            message.put(Message.DATA_KEY_TITLE, remoteMessage.getNotification().getTitle());
-            message.put(Message.DATA_KEY_BODY, remoteMessage.getNotification().getBody());
-            message.put(Message.DATA_KEY_TYPE, Message.MESSAGE_TYPE_GENERAL);
-        } else return;
-
+        Map<String, String> message = Message.extractRemoteMessage(remoteMessage);
+        if(message.isEmpty()) {
+            return;
+        }
         Log.d(TAG, "About to send notification with title: " + message.get(Message.DATA_KEY_TITLE));
-
         NotificationMessage.getInstance().scheduleNotification(this, message);
     }
 

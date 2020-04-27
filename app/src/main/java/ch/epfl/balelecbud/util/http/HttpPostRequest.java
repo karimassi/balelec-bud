@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class HttpPostRequest extends CompletableFuture<JsonElement> {
 
     private static final String TAG = HttpPostRequest.class.getSimpleName();
-    private static final String key = "key=AAAAIEByxFA:APA91bHhnxIzhsfli52m8kq9uP9VWvIB972DTJYz85_ndFCzeDEzEDdgiYVjrVo8yM9npWNH5VchrfNqWw--1-SXB35YS7HIX04_-_9FmiUdJAlYzrRnN2B9q__7t9hXWsIC_rkzgRiv";
+    private static String key;
 
     private JsonObjectRequest postRequest;
 
@@ -37,6 +37,10 @@ public class HttpPostRequest extends CompletableFuture<JsonElement> {
                 return params;
             }
         };
+    }
+
+    public static void setAuthorizationKey(String authorizationKey) {
+        key = authorizationKey;
     }
 
     public JsonObjectRequest getPostRequest() {

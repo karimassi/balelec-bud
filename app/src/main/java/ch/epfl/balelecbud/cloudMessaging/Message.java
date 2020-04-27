@@ -2,7 +2,7 @@ package ch.epfl.balelecbud.cloudMessaging;
 
 import android.util.Log;
 
-import androidx.annotation.VisibleForTesting;
+import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,25 +11,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
-
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class Message {
 
     private static final String TAG = Message.class.getSimpleName();
 
-    public static final String BASE_URL = "https://fcm.googleapis.com/fcm/send";
-
     public static final String MESSAGE_TYPE_GENERAL = "GENERAL";
     public static final String DATA_KEY_TITLE = "title";
     public static final String DATA_KEY_BODY = "body";
     public static final String DATA_KEY_TYPE = "type";
-
-    private static String token = null;
 
     private String title;
     private String body;
@@ -70,31 +61,20 @@ public class Message {
                 });
     }
 
-    public static void storeToken() {
-        User user = getAppAuthenticator().getCurrentUser();
-        if(user != null) {
-            String uid = user.getUid();
-            Log.d(TAG, "Storing token in  database for user: " + uid);
-            Log.d(TAG, "Token: " + token);
-            if(token != null && uid != null) {
-                Map<String, String> toStore = new HashMap<>();
-                toStore.put("token", token);
-                getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.TOKENS_PATH, uid, toStore);
-                Log.d(TAG, "Stored the new token");
-                token = null;
-            }
+    public static Map<String, String> extractRemoteMessage(RemoteMessage remoteMessage) {
+        Map<String, String> message = new HashMap<>();
+        if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Received Message");
+            message.put(Message.DATA_KEY_TITLE, remoteMessage.getData().get(Message.DATA_KEY_TITLE));
+            message.put(Message.DATA_KEY_BODY, remoteMessage.getData().get(Message.DATA_KEY_BODY));
+            message.put(Message.DATA_KEY_TYPE, remoteMessage.getMessageType());
         }
-    }
-
-    static void setToken(String newToken) {
-        if(newToken != null) {
-            Log.d(TAG, "Storing new token temporarily");
-            token = newToken;
+        else if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Received Notification");
+            message.put(Message.DATA_KEY_TITLE, remoteMessage.getNotification().getTitle());
+            message.put(Message.DATA_KEY_BODY, remoteMessage.getNotification().getBody());
+            message.put(Message.DATA_KEY_TYPE, Message.MESSAGE_TYPE_GENERAL);
         }
-    }
-
-    @VisibleForTesting
-    protected static String getToken() {
-        return token;
+        return message;
     }
 }

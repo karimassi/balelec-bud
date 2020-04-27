@@ -2,7 +2,7 @@ package ch.epfl.balelecbud;
 
 import android.os.Bundle;
 
-import ch.epfl.balelecbud.cloudMessaging.Message;
+import ch.epfl.balelecbud.cloudMessaging.TokenUtil;
 
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
@@ -16,6 +16,6 @@ public class WelcomeActivity extends BasicActivity {
         this.configureDrawerLayout(R.id.root_activity_drawer_layout);
         this.configureNavigationView(R.id.root_activity_nav_view);
 
-        Message.storeToken();
+        TokenUtil.storeToken();
     }
 }
