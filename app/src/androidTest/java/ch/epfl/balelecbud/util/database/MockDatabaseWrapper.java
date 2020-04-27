@@ -290,7 +290,12 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 result.putAll(friendRequests.get(documentID));
                 break;
             case DatabaseWrapper.TOKENS_PATH:
-                result.putAll(tokens.get(documentID));
+                if(tokens.containsKey(documentID)) {
+                    result.putAll(tokens.get(documentID));
+                }
+                else {
+                    return CompletableFuture.completedFuture(null);
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported collectionName " + collectionName);

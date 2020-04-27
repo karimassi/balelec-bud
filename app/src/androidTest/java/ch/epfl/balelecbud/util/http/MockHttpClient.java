@@ -49,7 +49,7 @@ public class MockHttpClient implements HttpClient {
     public CompletableFuture<JsonElement> post(String url, JSONObject request) {
         try {
             setupMessage(url, request);
-            return new HttpPostRequest(url, request);
+            return VolleyHttpClient.getInstance().post(url, request);
         } catch (JSONException e) {
             e.printStackTrace();
         }

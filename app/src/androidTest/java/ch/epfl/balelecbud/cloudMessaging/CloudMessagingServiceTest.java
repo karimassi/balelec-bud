@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.cloudMessaging;
 
+import android.content.Context;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
@@ -22,6 +24,7 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.notifications.NotificationMessage;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.http.HttpClient;
 import ch.epfl.balelecbud.util.http.MockHttpClient;
@@ -90,6 +93,7 @@ public class CloudMessagingServiceTest {
                 .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
         cloudMessagingService.onMessageReceived(rm);
         verifyNotification();
+        NotificationMessage.getInstance().cancelNotification(mActivityRule.getActivity(), createMessage());
     }
 
     @Test
@@ -100,6 +104,22 @@ public class CloudMessagingServiceTest {
     }
 
     @Test
+    public void cantSendMessageToUserWithoutToken() {
+        Message message = new Message(Message.MESSAGE_TYPE_GENERAL, title, body);
+        message.sendMessage(MockDatabaseWrapper.karim.getUid());
+        device.openNotification();
+        assertNull(device.findObject(By.text(title)));
+    }
+
+    @Test
+    public void cantSendNullMessage() {
+        Message message = new Message(Message.MESSAGE_TYPE_GENERAL, null, null);
+        message.sendMessage(user.getUid());
+        device.openNotification();
+        assertNull(device.findObject(By.text(title)));
+    }
+
+    @Test
     public void cantNotifyNullData() {
         RemoteMessage rm = new RemoteMessage.Builder("ID")
                 .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
@@ -107,6 +127,7 @@ public class CloudMessagingServiceTest {
         device.openNotification();
         assertNull(device.findObject(By.text(title)));
     }
+
 
     private Map<String, String> createMessage() {
         Map<String, String> message = new HashMap<>();
