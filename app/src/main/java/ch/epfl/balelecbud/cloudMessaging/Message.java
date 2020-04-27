@@ -61,7 +61,7 @@ public class Message {
                 });
     }
 
-    public static Map<String, String> extractRemoteMessage(RemoteMessage remoteMessage) {
+    public static Map<String, String> extractMessage(RemoteMessage remoteMessage) {
         Map<String, String> message = new HashMap<>();
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Received Message");

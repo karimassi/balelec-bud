@@ -72,14 +72,14 @@ public class MessageTest {
     }
 
     @Test
-    public void sendMessageTest() {
+    public void sendMessageToUserWithToken() {
         Message message = new Message(title, body, Message.MESSAGE_TYPE_GENERAL);
         message.sendMessage(user.getUid());
         verifyNotification();
     }
 
     @Test
-    public void sendMessageToUserWithoutTokenTest() {
+    public void sendMessageToUserWithoutToken() {
         Message message = new Message(title, body, Message.MESSAGE_TYPE_GENERAL);
         message.sendMessage(MockDatabaseWrapper.axel.getUid());
         device.openNotification();
@@ -95,23 +95,23 @@ public class MessageTest {
     }
 
     @Test
-    public void extractRemoteMessageTest() {
+    public void extractMessageTest() {
         Map<String, String> message = new HashMap<>();
         message.put(Message.DATA_KEY_TITLE, title);
         message.put(Message.DATA_KEY_BODY, body);
         RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
                 .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
         message.put(Message.DATA_KEY_TYPE, Message.MESSAGE_TYPE_GENERAL);
-        Map<String, String> result = Message.extractRemoteMessage(rm);
+        Map<String, String> result = Message.extractMessage(rm);
         assertThat(result, is(message));
     }
 
     @Test
-    public void extractNullDataRemoteMessageTest() {
+    public void extractEmptyMessageTest() {
         Map<String, String> message = new HashMap<>();
         RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
                 .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
-        Map<String, String> result = Message.extractRemoteMessage(rm);
+        Map<String, String> result = Message.extractMessage(rm);
         assertTrue(result.isEmpty());
     }
 

@@ -46,5 +46,4 @@ public class HttpPostRequest extends CompletableFuture<JsonElement> {
     public JsonObjectRequest getPostRequest() {
         return postRequest;
     }
-
 }

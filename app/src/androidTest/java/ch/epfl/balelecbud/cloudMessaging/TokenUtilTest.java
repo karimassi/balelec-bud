@@ -87,8 +87,7 @@ public class TokenUtilTest {
     }
 
     @Test
-    public void onNewTokenTest() {
-        cloudMessagingService.onNewToken(token);
-        assertThat(TokenUtil.getToken(), is(token));
+    public void defaultConstructor() {
+        new TokenUtil();
     }
 }

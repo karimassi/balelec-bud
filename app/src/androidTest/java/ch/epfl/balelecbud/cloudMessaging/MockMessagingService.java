@@ -40,7 +40,7 @@ public class MockMessagingService implements MessagingService {
 
     @Override
     public void receiveMessage(RemoteMessage remoteMessage) {
-        Map<String, String> message = Message.extractRemoteMessage(remoteMessage);
+        Map<String, String> message = Message.extractMessage(remoteMessage);
         if(message.isEmpty()) {
             return;
         }

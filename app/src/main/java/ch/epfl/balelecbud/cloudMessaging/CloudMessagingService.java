@@ -48,7 +48,7 @@ public class CloudMessagingService extends FirebaseMessagingService implements M
 
     @Override
     public void receiveMessage(RemoteMessage remoteMessage) {
-        Map<String, String> message = Message.extractRemoteMessage(remoteMessage);
+        Map<String, String> message = Message.extractMessage(remoteMessage);
         if(message.isEmpty()) {
             return;
         }

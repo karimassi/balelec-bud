@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import ch.epfl.balelecbud.cloudMessaging.Message;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestData;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestHolder;
@@ -33,8 +32,5 @@ public class PointOfInterestActivity extends BasicActivity {
         recyclerView.setAdapter(adapter);
         SwipeRefreshLayout refreshLayout = findViewById(R.id.swipe_refresh_layout_point_of_interest);
         adapter.setOnRefreshListener(refreshLayout);
-
-        Message m = new Message("Title", "Body", Message.MESSAGE_TYPE_GENERAL);
-        m.sendMessage(BalelecbudApplication.getAppAuthenticator().getCurrentUid());
     }
 }
