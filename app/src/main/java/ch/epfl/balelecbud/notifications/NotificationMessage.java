@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.notifications;
 
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

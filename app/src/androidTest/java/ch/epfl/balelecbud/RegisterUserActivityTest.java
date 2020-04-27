@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud;
 
 import android.Manifest;
+import android.util.Log;
 import android.view.View;
 
 import androidx.test.espresso.intent.Intents;
@@ -9,6 +10,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.Matcher;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +23,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
@@ -72,9 +76,11 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
                 }
             };
 
+    private MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+
     @Before
     public void setUp() throws Throwable {
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppDatabaseWrapper(mockDB);
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
@@ -135,6 +141,17 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     public void testCanRegister() {
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
         intended(hasComponent(WelcomeActivity.class.getName()));
+    }
+
+    @Test
+    public void testRegisterSavesUserOnDB() throws Throwable {
+        String email = "testregister" + randomInt() + "@gmail.com";
+        TestAsyncUtils sync = new TestAsyncUtils();
+        Log.d("HERE", "HERE");
+        enterValuesAndClick("name", email, "123123", "123123");
+
+        Assert.assertEquals(email, mockDB.getCustomDocument(DatabaseWrapper.USERS_PATH, MockAuthenticator.getInstance().getCurrentUid(), User.class).get().getEmail());
+        Assert.assertEquals("name", mockDB.getCustomDocument(DatabaseWrapper.USERS_PATH, MockAuthenticator.getInstance().getCurrentUid(), User.class).get().getDisplayName());
     }
 
     @Test

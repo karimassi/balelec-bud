@@ -29,8 +29,7 @@ public class VolleyHttpClient implements HttpClient {
 
     @Override
     public CompletableFuture<JsonElement> post(String url, JSONObject r) {
-        HttpPostRequest request = null;
-        request = new HttpPostRequest(url, r);
+        HttpPostRequest request = new HttpPostRequest(url, r);
         queue.add(request.getPostRequest());
         return request;
     }
@@ -38,7 +37,4 @@ public class VolleyHttpClient implements HttpClient {
     public static HttpClient getInstance() {
         return instance;
     }
-
-
-
 }

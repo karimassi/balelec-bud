@@ -20,7 +20,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class Message {
 
-    private static final String TAG = CloudMessagingService.class.getSimpleName();
+    private static final String TAG = Message.class.getSimpleName();
 
     public static final String BASE_URL = "https://fcm.googleapis.com/fcm/send";
 
@@ -31,14 +31,14 @@ public class Message {
 
     private static String token = null;
 
-    private String type;
     private String title;
     private String body;
+    private String type;
 
-    public Message(String type, String title, String body) {
-        this.type = type;
+    public Message(String title, String body, String type) {
         this.title = title;
         this.body = body;
+        this.type = type;
     }
 
     public void sendMessage(String uid) {
@@ -59,7 +59,7 @@ public class Message {
                                     .put(DATA_KEY_TITLE, title)
                                     .put(DATA_KEY_BODY, body);
                             send.put("data", message).put("to", token);
-                            BalelecbudApplication.getHttpClient().post(BASE_URL, send);
+                            BalelecbudApplication.getMessagingService().sendMessage(send);
                         } catch (JSONException e) {
                             Log.d(TAG, "Couldn't put data in JSONObj");
                             e.printStackTrace();
@@ -70,7 +70,7 @@ public class Message {
                 });
     }
 
-    public static void setTokenToDatabase() {
+    public static void storeToken() {
         User user = getAppAuthenticator().getCurrentUser();
         if(user != null) {
             String uid = user.getUid();

@@ -39,7 +39,7 @@ public class MockAuthenticator implements Authenticator {
     public CompletableFuture<Void> createAccount(final String name, final String email, final String password) {
         if (!users.containsKey(email)) {
             users.put(email, password);
-            User u = new User(email, email, provideUid());
+            User u = new User(email, name, provideUid());
             return MockDatabaseWrapper.getInstance().storeDocumentWithID(DatabaseWrapper.USERS_PATH, u.getUid(), u);
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed registration");

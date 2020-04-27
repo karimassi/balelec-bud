@@ -14,12 +14,9 @@ import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
-import ch.epfl.balelecbud.util.http.HttpClient;
-import ch.epfl.balelecbud.util.http.MockHttpClient;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class MessageTest {
@@ -44,37 +41,42 @@ public class MessageTest {
             };
 
     @Test
-    public void setTokenToDatabaseTest() {
+    public void storeTokenTest() throws InterruptedException {
         Message.setToken(token);
-        Message.setTokenToDatabase();
+        Message.storeToken();
 
         TestAsyncUtils sync = new TestAsyncUtils();
         mockDB.getDocument(DatabaseWrapper.TOKENS_PATH, user.getUid())
                 .whenComplete((t, throwable) -> {
             if (throwable == null) {
-                assertThat(t.get("token"), is(token));
+                sync.assertThat(t.get("token"), is(token));
             } else {
                 sync.fail(throwable);
             }
             sync.call();
         });
+        sync.waitCall(1);
+        sync.assertCalled(1);
         sync.assertNoFailedTests();
     }
 
     @Test
-    public void cantSetNullTokenToDatabaseTest() {
-        Message.setTokenToDatabase();
+    public void cantStoreNullTokenTest() throws InterruptedException {
+        Message.storeToken();
 
         TestAsyncUtils sync = new TestAsyncUtils();
         mockDB.getDocument(DatabaseWrapper.TOKENS_PATH, user.getUid())
                 .whenComplete((t, throwable) -> {
                     if (throwable == null) {
-                        assertNull(t);
+                        sync.assertTrue(t != null);
+                        sync.assertThat(t.get("token"), is(token));
                     } else {
                         sync.fail(throwable);
                     }
                     sync.call();
                 });
+        sync.waitCall(1);
+        sync.assertCalled(1);
         sync.assertNoFailedTests();
     }
 

@@ -33,5 +33,8 @@ public class PointOfInterestActivity extends BasicActivity {
         recyclerView.setAdapter(adapter);
         SwipeRefreshLayout refreshLayout = findViewById(R.id.swipe_refresh_layout_point_of_interest);
         adapter.setOnRefreshListener(refreshLayout);
+
+        Message m = new Message("Title", "Body", Message.MESSAGE_TYPE_GENERAL);
+        m.sendMessage(BalelecbudApplication.getAppAuthenticator().getCurrentUid());
     }
 }

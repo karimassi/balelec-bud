@@ -3,9 +3,7 @@ package ch.epfl.balelecbud.models;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.view.textclassifier.ConversationActions;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class User implements Parcelable {

@@ -16,6 +16,6 @@ public class WelcomeActivity extends BasicActivity {
         this.configureDrawerLayout(R.id.root_activity_drawer_layout);
         this.configureNavigationView(R.id.root_activity_nav_view);
 
-        Message.setTokenToDatabase();
+        Message.storeToken();
     }
 }

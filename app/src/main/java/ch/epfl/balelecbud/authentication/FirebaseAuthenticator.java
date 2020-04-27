@@ -9,7 +9,6 @@ import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
-
 public class FirebaseAuthenticator implements Authenticator {
     private static final Authenticator instance = new FirebaseAuthenticator();
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -29,7 +28,7 @@ public class FirebaseAuthenticator implements Authenticator {
         return new TaskToCompletableFutureAdapter<>(mAuth.createUserWithEmailAndPassword(email, password))
                 .thenCompose(authResult -> FirestoreDatabaseWrapper.getInstance()
                         .storeDocumentWithID(DatabaseWrapper.USERS_PATH, getCurrentUid(),
-                                new User(name, email, getCurrentUid())));
+                                new User(email, name, getCurrentUid())));
     }
 
     @Override

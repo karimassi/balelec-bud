@@ -1,7 +1,6 @@
 package ch.epfl.balelecbud;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -9,7 +8,6 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +31,6 @@ import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest extends BasicActivityTest {
