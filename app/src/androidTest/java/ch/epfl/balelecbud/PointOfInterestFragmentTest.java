@@ -1,11 +1,14 @@
 package ch.epfl.balelecbud;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import com.google.firebase.firestore.GeoPoint;
+import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,15 +24,21 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest1;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest2;
 
 @RunWith(AndroidJUnit4.class)
 public class PointOfInterestFragmentTest extends RootActivityTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
-    private final PointOfInterest pointOfInterest1 = new PointOfInterest(
-            new GeoPoint(4, 20), "Bar IC", "Bar");
-    private final PointOfInterest pointOfInterest2 = new PointOfInterest(
-            new GeoPoint(4, 22), "Bar EE", "Bar");
+    @Rule
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    BalelecbudApplication.setAppDatabaseWrapper(mock);
+                }
+            };
 
     @Override
     protected void setUpBeforeActivityLaunched() {
@@ -57,6 +66,7 @@ public class PointOfInterestFragmentTest extends RootActivityTest {
                 atPosition(0)), pointOfInterest1);
     }
 
+
     @Test
     public void testCanDeleteFromDatabase() {
         mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
@@ -83,7 +93,7 @@ public class PointOfInterestFragmentTest extends RootActivityTest {
 
     private void testInfoInView(ViewInteraction viewInteraction, PointOfInterest poi) {
         viewInteraction.check(matches(hasDescendant(withText(poi.getName()))));
-        viewInteraction.check(matches(hasDescendant(withText(poi.getType()))));
+        viewInteraction.check(matches(hasDescendant(withText(poi.getType().toString()))));
     }
 
     @Override

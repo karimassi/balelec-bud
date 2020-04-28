@@ -39,7 +39,7 @@ public class PointOfInterestFragment extends Fragment {
         RecyclerView recyclerView = getView().findViewById(R.id.pointOfInterestRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity)); // Not sure about this one
         recyclerView.setHasFixedSize(true);
-        RecyclerViewData<PointOfInterest, PointOfInterestHolder> data = new PointOfInterestData();
+        RecyclerViewData<PointOfInterest, PointOfInterestHolder> data = new PointOfInterestData(getActivity());
         RefreshableRecyclerViewAdapter<PointOfInterest, PointOfInterestHolder> adapter = new RefreshableRecyclerViewAdapter<>(
                 PointOfInterestHolder::new, data, R.layout.item_point_of_interest);
         recyclerView.setAdapter(adapter);

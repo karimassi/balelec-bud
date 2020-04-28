@@ -60,7 +60,7 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.call();
             }
         }));
@@ -85,7 +85,7 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.call();
             }
         }));
@@ -126,7 +126,7 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.call();
             }
         };

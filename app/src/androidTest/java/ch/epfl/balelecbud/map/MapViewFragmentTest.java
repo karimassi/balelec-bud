@@ -12,6 +12,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.location.LocationUtil;
+import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -19,6 +20,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
@@ -66,8 +68,9 @@ public class MapViewFragmentTest extends RootActivityTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.assertEquals(expectedLocation, locationEnabled);
+                sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }
         };
@@ -84,7 +87,7 @@ public class MapViewFragmentTest extends RootActivityTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.call();
             }
         }));

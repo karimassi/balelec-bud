@@ -20,6 +20,7 @@ import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.maps.MapView;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -29,7 +30,9 @@ import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
@@ -40,7 +43,9 @@ public class MapViewFragment extends Fragment {
     private MapView mapView;
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
+    private Map<PointOfInterest, MyMarker> poiMarkers = new HashMap<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
+    private Location defaultLocation;
 
     private Map<MarkerType, Icon> icons;
 
@@ -67,8 +72,11 @@ public class MapViewFragment extends Fragment {
                     mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
         }
 
+        Location location = getActivity().getIntent().getParcelableExtra("location");
+        defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
         setupMapIcons();
         requestFriendsLocations();
+        displayPointsOfInterests();
         return inflatedView;
     }
 
@@ -119,7 +127,7 @@ public class MapViewFragment extends Fragment {
 
     public void onMapReady(MyMap map) {
         myMap = map;
-        myMap.initialiseMap(LocationUtil.isLocationActive());
+        myMap.initialiseMap(LocationUtil.isLocationActive(), this.defaultLocation);
         displayWaitingFriends(myMap);
     }
 
@@ -163,6 +171,8 @@ public class MapViewFragment extends Fragment {
 
     private void updateFriendLocation(User friend, Location location) {
         Log.d(TAG, "updateFriendLocation() called with: friend = [" + friend + "], location = [" + location + "]");
+        if (location == null)
+            return;
         if (myMap == null) {
             waitingFriendsLocation.put(friend, location);
         } else if (friendsMarkers.containsKey(friend)) {
@@ -175,12 +185,26 @@ public class MapViewFragment extends Fragment {
         }
     }
 
+    private void displayPointsOfInterests() {
+        getAppDatabaseWrapper().query(new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>()),
+                PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
+                    for (PointOfInterest poi : pointOfInterests) {
+                        poiMarkers.put(poi, myMap.addMarker(new MyMarker.Builder()
+                            .location(poi.getLocation())
+                            .icon(icons.get(MarkerType.getMarkerType(poi.getType())))
+                            .title(poi.getName())));
+                    }
+        });
+    }
+
     private void setupMapIcons() {
-        icons = new HashMap<>();
         IconFactory iconFactory = IconFactory.getInstance(getActivity());
-        Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.map);
-        Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
-        Icon icon = iconFactory.fromBitmap(bitmap);
-        icons.put(MarkerType.FRIEND, icon);
+        icons = new HashMap<>();
+        for (MarkerType t : MarkerType.values()) {
+            Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), t.getDrawableId());
+            Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
+            Icon icon = iconFactory.fromBitmap(bitmap);
+            icons.put(t, icon);
+        }
     }
 }

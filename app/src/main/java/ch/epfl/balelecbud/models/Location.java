@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.firebase.firestore.GeoPoint;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Objects;
@@ -24,7 +23,7 @@ public class Location implements Parcelable {
             return new Location[size];
         }
     };
-    public static Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
+    public static final Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
     private Double longitude;
     private Double latitude;
     private Double geoFireLocation;
