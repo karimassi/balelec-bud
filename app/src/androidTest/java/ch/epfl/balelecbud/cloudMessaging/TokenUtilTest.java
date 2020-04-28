@@ -20,7 +20,6 @@ public class TokenUtilTest {
 
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
-    private final CloudMessagingService cloudMessagingService = CloudMessagingService.getInstance();
     private final User user = MockDatabaseWrapper.celine;
     private final String token = MockDatabaseWrapper.token;
 

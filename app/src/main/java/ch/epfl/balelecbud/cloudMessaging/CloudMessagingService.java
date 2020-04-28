@@ -21,7 +21,7 @@ public class CloudMessagingService extends FirebaseMessagingService implements M
     private static final String FCM_KEY = "key=AAAAIEByxFA:APA91bHhnxIzhsfli52m8kq9uP9VWvIB972DTJYz85_ndFCzeDEzEDdgiYVjrVo8yM9npWNH5VchrfNqWw--1-SXB35YS7HIX04_-_9FmiUdJAlYzrRnN2B9q__7t9hXWsIC_rkzgRiv";
 
     private static final String TAG = CloudMessagingService.class.getSimpleName();
-    private static final CloudMessagingService instance = new CloudMessagingService();
+    private static final MessagingService instance = new CloudMessagingService();
 
     @Override
     public void onNewToken(@NonNull String s) {
@@ -56,7 +56,7 @@ public class CloudMessagingService extends FirebaseMessagingService implements M
         NotificationMessage.getInstance().scheduleNotification(this, message);
     }
 
-    public static CloudMessagingService getInstance() {
+    public static MessagingService getInstance() {
         return instance;
     }
 }

@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNull;
 public class CloudMessagingServiceTest {
 
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
-    private final CloudMessagingService cloudMessagingService = CloudMessagingService.getInstance();
+    private final MessagingService cloudMessagingService = CloudMessagingService.getInstance();
     private final User user = MockDatabaseWrapper.celine;
     private final String token = MockDatabaseWrapper.token;
 
@@ -62,16 +62,16 @@ public class CloudMessagingServiceTest {
 
     @Test
     public void onNewTokenTest() {
-        cloudMessagingService.onNewToken(token);
+        new CloudMessagingService().onNewToken(token);
         assertThat(TokenUtil.getToken(), is(token));
     }
 
     @Test
-    public void receivedEmptyMessageTest() {
+    public void onMessageReceivedTest() {
         Map<String, String> message = new HashMap<>();
         RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
                 .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
-        cloudMessagingService.onMessageReceived(rm);
+        new CloudMessagingService().onMessageReceived(rm);
         device.openNotification();
         assertNull(device.findObject(By.text("title")));
     }
@@ -80,6 +80,16 @@ public class CloudMessagingServiceTest {
     public void sendEmptyMessageTest() {
         JSONObject message = new JSONObject();
         cloudMessagingService.sendMessage(message);
+        device.openNotification();
+        assertNull(device.findObject(By.text("title")));
+    }
+
+    @Test
+    public void receivedEmptyMessageTest() {
+        Map<String, String> message = new HashMap<>();
+        RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
+                .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
+        cloudMessagingService.receiveMessage(rm);
         device.openNotification();
         assertNull(device.findObject(By.text("title")));
     }

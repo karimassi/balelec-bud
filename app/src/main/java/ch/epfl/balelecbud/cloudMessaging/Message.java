@@ -62,19 +62,25 @@ public class Message {
     }
 
     public static Map<String, String> extractMessage(RemoteMessage remoteMessage) {
-        Map<String, String> message = new HashMap<>();
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Received Message");
-            message.put(Message.DATA_KEY_TITLE, remoteMessage.getData().get(Message.DATA_KEY_TITLE));
-            message.put(Message.DATA_KEY_BODY, remoteMessage.getData().get(Message.DATA_KEY_BODY));
-            message.put(Message.DATA_KEY_TYPE, remoteMessage.getMessageType());
+            return createMessage(remoteMessage.getData().get(Message.DATA_KEY_TITLE),
+                    remoteMessage.getData().get(Message.DATA_KEY_BODY),
+                    remoteMessage.getMessageType());
         }
-        else if (remoteMessage.getNotification() != null) {
+        if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Received Notification");
-            message.put(Message.DATA_KEY_TITLE, remoteMessage.getNotification().getTitle());
-            message.put(Message.DATA_KEY_BODY, remoteMessage.getNotification().getBody());
-            message.put(Message.DATA_KEY_TYPE, Message.MESSAGE_TYPE_GENERAL);
+            return createMessage(remoteMessage.getNotification().getTitle(),
+                    remoteMessage.getNotification().getBody(), Message.MESSAGE_TYPE_GENERAL);
         }
+        return new HashMap<>();
+    }
+
+    private static Map<String, String> createMessage(String title, String body, String type) {
+        Map<String, String> message = new HashMap<>();
+        message.put(Message.DATA_KEY_TITLE, title);
+        message.put(Message.DATA_KEY_BODY, body);
+        message.put(Message.DATA_KEY_TYPE, type);
         return message;
     }
 }
