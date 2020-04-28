@@ -14,6 +14,7 @@ import com.google.android.material.navigation.NavigationView;
 import ch.epfl.balelecbud.friendship.SocialFragment;
 import ch.epfl.balelecbud.map.MapViewFragment;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.settings.SettingsActivity;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
@@ -50,6 +51,9 @@ public abstract class BasicActivity extends AppCompatActivity implements Navigat
                 break;
             case R.id.activity_main_drawer_social:
                 startActivity(new Intent(this, SocialFragment.class));
+                break;
+            case R.id.activity_main_drawer_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.sign_out_button:
                 signOut();

@@ -43,11 +43,9 @@ public class MapViewFragment extends Fragment {
     private MapView mapView;
     private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
-    private Map<PointOfInterest, MyMarker> poiMarkers = new HashMap<>();
+    private List<PointOfInterest> waitingPOI = new LinkedList<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
     private Location defaultLocation;
-
-    private Map<MarkerType, Icon> icons;
 
     @VisibleForTesting
     public static void setMockCallback(com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback) {
@@ -68,8 +66,7 @@ public class MapViewFragment extends Fragment {
         if (mockCallback != null) {
             mapView.getMapAsync(mockCallback);
         } else {
-            mapView.getMapAsync(
-                    mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
+            mapView.getMapAsync(mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
         }
 
         Location location = getActivity().getIntent().getParcelableExtra("location");
@@ -128,7 +125,8 @@ public class MapViewFragment extends Fragment {
     public void onMapReady(MyMap map) {
         myMap = map;
         myMap.initialiseMap(LocationUtil.isLocationActive(), this.defaultLocation);
-        displayWaitingFriends(myMap);
+        displayWaitingFriends();
+        displayWaitingPOI();
     }
 
 
@@ -138,12 +136,22 @@ public class MapViewFragment extends Fragment {
                         .unregisterDocumentListener(DatabaseWrapper.LOCATIONS_PATH, id)));
     }
 
-    public void displayWaitingFriends(MyMap map) {
+    public void displayWaitingPOI() {
+        for (PointOfInterest poi : waitingPOI) {
+            myMap.addMarker(new MyMarker.Builder()
+                    .location(poi.getLocation())
+                    .type(MarkerType.getMarkerType(poi.getType()))
+                    .title(poi.getName()));
+        }
+        waitingPOI.clear();
+    }
+
+    public void displayWaitingFriends() {
         for (User friend : waitingFriendsLocation.keySet()) {
-            friendsMarkers.put(friend, map.addMarker(new MyMarker.Builder()
+            friendsMarkers.put(friend, myMap.addMarker(new MyMarker.Builder()
                     .location(waitingFriendsLocation.get(friend))
                     .title(friend.getDisplayName())
-                    .icon(icons.get(MarkerType.FRIEND))));
+                    .type(MarkerType.FRIEND)));
         }
         waitingFriendsLocation.clear();
     }
@@ -181,19 +189,23 @@ public class MapViewFragment extends Fragment {
             friendsMarkers.put(friend, myMap.addMarker(new MyMarker.Builder()
                     .location(location)
                     .title(friend.getDisplayName())
-                    .icon(icons.get(MarkerType.FRIEND))));
+                    .type(MarkerType.FRIEND)));
         }
     }
 
     private void displayPointsOfInterests() {
         getAppDatabaseWrapper().query(new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>()),
                 PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
-                    for (PointOfInterest poi : pointOfInterests) {
-                        poiMarkers.put(poi, myMap.addMarker(new MyMarker.Builder()
+            for (PointOfInterest poi : pointOfInterests) {
+                if (myMap == null) {
+                    waitingPOI.add(poi);
+                } else {
+                    myMap.addMarker(new MyMarker.Builder()
                             .location(poi.getLocation())
-                            .icon(icons.get(MarkerType.getMarkerType(poi.getType())))
-                            .title(poi.getName())));
-                    }
+                            .type(MarkerType.getMarkerType(poi.getType()))
+                            .title(poi.getName()));
+                }
+            }
         });
     }
 
