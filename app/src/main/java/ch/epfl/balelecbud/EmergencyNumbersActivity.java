@@ -11,10 +11,6 @@ import android.widget.ListView;
 
 import androidx.core.app.ActivityCompat;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,11 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
-import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
-
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class EmergencyNumbersActivity extends BasicActivity {
     public static final int PERMISSION_TO_CALL_CODE = 991;
@@ -119,6 +112,4 @@ public class EmergencyNumbersActivity extends BasicActivity {
 
         }
     }
-
-
 }

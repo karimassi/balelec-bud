@@ -16,6 +16,7 @@ import java.util.Map;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.cloudMessaging.Message;
+import ch.epfl.balelecbud.friendship.SocialActivity;
 
 public class NotificationMessage implements NotificationInterface<Map<String, String>> {
 
@@ -64,15 +65,12 @@ public class NotificationMessage implements NotificationInterface<Map<String, St
     }
 
     @Override
-    public void cancelNotification(Context context, Map<String, String> object) {
-
-    }
+    public void cancelNotification(Context context, Map<String, String> object) { }
 
     public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    context.getString(R.string.message_channel_name),
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    context.getString(R.string.message_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
 
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);

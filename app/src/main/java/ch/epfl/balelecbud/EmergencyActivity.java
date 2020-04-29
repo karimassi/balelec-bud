@@ -10,17 +10,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.Timestamp;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.models.emergency.EmergencyType;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
-
 
 public class EmergencyActivity extends BasicActivity {
 

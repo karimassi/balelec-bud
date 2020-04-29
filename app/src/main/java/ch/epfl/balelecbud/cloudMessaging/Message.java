@@ -53,7 +53,6 @@ public class Message {
                             BalelecbudApplication.getMessagingService().sendMessage(send);
                         } catch (JSONException e) {
                             Log.d(TAG, "Couldn't put data in JSONObj");
-                            e.printStackTrace();
                         }
                     }
                     else Log.d(TAG,
@@ -70,8 +69,7 @@ public class Message {
         }
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Received Notification");
-            return createMessage(remoteMessage.getNotification().getTitle(),
-                    remoteMessage.getNotification().getBody(), Message.MESSAGE_TYPE_GENERAL);
+            return createMessage(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), Message.MESSAGE_TYPE_GENERAL);
         }
         return new HashMap<>();
     }
