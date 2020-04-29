@@ -58,7 +58,6 @@
     <string name="tab_received_requests">Received requests</string>
     <string name="tab_sent_requests">Sent requests</string>
 
-
     <!-- DIALOG   -->
     <string name="add_friend_title">Add a friend</string>
     <string name="add_friend_request">Request</string>

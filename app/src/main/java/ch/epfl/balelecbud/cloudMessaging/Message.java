@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 public class Message {
@@ -18,9 +19,14 @@ public class Message {
     private static final String TAG = Message.class.getSimpleName();
 
     public static final String MESSAGE_TYPE_GENERAL = "GENERAL";
+    public static final String MESSAGE_TYPE_SOCIAL = "SOCIAL";
     public static final String DATA_KEY_TITLE = "title";
     public static final String DATA_KEY_BODY = "body";
     public static final String DATA_KEY_TYPE = "type";
+    public static final String FRIEND_REQUEST_TITLE = "You received a friend request!";
+    public static final String FRIEND_REQUEST_BODY = " sent you a friend request";
+    public static final String ACCEPT_REQUEST_TITLE = "You have a new friend!";
+    public static final String ACCEPT_REQUEST_BODY = " accepted your friend request";
 
     private String title;
     private String body;
@@ -30,6 +36,34 @@ public class Message {
         this.title = title;
         this.body = body;
         this.type = type;
+    }
+
+    public static void sendFriendRequestMessage(User sender, String uid) {
+        Log.d(TAG, "In send friend request message to uid: " + uid);
+        BalelecbudApplication.getAppDatabaseWrapper()
+                .getDocument(FirestoreDatabaseWrapper.TOKENS_PATH, sender.getUid())
+                .whenCompleteAsync((t, throwable) -> {
+                    if( t != null ) {
+                        new Message(FRIEND_REQUEST_TITLE, sender.getDisplayName() +
+                                FRIEND_REQUEST_BODY, MESSAGE_TYPE_SOCIAL).sendMessage(uid);
+                    }
+                    else Log.d(TAG,
+                            "Didn't find token for this user, stopped sending the message");
+                });
+    }
+
+    public static void sendAcceptRequestMessage(User friend, String uid) {
+        Log.d(TAG, "In send accept request message to uid: " + uid);
+        BalelecbudApplication.getAppDatabaseWrapper()
+                .getDocument(FirestoreDatabaseWrapper.TOKENS_PATH, friend.getUid())
+                .whenCompleteAsync((t, throwable) -> {
+                    if( t != null ) {
+                        new Message(ACCEPT_REQUEST_TITLE, friend.getDisplayName() +
+                                ACCEPT_REQUEST_BODY, MESSAGE_TYPE_SOCIAL).sendMessage(uid);
+                    }
+                    else Log.d(TAG,
+                            "Didn't find token for this user, stopped sending the message");
+                });
     }
 
     public void sendMessage(String uid) {
@@ -46,9 +80,9 @@ public class Message {
                         JSONObject message = new JSONObject();
 
                         try {
-                            message.put(DATA_KEY_TYPE, type)
-                                    .put(DATA_KEY_TITLE, title)
-                                    .put(DATA_KEY_BODY, body);
+                            message.put(DATA_KEY_TITLE, title)
+                                    .put(DATA_KEY_BODY, body)
+                                    .put(DATA_KEY_TYPE, type);
                             send.put("data", message).put("to", token);
                             BalelecbudApplication.getMessagingService().sendMessage(send);
                         } catch (JSONException e) {
@@ -65,7 +99,7 @@ public class Message {
             Log.d(TAG, "Received Message");
             return createMessage(remoteMessage.getData().get(Message.DATA_KEY_TITLE),
                     remoteMessage.getData().get(Message.DATA_KEY_BODY),
-                    remoteMessage.getMessageType());
+                    remoteMessage.getData().get(Message.DATA_KEY_TYPE));
         }
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Received Notification");

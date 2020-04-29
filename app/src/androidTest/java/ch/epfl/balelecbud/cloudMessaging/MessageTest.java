@@ -36,7 +36,8 @@ public class MessageTest {
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final MockMessagingService mockMessagingService = MockMessagingService.getInstance();
     private final User user = MockDatabaseWrapper.celine;
-    private final String token = MockDatabaseWrapper.token;
+    private final User friend = MockDatabaseWrapper.karim;
+    private final String token = MockDatabaseWrapper.token1;
     private final String title = "This title is the best!";
     private final String body = "This body is good :)";
 
@@ -70,6 +71,32 @@ public class MessageTest {
     }
 
     @Test
+    public void sendFriendRequestMessageTest() {
+        Message.sendFriendRequestMessage(friend, user.getUid());
+        NotificationMessageTest.verifyNotification(device, Message.FRIEND_REQUEST_TITLE,
+                friend.getDisplayName() + Message.FRIEND_REQUEST_BODY);
+    }
+
+    @Test
+    public void sendFriendRequestMessageWithoutToken() {
+        Message.sendFriendRequestMessage(MockDatabaseWrapper.axel, user.getUid());
+        assertNull(device.findObject(By.text(Message.FRIEND_REQUEST_TITLE)));
+    }
+
+    @Test
+    public void sendAcceptRequestMessageTest() {
+        Message.sendAcceptRequestMessage(friend, user.getUid());
+        NotificationMessageTest.verifyNotification(device, Message.ACCEPT_REQUEST_TITLE,
+                friend.getDisplayName() + Message.ACCEPT_REQUEST_BODY);
+    }
+
+    @Test
+    public void sendAcceptRequestMessageWithoutToken() {
+        Message.sendAcceptRequestMessage(MockDatabaseWrapper.axel, user.getUid());
+        assertNull(device.findObject(By.text(Message.ACCEPT_REQUEST_TITLE)));
+    }
+
+    @Test
     public void sendMessageToUserWithToken() {
         Message message = new Message(title, body, Message.MESSAGE_TYPE_GENERAL);
         message.sendMessage(user.getUid());
@@ -97,9 +124,8 @@ public class MessageTest {
         Map<String, String> message = new HashMap<>();
         message.put(Message.DATA_KEY_TITLE, title);
         message.put(Message.DATA_KEY_BODY, body);
-        RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
-                .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
         message.put(Message.DATA_KEY_TYPE, Message.MESSAGE_TYPE_GENERAL);
+        RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message).build();
         Map<String, String> result = Message.extractMessage(rm);
         assertThat(result, is(message));
     }
@@ -107,8 +133,7 @@ public class MessageTest {
     @Test
     public void extractEmptyMessageTest() {
         Map<String, String> message = new HashMap<>();
-        RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
-                .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
+        RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message).build();
         Map<String, String> result = Message.extractMessage(rm);
         assertTrue(result.isEmpty());
     }

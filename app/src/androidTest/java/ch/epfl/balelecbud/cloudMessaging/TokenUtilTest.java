@@ -21,7 +21,7 @@ public class TokenUtilTest {
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final User user = MockDatabaseWrapper.celine;
-    private final String token = MockDatabaseWrapper.token;
+    private final String token = MockDatabaseWrapper.token1;
 
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =

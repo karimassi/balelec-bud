@@ -32,7 +32,7 @@ public class CloudMessagingServiceTest {
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final CloudMessagingService cloudMessagingService = new CloudMessagingService();
     private final User user = MockDatabaseWrapper.celine;
-    private final String token = MockDatabaseWrapper.token;
+    private final String token = MockDatabaseWrapper.token1;
 
     private UiDevice device;
 

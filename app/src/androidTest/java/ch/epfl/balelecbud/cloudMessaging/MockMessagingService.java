@@ -26,8 +26,8 @@ public class MockMessagingService implements MessagingService {
             JSONObject data = (JSONObject) send.get("data");
             message.put(Message.DATA_KEY_TITLE, (String) data.get(Message.DATA_KEY_TITLE));
             message.put(Message.DATA_KEY_BODY, (String) data.get(Message.DATA_KEY_BODY));
-            RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
-                    .setMessageType((String) data.get(Message.DATA_KEY_TYPE)).build();
+            message.put(Message.DATA_KEY_TYPE, (String) data.get(Message.DATA_KEY_TYPE));
+            RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message).build();
             this.receiveMessage(rm);
         } catch (JSONException e) {
             Log.d(TAG, "Couldn't get information from JSONObject");

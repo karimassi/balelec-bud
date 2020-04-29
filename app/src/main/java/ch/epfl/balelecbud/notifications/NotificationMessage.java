@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.util.Log;
 
-import androidx.annotation.VisibleForTesting;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -17,6 +17,7 @@ import java.util.Map;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.cloudMessaging.Message;
+import ch.epfl.balelecbud.friendship.SocialActivity;
 
 public class NotificationMessage implements NotificationInterface<Map<String, String>> {
 
@@ -61,6 +62,10 @@ public class NotificationMessage implements NotificationInterface<Map<String, St
     }
 
     private Intent getIntent(Context context, String type) {
+        Log.d("NotificationMessage", "type: " + type);
+        if(type.equals(Message.MESSAGE_TYPE_SOCIAL)) {
+            return new Intent(context, SocialActivity.class);
+        }
         return new Intent(context, WelcomeActivity.class);
     }
 
