@@ -71,28 +71,35 @@ public class MessageTest {
     }
 
     @Test
+    public void sendFriendshipMessageNullType() {
+        Message.sendFriendshipMessage(friend, user.getUid(), null);
+        assertNull(device.findObject(By.text(Message.ACCEPT_REQUEST_TITLE)));
+        assertNull(device.findObject(By.text(Message.FRIEND_REQUEST_TITLE)));
+    }
+
+    @Test
     public void sendFriendRequestMessageTest() {
-        Message.sendFriendRequestMessage(friend, user.getUid());
+        Message.sendFriendshipMessage(friend, user.getUid(), Message.TYPE_FRIEND_REQUEST);
         NotificationMessageTest.verifyNotification(device, Message.FRIEND_REQUEST_TITLE,
                 friend.getDisplayName() + Message.FRIEND_REQUEST_BODY);
     }
 
     @Test
     public void sendFriendRequestMessageWithoutToken() {
-        Message.sendFriendRequestMessage(MockDatabaseWrapper.axel, user.getUid());
+        Message.sendFriendshipMessage(MockDatabaseWrapper.axel, user.getUid(), Message.TYPE_FRIEND_REQUEST);
         assertNull(device.findObject(By.text(Message.FRIEND_REQUEST_TITLE)));
     }
 
     @Test
     public void sendAcceptRequestMessageTest() {
-        Message.sendAcceptRequestMessage(friend, user.getUid());
+        Message.sendFriendshipMessage(friend, user.getUid(), Message.TYPE_ACCEPT_REQUEST);
         NotificationMessageTest.verifyNotification(device, Message.ACCEPT_REQUEST_TITLE,
                 friend.getDisplayName() + Message.ACCEPT_REQUEST_BODY);
     }
 
     @Test
     public void sendAcceptRequestMessageWithoutToken() {
-        Message.sendAcceptRequestMessage(MockDatabaseWrapper.axel, user.getUid());
+        Message.sendFriendshipMessage(MockDatabaseWrapper.axel, user.getUid(), Message.TYPE_ACCEPT_REQUEST);
         assertNull(device.findObject(By.text(Message.ACCEPT_REQUEST_TITLE)));
     }
 

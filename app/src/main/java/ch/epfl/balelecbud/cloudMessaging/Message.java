@@ -20,6 +20,8 @@ public class Message {
 
     public static final String MESSAGE_TYPE_GENERAL = "GENERAL";
     public static final String MESSAGE_TYPE_SOCIAL = "SOCIAL";
+    public static final String TYPE_FRIEND_REQUEST = "FRIEND REQUEST";
+    public static final String TYPE_ACCEPT_REQUEST = "ACCEPT REQUEST";
     public static final String DATA_KEY_TITLE = "title";
     public static final String DATA_KEY_BODY = "body";
     public static final String DATA_KEY_TYPE = "type";
@@ -38,28 +40,20 @@ public class Message {
         this.type = type;
     }
 
-    public static void sendFriendRequestMessage(User sender, String uid) {
-        Log.d(TAG, "In send friend request message to uid: " + uid);
+    public static void sendFriendshipMessage(User user, String toSend, String type) {
+        Log.d(TAG, "Sending friendship message, type: " + type);
         BalelecbudApplication.getAppDatabaseWrapper()
-                .getDocument(FirestoreDatabaseWrapper.TOKENS_PATH, sender.getUid())
+                .getDocument(FirestoreDatabaseWrapper.TOKENS_PATH, user.getUid())
                 .whenCompleteAsync((t, throwable) -> {
                     if( t != null ) {
-                        new Message(FRIEND_REQUEST_TITLE, sender.getDisplayName() +
-                                FRIEND_REQUEST_BODY, MESSAGE_TYPE_SOCIAL).sendMessage(uid);
-                    }
-                    else Log.d(TAG,
-                            "Didn't find token for this user, stopped sending the message");
-                });
-    }
-
-    public static void sendAcceptRequestMessage(User friend, String uid) {
-        Log.d(TAG, "In send accept request message to uid: " + uid);
-        BalelecbudApplication.getAppDatabaseWrapper()
-                .getDocument(FirestoreDatabaseWrapper.TOKENS_PATH, friend.getUid())
-                .whenCompleteAsync((t, throwable) -> {
-                    if( t != null ) {
-                        new Message(ACCEPT_REQUEST_TITLE, friend.getDisplayName() +
-                                ACCEPT_REQUEST_BODY, MESSAGE_TYPE_SOCIAL).sendMessage(uid);
+                        if(type.equals(TYPE_FRIEND_REQUEST)) {
+                            new Message(FRIEND_REQUEST_TITLE, user.getDisplayName() +
+                                    FRIEND_REQUEST_BODY, MESSAGE_TYPE_SOCIAL).sendMessage(toSend);
+                        }
+                        else if(type.equals(TYPE_ACCEPT_REQUEST)) {
+                            new Message(ACCEPT_REQUEST_TITLE, user.getDisplayName() +
+                                    ACCEPT_REQUEST_BODY, MESSAGE_TYPE_SOCIAL).sendMessage(toSend);
+                        }
                     }
                     else Log.d(TAG,
                             "Didn't find token for this user, stopped sending the message");

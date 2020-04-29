@@ -43,14 +43,16 @@ public class NotificationMessageTest {
 
     @Test
     public void scheduleGeneralNotificationTest() {
-        Map<String, String> message = Message.createMessage(title, body, Message.MESSAGE_TYPE_GENERAL);
-        NotificationMessage.getInstance().scheduleNotification(mActivityRule.getActivity(), message);
-        verifyNotification(device, title, body);
+        scheduleNotificationTest(Message.MESSAGE_TYPE_GENERAL);
     }
 
     @Test
     public void scheduleSocialNotificationTest() {
-        Map<String, String> message = Message.createMessage(title, body, Message.MESSAGE_TYPE_SOCIAL);
+        scheduleNotificationTest(Message.MESSAGE_TYPE_SOCIAL);
+    }
+
+    private void scheduleNotificationTest(String type) {
+        Map<String, String> message = Message.createMessage(title, body, type);
         NotificationMessage.getInstance().scheduleNotification(mActivityRule.getActivity(), message);
         verifyNotification(device, title, body);
     }
