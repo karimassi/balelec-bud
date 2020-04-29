@@ -23,7 +23,7 @@ public class PointOfInterestUtils {
 
         MyGeoClause geoClause = new MyGeoClause(poiLatitude, poiLongitude, SEARCH_RADIUS_IN_KM);
 
-        return getAppDatabaseWrapper().query(new MyQuery(DatabaseWrapper.LOCATIONS_PATH, geoClause), Location.class).thenApply(List::size);
+        return getAppDatabaseWrapper().queryWithType(new MyQuery(DatabaseWrapper.LOCATIONS_PATH, geoClause), Location.class).thenApply(List::size);
     }
 
     public static CompletableFuture<List<PointOfInterestUtils.PoiAffluenceTuple>> computeAffluence(List<PointOfInterest> pointOfInterests) {

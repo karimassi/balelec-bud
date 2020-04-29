@@ -194,7 +194,7 @@ public class MapViewActivity extends BasicActivity {
     }
 
     private void displayPointsOfInterests() {
-        getAppDatabaseWrapper().query(new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>()),
+        getAppDatabaseWrapper().queryWithType(new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>()),
                 PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
             for (PointOfInterest poi : pointOfInterests) {
                 if (myMap == null) {

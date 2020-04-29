@@ -1,7 +1,10 @@
 package ch.epfl.balelecbud.friendship;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.FieldValue;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +13,13 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import static ch.epfl.balelecbud.util.database.DatabaseWrapper.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 
 public class FriendshipUtils {
 
@@ -62,12 +69,15 @@ public class FriendshipUtils {
     }
 
     public static CompletableFuture<User> getUserFromUid(String uid) {
-        return getAppDatabaseWrapper().getCustomDocument(DatabaseWrapper.USERS_PATH, uid, User.class);
+        MyQuery query = new MyQuery(DatabaseWrapper.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, uid));
+        return getAppDatabaseWrapper().queryWithType(query, User.class).thenApply(users -> users.get(0));
+        //return getAppDatabaseWrapper().getCustomDocument(DatabaseWrapper.USERS_PATH, uid, User.class);
     }
 
     public static CompletableFuture<User> getUserFromEmail(String email) {
+        MyQuery query = new MyQuery(DatabaseWrapper.USERS_PATH, new MyWhereClause("email", EQUAL, email));
         return getAppDatabaseWrapper()
-                .getDocumentWithFieldCondition(DatabaseWrapper.USERS_PATH, "email", email, User.class);
+                .queryWithType(query, User.class).thenApply(users -> users.get(0));
     }
 
     public static CompletableFuture<List<String>> getRequestsUids(User user) {
@@ -79,7 +89,7 @@ public class FriendshipUtils {
     }
 
     private static CompletableFuture<List<String>> getUidsFromCollection(User user, String collectionName) {
-        return getAppDatabaseWrapper().getDocument(collectionName, user.getUid())
-                .thenApply(stringObjectMap -> new ArrayList<>(stringObjectMap.keySet()));
+        MyQuery query = new MyQuery(collectionName, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, user.getUid()));
+        return getAppDatabaseWrapper().query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet()));
     }
 }

@@ -14,7 +14,7 @@ public class FestivalInformationData extends RecyclerViewData<FestivalInformatio
     @Override
     public void reload() {
         MyQuery query = new MyQuery(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new LinkedList<>());
-        BalelecbudApplication.getAppDatabaseWrapper().query(query, FestivalInformation.class)
+        BalelecbudApplication.getAppDatabaseWrapper().queryWithType(query, FestivalInformation.class)
             .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 

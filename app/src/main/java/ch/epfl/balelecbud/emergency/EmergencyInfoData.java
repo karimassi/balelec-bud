@@ -14,7 +14,7 @@ public class EmergencyInfoData extends RecyclerViewData<EmergencyInfo, Emergency
         @Override
         public void reload() {
             MyQuery query = new MyQuery(DatabaseWrapper.EMERGENCY_INFO_PATH, new LinkedList<>());
-            BalelecbudApplication.getAppDatabaseWrapper().query(query, EmergencyInfo.class)
+            BalelecbudApplication.getAppDatabaseWrapper().queryWithType(query, EmergencyInfo.class)
                     .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
         }
 

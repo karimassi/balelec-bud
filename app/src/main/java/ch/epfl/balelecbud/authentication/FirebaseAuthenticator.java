@@ -8,6 +8,11 @@ import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
+
+import static ch.epfl.balelecbud.util.database.DatabaseWrapper.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 
 
 public class FirebaseAuthenticator implements Authenticator {
@@ -20,8 +25,12 @@ public class FirebaseAuthenticator implements Authenticator {
     public CompletableFuture<User> signIn(String email, String password) {
         return new TaskToCompletableFutureAdapter<>(mAuth.signInWithEmailAndPassword(email, password))
                 .thenCompose(authResult -> FirestoreDatabaseWrapper.getInstance()
-                        .getCustomDocument(DatabaseWrapper.USERS_PATH,
-                                getCurrentUid(), User.class));
+                        .queryWithType(new MyQuery(DatabaseWrapper.USERS_PATH,
+                                new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, getCurrentUid())),
+                                User.class)
+                        .thenApply(users -> users.get(0)));
+//                        .getCustomDocument(DatabaseWrapper.USERS_PATH,
+//                                getCurrentUid(), User.class));
     }
 
     @Override
@@ -29,7 +38,7 @@ public class FirebaseAuthenticator implements Authenticator {
         return new TaskToCompletableFutureAdapter<>(mAuth.createUserWithEmailAndPassword(email, password))
                 .thenCompose(authResult -> FirestoreDatabaseWrapper.getInstance()
                         .storeDocumentWithID(DatabaseWrapper.USERS_PATH, getCurrentUid(),
-                                new User(name, email, getCurrentUid())));
+                                new User(email, name, getCurrentUid())));
     }
 
     @Override
