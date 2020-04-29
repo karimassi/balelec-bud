@@ -10,14 +10,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.EmergencyInfoActivity;
-import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
-
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
@@ -29,7 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyInfoActivityTest extends BasicActivityTest{
+public class EmergencyInfoFragmentTest extends RootActivityTest{
 
     final EmergencyInfo info1 = new EmergencyInfo("To much alcool","Seek assistance");
     final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
@@ -41,7 +37,7 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
     }
 
     @Rule
-    public final ActivityTestRule<EmergencyInfoActivity> mActivityRule = new ActivityTestRule<EmergencyInfoActivity>(EmergencyInfoActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
@@ -62,7 +58,7 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
 
     @Ignore("Currently modifying info does not make sens")
     @Test
-    public void testCanModifyInfoFromDatabase() throws Throwable {
+    public void testCanModifyInfoFromDatabase() {
         mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info1);
         mock.updateDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, 0, info2 );
 
@@ -71,7 +67,7 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
 
     @Ignore("Currently modifying info does not make sens")
     @Test
-    public void testCantModifyInfoFromDatabaseThatIsNotThere() throws Throwable {
+    public void testCantModifyInfoFromDatabaseThatIsNotThere() {
         final EmergencyInfo emergencyInfoModified = new EmergencyInfo();
 
         mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info1);
@@ -103,7 +99,7 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
 
     @Ignore("What this should do is unclear")
     @Test
-    public void testCantDeleteInfoFromEmptyDatabase() throws Throwable {
+    public void testCantDeleteInfoFromEmptyDatabase() {
         final EmergencyInfo info = new EmergencyInfo();
         mock.deleteDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info);
     }
@@ -114,7 +110,12 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
     }
 
     @Override
-    protected void setIds() {
-        setIds(R.id.emergency_info_activity_drawer_layout, R.id.emergency_info_activity_nav_view);
+    protected int getItemId() {
+        return R.id.activity_main_drawer_emergency_info;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.emergencyInfoRecyclerView;
     }
 }

@@ -6,14 +6,14 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.core.app.ActivityCompat;
-
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,13 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
-import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
 
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
-
-public class EmergencyNumbersActivity extends BasicActivity {
+public class EmergencyNumbersFragment extends Fragment {
     public static final int PERMISSION_TO_CALL_CODE = 991;
     private boolean callPermissionGranted;
     private ListView numbersListView;
@@ -37,32 +34,32 @@ public class EmergencyNumbersActivity extends BasicActivity {
     private Map<String, String> repertoryMap = new HashMap<String, String>();
     List<String> numberList = new ArrayList<>(Arrays.asList(repertoryMap.keySet().toArray(new String[0])));
 
-
-
+    public static EmergencyNumbersFragment newInstance() {
+        return (new EmergencyNumbersFragment());
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        return inflater.inflate(R.layout.fragment_emergency_numbers, container, false);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BalelecbudApplication.getAppDatabaseWrapper();
+    }
 
-        setContentView(R.layout.activity_emergency_numbers);
-        configureToolBar(R.id.emergency_numbers_activity_toolbar);
-        configureDrawerLayout(R.id.emergency_numbers_activity_drawer_layout);
-        configureNavigationView(R.id.emergency_numbers_activity_nav_view);
-
-
-        numbersListView = findViewById(R.id.numbersListView);
+    @Override
+    public void onStart() {
+        super.onStart();
+        numbersListView = getActivity().findViewById(R.id.numbersListView);
         arrayAdapter = new ArrayAdapter(
-                this,
+                getActivity(),
                 android.R.layout.simple_list_item_1,
                 numberList);
 
         numbersListView.setAdapter(arrayAdapter);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         BalelecbudApplication.getAppDatabaseWrapper().query( new MyQuery(DatabaseWrapper. EMERGENCY_NUMBER_PATH, new LinkedList<>()), EmergencyNumber.class).whenComplete((res, err) -> {
             for (EmergencyNumber number : res) {
                 repertoryMap.put(number.getName(), number.getNumber());
@@ -85,10 +82,10 @@ public class EmergencyNumbersActivity extends BasicActivity {
 
             String permissions[] = {Manifest.permission.CALL_PHONE};
 
-            if(ActivityCompat.checkSelfPermission(EmergencyNumbersActivity.this,
+            if(ActivityCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 callPermissionGranted = false;
-                ActivityCompat.requestPermissions(EmergencyNumbersActivity.this,
+                ActivityCompat.requestPermissions(getActivity(),
                         permissions,
                         PERMISSION_TO_CALL_CODE);
                 if(callPermissionGranted){

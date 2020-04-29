@@ -24,7 +24,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
         findPreference(INFO_KEY).setOnPreferenceClickListener(preference -> {
-            LocationUtil.requestLocationPermission(getActivity());
+            LocationUtil.requestLocationPermission(getParentFragment());
             return true;
         });
         boolean permissionGranted =

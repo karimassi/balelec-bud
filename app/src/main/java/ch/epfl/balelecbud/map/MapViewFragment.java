@@ -1,8 +1,5 @@
 package ch.epfl.balelecbud.map;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,12 +8,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.maps.MapView;
 
 import java.util.HashMap;
@@ -60,7 +54,7 @@ public class MapViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(getActivity(), getString(R.string.mapbox_access_token));
-        View inflatedView = inflater.inflate(R.layout.activity_map, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_main_map, container, false);
         mapView = inflatedView.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         if (mockCallback != null) {
@@ -71,7 +65,6 @@ public class MapViewFragment extends Fragment {
 
         Location location = getActivity().getIntent().getParcelableExtra("location");
         defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
-        setupMapIcons();
         requestFriendsLocations();
         displayPointsOfInterests();
         return inflatedView;
@@ -207,16 +200,5 @@ public class MapViewFragment extends Fragment {
                 }
             }
         });
-    }
-
-    private void setupMapIcons() {
-        IconFactory iconFactory = IconFactory.getInstance(getActivity());
-        icons = new HashMap<>();
-        for (MarkerType t : MarkerType.values()) {
-            Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), t.getDrawableId());
-            Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
-            Icon icon = iconFactory.fromBitmap(bitmap);
-            icons.put(t, icon);
-        }
     }
 }

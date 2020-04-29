@@ -22,6 +22,7 @@ import ch.epfl.balelecbud.map.MapViewFragment;
 import ch.epfl.balelecbud.map.MyMap;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.settings.SettingsMainFragment;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
@@ -44,6 +45,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private Fragment fragmentSocial;
     private WelcomeFragment fragmentHome;
     private Fragment fragmentEmergency;
+    private Fragment fragmentEmergencyInfo;
+    private Fragment fragmentEmergencyNumbers;
+    private Fragment fragmentSettings;
 
     private static final int FRAGMENT_HOME = 0;
     private static final int FRAGMENT_INFO = 1;
@@ -53,6 +57,10 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private static final int FRAGMENT_TRANSPORT = 5;
     private static final int FRAGMENT_SOCIAL = 6;
     private static final int FRAGMENT_EMERGENCY = 7;
+    private static final int FRAGMENT_EMERGENCY_INFO = 8;
+    private static final int FRAGMENT_EMERGENCY_NUMBERS = 9;
+    private static final int FRAGMENT_SETTINGS = 10;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +110,15 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_emergency:
                 this.showFragment(FRAGMENT_EMERGENCY);
                 break;
+            case R.id.activity_main_drawer_emergency_info:
+                this.showFragment(FRAGMENT_EMERGENCY_INFO);
+                break;
+            case R.id.activity_main_drawer_emergency_numbers:
+                this.showFragment(FRAGMENT_EMERGENCY_NUMBERS);
+                break;
+            case R.id.activity_main_drawer_settings:
+                this.showFragment(FRAGMENT_SETTINGS);
+                break;
             case R.id.sign_out_button:
                 signOut();
                 break;
@@ -137,6 +154,15 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case FRAGMENT_EMERGENCY:
                 this.showEmergencyFragment();
+                break;
+            case FRAGMENT_EMERGENCY_INFO:
+                this.showEmergencyInfoFragment();
+                break;
+            case FRAGMENT_EMERGENCY_NUMBERS:
+                this.showEmergencyNumbersFragment();
+                break;
+            case FRAGMENT_SETTINGS:
+                this.showSettingsFragment();
                 break;
             default:
                 break;
@@ -187,6 +213,24 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         if (this.fragmentEmergency == null)
             this.fragmentEmergency = EmergencyFragment.newInstance();
         this.startTransactionFragment(this.fragmentEmergency, "EMERGENCY");
+    }
+
+    private void showEmergencyInfoFragment() {
+        if (this.fragmentEmergencyInfo == null)
+            this.fragmentEmergencyInfo = EmergencyInfoFragment.newInstance();
+        this.startTransactionFragment(this.fragmentEmergencyInfo, "EMERGENCY_INFO");
+    }
+
+    private void showEmergencyNumbersFragment() {
+        if (this.fragmentEmergencyNumbers == null)
+            this.fragmentEmergencyNumbers = EmergencyNumbersFragment.newInstance();
+        this.startTransactionFragment(this.fragmentEmergencyNumbers, "EMERGENCY_NUMBERS");
+    }
+
+    private void showSettingsFragment() {
+        if (this.fragmentSettings == null)
+            this.fragmentSettings = SettingsMainFragment.newInstance();
+        this.startTransactionFragment(this.fragmentSettings, "SETTINGS");
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {

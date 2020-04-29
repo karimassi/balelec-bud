@@ -2,35 +2,36 @@ package ch.epfl.balelecbud.settings;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
-import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.location.LocationUtil;
 
-public class SettingsActivity extends BasicActivity {
+public class SettingsMainFragment extends Fragment {
 
-    private static final String TAG = SettingsActivity.class.getSimpleName();
+    private static final String TAG = SettingsMainFragment.class.getSimpleName();
     private SettingsFragment fragment;
 
+    public static SettingsMainFragment newInstance() {
+        return (new SettingsMainFragment());
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        return inflater.inflate(R.layout.fragment_settings, container, false);
+    }
 
-        setContentView(R.layout.activity_settings);
-
-        this.configureToolBar(R.id.settings_activity_toolbar);
-        this.configureDrawerLayout(R.id.settings_activity_drawer_layout);
-        this.configureNavigationView(R.id.settings_activity_nav_view);
-
+    @Override
+    public void onStart() {
+        super.onStart();
         fragment = new SettingsFragment();
-
-        getSupportFragmentManager()
+        getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.settings_container, fragment)
                 .commit();

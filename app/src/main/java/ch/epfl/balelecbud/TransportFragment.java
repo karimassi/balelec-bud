@@ -25,7 +25,7 @@ public class TransportFragment extends Fragment implements OnRecyclerViewInterac
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        return inflater.inflate(R.layout.activity_transport, container, false);
+        return inflater.inflate(R.layout.fragment_transport, container, false);
     }
 
     public void switchFragment(Fragment fragment) {

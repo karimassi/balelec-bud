@@ -35,6 +35,18 @@
             android:icon="@mipmap/social"
             android:title="Social" />
         <item
+            android:id="@+id/activity_main_drawer_emergency"
+            android:icon="@mipmap/info"
+            android:title="Emergency" />
+        <item
+            android:id="@+id/activity_main_drawer_emergency_info"
+            android:icon="@mipmap/info"
+            android:title="Emergency Informations" />
+        <item
+            android:id="@+id/activity_main_drawer_emergency_numbers"
+            android:icon="@mipmap/info"
+            android:title="Emergency Numbers" />
+        <item
             android:id="@+id/activity_main_drawer_settings"
             android:icon="@drawable/settings"
             android:title="Settings" />
@@ -42,10 +54,6 @@
             android:id="@+id/sign_out_button"
             android:icon="@mipmap/signout"
             android:title="Sign Out" />
-        <item
-            android:id="@+id/activity_main_drawer_emergency"
-            android:icon="@mipmap/info"
-            android:title="Emergency" />
     </group>
 
 </menu>

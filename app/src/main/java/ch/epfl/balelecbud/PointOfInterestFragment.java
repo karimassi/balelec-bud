@@ -28,7 +28,7 @@ public class PointOfInterestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        return inflater.inflate(R.layout.activity_point_of_interest, container, false);
+        return inflater.inflate(R.layout.fragment_point_of_interest, container, false);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class PointOfInterestFragment extends Fragment {
         activity = this.getActivity();
 
         RecyclerView recyclerView = getView().findViewById(R.id.pointOfInterestRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity)); // Not sure about this one
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setHasFixedSize(true);
         RecyclerViewData<PointOfInterest, PointOfInterestHolder> data = new PointOfInterestData(getActivity());
         RefreshableRecyclerViewAdapter<PointOfInterest, PointOfInterestHolder> adapter = new RefreshableRecyclerViewAdapter<>(

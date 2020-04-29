@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationRequest;
 
 import org.junit.Before;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -111,6 +112,7 @@ public abstract class RootActivityTest {
         clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
     }
 
+    @Ignore
     @Test
     public void openPOIActivityFromDrawer() {
         openDrawer();
