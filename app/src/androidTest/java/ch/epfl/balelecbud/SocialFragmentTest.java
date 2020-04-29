@@ -3,7 +3,7 @@ package ch.epfl.balelecbud;
 import android.os.SystemClock;
 
 import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class SocialFragmentTest extends RootActivityTest {
     }
 
     @After
-    private void cleanUp() {
+    public void cleanUp() {
         mockDb.resetFriendshipsAndRequests();
         createFriendship(otherUser);
         createRequest(newFriend, currentUser);

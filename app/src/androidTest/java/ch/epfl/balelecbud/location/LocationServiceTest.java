@@ -5,7 +5,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.google.android.gms.location.LocationResult;
 

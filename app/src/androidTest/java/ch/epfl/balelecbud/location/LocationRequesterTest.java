@@ -6,9 +6,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 
@@ -33,6 +33,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.balelecbud.RootActivityTest.clickItem;
+import static ch.epfl.balelecbud.RootActivityTest.openDrawer;
 
 @SdkSuppress(maxSdkVersion = (Build.VERSION_CODES.Q - 1))
 @RunWith(AndroidJUnit4.class)
@@ -62,6 +64,12 @@ public class LocationRequesterTest {
 
                 }
             };
+
+    @Before
+    public void openFragment(){
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_settings, R.id.settings_constraint_layout);
+    }
 
     private void setDumLocationClient() {
         LocationUtil.setLocationClient(new LocationClient() {

@@ -170,18 +170,17 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showHomeFragment() {
-        if (this.fragmentHome == null) this.fragmentHome = WelcomeFragment.newInstance();
+        this.fragmentHome = WelcomeFragment.newInstance();
         this.startTransactionFragment(this.fragmentHome, "HOME");
     }
 
     private void showInfoFragment() {
-        if (this.fragmentInfo == null)
-            this.fragmentInfo = FestivalInformationFragment.newInstance();
+        this.fragmentInfo = FestivalInformationFragment.newInstance();
         this.startTransactionFragment(this.fragmentInfo, "INFO");
     }
 
     private void showScheduleFragment() {
-        if (this.fragmentSchedule == null) this.fragmentSchedule = ScheduleFragment.newInstance();
+        this.fragmentSchedule = ScheduleFragment.newInstance();
         Intent intent = new Intent(this, ConcertFlow.class);
         intent.setAction(FlowUtil.GET_ALL_CONCERT);
         intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(this, RootActivity.class));
@@ -189,47 +188,42 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showPoiFragment() {
-        if (this.fragmentPoi == null) this.fragmentPoi = PointOfInterestFragment.newInstance();
+        this.fragmentPoi = PointOfInterestFragment.newInstance();
         this.startTransactionFragment(this.fragmentPoi, "POI");
     }
 
     private void showMapFragment() {
-        if (this.fragmentMap == null) this.fragmentMap = MapViewFragment.newInstance();
+        this.fragmentMap = MapViewFragment.newInstance();
         this.startTransactionFragment(this.fragmentMap, MapViewFragment.TAG);
     }
 
     private void showTransportFragment() {
-        if (this.fragmentTransport == null)
-            this.fragmentTransport = TransportFragment.newInstance();
+        this.fragmentTransport = TransportFragment.newInstance();
         this.startTransactionFragment(this.fragmentTransport, "TRANSPORT");
     }
 
     private void showSocialFragment() {
-        if (this.fragmentSocial == null) this.fragmentSocial = SocialFragment.newInstance();
+        this.fragmentSocial = SocialFragment.newInstance();
         this.startTransactionFragment(this.fragmentSocial, "SOCIAL");
     }
 
     private void showEmergencyFragment() {
-        if (this.fragmentEmergency == null)
-            this.fragmentEmergency = EmergencyFragment.newInstance();
+        this.fragmentEmergency = EmergencyFragment.newInstance();
         this.startTransactionFragment(this.fragmentEmergency, "EMERGENCY");
     }
 
     private void showEmergencyInfoFragment() {
-        if (this.fragmentEmergencyInfo == null)
-            this.fragmentEmergencyInfo = EmergencyInfoFragment.newInstance();
+        this.fragmentEmergencyInfo = EmergencyInfoFragment.newInstance();
         this.startTransactionFragment(this.fragmentEmergencyInfo, "EMERGENCY_INFO");
     }
 
     private void showEmergencyNumbersFragment() {
-        if (this.fragmentEmergencyNumbers == null)
-            this.fragmentEmergencyNumbers = EmergencyNumbersFragment.newInstance();
+        this.fragmentEmergencyNumbers = EmergencyNumbersFragment.newInstance();
         this.startTransactionFragment(this.fragmentEmergencyNumbers, "EMERGENCY_NUMBERS");
     }
 
     private void showSettingsFragment() {
-        if (this.fragmentSettings == null)
-            this.fragmentSettings = SettingsMainFragment.newInstance();
+        this.fragmentSettings = SettingsMainFragment.newInstance();
         this.startTransactionFragment(this.fragmentSettings, "SETTINGS");
     }
 
