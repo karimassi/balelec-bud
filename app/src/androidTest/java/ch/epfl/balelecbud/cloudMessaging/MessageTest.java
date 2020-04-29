@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.cloudMessaging;
 
+import android.util.Log;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
@@ -9,6 +11,8 @@ import androidx.test.uiautomator.Until;
 
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,6 +26,7 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.notifications.NotificationMessage;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -34,9 +39,10 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class MessageTest {
 
+    private final String TAG = MessageTest.class.getSimpleName();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
-    private final MockMessagingService mockMessagingService = MockMessagingService.getInstance();
+    private final MessagingService mockMessagingService = getMessagingService();
     private final User user = MockDatabaseWrapper.celine;
     private final String token = MockDatabaseWrapper.token;
     private final String title = "This title is the best!";
@@ -63,7 +69,10 @@ public class MessageTest {
     public void setup() {
         device = UiDevice.getInstance(getInstrumentation());
         clearNotifications();
+        /*
         mockMessagingService.setContext(mActivityRule.getActivity());
+
+         */
     }
 
     @After
@@ -128,5 +137,34 @@ public class MessageTest {
         UiObject2 button = device.findObject(By.text("CLEAR ALL"));
         if (button != null) button.click();
         device.pressBack();
+    }
+
+    private MessagingService getMessagingService() {
+        return new MessagingService() {
+            @Override
+            public void sendMessage(JSONObject send) {
+                Map<String, String> message = new HashMap<>();
+                try {
+                    JSONObject data = (JSONObject) send.get("data");
+                    message.put(Message.DATA_KEY_TITLE, (String) data.get(Message.DATA_KEY_TITLE));
+                    message.put(Message.DATA_KEY_BODY, (String) data.get(Message.DATA_KEY_BODY));
+                    RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
+                            .setMessageType((String) data.get(Message.DATA_KEY_TYPE)).build();
+                    this.receiveMessage(rm);
+                } catch (JSONException e) {
+                    Log.d(TAG, "Couldn't get information from test JSONObject");
+                }
+            }
+
+            @Override
+            public void receiveMessage(RemoteMessage remoteMessage) {
+                Map<String, String> message = Message.extractMessage(remoteMessage);
+                if(message.isEmpty()) {
+                    return;
+                }
+                Log.d(TAG, "About to send test notification");
+                NotificationMessage.getInstance().scheduleNotification(mActivityRule.getActivity(), message);
+            }
+        };
     }
 }

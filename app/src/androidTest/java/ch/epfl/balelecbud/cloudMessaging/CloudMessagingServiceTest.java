@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNull;
 public class CloudMessagingServiceTest {
 
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
-    private final MessagingService cloudMessagingService = CloudMessagingService.getInstance();
+    private final CloudMessagingService cloudMessagingService = new CloudMessagingService();
     private final User user = MockDatabaseWrapper.celine;
     private final String token = MockDatabaseWrapper.token;
 
@@ -62,7 +62,7 @@ public class CloudMessagingServiceTest {
 
     @Test
     public void onNewTokenTest() {
-        new CloudMessagingService().onNewToken(token);
+        cloudMessagingService.onNewToken(token);
         assertThat(TokenUtil.getToken(), is(token));
     }
 
@@ -71,7 +71,7 @@ public class CloudMessagingServiceTest {
         Map<String, String> message = new HashMap<>();
         RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
                 .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
-        new CloudMessagingService().onMessageReceived(rm);
+        cloudMessagingService.onMessageReceived(rm);
         device.openNotification();
         assertNull(device.findObject(By.text("title")));
     }
