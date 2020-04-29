@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.firebase.firestore.FieldValue;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
