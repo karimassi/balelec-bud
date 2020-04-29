@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud;
+package ch.epfl.balelecbud.pointOfInterest;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,9 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
-import ch.epfl.balelecbud.pointOfInterest.PointOfInterestData;
-import ch.epfl.balelecbud.pointOfInterest.PointOfInterestHolder;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 

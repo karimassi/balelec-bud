@@ -19,8 +19,8 @@ import java.util.List;
 import ch.epfl.balelecbud.friendship.SocialFragment;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.map.MapViewFragment;
-import ch.epfl.balelecbud.map.MyMap;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterestFragment;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.settings.SettingsMainFragment;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
@@ -195,7 +195,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
 
     private void showMapFragment() {
         if (this.fragmentMap == null) this.fragmentMap = MapViewFragment.newInstance();
-        this.startTransactionFragment(this.fragmentMap, "MAP");
+        this.startTransactionFragment(this.fragmentMap, MapViewFragment.TAG);
     }
 
     private void showTransportFragment() {
@@ -236,8 +236,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private void startTransactionFragment(Fragment fragment, String tag) {
         if (!fragment.isVisible()) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.root_activity_frame_layout, fragment)
-                    .setPrimaryNavigationFragment(fragmentHome)
+                    .replace(R.id.root_activity_frame_layout, fragment, tag)
                     .addToBackStack(tag).commit();
         }
     }
@@ -285,10 +284,6 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this, LoginUserActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    public void onMapReady(MyMap map) {
-        fragmentMap.onMapReady(map);
     }
 
     @Override

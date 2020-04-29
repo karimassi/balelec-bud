@@ -41,7 +41,9 @@ public class MapViewFragmentTest extends RootActivityTest {
     @Test
     public void whenLocationIsOffLocationOnMapIsDisabled() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(assertMapLocation(sync, false)));
+        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
+        fragment.onMapReady(assertMapLocation(sync, false));
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
@@ -51,7 +53,9 @@ public class MapViewFragmentTest extends RootActivityTest {
     public void whenLocationIfOnLocationOnMapIsDisable() throws Throwable {
         LocationUtil.enableLocation();
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(assertMapLocation(sync, true)));
+        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
+        fragment.onMapReady(assertMapLocation(sync, true));
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
@@ -79,7 +83,9 @@ public class MapViewFragmentTest extends RootActivityTest {
     @Test
     public void whenNoFriendsNoMarkerOnTheMap() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
+        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
+        fragment.onMapReady(new MyMap() {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.fail();
@@ -90,7 +96,7 @@ public class MapViewFragmentTest extends RootActivityTest {
             public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.call();
             }
-        }));
+        });
         sync.waitCall(1);
         sync.assertNoFailedTests();
         sync.assertCalled(1);

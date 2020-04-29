@@ -8,12 +8,15 @@ import androidx.test.rule.ActivityTestRule;
 import com.google.android.gms.location.LocationRequest;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
@@ -24,7 +27,6 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
-import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
 import static org.hamcrest.Matchers.is;
 
@@ -58,9 +60,16 @@ public class MapViewWithPOITest {
                         }
                     });
                     mockAuth.setCurrentUser(celine);
+                    mockDB.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
                     mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, atm);
                 }
             };
+
+    @Before
+    public void openMap() {
+        RootActivityTest.openDrawer();
+        RootActivityTest.clickItem(R.id.activity_main_drawer_map, R.id.map_view);
+    }
 
     @After
     public void cleanup() {
@@ -76,7 +85,8 @@ public class MapViewWithPOITest {
     @Test
     public void onePoiShowsOneMarkerOnMap() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
+        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity().getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
+        fragment.onMapReady(new MyMap() {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
@@ -90,7 +100,7 @@ public class MapViewWithPOITest {
                 sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }
-        }));
+        });
         sync.waitCall(2);
         sync.assertCalled(2);
         sync.assertNoFailedTests();

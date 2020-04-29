@@ -175,14 +175,14 @@ public abstract class RootActivityTest {
         device.waitForIdle();
     }
 
-    public void openDrawer() {
+    public static void openDrawer() {
         device.pressBack();
         onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
         device.waitForIdle();
         onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
     }
 
-    public void clickItem(int itemId, int viewToDisplayId) {
+    public static void clickItem(int itemId, int viewToDisplayId) {
         onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
         device.waitForIdle();
         onView(withId(viewToDisplayId)).check(matches(isDisplayed()));

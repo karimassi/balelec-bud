@@ -17,7 +17,6 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
-import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.karim;
@@ -50,7 +49,8 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
     @Test
     public void whenHaveOneFriendOneMarkerOnTheMap() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
+        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity().getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
+        fragment.onMapReady(new MyMap() {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
@@ -63,7 +63,7 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
             public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.call();
             }
-        }));
+        });
         sync.waitCall(2);
         sync.assertCalled(2);
         sync.assertNoFailedTests();
@@ -72,7 +72,9 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
     @Test
     public void whenFriendLocationUpdateMarkerMoved() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(new MyMap() {
+        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
+        fragment.onMapReady(new MyMap() {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
@@ -88,7 +90,7 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
             public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
                 sync.call();
             }
-        }));
+        });
         sync.waitCall(2);
         mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), newKarimLocation);
         sync.waitCall(3);
@@ -99,7 +101,9 @@ public class MapViewFragmentWithFriendTest extends RootActivityTest {
     @Test
     public void whenAFriendHaveNoLocationNothingIsShownOnTheMap() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onMapReady(assertKarimThenAlexLocation(sync)));
+        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
+        fragment.onMapReady(assertKarimThenAlexLocation(sync));
         sync.waitCall(2);
         mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, alex.getUid(), alexLocation);
         sync.waitCall(3);

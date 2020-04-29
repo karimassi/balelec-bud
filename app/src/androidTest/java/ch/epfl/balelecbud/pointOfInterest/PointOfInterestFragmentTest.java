@@ -1,8 +1,9 @@
-package ch.epfl.balelecbud;
+package ch.epfl.balelecbud.pointOfInterest;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -12,6 +13,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
@@ -53,7 +58,7 @@ public class PointOfInterestFragmentTest extends RootActivityTest {
 
     @Test
     public void testPointOfInterestRecyclerViewIsDisplayed() {
-        onView(withId(R.id.pointOfInterestRecyclerView)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.pointOfInterestRecyclerView)).check(matches(isDisplayed()));
     }
 
     @Test

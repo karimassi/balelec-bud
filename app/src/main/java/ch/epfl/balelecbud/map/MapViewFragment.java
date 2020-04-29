@@ -32,7 +32,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class MapViewFragment extends Fragment {
-    private final static String TAG = MapViewFragment.class.getSimpleName();
+    public final static String TAG = MapViewFragment.class.getSimpleName();
     private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
     private MapView mapView;
     private MyMap myMap;
@@ -47,7 +47,7 @@ public class MapViewFragment extends Fragment {
     }
 
     public static MapViewFragment newInstance() {
-        return (new MapViewFragment());
+        return new MapViewFragment();
     }
 
     @Override
@@ -63,7 +63,8 @@ public class MapViewFragment extends Fragment {
             mapView.getMapAsync(mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
         }
 
-        Location location = getActivity().getIntent().getParcelableExtra("location");
+        Bundle arguments = getArguments();
+        Location location = arguments != null ? arguments.getParcelable("location") : null;
         defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
         requestFriendsLocations();
         displayPointsOfInterests();
