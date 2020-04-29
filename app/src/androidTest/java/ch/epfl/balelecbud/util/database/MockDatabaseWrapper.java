@@ -2,28 +2,20 @@ package ch.epfl.balelecbud.util.database;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 
-import org.junit.Assert;
-
-import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
@@ -69,7 +61,22 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
 
+    private final HashMap<String, HashMap<String, Object>> database = new HashMap<>();
+
     private MockDatabaseWrapper() {
+
+        database.put(DatabaseWrapper.USERS_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.FRIENDSHIPS_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.FRIEND_REQUESTS_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.CONCERT_SLOTS_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.EMERGENCIES_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.EMERGENCY_INFO_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.EMERGENCY_NUMBER_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.LOCATIONS_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.POINT_OF_INTEREST_PATH, new HashMap<>());
+
+
         storeDocument(USERS_PATH, karim);
         storeDocument(USERS_PATH, celine);
         storeDocument(USERS_PATH, alex);
@@ -116,282 +123,85 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
+    private List<Object> getCollectionItems(String collectionName) {
+        return new ArrayList<>(database.get(collectionName).values());
+    }
+
     @Override
-    public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
-        List<T> list = new LinkedList<>();
-        List<T> listToQuery = getListToQuery(query.getCollectionName());
-        for (Object elem : listToQuery) {
-            list.add(tClass.cast(elem));
-        }
-        for (MyWhereClause clause : query.getWhereClauses()) {
-            list = filterList(list, clause);
-        }
-        return CompletableFuture.completedFuture(list);
-    }
-
-    private List getListToQuery(String name) {
-        switch (name) {
-            case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
-                return festivalInfos;
-            case DatabaseWrapper.POINT_OF_INTEREST_PATH:
-                return pointOfInterests;
-            case DatabaseWrapper.EMERGENCY_INFO_PATH :
-                return emergencyInfos;
-            case DatabaseWrapper.LOCATIONS_PATH:
-                return new LinkedList(locations.values());
-            case DatabaseWrapper.CONCERT_SLOTS_PATH:
-                return slots;
-            case DatabaseWrapper.EMERGENCIES_PATH:
-                return new LinkedList(emergencies.values());
-            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
-                return new LinkedList(emergencyNumbers.values());
-            default:
-
-                throw new IllegalArgumentException("Unsupported collection name " + name);
-        }
-    }
-
-    private <A> List<A> filterList(List<A> list, MyWhereClause clause) {
-        List<A> newList = new LinkedList<>();
-        if (list.isEmpty())
-            return list;
-        A head = list.get(0);
-        Class clazz = head.getClass();
-        Field field = getField(clause, clazz);
-        Object rightOperand = clause.getRightOperand();
-        // check that the field and our value have the same type,
-        // right now they must be exactly the same class
-        if (!rightOperand.getClass().equals(field.getType())) {
-            return newList;
-        }
-        for (A elem : list) {
-            filterELem(clause.getOp(), newList, field, rightOperand, elem);
-        }
-        return newList;
-    }
-
-    private <A> void filterELem(MyWhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
-        try {
-            if (op == MyWhereClause.Operator.EQUAL) {
-                if (Objects.equals(field.get(elem), rightOperand)) {
-                    newList.add(elem);
-                }
-            } else if (field.get(elem) instanceof Comparable) {
-                Comparable rightOperandComparable = (Comparable) field.get(elem);
-                // fine because we checked before that the types were equal, would be nice
-                // to find a way so that the IDE doesn't complain
-                int result = rightOperandComparable.compareTo(rightOperand);
-                if (evaluateResult(op, result)) {
-                    newList.add(elem);
-                }
+    public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
+        List<T> queryResult = new LinkedList<>();
+        Map<String, Object> collection = database.get(query.getCollectionName());
+        if (MockQueryUtils.queryContainsDocumentIdClause(query)) {
+            T result = (T) collection.get(MockQueryUtils.getRightOperandFromDocumentIdClause(query));
+            queryResult.add(result);
+        } else {
+            List<Object> collectionItems = getCollectionItems(query.getCollectionName());
+            for (Object elem : collectionItems) {
+                queryResult.add(tClass.cast(elem));
             }
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException("Given field param cannot be accessed");
-        }
-    }
-
-    @NonNull
-    private Field getField(MyWhereClause clause, Class clazz) {
-        Field field;
-        try {
-            field = clazz.getDeclaredField(clause.getLeftOperand());
-        } catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException("Class" + clazz.getName() + "does not contain a" + clause.getLeftOperand());
-        }
-        // to allow us to modify variable
-        field.setAccessible(true);
-        return field;
-    }
-
-    private boolean evaluateResult(MyWhereClause.Operator op, int resultOfComparison) {
-        switch (op) {
-            case LESS_THAN:
-                return resultOfComparison < 0;
-            case LESS_EQUAL:
-                return resultOfComparison <= 0;
-            case GREATER_THAN:
-                return resultOfComparison > 0;
-            case GREATER_EQUAL:
-                return resultOfComparison >= 0;
-            default:
-                return resultOfComparison == 0;
-        }
-    }
-
-    @Override
-    public CompletableFuture<List<String>> queryIds(MyQuery query) {
-        Map<String, Map<String, Boolean>> mapToQuery = getMapToQuery(query.getCollectionName());
-        List<Map<String, Boolean>> filteredValues = filterMapValues(mapToQuery, query.getWhereClauses());
-        Set<String> filteredKeys = filterKeys(mapToQuery, filteredValues);
-        return CompletableFuture.completedFuture(new LinkedList<>(filteredKeys));
-    }
-
-    private Map<String, Map<String, Boolean>> getMapToQuery(String name) {
-        switch (name) {
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                return friendRequests;
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
-                return friendships;
-            default:
-                throw new IllegalArgumentException("Unsupported collection name " + name);
-        }
-    }
-
-    private List<Map<String, Boolean>> filterMapValues(Map<String, Map<String, Boolean>> mapToFilter, List<MyWhereClause> clauses) {
-        List<Map<String, Boolean>> values = new LinkedList<>(mapToFilter.values());
-        for (MyWhereClause clause : clauses) {
-            values = values.stream().filter(x -> x.getOrDefault(clause.getLeftOperand(), false)).collect(Collectors.toList());
-        }
-        return values;
-    }
-
-    private Set<String> filterKeys(Map<String, Map<String, Boolean>> mapToFilter, List<Map<String, Boolean>> valuesToKeep) {
-        Set<String> filteredKeys = new HashSet<>();
-        for (String key : mapToFilter.keySet()) {
-            if (valuesToKeep.contains(mapToFilter.get(key))) {
-                filteredKeys.add(key);
+            for (MyWhereClause clause : query.getWhereClauses()) {
+                queryResult = MockQueryUtils.filterList(queryResult, clause);
             }
         }
-        return filteredKeys;
-    }
-
-    @Override
-    public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
-        switch (collectionName) {
-            case DatabaseWrapper.USERS_PATH:
-                return CompletableFuture.completedFuture((T) users.get(documentID));
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
-                return CompletableFuture.completedFuture((T) friendships.get(documentID));
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                return CompletableFuture.completedFuture((T) friendRequests.get(documentID));
-            case DatabaseWrapper.LOCATIONS_PATH:
-                return CompletableFuture.completedFuture((T) locations.get(documentID));
-            case DatabaseWrapper.EMERGENCIES_PATH:
-                return CompletableFuture.completedFuture((T) emergencies.get(documentID));
-            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
-                return CompletableFuture.completedFuture((T) emergencyNumbers.get(documentID));
-            default:
-                return CompletableFuture.completedFuture(null);
-        }
-    }
-
-    @Override
-    public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
-        Map<String, Object> result = new HashMap<>();
-        switch (collectionName) {
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
-                result.putAll(friendships.get(documentID));
-                break;
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                result.putAll(friendRequests.get(documentID));
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported collectionName " + collectionName);
-        }
-        return CompletableFuture.completedFuture(result);
+        return CompletableFuture.completedFuture(queryResult);
     }
 
 
     @Override
-    public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName,
-                                                                  String fieldValue, Class<T> type) {
-        switch (collectionName) {
-            case DatabaseWrapper.USERS_PATH:
-                for (User u : users.values()) {
-                    if ("email".equals(fieldName)) {
-                        if (u.getEmail().equals(fieldValue)) {
-                            return CompletableFuture.completedFuture((T) u);
-                        }
-                    }
-                }
-
-                break;
-            case DatabaseWrapper.EMERGENCIES_PATH:
-                for (Emergency u : emergencies.values()) {
-
-                    if ("category".equals(fieldName)) {
-                        if (u.getCategory().toString().equals(fieldValue)) {
-                            return CompletableFuture.completedFuture((T) u);
-                        }
-                    }
-                }
-                break;
-            default:
+    public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
+        List<Map<String, Object>> queryResult = new LinkedList<>();
+        Map<String, Object> collection = database.get(query.getCollectionName());
+        if (MockQueryUtils.queryContainsDocumentIdClause(query)) {
+            Object result = collection.get(MockQueryUtils.getRightOperandFromDocumentIdClause(query));
+            queryResult.add((Map<String, Object>) result);
+            return CompletableFuture.completedFuture(queryResult);
+        } else {
+            throw new UnsupportedOperationException("This type of query is not supported yet.");
         }
-
-        return CompletableFuture.completedFuture(null);
-
     }
+
 
     @Override
     public <T> void storeDocument(String collectionName, T document) {
         Log.d(TAG, "storeDocument() called with: collectionName = [" + collectionName + "], document = [" + document + "]");
-        switch (collectionName) {
-            case DatabaseWrapper.USERS_PATH:
-                User newUser = (User) document;
-                users.put(newUser.getUid(), newUser);
-                friendRequests.put(newUser.getUid(), new HashMap<>());
-                friendships.put(newUser.getUid(), new HashMap<>());
-                break;
-            case DatabaseWrapper.POINT_OF_INTEREST_PATH:
-                pointOfInterests.add((PointOfInterest) document);
-                break;
-            case DatabaseWrapper.EMERGENCY_INFO_PATH:
-                emergencyInfos.add((EmergencyInfo) document);
-                break;
-            case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
-                festivalInfos.add((FestivalInformation) document);
-                break;
-            case DatabaseWrapper.CONCERT_SLOTS_PATH:
-                slots.add((Slot) document);
-                break;
-            case DatabaseWrapper.EMERGENCIES_PATH:
-                emergencies.put(generateRandomUid(), (Emergency) document);
-                break;
-            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
-                emergencyNumbers.put(generateRandomUid(), (EmergencyNumber) document);
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported collection name " + collectionName);
+        if (document instanceof User) {
+            User user = (User) document;
+            database.get(collectionName).put(user.getUid(), user);
+            database.get(DatabaseWrapper.FRIEND_REQUESTS_PATH).put(user.getUid(), new HashMap<>());
+            database.get(DatabaseWrapper.FRIENDSHIPS_PATH).put(user.getUid(), new HashMap<>());
+
+        } else {
+            database.get(collectionName).put(generateRandomID(), document);
         }
+        Log.d(this.getClass().getSimpleName(), database.toString());
     }
 
     @Override
     public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
+        Log.d(TAG, "storeDocumentWithID() called with: collectionName = [" + collectionName + "], document = [" + document + "]");
         switch (collectionName) {
             case DatabaseWrapper.USERS_PATH:
-                User newUser = (User) document;
-                Assert.assertEquals("documentID must be equals to the userID", documentID, newUser.getUid());
-                users.put(newUser.getUid(), newUser);
-                friendRequests.put(newUser.getUid(), new HashMap<>());
-                friendships.put(newUser.getUid(), new HashMap<>());
-                break;
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
-                friendships.get(documentID).putAll((Map<String, Boolean>) document);
-                break;
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                friendRequests.get(documentID).putAll((Map<String, Boolean>) document);
-                break;
+                throw new IllegalArgumentException("Cannot add user with custom identifier");
             case DatabaseWrapper.LOCATIONS_PATH:
-                locations.put(documentID, (Location) document);
                 if (friendsLocationListener.containsKey(documentID))
                     friendsLocationListener.get(documentID).accept((Location) document);
                 break;
             default:
-                storeDocument(collectionName, document);
+                break;
         }
+        database.get(collectionName).put(documentID, document);
+        Log.d(this.getClass().getSimpleName(), database.toString());
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
     public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
-        switch (collectionName) {
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
-                friendships.get(documentID).clear();
-                break;
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                friendRequests.get(documentID).remove(new ArrayList<>(updates.keySet()).get(0));
-                break;
+        for (String key : updates.keySet()) {
+            if (updates.get(key).equals(FieldValue.delete())) {
+                ((Map<String, Object>) database.get(collectionName).get(documentID)).remove(key);
+            } else {
+                ((Map<String, Object>) database.get(collectionName).get(documentID)).put(key, updates.get(key));
+            }
         }
     }
 
@@ -441,10 +251,10 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     }
 
     public void resetFriendshipsAndRequests() {
-        for (Map m : friendships.values()) {
+        for (Map<String, Boolean> m : friendships.values()) {
             m.clear();
         }
-        for (Map m : friendRequests.values()) {
+        for (Map<String, Boolean> m : friendRequests.values()) {
             m.clear();
         }
         friendsLocationListener.clear();
@@ -477,14 +287,15 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-    public String generateRandomUid() {
-        byte[] array = new byte[20]; // length is bounded by 7
-        new Random().nextBytes(array);
-        String generatedString = new String(array, StandardCharsets.UTF_8);
-        return generatedString;
-    }
+
 
     public int getFriendsLocationListenerCount() {
         return this.friendsLocationListener.size();
     }
+
+
+    public String generateRandomID() {
+        return UUID.randomUUID().toString();
+    }
+
 }

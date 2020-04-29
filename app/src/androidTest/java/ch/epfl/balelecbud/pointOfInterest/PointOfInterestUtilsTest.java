@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.pointOfInterest;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +44,7 @@ public class PointOfInterestUtilsTest {
     private List<Location> getResList(List<MyWhereClause> clauses)
             throws InterruptedException, ExecutionException {
         MyQuery query = new MyQuery(DatabaseWrapper.LOCATIONS_PATH, clauses);
-        CompletableFuture<List<Location>> result = db.query(query, Location.class);
+        CompletableFuture<List<Location>> result = db.queryWithType(query, Location.class);
         return result.get();
     }
 

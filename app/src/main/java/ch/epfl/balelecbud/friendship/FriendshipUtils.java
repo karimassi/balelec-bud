@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.google.firebase.firestore.FieldValue;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +70,6 @@ public class FriendshipUtils {
     public static CompletableFuture<User> getUserFromUid(String uid) {
         MyQuery query = new MyQuery(DatabaseWrapper.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, uid));
         return getAppDatabaseWrapper().queryWithType(query, User.class).thenApply(users -> users.get(0));
-        //return getAppDatabaseWrapper().getCustomDocument(DatabaseWrapper.USERS_PATH, uid, User.class);
     }
 
     public static CompletableFuture<User> getUserFromEmail(String email) {

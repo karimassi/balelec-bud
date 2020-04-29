@@ -27,12 +27,6 @@ public interface DatabaseWrapper {
     <T> CompletableFuture<List<T>> queryWithType(MyQuery query, final Class<T> tClass);
 
     CompletableFuture<List<Map<String, Object>>> query(MyQuery query);
-    
-//    <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type);
-//
-//    CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID);
-//
-//    <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type);
 
     void updateDocument(String collectionName, String documentID, Map<String,Object> updates);
 

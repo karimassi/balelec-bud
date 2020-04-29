@@ -17,6 +17,8 @@ import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -76,7 +78,8 @@ public class EmergencyActivityTest extends BasicActivityTest {
     public void emergencyIsCorrectlySent() throws ExecutionException, InterruptedException {
 
         submitEmergency("Theft", "I lost something");
-        Emergency res = mockDB.getDocumentWithFieldCondition(DatabaseWrapper.EMERGENCIES_PATH, "category", "Theft", Emergency.class).get();
+        MyQuery query = new MyQuery(DatabaseWrapper.EMERGENCIES_PATH, new MyWhereClause("category", MyWhereClause.Operator.EQUAL, "Theft"));
+        Emergency res = mockDB.queryWithType(query, Emergency.class).thenApply(emergencies -> emergencies.get(0)).get();
         assertThat(res, notNullValue());
         assertEquals(res.getMessage(), "I lost something");
     }

@@ -147,32 +147,32 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) { }
 
             @Override
-            public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
+            public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
                 return null;
             }
 
             @Override
-            public CompletableFuture<List<String>> queryIds(MyQuery query) {
+            public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
                 return null;
             }
 
-            @Override
-            public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
-                return CompletableFuture.completedFuture(null).thenCompose(o -> {
-                    throw new RuntimeException("Failed to store document");
-                });
-            }
-
-            @Override
-            public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
-                return null;
-            }
-
-            @Override
-            public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName,
-                                                                          String fieldName, String fieldValue, Class<T> type) {
-                return null;
-            }
+//            @Override
+//            public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
+//                return CompletableFuture.completedFuture(null).thenCompose(o -> {
+//                    throw new RuntimeException("Failed to store document");
+//                });
+//            }
+//
+//            @Override
+//            public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
+//                return null;
+//            }
+//
+//            @Override
+//            public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName,
+//                                                                          String fieldName, String fieldValue, Class<T> type) {
+//                return null;
+//            }
 
             @Override
             public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
