@@ -74,7 +74,7 @@ public class Message {
         return new HashMap<>();
     }
 
-    private static Map<String, String> createMessage(String title, String body, String type) {
+    public static Map<String, String> createMessage(String title, String body, String type) {
         Map<String, String> message = new HashMap<>();
         message.put(Message.DATA_KEY_TITLE, title);
         message.put(Message.DATA_KEY_BODY, body);

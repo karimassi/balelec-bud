@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Build;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -16,7 +17,6 @@ import java.util.Map;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.cloudMessaging.Message;
-import ch.epfl.balelecbud.friendship.SocialActivity;
 
 public class NotificationMessage implements NotificationInterface<Map<String, String>> {
 
@@ -65,7 +65,7 @@ public class NotificationMessage implements NotificationInterface<Map<String, St
     }
 
     @Override
-    public void cancelNotification(Context context, Map<String, String> object) { }
+    public void cancelNotification(Context context, Map<String, String> object) {}
 
     public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

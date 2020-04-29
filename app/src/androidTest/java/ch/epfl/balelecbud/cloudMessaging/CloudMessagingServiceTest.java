@@ -3,7 +3,6 @@ package ch.epfl.balelecbud.cloudMessaging;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject2;
 
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -20,6 +19,7 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.notifications.NotificationMessageTest;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -36,17 +36,6 @@ public class CloudMessagingServiceTest {
 
     private UiDevice device;
 
-    @Before
-    public void setup() {
-        device = UiDevice.getInstance(getInstrumentation());
-        clearNotifications();
-    }
-
-    @After
-    public void tearDown() {
-        clearNotifications();
-    }
-
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
@@ -60,6 +49,17 @@ public class CloudMessagingServiceTest {
                 }
             };
 
+    @Before
+    public void setup() {
+        device = UiDevice.getInstance(getInstrumentation());
+        NotificationMessageTest.clearNotifications(device);
+    }
+
+    @After
+    public void tearDown() {
+        NotificationMessageTest.clearNotifications(device);
+    }
+
     @Test
     public void onNewTokenTest() {
         cloudMessagingService.onNewToken(token);
@@ -68,10 +68,7 @@ public class CloudMessagingServiceTest {
 
     @Test
     public void onMessageReceivedTest() {
-        Map<String, String> message = new HashMap<>();
-        RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
-                .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
-        cloudMessagingService.onMessageReceived(rm);
+        cloudMessagingService.onMessageReceived(emptyRemoteMessage());
         device.openNotification();
         assertNull(device.findObject(By.text("title")));
     }
@@ -86,18 +83,14 @@ public class CloudMessagingServiceTest {
 
     @Test
     public void receivedEmptyMessageTest() {
-        Map<String, String> message = new HashMap<>();
-        RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message)
-                .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
-        cloudMessagingService.receiveMessage(rm);
+        cloudMessagingService.receiveMessage(emptyRemoteMessage());
         device.openNotification();
         assertNull(device.findObject(By.text("title")));
     }
 
-    private void clearNotifications() {
-        device.openNotification();
-        UiObject2 button = device.findObject(By.text("CLEAR ALL"));
-        if (button != null) button.click();
-        device.pressBack();
+    private RemoteMessage emptyRemoteMessage() {
+        Map<String, String> message = new HashMap<>();
+        return new RemoteMessage.Builder("ID").setData(message)
+                .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
     }
 }
