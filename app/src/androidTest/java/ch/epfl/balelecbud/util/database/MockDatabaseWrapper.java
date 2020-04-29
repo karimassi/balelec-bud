@@ -88,7 +88,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         database.put(DatabaseWrapper.FRIENDSHIPS_PATH, new HashMap<>());
         database.put(DatabaseWrapper.FRIEND_REQUESTS_PATH, new HashMap<>());
 
-
         storeDocument(USERS_PATH, karim);
         storeDocument(USERS_PATH, celine);
         storeDocument(USERS_PATH, alex);
@@ -183,7 +182,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
         Log.d(this.getClass().getSimpleName(), databasePOJO.toString());
         Log.d(this.getClass().getSimpleName(), database.toString());
-
     }
 
     @Override
@@ -229,7 +227,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             default:
                 throw new UnsupportedOperationException("Cannot update custom POJO documents");
         }
-
     }
 
     public void updateDocument(String collectionName, int documentID, Object update) {
@@ -264,8 +261,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 databasePOJO.get(collectionName).clear();
         }
     }
-
-
 
     public int getFriendsLocationListenerCount() {
         return this.friendsLocationListener.size();
