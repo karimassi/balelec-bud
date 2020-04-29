@@ -33,5 +33,4 @@ public class PointOfInterestActivity extends BasicActivity {
         SwipeRefreshLayout refreshLayout = findViewById(R.id.swipe_refresh_layout_point_of_interest);
         adapter.setOnRefreshListener(refreshLayout);
     }
-
 }

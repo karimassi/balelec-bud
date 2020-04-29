@@ -7,6 +7,9 @@ import androidx.annotation.VisibleForTesting;
 
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
+import ch.epfl.balelecbud.cloudMessaging.CloudMessagingService;
+import ch.epfl.balelecbud.cloudMessaging.MessagingService;
+import ch.epfl.balelecbud.notifications.NotificationMessage;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
@@ -19,6 +22,7 @@ public class BalelecbudApplication extends Application {
     private static DatabaseWrapper appDatabaseWrapper;
     private static Authenticator appAuthenticator;
     private static HttpClient httpClient;
+    private static MessagingService appMessagingService;
 
     public static Context getAppContext() {
         return appContext;
@@ -30,6 +34,30 @@ public class BalelecbudApplication extends Application {
 
     public static Authenticator getAppAuthenticator() {
         return appAuthenticator;
+    }
+
+    public static HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public static MessagingService getMessagingService() {
+        return appMessagingService;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        appContext = getApplicationContext();
+        if (appDatabaseWrapper == null)
+            appDatabaseWrapper = FirestoreDatabaseWrapper.getInstance();
+        if (appAuthenticator == null)
+            appAuthenticator = FirebaseAuthenticator.getInstance();
+        if (httpClient == null)
+            httpClient = VolleyHttpClient.getInstance();
+        if (appMessagingService == null)
+            appMessagingService = CloudMessagingService.getInstance();
+        NotificationScheduler.getInstance().createNotificationChannel(appContext);
+        NotificationMessage.getInstance().createNotificationChannel(appContext);
     }
 
     @VisibleForTesting
@@ -47,26 +75,13 @@ public class BalelecbudApplication extends Application {
         appAuthenticator = authenticator;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        appContext = getApplicationContext();
-        if (appDatabaseWrapper == null)
-            appDatabaseWrapper = FirestoreDatabaseWrapper.getInstance();
-        if (appAuthenticator == null)
-            appAuthenticator = FirebaseAuthenticator.getInstance();
-        if (httpClient == null)
-            httpClient = VolleyHttpClient.getInstance();
-        NotificationScheduler.getInstance().createNotificationChannel(appContext);
-    }
-
     @VisibleForTesting
     public static void setHttpClient(HttpClient client) {
         httpClient = client;
     }
 
-    public static HttpClient getHttpClient() {
-        return httpClient;
+    @VisibleForTesting
+    public static void setAppMessagingService(MessagingService messagingService) {
+        appMessagingService = messagingService;
     }
-
 }

@@ -21,6 +21,7 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 
 public final class LocationUtil {
+
     private final static String TAG = LocationUtil.class.getSimpleName();
     private final static long FASTEST_UPDATE_INTERVAL = 30_000;
     public final static int LOCATION_PERMISSIONS_REQUEST_CODE = 34;
@@ -167,5 +168,4 @@ public final class LocationUtil {
         Log.i(TAG, "Removing location updates");
         getClient(context).removeLocationUpdates(getPendingIntent(context));
     }
-
 }

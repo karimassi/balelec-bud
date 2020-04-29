@@ -2,7 +2,6 @@ package ch.epfl.balelecbud;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -35,5 +34,4 @@ public class FestivalInformationActivity extends BasicActivity {
         configureDrawerLayout(R.id.festival_info_activity_drawer_layout);
         configureNavigationView(R.id.festival_info_activity_nav_view);
     }
-
 }

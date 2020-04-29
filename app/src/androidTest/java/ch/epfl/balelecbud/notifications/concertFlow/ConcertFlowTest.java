@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
-import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
+import ch.epfl.balelecbud.notifications.NotificationInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
@@ -42,7 +42,7 @@ public class ConcertFlowTest {
     }
 
     private void setDummyNotificationScheduler() {
-        ConcertFlow.setNotificationScheduler(new NotificationSchedulerInterface() {
+        ConcertFlow.setNotificationScheduler(new NotificationInterface<Slot>() {
             @Override
             public void scheduleNotification(Context context, Slot slot) { }
 
@@ -61,7 +61,7 @@ public class ConcertFlowTest {
     @Test
     public void notificationSchedulerIsCalledWhenNewConcertOfInterestAdded() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        ConcertFlow.setNotificationScheduler(new NotificationSchedulerInterface() {
+        ConcertFlow.setNotificationScheduler(new NotificationInterface<Slot>() {
             @Override
             public void scheduleNotification(Context context, Slot slot) {
                 sync.assertEquals(slot1, slot);
@@ -109,9 +109,9 @@ public class ConcertFlowTest {
     }
 
     @NotNull
-    private NotificationSchedulerInterface getScheduler(TestAsyncUtils sync,
-                                                        Consumer<Slot> cancel) {
-        return new NotificationSchedulerInterface() {
+    private NotificationInterface getScheduler(TestAsyncUtils sync,
+                                               Consumer<Slot> cancel) {
+        return new NotificationInterface<Slot>() {
             private int received = 0;
             @Override
             public void scheduleNotification(Context context, Slot slot) {
