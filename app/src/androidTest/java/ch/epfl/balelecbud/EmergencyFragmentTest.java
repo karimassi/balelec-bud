@@ -30,7 +30,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 @RunWith(AndroidJUnit4.class)
 public class EmergencyFragmentTest extends RootActivityTest {
 
-    private final User user = MockDatabaseWrapper.karim;
+    private final User user = MockDatabaseWrapper.camille;
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final Authenticator mockAuthenticator = MockAuthenticator.getInstance();
 
@@ -46,7 +46,7 @@ public class EmergencyFragmentTest extends RootActivityTest {
     public void testSubmitEmergencyButtonIsDisplayedWhenButtonClicked() throws InterruptedException {
         onView(withId(R.id.buttonAskForHelp)).perform(click());
         Thread.sleep(1000);
-        //onView(withId(R.id.buttonEmergencySubmit)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonEmergencySubmit)).check(matches(isDisplayed()));
     }
 
     @Test

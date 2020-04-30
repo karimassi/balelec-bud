@@ -3,6 +3,7 @@ package ch.epfl.balelecbud;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,8 +45,14 @@ public class EmergencyInfoFragmentTest extends RootActivityTest{
     @Override
     protected void setUpBeforeActivityLaunched() {
         super.setUpBeforeActivityLaunched();
+        cleanUp();
         mock.resetDocument(DatabaseWrapper.EMERGENCY_INFO_PATH);
         BalelecbudApplication.setAppDatabaseWrapper(mock);
+    }
+
+    @After
+    public void cleanUp() {
+        mock.resetDocument(DatabaseWrapper.EMERGENCY_INFO_PATH);
     }
 
     @Test

@@ -4,9 +4,7 @@ import android.os.SystemClock;
 import android.view.View;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,16 +31,13 @@ public class EmergencyNumberActivityTest extends RootActivityTest {
     final EmergencyNumber num2 = new EmergencyNumber("More help","1234");
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
-
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppDatabaseWrapper(mock);
-            mock.resetDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH);
-            mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num1);
-        }
-    };
+    @Override
+    protected void setUpBeforeActivityLaunched() {
+        super.setUpBeforeActivityLaunched();
+        BalelecbudApplication.setAppDatabaseWrapper(mock);
+        mock.resetDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH);
+        mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num1);
+    }
 
     @Test
     public void testListViewIsNonNull() {
