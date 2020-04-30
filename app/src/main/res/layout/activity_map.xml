@@ -12,7 +12,7 @@ android:background="@color/blek_blue"
 tools:openDrawer="start"
 tools:context="ch.epfl.balelecbud.map.MapViewActivity">
 
-<!-- 1 | MainActivity RootView -->
+<!-- 1 | Main RootView -->
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"

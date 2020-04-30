@@ -11,7 +11,7 @@
     tools:openDrawer="start"
     tools:context="ch.epfl.balelecbud.WelcomeActivity">
 
-    <!-- 1 | MainActivity RootView -->
+    <!-- 1 | Main RootView -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
