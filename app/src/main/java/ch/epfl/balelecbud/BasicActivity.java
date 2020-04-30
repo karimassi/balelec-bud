@@ -56,9 +56,6 @@ public abstract class BasicActivity extends AppCompatActivity implements Navigat
             case R.id.activity_main_drawer_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
             default:
                 break;
         }

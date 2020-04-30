@@ -11,4 +11,13 @@
         app:title="@string/location_info_title"
         app:summary="@string/location_info_summary"/>
 
+    <Preference
+        app:key="@string/sign_in_key"
+        app:title="@string/not_sign_in"
+        app:summary="@string/click_to_sign_in"/>
+
+    <Preference
+        app:key="@string/sign_out_key"
+        app:title="@string/sign_out_text"/>
+
 </PreferenceScreen>

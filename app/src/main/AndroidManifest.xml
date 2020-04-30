@@ -25,8 +25,6 @@
         </activity>
         <activity android:name=".EmergencyInfoActivity" />
         <activity android:name=".EmergencyNumbersActivity" />
-        <activity android:name=".LoginUserActivity" />
-        <activity android:name=".RegisterUserActivity" />
         <activity android:name=".FestivalInformationActivity" />
         <activity android:name=".PointOfInterestActivity" />
         <activity android:name=".EmergencyActivity" />

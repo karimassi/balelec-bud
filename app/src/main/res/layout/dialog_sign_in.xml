@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editTextNameRegister"
+    <TextView
+        android:id="@+id/text_view_add_friend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/prompt_name"
-        android:inputType="textPersonName" />
+        android:text="@string/sign_in"
+        android:textAlignment="gravity"
+        android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/editTextEmailRegister"
+        android:id="@+id/editTextEmailLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -21,32 +20,25 @@
         android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/editTextPasswordRegister"
+        android:id="@+id/editTextPasswordLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/prompt_password"
         android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/editTextRepeatPasswordRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/prompt_repeat_password"
-        android:inputType="textPassword" />
-
     <Button
-        android:id="@+id/buttonRegister"
+        android:id="@+id/buttonLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick"
-        android:text="@string/action_register" />
+        android:text="@string/action_sign_in" />
 
     <Button
-        android:id="@+id/buttonRegisterToLogin"
+        android:id="@+id/buttonLoginToRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="onClick"
-        android:text="@string/action_existing_account" />
+        android:text="@string/action_no_account" />
+
 </LinearLayout>

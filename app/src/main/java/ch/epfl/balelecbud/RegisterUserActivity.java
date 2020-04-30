@@ -25,7 +25,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_user);
+        setContentView(R.layout.dialog_register_user);
 
         nameField = findViewById(R.id.editTextNameRegister);
         emailField = findViewById(R.id.editTextEmailRegister);
@@ -131,5 +131,4 @@ public class RegisterUserActivity extends AppCompatActivity {
             finish();
         }
     }
-
 }

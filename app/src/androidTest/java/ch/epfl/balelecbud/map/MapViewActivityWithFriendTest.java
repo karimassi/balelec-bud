@@ -167,7 +167,7 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     @Test
     public void signOutClearListeners() {
         assertEquals(2, mockDB.getFriendsLocationListenerCount());
-        super.signOutFromDrawer();
+        //super.signOutFromDrawer();
         assertEquals(0, mockDB.getFriendsLocationListenerCount());
     }
 

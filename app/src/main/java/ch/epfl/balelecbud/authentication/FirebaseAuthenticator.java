@@ -36,6 +36,12 @@ public class FirebaseAuthenticator implements Authenticator {
         return mAuth.getCurrentUser().getUid();
     }
 
+    @Override
+    public void signOut() {
+        Authenticator.super.signOut();
+        this.mAuth.signOut();
+    }
+
     public static Authenticator getInstance() {
         return instance;
     }
