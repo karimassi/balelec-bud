@@ -47,6 +47,7 @@ public class CloudMessagingServiceTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
+                    BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
                     BalelecbudApplication.setAppContext(ApplicationProvider.getApplicationContext());
                     mockAuth.signOut();
                     mockAuth.setCurrentUser(user);

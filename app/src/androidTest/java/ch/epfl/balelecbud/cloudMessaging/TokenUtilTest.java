@@ -5,7 +5,6 @@ import androidx.test.rule.ActivityTestRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
