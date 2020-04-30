@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.friendship;
 
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -24,6 +25,8 @@ public class SocialActivity extends BasicActivity {
 
     private List<String> tabTitleList;
 
+    private BroadcastReceiver receiver;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +50,6 @@ public class SocialActivity extends BasicActivity {
             AddFriendFragment dialog = AddFriendFragment.newInstance(getAppAuthenticator().getCurrentUser());
             dialog.show(getSupportFragmentManager(), getString(R.string.add_friend_title));
         });
-
     }
 
     private void setupFragmentAdapter() {

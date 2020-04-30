@@ -1,17 +1,11 @@
 package ch.epfl.balelecbud;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Switch;
 
-import androidx.annotation.NonNull;
-
-import ch.epfl.balelecbud.location.LocationUtil;
-import ch.epfl.balelecbud.location.LocationUtil.Action;
+import ch.epfl.balelecbud.cloudMessaging.TokenUtil;
 
 public class WelcomeActivity extends BasicActivity {
     private static final String TAG = WelcomeActivity.class.getSimpleName();
-    private Switch locationSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +15,7 @@ public class WelcomeActivity extends BasicActivity {
         this.configureToolBar(R.id.root_activity_toolbar);
         this.configureDrawerLayout(R.id.root_activity_drawer_layout);
         this.configureNavigationView(R.id.root_activity_nav_view);
-    }
 
+        TokenUtil.storeToken();
+    }
 }

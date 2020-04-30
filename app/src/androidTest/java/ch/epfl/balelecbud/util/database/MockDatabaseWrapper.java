@@ -51,6 +51,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             new Location(4, 20), "Bar IC", PointOfInterestType.BAR);
     public static final PointOfInterest pointOfInterest2 = new PointOfInterest(
             new Location(4, 22), "Bar EE", PointOfInterestType.BAR);
+    public static final String token = "TheBestTestToken";
     private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
     private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
 
@@ -60,6 +61,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, User> users = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendships = new HashMap<>();
     private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
+    private final Map<String, Map<String, String>> tokens = new HashMap<>();
     private final List<FestivalInformation> festivalInfos = new ArrayList<>();
     private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
     private final List<EmergencyInfo> emergencyInfos = new ArrayList<>();
@@ -85,6 +87,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
         slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3));
         slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
+        Map<String, String> celineToken = new HashMap<>();
+        celineToken.put("token", token);
+        storeDocumentWithID(TOKENS_PATH, celine.getUid(), celineToken);
     }
 
     public static MockDatabaseWrapper getInstance() {
@@ -146,7 +151,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
                 return new LinkedList(emergencyNumbers.values());
             default:
-
                 throw new IllegalArgumentException("Unsupported collection name " + name);
         }
     }
@@ -285,6 +289,14 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 result.putAll(friendRequests.get(documentID));
                 break;
+            case DatabaseWrapper.TOKENS_PATH:
+                if(tokens.containsKey(documentID)) {
+                    result.putAll(tokens.get(documentID));
+                }
+                else {
+                    return CompletableFuture.completedFuture(null);
+                }
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported collectionName " + collectionName);
         }
@@ -377,6 +389,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 if (friendsLocationListener.containsKey(documentID))
                     friendsLocationListener.get(documentID).accept((Location) document);
                 break;
+            case DatabaseWrapper.TOKENS_PATH:
+                tokens.put(documentID, (Map<String, String>) document);
+                break;
             default:
                 storeDocument(collectionName, document);
         }
@@ -437,6 +452,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
                 friendRequests.remove(documentID);
                 break;
+            case DatabaseWrapper.TOKENS_PATH:
+                tokens.remove(documentID);
+                break;
         }
     }
 
@@ -468,6 +486,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             case DatabaseWrapper.EMERGENCIES_PATH:
                 emergencies.clear();
+                break;
+            case DatabaseWrapper.TOKENS_PATH:
+                tokens.clear();
                 break;
             case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
                 emergencyNumbers.clear();
