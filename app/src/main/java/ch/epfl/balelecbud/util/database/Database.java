@@ -16,6 +16,7 @@ public interface Database {
     String LOCATIONS_PATH = "locations";
     String FRIENDSHIPS_PATH = "friendships";
     String FRIEND_REQUESTS_PATH = "friendRequests";
+    String SENT_REQUESTS_PATH = "sentRequests";
     String EMERGENCY_NUMBER_PATH = "emergencyNumbers";
     String EMERGENCIES_PATH = "emergencies";
 

@@ -24,6 +24,10 @@ public class FriendshipUtils {
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(getAppAuthenticator().getCurrentUser().getUid(), true);
         getAppDatabase().storeDocumentWithID(Database.FRIEND_REQUESTS_PATH, friend.getUid(), toStore);
+
+        toStore = new HashMap<>();
+        toStore.put(friend.getUid(), true);
+        getAppDatabase().storeDocumentWithID(Database.SENT_REQUESTS_PATH, getAppAuthenticator().getCurrentUser().getUid(), toStore);
     }
 
     public static void removeFriend(User friend) {
@@ -55,6 +59,11 @@ public class FriendshipUtils {
         updates.put(sender.getUid(), FieldValue.delete());
         getAppDatabase().updateDocument(Database.FRIEND_REQUESTS_PATH,
                 receiver.getUid(), updates);
+
+        updates = new HashMap<>();
+        updates.put(receiver.getUid(), FieldValue.delete());
+        getAppDatabase().updateDocument(Database.SENT_REQUESTS_PATH,
+                sender.getUid(), updates);
     }
 
     public static List<CompletableFuture<User>> getUsersFromUids(List<String> uidList) {

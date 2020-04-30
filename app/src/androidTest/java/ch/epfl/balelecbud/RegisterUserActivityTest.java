@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud;
 
 import android.Manifest;
+import android.util.Log;
 import android.view.View;
 
 import androidx.test.espresso.intent.Intents;

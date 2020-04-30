@@ -76,11 +76,14 @@ public class MockDatabase implements Database {
 
         database.put(Database.FRIENDSHIPS_PATH, new LinkedHashMap<>());
         database.put(Database.FRIEND_REQUESTS_PATH, new LinkedHashMap<>());
+        database.put(Database.SENT_REQUESTS_PATH, new LinkedHashMap<>());
         database.put(Database.TOKENS_PATH, new LinkedHashMap<>());
 
-        database.get(Database.TOKENS_PATH).put(karim.getUid(), new HashMap<>());
-        database.get(Database.TOKENS_PATH).put(celine.getUid(), new HashMap<>());
-
+        storeDocument(USERS_PATH, karim);
+        storeDocument(USERS_PATH, celine);
+        storeDocument(USERS_PATH, alex);
+        storeDocument(USERS_PATH, axel);
+        storeDocument(USERS_PATH, gaspard);
 
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(token1, true);
@@ -89,11 +92,6 @@ public class MockDatabase implements Database {
         toStore.put(token2, true);
         storeDocumentWithID(Database.TOKENS_PATH, karim.getUid(), toStore);
 
-        storeDocument(USERS_PATH, karim);
-        storeDocument(USERS_PATH, celine);
-        storeDocument(USERS_PATH, alex);
-        storeDocument(USERS_PATH, axel);
-        storeDocument(USERS_PATH, gaspard);
         List<Timestamp> timestamps = new LinkedList<>();
         for (int i = 0; i < 6; ++i) {
             Calendar c = Calendar.getInstance();
@@ -177,6 +175,8 @@ public class MockDatabase implements Database {
             databasePOJO.get(collectionName).put(user.getUid(), user);
             database.get(Database.FRIEND_REQUESTS_PATH).put(user.getUid(), new LinkedHashMap<>());
             database.get(Database.FRIENDSHIPS_PATH).put(user.getUid(), new LinkedHashMap<>());
+            database.get(Database.SENT_REQUESTS_PATH).put(user.getUid(), new LinkedHashMap<>());
+            database.get(Database.TOKENS_PATH).put(user.getUid(), new LinkedHashMap<>());
         } else {
             databasePOJO.get(collectionName).put(generateRandomID(), document);
         }
@@ -189,6 +189,7 @@ public class MockDatabase implements Database {
         switch (collectionName) {
             case Database.FRIEND_REQUESTS_PATH:
             case Database.FRIENDSHIPS_PATH:
+            case Database.SENT_REQUESTS_PATH:
             case Database.TOKENS_PATH:
                 database.get(collectionName).get(documentID).putAll((Map<String, Boolean>)document);
                 break;
@@ -215,6 +216,7 @@ public class MockDatabase implements Database {
         switch (collectionName) {
             case Database.FRIEND_REQUESTS_PATH:
             case Database.FRIENDSHIPS_PATH:
+            case Database.SENT_REQUESTS_PATH:
             case Database.TOKENS_PATH:
                 for (String key : updates.keySet()) {
                     if (updates.get(key).equals(FieldValue.delete())) {
@@ -235,6 +237,7 @@ public class MockDatabase implements Database {
         switch (collectionName) {
             case Database.FRIENDSHIPS_PATH:
             case Database.FRIEND_REQUESTS_PATH:
+            case Database.SENT_REQUESTS_PATH:
             case Database.TOKENS_PATH:
                 throw new UnsupportedOperationException();
             default:
@@ -248,6 +251,7 @@ public class MockDatabase implements Database {
         switch (collectionName) {
             case Database.FRIEND_REQUESTS_PATH:
             case Database.FRIENDSHIPS_PATH:
+            case Database.SENT_REQUESTS_PATH:
             case Database.TOKENS_PATH:
                 for (Map o : database.get(collectionName).values()) {
                     o.clear();

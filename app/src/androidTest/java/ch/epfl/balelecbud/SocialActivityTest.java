@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +39,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition;
 import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
@@ -91,6 +92,10 @@ public class SocialActivityTest extends BasicActivityTest {
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(from.getUid(), true);
         mockDb.storeDocumentWithID(Database.FRIEND_REQUESTS_PATH, to.getUid(), toStore);
+
+        toStore = new HashMap<>();
+        toStore.put(to.getUid(), true);
+        getAppDatabase().storeDocumentWithID(Database.SENT_REQUESTS_PATH, from.getUid(), toStore);
     }
 
     private void selectTab(int position) {
@@ -102,6 +107,7 @@ public class SocialActivityTest extends BasicActivityTest {
     public void setup() {
         mockDb.resetDocument(Database.FRIENDSHIPS_PATH);
         mockDb.resetDocument(Database.FRIEND_REQUESTS_PATH);
+        mockDb.resetDocument(Database.SENT_REQUESTS_PATH);
         createFriendship(otherUser);
         createRequest(newFriend, currentUser);
         createRequest(currentUser, requestedUser);
@@ -164,7 +170,6 @@ public class SocialActivityTest extends BasicActivityTest {
     }
 
     @Test
-    @Ignore
     public void sentRequestsShownTest() {
         selectTab(2);
         onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(1)));
@@ -190,7 +195,6 @@ public class SocialActivityTest extends BasicActivityTest {
     }
 
     @Test
-    @Ignore
     public void sentRequestsAddedUpdatesListAfterRefresh() {
         selectTab(2);
         createRequest(currentUser, otherUser);
@@ -215,7 +219,6 @@ public class SocialActivityTest extends BasicActivityTest {
     }
 
     @Test
-    @Ignore
     public void sentRequestRemovedUpdatesListAfterRefresh() {
         selectTab(2);
         FriendshipUtils.deleteRequest(currentUser, requestedUser);
@@ -230,7 +233,6 @@ public class SocialActivityTest extends BasicActivityTest {
     }
 
     @Test
-    @Ignore
     public void buttonCancelRequestUpdatesList() {
         onTabClickOnChildAndSwipe(2, R.id.recycler_view_sent_request,
                 R.id.button_sent_request_item_cancel, R.id.swipe_refresh_layout_sent_requests);

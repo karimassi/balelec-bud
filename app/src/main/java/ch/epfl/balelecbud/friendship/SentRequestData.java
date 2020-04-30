@@ -24,7 +24,7 @@ public class SentRequestData extends RecyclerViewData<User, SentRequestViewHolde
 
     @Override
     public void reload() {
-        MyQuery myQuery = new MyQuery(Database.FRIEND_REQUESTS_PATH,
+        MyQuery myQuery = new MyQuery(Database.SENT_REQUESTS_PATH,
                 new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()));
         getAppDatabase().query(myQuery)
                 .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(new ArrayList<>(uids.get(0).keySet()))))
