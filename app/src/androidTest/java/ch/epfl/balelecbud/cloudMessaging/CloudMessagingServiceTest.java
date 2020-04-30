@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.cloudMessaging;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
@@ -43,6 +44,7 @@ public class CloudMessagingServiceTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
+                    BalelecbudApplication.setAppContext(ApplicationProvider.getApplicationContext());
                     mockAuth.signOut();
                     mockAuth.setCurrentUser(user);
                     TokenUtil.setToken(token);

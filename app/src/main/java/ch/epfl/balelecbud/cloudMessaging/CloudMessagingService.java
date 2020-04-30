@@ -12,13 +12,16 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.notifications.NotificationMessage;
 import ch.epfl.balelecbud.util.http.HttpPostRequest;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
+
 public class CloudMessagingService extends FirebaseMessagingService implements MessagingService {
 
-    private static final String BASE_URL = "https://fcm.googleapis.com/fcm/send";
-    private static final String FCM_KEY = "key=AAAAIEByxFA:APA91bHhnxIzhsfli52m8kq9uP9VWvIB972DTJYz85_ndFCzeDEzEDdgiYVjrVo8yM9npWNH5VchrfNqWw--1-SXB35YS7HIX04_-_9FmiUdJAlYzrRnN2B9q__7t9hXWsIC_rkzgRiv";
+    private static final String BASE_URL = getAppContext().getString(R.string.fcm_base_url);
+    private static final String FCM_KEY = getAppContext().getString(R.string.fcm_key);
 
     private static final String TAG = CloudMessagingService.class.getSimpleName();
     private static final MessagingService instance = new CloudMessagingService();

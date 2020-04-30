@@ -11,24 +11,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
 public class Message {
 
     private static final String TAG = Message.class.getSimpleName();
 
-    public static final String MESSAGE_TYPE_GENERAL = "GENERAL";
-    public static final String MESSAGE_TYPE_SOCIAL = "SOCIAL";
-    public static final String TYPE_FRIEND_REQUEST = "FRIEND REQUEST";
-    public static final String TYPE_ACCEPT_REQUEST = "ACCEPT REQUEST";
-    public static final String DATA_KEY_TITLE = "title";
-    public static final String DATA_KEY_BODY = "body";
-    public static final String DATA_KEY_TYPE = "type";
-    public static final String FRIEND_REQUEST_TITLE = "You received a friend request!";
-    public static final String FRIEND_REQUEST_BODY = " sent you a friend request";
-    public static final String ACCEPT_REQUEST_TITLE = "You have a new friend!";
-    public static final String ACCEPT_REQUEST_BODY = " accepted your friend request";
+    public static final String MESSAGE_TYPE_GENERAL = getAppContext().getString(R.string.message_type_general);
+    public static final String MESSAGE_TYPE_SOCIAL = getAppContext().getString(R.string.message_type_social);
+    public static final String TYPE_FRIEND_REQUEST = getAppContext().getString(R.string.type_friend_request);
+    public static final String TYPE_ACCEPT_REQUEST = getAppContext().getString(R.string.type_accept_request);
+    public static final String DATA_KEY_TITLE = getAppContext().getString(R.string.data_key_title);
+    public static final String DATA_KEY_BODY = getAppContext().getString(R.string.data_key_body);
+    public static final String DATA_KEY_TYPE = getAppContext().getString(R.string.data_key_type);
+    public static final String FRIEND_REQUEST_TITLE = getAppContext().getString(R.string.friend_request_title);
+    public static final String FRIEND_REQUEST_BODY = getAppContext().getString(R.string.friend_request_body);
+    public static final String ACCEPT_REQUEST_TITLE = getAppContext().getString(R.string.accept_request_title);
+    public static final String ACCEPT_REQUEST_BODY = getAppContext().getString(R.string.accept_request_body);
 
     private String title;
     private String body;
@@ -91,22 +94,22 @@ public class Message {
     public static Map<String, String> extractMessage(RemoteMessage remoteMessage) {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Received Message");
-            return createMessage(remoteMessage.getData().get(Message.DATA_KEY_TITLE),
-                    remoteMessage.getData().get(Message.DATA_KEY_BODY),
-                    remoteMessage.getData().get(Message.DATA_KEY_TYPE));
+            return createMessage(remoteMessage.getData().get(DATA_KEY_TITLE),
+                    remoteMessage.getData().get(DATA_KEY_BODY),
+                    remoteMessage.getData().get(DATA_KEY_TYPE));
         }
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Received Notification");
-            return createMessage(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), Message.MESSAGE_TYPE_GENERAL);
+            return createMessage(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), MESSAGE_TYPE_GENERAL);
         }
         return new HashMap<>();
     }
 
     public static Map<String, String> createMessage(String title, String body, String type) {
         Map<String, String> message = new HashMap<>();
-        message.put(Message.DATA_KEY_TITLE, title);
-        message.put(Message.DATA_KEY_BODY, body);
-        message.put(Message.DATA_KEY_TYPE, type);
+        message.put(DATA_KEY_TITLE, title);
+        message.put(DATA_KEY_BODY, body);
+        message.put(DATA_KEY_TYPE, type);
         return message;
     }
 }
