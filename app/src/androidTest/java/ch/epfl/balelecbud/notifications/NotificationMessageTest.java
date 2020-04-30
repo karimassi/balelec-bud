@@ -13,10 +13,12 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.cloudMessaging.Message;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static org.junit.Assert.assertNotNull;
 
 public class NotificationMessageTest {
@@ -43,12 +45,12 @@ public class NotificationMessageTest {
 
     @Test
     public void scheduleGeneralNotificationTest() {
-        scheduleNotificationTest(Message.MESSAGE_TYPE_GENERAL);
+        scheduleNotificationTest(getAppContext().getString(R.string.message_type_general));
     }
 
     @Test
     public void scheduleSocialNotificationTest() {
-        scheduleNotificationTest(Message.MESSAGE_TYPE_SOCIAL);
+        scheduleNotificationTest(getAppContext().getString(R.string.message_type_social));
     }
 
     private void scheduleNotificationTest(String type) {

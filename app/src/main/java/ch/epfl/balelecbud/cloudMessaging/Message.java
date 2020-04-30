@@ -21,18 +21,6 @@ public class Message {
 
     private static final String TAG = Message.class.getSimpleName();
 
-    public static final String MESSAGE_TYPE_GENERAL = getAppContext().getString(R.string.message_type_general);
-    public static final String MESSAGE_TYPE_SOCIAL = getAppContext().getString(R.string.message_type_social);
-    public static final String TYPE_FRIEND_REQUEST = getAppContext().getString(R.string.type_friend_request);
-    public static final String TYPE_ACCEPT_REQUEST = getAppContext().getString(R.string.type_accept_request);
-    public static final String DATA_KEY_TITLE = getAppContext().getString(R.string.data_key_title);
-    public static final String DATA_KEY_BODY = getAppContext().getString(R.string.data_key_body);
-    public static final String DATA_KEY_TYPE = getAppContext().getString(R.string.data_key_type);
-    public static final String FRIEND_REQUEST_TITLE = getAppContext().getString(R.string.friend_request_title);
-    public static final String FRIEND_REQUEST_BODY = getAppContext().getString(R.string.friend_request_body);
-    public static final String ACCEPT_REQUEST_TITLE = getAppContext().getString(R.string.accept_request_title);
-    public static final String ACCEPT_REQUEST_BODY = getAppContext().getString(R.string.accept_request_body);
-
     private String title;
     private String body;
     private String type;
@@ -49,13 +37,15 @@ public class Message {
                 .getDocument(FirestoreDatabaseWrapper.TOKENS_PATH, user.getUid())
                 .whenCompleteAsync((t, throwable) -> {
                     if( t != null ) {
-                        if(type.equals(TYPE_FRIEND_REQUEST)) {
-                            new Message(FRIEND_REQUEST_TITLE, user.getDisplayName() +
-                                    FRIEND_REQUEST_BODY, MESSAGE_TYPE_SOCIAL).sendMessage(toSend);
+                        if(type.equals(getAppContext().getString(R.string.type_friend_request))) {
+                            new Message(getAppContext().getString(R.string.friend_request_title),
+                                    user.getDisplayName() + getAppContext().getString(R.string.friend_request_body),
+                                    getAppContext().getString(R.string.message_type_social)).sendMessage(toSend);
                         }
-                        else if(type.equals(TYPE_ACCEPT_REQUEST)) {
-                            new Message(ACCEPT_REQUEST_TITLE, user.getDisplayName() +
-                                    ACCEPT_REQUEST_BODY, MESSAGE_TYPE_SOCIAL).sendMessage(toSend);
+                        else if(type.equals(getAppContext().getString(R.string.type_accept_request))) {
+                            new Message(getAppContext().getString(R.string.accept_request_title),
+                                    user.getDisplayName() + getAppContext().getString(R.string.accept_request_body),
+                                    getAppContext().getString(R.string.message_type_social)).sendMessage(toSend);
                         }
                     }
                     else Log.d(TAG,
@@ -77,9 +67,9 @@ public class Message {
                         JSONObject message = new JSONObject();
 
                         try {
-                            message.put(DATA_KEY_TITLE, title)
-                                    .put(DATA_KEY_BODY, body)
-                                    .put(DATA_KEY_TYPE, type);
+                            message.put(getAppContext().getString(R.string.data_key_title), title)
+                                    .put(getAppContext().getString(R.string.data_key_body), body)
+                                    .put(getAppContext().getString(R.string.data_key_type), type);
                             send.put("data", message).put("to", token);
                             BalelecbudApplication.getMessagingService().sendMessage(send);
                         } catch (JSONException e) {
@@ -94,22 +84,22 @@ public class Message {
     public static Map<String, String> extractMessage(RemoteMessage remoteMessage) {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Received Message");
-            return createMessage(remoteMessage.getData().get(DATA_KEY_TITLE),
-                    remoteMessage.getData().get(DATA_KEY_BODY),
-                    remoteMessage.getData().get(DATA_KEY_TYPE));
+            return createMessage(remoteMessage.getData().get(getAppContext().getString(R.string.data_key_title)),
+                    remoteMessage.getData().get(getAppContext().getString(R.string.data_key_body)),
+                    remoteMessage.getData().get(getAppContext().getString(R.string.data_key_type)));
         }
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Received Notification");
-            return createMessage(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), MESSAGE_TYPE_GENERAL);
+            return createMessage(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), getAppContext().getString(R.string.message_type_general));
         }
         return new HashMap<>();
     }
 
     public static Map<String, String> createMessage(String title, String body, String type) {
         Map<String, String> message = new HashMap<>();
-        message.put(DATA_KEY_TITLE, title);
-        message.put(DATA_KEY_BODY, body);
-        message.put(DATA_KEY_TYPE, type);
+        message.put(getAppContext().getString(R.string.data_key_title), title);
+        message.put(getAppContext().getString(R.string.data_key_body), body);
+        message.put(getAppContext().getString(R.string.data_key_type), type);
         return message;
     }
 }

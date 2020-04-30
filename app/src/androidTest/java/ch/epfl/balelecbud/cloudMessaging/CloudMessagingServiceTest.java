@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
@@ -24,6 +25,7 @@ import ch.epfl.balelecbud.notifications.NotificationMessageTest;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
@@ -93,6 +95,6 @@ public class CloudMessagingServiceTest {
     private RemoteMessage emptyRemoteMessage() {
         Map<String, String> message = new HashMap<>();
         return new RemoteMessage.Builder("ID").setData(message)
-                .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
+                .setMessageType(getAppContext().getString(R.string.message_type_general)).build();
     }
 }

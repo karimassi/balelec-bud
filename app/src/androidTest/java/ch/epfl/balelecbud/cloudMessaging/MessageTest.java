@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
@@ -25,16 +26,7 @@ import ch.epfl.balelecbud.notifications.NotificationMessageTest;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static ch.epfl.balelecbud.cloudMessaging.Message.ACCEPT_REQUEST_BODY;
-import static ch.epfl.balelecbud.cloudMessaging.Message.ACCEPT_REQUEST_TITLE;
-import static ch.epfl.balelecbud.cloudMessaging.Message.DATA_KEY_BODY;
-import static ch.epfl.balelecbud.cloudMessaging.Message.DATA_KEY_TITLE;
-import static ch.epfl.balelecbud.cloudMessaging.Message.DATA_KEY_TYPE;
-import static ch.epfl.balelecbud.cloudMessaging.Message.FRIEND_REQUEST_BODY;
-import static ch.epfl.balelecbud.cloudMessaging.Message.FRIEND_REQUEST_TITLE;
-import static ch.epfl.balelecbud.cloudMessaging.Message.MESSAGE_TYPE_GENERAL;
-import static ch.epfl.balelecbud.cloudMessaging.Message.TYPE_ACCEPT_REQUEST;
-import static ch.epfl.balelecbud.cloudMessaging.Message.TYPE_FRIEND_REQUEST;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
@@ -85,42 +77,48 @@ public class MessageTest {
     @Test
     public void sendFriendshipMessageNullType() {
         Message.sendFriendshipMessage(friend, user.getUid(), null);
-        assertNull(device.findObject(By.text(ACCEPT_REQUEST_TITLE)));
-        assertNull(device.findObject(By.text(FRIEND_REQUEST_TITLE)));
+        assertNull(device.findObject(By.text(getAppContext().getString(R.string.accept_request_title))));
+        assertNull(device.findObject(By.text(getAppContext().getString(R.string.friend_request_title))));
     }
 
     @Test
     public void sendFriendRequestMessageTest() {
-        sendFriendshipMessageTest(TYPE_FRIEND_REQUEST, FRIEND_REQUEST_TITLE, FRIEND_REQUEST_BODY);
+        sendFriendshipMessageTest(getAppContext().getString(R.string.type_friend_request),
+                getAppContext().getString(R.string.friend_request_title),
+                getAppContext().getString(R.string.friend_request_body));
     }
 
     @Test
     public void sendFriendRequestMessageWithoutToken() {
-        Message.sendFriendshipMessage(MockDatabaseWrapper.axel, user.getUid(), TYPE_FRIEND_REQUEST);
-        assertNull(device.findObject(By.text(FRIEND_REQUEST_TITLE)));
+        Message.sendFriendshipMessage(MockDatabaseWrapper.axel, user.getUid(),
+                getAppContext().getString(R.string.type_friend_request));
+        assertNull(device.findObject(By.text(getAppContext().getString(R.string.friend_request_title))));
     }
 
     @Test
     public void sendAcceptRequestMessageTest() {
-        sendFriendshipMessageTest(TYPE_ACCEPT_REQUEST, ACCEPT_REQUEST_TITLE, ACCEPT_REQUEST_BODY);
+        sendFriendshipMessageTest(getAppContext().getString(R.string.type_accept_request),
+                getAppContext().getString(R.string.accept_request_title),
+                getAppContext().getString(R.string.accept_request_body));
     }
 
     @Test
     public void sendAcceptRequestMessageWithoutToken() {
-        Message.sendFriendshipMessage(MockDatabaseWrapper.axel, user.getUid(), TYPE_ACCEPT_REQUEST);
-        assertNull(device.findObject(By.text(ACCEPT_REQUEST_TITLE)));
+        Message.sendFriendshipMessage(MockDatabaseWrapper.axel, user.getUid(),
+                getAppContext().getString(R.string.type_accept_request));
+        assertNull(device.findObject(By.text(getAppContext().getString(R.string.accept_request_title))));
     }
 
     @Test
     public void sendMessageToUserWithToken() {
-        Message message = new Message(title, body, MESSAGE_TYPE_GENERAL);
+        Message message = new Message(title, body, getAppContext().getString(R.string.message_type_general));
         message.sendMessage(user.getUid());
         NotificationMessageTest.verifyNotification(device, title, body);
     }
 
     @Test
     public void sendMessageToUserWithoutToken() {
-        Message message = new Message(title, body, MESSAGE_TYPE_GENERAL);
+        Message message = new Message(title, body, getAppContext().getString(R.string.message_type_general));
         message.sendMessage(MockDatabaseWrapper.axel.getUid());
         device.openNotification();
         assertNull(device.findObject(By.text(title)));
@@ -128,7 +126,7 @@ public class MessageTest {
 
     @Test
     public void sendNullMessageTest() {
-        Message message = new Message(null, null, MESSAGE_TYPE_GENERAL);
+        Message message = new Message(null, null, getAppContext().getString(R.string.message_type_general));
         message.sendMessage(user.getUid());
         device.openNotification();
         assertNull(device.findObject(By.text(title)));
@@ -137,9 +135,9 @@ public class MessageTest {
     @Test
     public void extractMessageTest() {
         Map<String, String> message = new HashMap<>();
-        message.put(DATA_KEY_TITLE, title);
-        message.put(DATA_KEY_BODY, body);
-        message.put(DATA_KEY_TYPE, MESSAGE_TYPE_GENERAL);
+        message.put(getAppContext().getString(R.string.data_key_title), title);
+        message.put(getAppContext().getString(R.string.data_key_body), body);
+        message.put(getAppContext().getString(R.string.data_key_type), getAppContext().getString(R.string.message_type_general));
         RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message).build();
         Map<String, String> result = Message.extractMessage(rm);
         assertThat(result, is(message));

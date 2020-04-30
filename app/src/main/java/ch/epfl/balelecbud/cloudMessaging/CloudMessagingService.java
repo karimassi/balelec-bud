@@ -20,9 +20,6 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
 public class CloudMessagingService extends FirebaseMessagingService implements MessagingService {
 
-    private static final String BASE_URL = getAppContext().getString(R.string.fcm_base_url);
-    private static final String FCM_KEY = getAppContext().getString(R.string.fcm_key);
-
     private static final String TAG = CloudMessagingService.class.getSimpleName();
     private static final MessagingService instance = new CloudMessagingService();
 
@@ -45,8 +42,8 @@ public class CloudMessagingService extends FirebaseMessagingService implements M
     @Override
     public void sendMessage(JSONObject send) {
         Log.d(TAG, "Sending the message to the server");
-        HttpPostRequest.setAuthorizationKey(FCM_KEY);
-        BalelecbudApplication.getHttpClient().post(BASE_URL, send);
+        HttpPostRequest.setAuthorizationKey(getAppContext().getString(R.string.fcm_key));
+        BalelecbudApplication.getHttpClient().post(getAppContext().getString(R.string.fcm_base_url), send);
     }
 
     @Override
@@ -55,7 +52,7 @@ public class CloudMessagingService extends FirebaseMessagingService implements M
         if(message.isEmpty()) {
             return;
         }
-        Log.d(TAG, "About to send notification with title: " + message.get(Message.DATA_KEY_TITLE));
+        Log.d(TAG, "About to send notification with title: " + message.get(getAppContext().getString(R.string.data_key_title)));
         NotificationMessage.getInstance().scheduleNotification(this, message);
     }
 
