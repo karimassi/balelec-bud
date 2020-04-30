@@ -42,3 +42,4 @@ public class EmergencyInfoFragment extends Fragment {
         adapter.setOnRefreshListener(refreshLayout);
     }
 }
+
