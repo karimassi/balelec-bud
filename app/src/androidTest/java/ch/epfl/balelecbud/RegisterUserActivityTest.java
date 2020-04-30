@@ -21,8 +21,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -74,7 +74,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Before
     public void setUp() throws Throwable {
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
@@ -139,7 +139,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
     @Test
     public void testCanRegisterFailDB() {
-        BalelecbudApplication.setAppDatabaseWrapper(new DatabaseWrapper() {
+        BalelecbudApplication.setAppDatabase(new Database() {
             @Override
             public void unregisterDocumentListener(String collectionName, String documentID) { }
 

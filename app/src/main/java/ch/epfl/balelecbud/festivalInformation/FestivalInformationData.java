@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
@@ -13,8 +13,8 @@ public class FestivalInformationData extends RecyclerViewData<FestivalInformatio
 
     @Override
     public void reload() {
-        MyQuery query = new MyQuery(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new LinkedList<>());
-        BalelecbudApplication.getAppDatabaseWrapper().queryWithType(query, FestivalInformation.class)
+        MyQuery query = new MyQuery(Database.FESTIVAL_INFORMATION_PATH, new LinkedList<>());
+        BalelecbudApplication.getAppDatabase().queryWithType(query, FestivalInformation.class)
             .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 

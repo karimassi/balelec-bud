@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public interface DatabaseWrapper {
+public interface Database {
 
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";

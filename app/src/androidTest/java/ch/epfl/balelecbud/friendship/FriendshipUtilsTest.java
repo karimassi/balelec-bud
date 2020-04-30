@@ -3,17 +3,13 @@ package ch.epfl.balelecbud.friendship;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
@@ -22,8 +18,8 @@ import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.database.MyWhereClause;
 
@@ -32,14 +28,14 @@ import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 @RunWith(AndroidJUnit4.class)
 public class FriendshipUtilsTest {
 
-    private final MockDatabaseWrapper db = MockDatabaseWrapper.getInstance();
+    private final MockDatabase db = MockDatabase.getInstance();
     private final Authenticator authenticator = MockAuthenticator.getInstance();
-    private final User sender = MockDatabaseWrapper.karim;
-    private final User recipient = MockDatabaseWrapper.celine;
+    private final User sender = MockDatabase.karim;
+    private final User recipient = MockDatabase.celine;
 
     @Before
     public void setup() {
-        BalelecbudApplication.setAppDatabaseWrapper(db);
+        BalelecbudApplication.setAppDatabase(db);
         BalelecbudApplication.setAppAuthenticator(authenticator);
         authenticator.signOut();
         authenticator.setCurrentUser(sender);
@@ -87,8 +83,8 @@ public class FriendshipUtilsTest {
         final List<String> result = new ArrayList<>();
         result.add(sender.getUid());
 
-        MyQuery query = new MyQuery(DatabaseWrapper.FRIEND_REQUESTS_PATH,
-                new MyWhereClause(DatabaseWrapper.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
+        MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH,
+                new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
         checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())),result);
     }
 
@@ -102,8 +98,8 @@ public class FriendshipUtilsTest {
 
         acceptRequest(sender);
 
-        MyQuery query = new MyQuery(DatabaseWrapper.FRIENDSHIPS_PATH,
-                new MyWhereClause(DatabaseWrapper.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
+        MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH,
+                new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
         checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())),result);
     }
 
@@ -113,8 +109,8 @@ public class FriendshipUtilsTest {
         acceptRequest(sender);
         deleteFriend(recipient);
 
-        MyQuery query = new MyQuery(DatabaseWrapper.FRIENDSHIPS_PATH,
-                new MyWhereClause(DatabaseWrapper.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
+        MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH,
+                new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
         checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), new ArrayList<>());
     }
 }

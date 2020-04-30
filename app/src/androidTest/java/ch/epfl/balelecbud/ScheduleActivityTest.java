@@ -1,7 +1,6 @@
 package ch.epfl.balelecbud;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -16,33 +15,31 @@ import org.junit.runner.RunWith;
 import ch.epfl.balelecbud.schedule.SlotData;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot3;
+import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
+import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest extends BasicActivityTest {
-    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mock = MockDatabase.getInstance();
 
     @Rule
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppDatabaseWrapper(mock);
+            BalelecbudApplication.setAppDatabase(mock);
             SlotData.setIntentLauncher(intent -> {
                 if (intent.getAction() == null)
                     Assert.fail();
@@ -70,7 +67,7 @@ public class ScheduleActivityTest extends BasicActivityTest {
 
     @Before
     public void setup() {
-        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
+        mock.resetDocument(Database.CONCERT_SLOTS_PATH);
         refreshRecyclerView();
     }
 
@@ -81,8 +78,8 @@ public class ScheduleActivityTest extends BasicActivityTest {
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
-        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
+        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
+        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
 
         refreshRecyclerView();
 
@@ -104,7 +101,7 @@ public class ScheduleActivityTest extends BasicActivityTest {
     @Test
     public void testCanSubscribeToAConcert() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
+        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
 
         refreshRecyclerView();
 

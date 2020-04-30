@@ -25,7 +25,7 @@ import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
 @SuppressWarnings("ALL")
-public class MockDatabaseWrapper implements DatabaseWrapper {
+public class MockDatabase implements Database {
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
     public static final User celine =
@@ -40,8 +40,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             new Location(4, 20), "Bar IC", PointOfInterestType.BAR);
     public static final PointOfInterest pointOfInterest2 = new PointOfInterest(
             new Location(4, 22), "Bar EE", PointOfInterestType.BAR);
-    private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
-    private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
+    private static final String TAG = MockDatabase.class.getSimpleName();
+    private static final MockDatabase instance = new MockDatabase();
 
     public static Slot slot1;
     public static Slot slot2;
@@ -52,21 +52,25 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private Map<String, Map<String, Object>> databasePOJO;
     private Map<String, Map<String, Map<String, Boolean>>> database;
 
-    private MockDatabaseWrapper() {
+    private MockDatabase() {
+        resetDatabase();
+    }
+
+    public void resetDatabase() {
         databasePOJO = new HashMap<>();
         database = new HashMap<>();
 
-        databasePOJO.put(DatabaseWrapper.USERS_PATH, new LinkedHashMap<>());
-        databasePOJO.put(DatabaseWrapper.CONCERT_SLOTS_PATH, new LinkedHashMap<>());
-        databasePOJO.put(DatabaseWrapper.EMERGENCIES_PATH, new LinkedHashMap<>());
-        databasePOJO.put(DatabaseWrapper.EMERGENCY_INFO_PATH, new LinkedHashMap<>());
-        databasePOJO.put(DatabaseWrapper.EMERGENCY_NUMBER_PATH, new LinkedHashMap<>());
-        databasePOJO.put(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new LinkedHashMap<>());
-        databasePOJO.put(DatabaseWrapper.LOCATIONS_PATH, new LinkedHashMap<>());
-        databasePOJO.put(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.USERS_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.CONCERT_SLOTS_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.EMERGENCIES_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.EMERGENCY_INFO_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.EMERGENCY_NUMBER_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.FESTIVAL_INFORMATION_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.LOCATIONS_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.POINT_OF_INTEREST_PATH, new LinkedHashMap<>());
 
-        database.put(DatabaseWrapper.FRIENDSHIPS_PATH, new LinkedHashMap<>());
-        database.put(DatabaseWrapper.FRIEND_REQUESTS_PATH, new LinkedHashMap<>());
+        database.put(Database.FRIENDSHIPS_PATH, new LinkedHashMap<>());
+        database.put(Database.FRIEND_REQUESTS_PATH, new LinkedHashMap<>());
 
         storeDocument(USERS_PATH, karim);
         storeDocument(USERS_PATH, celine);
@@ -85,14 +89,15 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
     }
 
-    public static MockDatabaseWrapper getInstance() {
+
+    public static MockDatabase getInstance() {
         return instance;
     }
 
     @Override
     public void unregisterDocumentListener(String collectionName, String documentID) {
         switch (collectionName) {
-            case DatabaseWrapper.LOCATIONS_PATH:
+            case Database.LOCATIONS_PATH:
                 friendsLocationListener.remove(documentID);
                 break;
             default:
@@ -104,7 +109,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) {
         switch (collectionName) {
-            case DatabaseWrapper.LOCATIONS_PATH:
+            case Database.LOCATIONS_PATH:
                 friendsLocationListener.put(documentID, (Consumer<Location>) consumer);
                 ((Consumer<Location>) consumer).accept( (Location) databasePOJO.get(collectionName).get(documentID));
                 break;
@@ -153,8 +158,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         if (document instanceof User) {
             User user = (User) document;
             databasePOJO.get(collectionName).put(user.getUid(), user);
-            database.get(DatabaseWrapper.FRIEND_REQUESTS_PATH).put(user.getUid(), new LinkedHashMap<>());
-            database.get(DatabaseWrapper.FRIENDSHIPS_PATH).put(user.getUid(), new LinkedHashMap<>());
+            database.get(Database.FRIEND_REQUESTS_PATH).put(user.getUid(), new LinkedHashMap<>());
+            database.get(Database.FRIENDSHIPS_PATH).put(user.getUid(), new LinkedHashMap<>());
         } else {
             databasePOJO.get(collectionName).put(generateRandomID(), document);
         }
@@ -165,16 +170,16 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
         Log.d(TAG, "storeDocumentWithID() called with: collectionName = [" + collectionName + "], document = [" + document + "]");
         switch (collectionName) {
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
+            case Database.FRIEND_REQUESTS_PATH:
+            case Database.FRIENDSHIPS_PATH:
                 database.get(collectionName).get(documentID).putAll((Map<String, Boolean>)document);
                 break;
-            case DatabaseWrapper.LOCATIONS_PATH:
+            case Database.LOCATIONS_PATH:
                 databasePOJO.get(collectionName).put(documentID, document);
                 if (friendsLocationListener.containsKey(documentID))
                     friendsLocationListener.get(documentID).accept((Location) document);
                 break;
-            case DatabaseWrapper.USERS_PATH:
+            case Database.USERS_PATH:
                 User user = (User) document;
                 if (user.getUid() != documentID)
                     throw new IllegalArgumentException("Cannot add user with custom identifier");
@@ -190,8 +195,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
         switch (collectionName) {
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
+            case Database.FRIEND_REQUESTS_PATH:
+            case Database.FRIENDSHIPS_PATH:
                 for (String key : updates.keySet()) {
                     if (updates.get(key).equals(FieldValue.delete())) {
                         database.get(collectionName).get(documentID).remove(key);
@@ -209,8 +214,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public void deleteDocumentWithID(String collectionName, String documentID) {
         switch (collectionName) {
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
+            case Database.FRIENDSHIPS_PATH:
+            case Database.FRIEND_REQUESTS_PATH:
                 throw new UnsupportedOperationException();
             default:
                 databasePOJO.get(collectionName).remove(documentID);
@@ -221,8 +226,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
 
     public void resetDocument(String collectionName) {
         switch (collectionName) {
-            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-            case DatabaseWrapper.FRIENDSHIPS_PATH:
+            case Database.FRIEND_REQUESTS_PATH:
+            case Database.FRIENDSHIPS_PATH:
                 for (Map o : database.get(collectionName).values()) {
                     o.clear();
                 }

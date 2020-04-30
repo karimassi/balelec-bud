@@ -10,7 +10,7 @@ import uk.co.mgbramwell.geofire.android.model.Distance;
 import uk.co.mgbramwell.geofire.android.model.DistanceUnit;
 import uk.co.mgbramwell.geofire.android.model.QueryLocation;
 
-import static ch.epfl.balelecbud.util.database.DatabaseWrapper.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
 
 public class FirestoreClauseConverter implements MyClauseVisitor<Query> {
 

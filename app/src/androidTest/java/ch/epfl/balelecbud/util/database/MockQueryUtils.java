@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.util.database;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import java.lang.reflect.Field;
@@ -13,7 +11,7 @@ public class MockQueryUtils {
 
     public static boolean queryContainsDocumentIdClause(MyQuery query) {
         for (MyWhereClause clause : query.getWhereClauses()) {
-            if (clause.getLeftOperand().equals(DatabaseWrapper.DOCUMENT_ID_OPERAND)) {
+            if (clause.getLeftOperand().equals(Database.DOCUMENT_ID_OPERAND)) {
                 return true;
             }
         }
@@ -22,7 +20,7 @@ public class MockQueryUtils {
 
     public static String getRightOperandFromDocumentIdClause(MyQuery query) {
         for (MyWhereClause clause : query.getWhereClauses()) {
-            if (clause.getLeftOperand().equals(DatabaseWrapper.DOCUMENT_ID_OPERAND)) {
+            if (clause.getLeftOperand().equals(Database.DOCUMENT_ID_OPERAND)) {
                 return (String) clause.getRightOperand();
             }
         }
