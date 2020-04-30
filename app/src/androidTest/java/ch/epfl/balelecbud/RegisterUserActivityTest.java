@@ -185,24 +185,6 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
                 return null;
             }
 
-//            @Override
-//            public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
-//                return CompletableFuture.completedFuture(null).thenCompose(o -> {
-//                    throw new RuntimeException("Failed to store document");
-//                });
-//            }
-//
-//            @Override
-//            public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
-//                return null;
-//            }
-//
-//            @Override
-//            public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName,
-//                                                                          String fieldName, String fieldValue, Class<T> type) {
-//                return null;
-//            }
-
             @Override
             public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
             }
