@@ -59,12 +59,6 @@ public class MapViewWithPOITest {
                     mockAuth.setCurrentUser(celine);
                     mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, atm);
                 }
-
-                @Override
-                protected void afterActivityFinished() {
-                    super.afterActivityFinished();
-                    mockDB.resetMockDatabase();
-                }
             };
 
     @After

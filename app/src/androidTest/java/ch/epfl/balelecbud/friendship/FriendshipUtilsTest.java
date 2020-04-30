@@ -45,12 +45,6 @@ public class FriendshipUtilsTest {
         authenticator.setCurrentUser(sender);
     }
 
-    @After
-    public void tearDown() {
-        MockDatabaseWrapper.getInstance().resetMockDatabase();
-    }
-
-
     @Rule
     public final ActivityTestRule<LoginUserActivity> mActivityRule =
             new ActivityTestRule<>(LoginUserActivity.class);

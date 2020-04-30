@@ -61,18 +61,11 @@ public class ScheduleActivityTest extends BasicActivityTest {
         }
 
         @Override
-        protected void afterActivityFinished() {
-            super.afterActivityFinished();
-            mock.resetMockDatabase();
-        }
-
-        @Override
         protected Intent getActivityIntent() {
             Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
             FlowUtil.packCallback(new Slot[]{}, intent);
             return intent;
         }
-
     };
 
     @Before

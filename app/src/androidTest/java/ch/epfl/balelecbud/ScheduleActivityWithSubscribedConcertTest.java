@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud;
 
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -45,12 +46,6 @@ public class ScheduleActivityWithSubscribedConcertTest {
             Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
             FlowUtil.packCallback(new Slot[]{slot1}, intent);
             return intent;
-        }
-
-        @Override
-        protected void afterActivityFinished() {
-            super.afterActivityFinished();
-            mock.resetMockDatabase();
         }
     };
 

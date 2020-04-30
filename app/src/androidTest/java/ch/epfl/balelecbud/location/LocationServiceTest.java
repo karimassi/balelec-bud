@@ -54,11 +54,6 @@ public class LocationServiceTest {
         ls.onCreate();
     }
 
-    @After
-    public void tearDown() {
-        mockDB.resetMockDatabase();
-    }
-
     private Intent getIntent(android.location.Location l) {
         Intent i = new Intent(ApplicationProvider.getApplicationContext(), LocationService.class);
         LocationResult lr = LocationResult.create(Collections.singletonList(l));

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +18,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
-import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
-import ch.epfl.balelecbud.festivalInformation.models.FestivalInformation;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -49,44 +46,27 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     public static Slot slot1;
     public static Slot slot2;
     public static Slot slot3;
-    private final Map<String, User> users = new HashMap<>();
-    private final Map<String, Map<String, Boolean>> friendships = new HashMap<>();
-    private final Map<String, Map<String, Boolean>> friendRequests = new HashMap<>();
-    private final List<FestivalInformation> festivalInfos = new ArrayList<>();
-    private final List<PointOfInterest> pointOfInterests = new ArrayList<>();
-    private final List<EmergencyInfo> emergencyInfos = new ArrayList<>();
-    private final Map<String, EmergencyNumber> emergencyNumbers = new HashMap<>();
-    private final List<Slot> slots = new ArrayList<>();
-    private final Map<String, Emergency> emergencies = new HashMap<>();
-    private final Map<String, Location> locations = new HashMap<>();
+
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
 
     private Map<String, Map<String, Object>> databasePOJO;
     private Map<String, Map<String, Map<String, Boolean>>> database;
 
     private MockDatabaseWrapper() {
-        resetMockDatabase();
-    }
-
-    public static MockDatabaseWrapper getInstance() {
-        return instance;
-    }
-
-    public void resetMockDatabase() {
         databasePOJO = new HashMap<>();
         database = new HashMap<>();
 
-        databasePOJO.put(DatabaseWrapper.USERS_PATH, new HashMap<>());
-        databasePOJO.put(DatabaseWrapper.CONCERT_SLOTS_PATH, new HashMap<>());
-        databasePOJO.put(DatabaseWrapper.EMERGENCIES_PATH, new HashMap<>());
-        databasePOJO.put(DatabaseWrapper.EMERGENCY_INFO_PATH, new HashMap<>());
-        databasePOJO.put(DatabaseWrapper.EMERGENCY_NUMBER_PATH, new HashMap<>());
-        databasePOJO.put(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new HashMap<>());
-        databasePOJO.put(DatabaseWrapper.LOCATIONS_PATH, new HashMap<>());
-        databasePOJO.put(DatabaseWrapper.POINT_OF_INTEREST_PATH, new HashMap<>());
+        databasePOJO.put(DatabaseWrapper.USERS_PATH, new LinkedHashMap<>());
+        databasePOJO.put(DatabaseWrapper.CONCERT_SLOTS_PATH, new LinkedHashMap<>());
+        databasePOJO.put(DatabaseWrapper.EMERGENCIES_PATH, new LinkedHashMap<>());
+        databasePOJO.put(DatabaseWrapper.EMERGENCY_INFO_PATH, new LinkedHashMap<>());
+        databasePOJO.put(DatabaseWrapper.EMERGENCY_NUMBER_PATH, new LinkedHashMap<>());
+        databasePOJO.put(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new LinkedHashMap<>());
+        databasePOJO.put(DatabaseWrapper.LOCATIONS_PATH, new LinkedHashMap<>());
+        databasePOJO.put(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedHashMap<>());
 
-        database.put(DatabaseWrapper.FRIENDSHIPS_PATH, new HashMap<>());
-        database.put(DatabaseWrapper.FRIEND_REQUESTS_PATH, new HashMap<>());
+        database.put(DatabaseWrapper.FRIENDSHIPS_PATH, new LinkedHashMap<>());
+        database.put(DatabaseWrapper.FRIEND_REQUESTS_PATH, new LinkedHashMap<>());
 
         storeDocument(USERS_PATH, karim);
         storeDocument(USERS_PATH, celine);
@@ -105,6 +85,9 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
     }
 
+    public static MockDatabaseWrapper getInstance() {
+        return instance;
+    }
 
     @Override
     public void unregisterDocumentListener(String collectionName, String documentID) {
@@ -129,10 +112,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 throw new IllegalArgumentException("MockDataBaseWrapper.listenDocument() is not configured" +
                         " for collection = [" + collectionName + "]");
         }
-    }
-
-    private List<Object> getCollectionItems(String collectionName) {
-        return new ArrayList<>(databasePOJO.get(collectionName).values());
     }
 
     @Override
@@ -168,20 +147,18 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-
     @Override
     public <T> void storeDocument(String collectionName, T document) {
         Log.d(TAG, "storeDocument() called with: collectionName = [" + collectionName + "], document = [" + document + "]");
         if (document instanceof User) {
             User user = (User) document;
             databasePOJO.get(collectionName).put(user.getUid(), user);
-            database.get(DatabaseWrapper.FRIEND_REQUESTS_PATH).put(user.getUid(), new HashMap<>());
-            database.get(DatabaseWrapper.FRIENDSHIPS_PATH).put(user.getUid(), new HashMap<>());
+            database.get(DatabaseWrapper.FRIEND_REQUESTS_PATH).put(user.getUid(), new LinkedHashMap<>());
+            database.get(DatabaseWrapper.FRIENDSHIPS_PATH).put(user.getUid(), new LinkedHashMap<>());
         } else {
             databasePOJO.get(collectionName).put(generateRandomID(), document);
         }
-        Log.d(this.getClass().getSimpleName(), databasePOJO.toString());
-        Log.d(this.getClass().getSimpleName(), database.toString());
+        logContents();
     }
 
     @Override
@@ -206,8 +183,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 databasePOJO.get(collectionName).put(documentID, document);
                 break;
         }
-        Log.d(this.getClass().getSimpleName(), databasePOJO.toString());
-        Log.d(this.getClass().getSimpleName(), database.toString());
+        logContents();
         return CompletableFuture.completedFuture(null);
     }
 
@@ -227,13 +203,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             default:
                 throw new UnsupportedOperationException("Cannot update custom POJO documents");
         }
-    }
-
-    public void updateDocument(String collectionName, int documentID, Object update) {
-        switch (collectionName) {
-            case DatabaseWrapper.EMERGENCY_INFO_PATH:
-                emergencyInfos.set(documentID, (EmergencyInfo) update);
-        }
+        logContents();
     }
 
     @Override
@@ -246,6 +216,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 databasePOJO.get(collectionName).remove(documentID);
                 break;
         }
+        logContents();
     }
 
     public void resetDocument(String collectionName) {
@@ -260,15 +231,23 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             default:
                 databasePOJO.get(collectionName).clear();
         }
+        logContents();
     }
 
     public int getFriendsLocationListenerCount() {
         return this.friendsLocationListener.size();
     }
 
-
     public String generateRandomID() {
         return UUID.randomUUID().toString();
+    }
+
+    private List<Object> getCollectionItems(String collectionName) {
+        return new ArrayList<>(databasePOJO.get(collectionName).values());
+    }
+
+    private void logContents() {
+        Log.d(this.getClass().getSimpleName(), databasePOJO.toString() + "\n" + database.toString());
     }
 
 }

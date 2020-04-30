@@ -51,12 +51,6 @@ public class PointOfInterestToMapButton {
                     MapViewActivity.setMockCallback(mapboxMap -> {
                     });
                 }
-
-                @Override
-                protected void afterActivityFinished() {
-                    super.afterActivityFinished();
-                    MockDatabaseWrapper.getInstance().resetMockDatabase();
-                }
             };
 
     @Before

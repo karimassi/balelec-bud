@@ -68,7 +68,6 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
 
                 @Override
                 protected void afterActivityFinished() {
-                    MockDatabaseWrapper.getInstance().resetMockDatabase();
                     Intents.release();
                 }
             };

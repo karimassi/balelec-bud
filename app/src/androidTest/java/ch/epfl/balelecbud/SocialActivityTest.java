@@ -66,12 +66,6 @@ public class SocialActivityTest extends BasicActivityTest {
             mockAuth.setCurrentUser(currentUser);
             mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);
         }
-
-        @Override
-        protected void afterActivityFinished() {
-            super.afterActivityFinished();
-            mockDb.resetMockDatabase();
-        }
     };
 
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {

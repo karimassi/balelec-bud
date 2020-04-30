@@ -42,11 +42,6 @@ public class PointOfInterestUtilsTest {
         }
     }
 
-    @After
-    public void tearDown() {
-        db.resetMockDatabase();
-    }
-
     private List<Location> getResList(List<MyWhereClause> clauses)
             throws InterruptedException, ExecutionException {
         MyQuery query = new MyQuery(DatabaseWrapper.LOCATIONS_PATH, clauses);

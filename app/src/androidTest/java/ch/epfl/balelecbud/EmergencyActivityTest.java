@@ -47,12 +47,6 @@ public class EmergencyActivityTest extends BasicActivityTest {
                     BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
                     BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
                 }
-
-                @Override
-                protected void afterActivityFinished() {
-                    super.afterActivityFinished();
-                    mockDB.resetMockDatabase();
-                }
             };
 
 

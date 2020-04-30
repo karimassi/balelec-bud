@@ -39,12 +39,6 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
-
-        @Override
-        protected void afterActivityFinished() {
-            super.afterActivityFinished();
-            mock.resetMockDatabase();
-        }
     };
 
     @Test
