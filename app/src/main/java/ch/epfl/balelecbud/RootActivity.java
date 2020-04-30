@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,7 +16,6 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.List;
 
 import ch.epfl.balelecbud.friendship.SocialFragment;
-import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.map.MapViewFragment;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestFragment;
@@ -224,7 +222,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
 
     private void showSettingsFragment() {
         this.fragmentSettings = SettingsMainFragment.newInstance();
-        this.startTransactionFragment(this.fragmentSettings, "SETTINGS");
+        this.startTransactionFragment(this.fragmentSettings, SettingsMainFragment.TAG);
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {
@@ -278,13 +276,5 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this, LoginUserActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE) {
-            fragmentHome.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
     }
 }

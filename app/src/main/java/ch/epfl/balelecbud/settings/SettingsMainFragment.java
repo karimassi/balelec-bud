@@ -14,7 +14,7 @@ import ch.epfl.balelecbud.location.LocationUtil;
 
 public class SettingsMainFragment extends Fragment {
 
-    private static final String TAG = SettingsMainFragment.class.getSimpleName();
+    public static final String TAG = SettingsMainFragment.class.getSimpleName();
     private SettingsFragment fragment;
 
     public static SettingsMainFragment newInstance() {

@@ -5,10 +5,11 @@ import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.fragment.app.Fragment;
 import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 
@@ -23,6 +24,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.settings.SettingsMainFragment;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
@@ -154,7 +156,9 @@ public class LocationRequesterTest {
     }
 
     private void checkPermissionAfterResult(String[] permissions, int[] permissionStatus, boolean b) {
-        this.mActivityRule.getActivity().onRequestPermissionsResult(
+        Fragment fragment = mActivityRule.getActivity().getSupportFragmentManager()
+                .findFragmentByTag(SettingsMainFragment.TAG);
+        fragment.onRequestPermissionsResult(
                 LocationUtil.LOCATION_PERMISSIONS_REQUEST_CODE,
                 permissions,
                 permissionStatus);

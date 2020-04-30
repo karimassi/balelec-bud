@@ -79,7 +79,8 @@ public class PointOfInterestToMapButton {
     private void clickOnButtonAndCheckMapOpenAtCorrectLocation(int i, PointOfInterest pointOfInterest1) throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
         onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), i), 5)).perform(click());
-        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity().getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
+        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity()
+                .getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
         fragment.onMapReady(new MyMap() {
             @Override
             public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {

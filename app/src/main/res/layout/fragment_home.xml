@@ -7,12 +7,5 @@
     android:layout_height="match_parent"
     tools:context=".WelcomeFragment"
     android:gravity="center"
-    android:background="@drawable/blek_main_root">
-
-    <Switch
-        android:id="@+id/locationSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="false"
-        android:text="@string/toggle_location_view" />
-</LinearLayout>
+    android:background="@drawable/blek_main_root"
+    android:orientation="vertical" />
