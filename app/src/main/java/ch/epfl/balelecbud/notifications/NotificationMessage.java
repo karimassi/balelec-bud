@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.util.Log;
 
-import androidx.annotation.VisibleForTesting;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -16,7 +16,9 @@ import java.util.Map;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
-import ch.epfl.balelecbud.cloudMessaging.Message;
+import ch.epfl.balelecbud.friendship.SocialActivity;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
 public class NotificationMessage implements NotificationInterface<Map<String, String>> {
 
@@ -39,7 +41,7 @@ public class NotificationMessage implements NotificationInterface<Map<String, St
     public void scheduleNotification(Context context, Map<String, String> object) {
         int notificationId = object.hashCode();
 
-        String type = object.get(Message.DATA_KEY_TYPE);
+        String type = object.get(context.getString(R.string.data_key_type));
 
         Intent intent = getIntent(context, type);
 
@@ -47,8 +49,8 @@ public class NotificationMessage implements NotificationInterface<Map<String, St
                 intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         android.app.Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(object.get(Message.DATA_KEY_TITLE))
-                .setContentText(object.get(Message.DATA_KEY_BODY))
+                .setContentTitle(object.get(getAppContext().getString(R.string.data_key_title)))
+                .setContentText(object.get(getAppContext().getString(R.string.data_key_body)))
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.my_notification_icone)
                 .setCategory(NotificationCompat.CATEGORY_SOCIAL)
@@ -61,6 +63,10 @@ public class NotificationMessage implements NotificationInterface<Map<String, St
     }
 
     private Intent getIntent(Context context, String type) {
+        Log.d("NotificationMessage", "type: " + type);
+        if(type.equals(context.getString(R.string.message_type_social))) {
+            return new Intent(context, SocialActivity.class);
+        }
         return new Intent(context, WelcomeActivity.class);
     }
 

@@ -30,6 +30,7 @@ public class TokenUtilTest {
     private final User user = MockDatabase.celine;
     private final String token = MockDatabase.token1;
 
+
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {

@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.friendship;
 
-import android.content.BroadcastReceiver;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -24,8 +23,6 @@ public class SocialActivity extends BasicActivity {
     private SocialAdapter fragmentAdapter;
 
     private List<String> tabTitleList;
-
-    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
