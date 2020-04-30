@@ -40,6 +40,11 @@ public class MockDatabase implements Database {
             new Location(4, 20), "Bar IC", PointOfInterestType.BAR);
     public static final PointOfInterest pointOfInterest2 = new PointOfInterest(
             new Location(4, 22), "Bar EE", PointOfInterestType.BAR);
+
+
+    public static final String token1 = "TheBestTestToken";
+    public static final String token2 = "TheNormalTestToken";
+
     private static final String TAG = MockDatabase.class.getSimpleName();
     private static final MockDatabase instance = new MockDatabase();
 
@@ -71,6 +76,18 @@ public class MockDatabase implements Database {
 
         database.put(Database.FRIENDSHIPS_PATH, new LinkedHashMap<>());
         database.put(Database.FRIEND_REQUESTS_PATH, new LinkedHashMap<>());
+        database.put(Database.TOKENS_PATH, new LinkedHashMap<>());
+
+        database.get(Database.TOKENS_PATH).put(karim.getUid(), new HashMap<>());
+        database.get(Database.TOKENS_PATH).put(celine.getUid(), new HashMap<>());
+
+
+        Map<String, Boolean> toStore = new HashMap<>();
+        toStore.put(token1, true);
+        storeDocumentWithID(Database.TOKENS_PATH, celine.getUid(), toStore);
+        toStore = new HashMap<>();
+        toStore.put(token2, true);
+        storeDocumentWithID(Database.TOKENS_PATH, karim.getUid(), toStore);
 
         storeDocument(USERS_PATH, karim);
         storeDocument(USERS_PATH, celine);
@@ -172,6 +189,7 @@ public class MockDatabase implements Database {
         switch (collectionName) {
             case Database.FRIEND_REQUESTS_PATH:
             case Database.FRIENDSHIPS_PATH:
+            case Database.TOKENS_PATH:
                 database.get(collectionName).get(documentID).putAll((Map<String, Boolean>)document);
                 break;
             case Database.LOCATIONS_PATH:
@@ -197,6 +215,7 @@ public class MockDatabase implements Database {
         switch (collectionName) {
             case Database.FRIEND_REQUESTS_PATH:
             case Database.FRIENDSHIPS_PATH:
+            case Database.TOKENS_PATH:
                 for (String key : updates.keySet()) {
                     if (updates.get(key).equals(FieldValue.delete())) {
                         database.get(collectionName).get(documentID).remove(key);
@@ -216,6 +235,7 @@ public class MockDatabase implements Database {
         switch (collectionName) {
             case Database.FRIENDSHIPS_PATH:
             case Database.FRIEND_REQUESTS_PATH:
+            case Database.TOKENS_PATH:
                 throw new UnsupportedOperationException();
             default:
                 databasePOJO.get(collectionName).remove(documentID);
@@ -228,6 +248,7 @@ public class MockDatabase implements Database {
         switch (collectionName) {
             case Database.FRIEND_REQUESTS_PATH:
             case Database.FRIENDSHIPS_PATH:
+            case Database.TOKENS_PATH:
                 for (Map o : database.get(collectionName).values()) {
                     o.clear();
                 }
@@ -252,7 +273,7 @@ public class MockDatabase implements Database {
     }
 
     private void logContents() {
-        Log.d(this.getClass().getSimpleName(), databasePOJO.toString() + "\n" + database.toString());
+        Log.d(TAG, databasePOJO.toString() + "\n" + database.toString());
     }
 
 }

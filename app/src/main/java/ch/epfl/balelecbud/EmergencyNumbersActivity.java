@@ -112,6 +112,4 @@ public class EmergencyNumbersActivity extends BasicActivity {
 
         }
     }
-
-
 }

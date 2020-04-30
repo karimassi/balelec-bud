@@ -86,7 +86,7 @@ public class ConcertNotificationTest {
             device.waitForWindowUpdate(null, 1_000);
         }
         // quit the notifications center if it happens to be open
-        clearNotifications();
+        NotificationMessageTest.clearNotifications(device);
 
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
         SlotData.setIntentLauncher(null);
@@ -100,15 +100,7 @@ public class ConcertNotificationTest {
     @After
     public void tearDown() {
         this.db.close();
-        clearNotifications();
-    }
-
-    private void clearNotifications() {
-        device.openNotification();
-        UiObject2 button = device.findObject(By.text("CLEAR ALL"));
-        if (button != null) button.click();
-        device.pressBack();
-
+        NotificationMessageTest.clearNotifications(device);
     }
 
     @Test
@@ -186,11 +178,8 @@ public class ConcertNotificationTest {
         String expectedTitle = mActivityRule.getActivity().getString(R.string.concert_soon_notification_title);
         String expectedText = "Le nom de mon artiste starts in 15 minutes on Scene 3";
 
-        device.openNotification();
-        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(expectedTitle)), 30_000));
-        UiObject2 title = device.findObject(By.text(expectedTitle));
-        assertNotNull(title);
-        assertNotNull(device.findObject(By.text(expectedText)));
+        UiObject2 title = NotificationMessageTest.verifyNotification(device, expectedTitle, expectedText);
+
         title.click();
     }
 
@@ -218,5 +207,4 @@ public class ConcertNotificationTest {
     private void refreshRecyclerView() {
         onView(withId(R.id.swipe_refresh_layout_schedule)).perform(swipeDown());
     }
-
 }

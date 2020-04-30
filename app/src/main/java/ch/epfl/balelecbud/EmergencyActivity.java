@@ -18,7 +18,6 @@ import ch.epfl.balelecbud.util.database.Database;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-
 public class EmergencyActivity extends BasicActivity {
 
     private Button mShowEmergencyDialog;

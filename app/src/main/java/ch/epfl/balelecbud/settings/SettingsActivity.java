@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.balelecbud.BasicActivity;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.location.LocationUtil;
 
 public class SettingsActivity extends BasicActivity {

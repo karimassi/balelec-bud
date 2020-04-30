@@ -14,7 +14,6 @@ import ch.epfl.balelecbud.util.database.MyWhereClause;
 import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 
-
 public class FirebaseAuthenticator implements Authenticator {
     private static final Authenticator instance = new FirebaseAuthenticator();
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();

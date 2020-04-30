@@ -67,6 +67,9 @@
     <string name="add_own_as_friend">You can\'t add yourself as a friend :-)</string>
     <string name="add_friend_request_sent">Friend request sent to </string>
 
+    <!--  CLOUD MESSAGING  -->
+    <string name="message_channel_name">Notification Message Channel</string>
+
     <!--  FRIEND ITEM  -->
     <string name="remove_friend">Unfriend</string>
 
@@ -98,6 +101,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="msg_token_fmt" />
 
 
 </resources>

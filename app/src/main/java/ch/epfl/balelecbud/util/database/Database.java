@@ -12,6 +12,7 @@ public interface Database {
     String EMERGENCY_INFO_PATH = "emergencyInfo";
     String CONCERT_SLOTS_PATH = "concertSlots";
     String USERS_PATH = "users";
+    String TOKENS_PATH = "tokens";
     String LOCATIONS_PATH = "locations";
     String FRIENDSHIPS_PATH = "friendships";
     String FRIEND_REQUESTS_PATH = "friendRequests";

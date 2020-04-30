@@ -21,9 +21,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -34,6 +37,8 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
 
@@ -72,9 +77,11 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
                 }
             };
 
+    private MockDatabase mockDB = MockDatabase.getInstance();
+
     @Before
     public void setUp() throws Throwable {
-        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
+        BalelecbudApplication.setAppDatabase(mockDB);
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
@@ -135,6 +142,27 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     public void testCanRegister() {
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
         intended(hasComponent(WelcomeActivity.class.getName()));
+    }
+
+    @Test
+    public void testRegisterSavesUserOnDB() throws Throwable {
+        String email = "testregister" + randomInt() + "@gmail.com";
+        TestAsyncUtils sync = new TestAsyncUtils();
+        enterValuesAndClick("name", email, "123123", "123123");
+
+        MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, MockAuthenticator.getInstance().getCurrentUid()));
+        mockDB.queryWithType(query, User.class).whenComplete((users, throwable) -> {
+            if (throwable == null) {
+                sync.assertEquals(email, users.get(0).getEmail());
+                sync.assertEquals("name", users.get(0).getDisplayName());
+                sync.call();
+            } else {
+                sync.fail();
+            }
+        });
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
