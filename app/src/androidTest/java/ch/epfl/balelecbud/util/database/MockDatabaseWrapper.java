@@ -51,7 +51,8 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
             new Location(4, 20), "Bar IC", PointOfInterestType.BAR);
     public static final PointOfInterest pointOfInterest2 = new PointOfInterest(
             new Location(4, 22), "Bar EE", PointOfInterestType.BAR);
-    public static final String token = "TheBestTestToken";
+    public static final String token1 = "TheBestTestToken";
+    public static final String token2 = "TheNormalTestToken";
     private static final String TAG = MockDatabaseWrapper.class.getSimpleName();
     private static final MockDatabaseWrapper instance = new MockDatabaseWrapper();
 
@@ -88,8 +89,11 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3));
         slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
         Map<String, String> celineToken = new HashMap<>();
-        celineToken.put("token", token);
+        celineToken.put("token", token1);
         storeDocumentWithID(TOKENS_PATH, celine.getUid(), celineToken);
+        Map<String, String> karimToken = new HashMap<>();
+        karimToken.put("token", token2);
+        storeDocumentWithID(TOKENS_PATH, karim.getUid(), karimToken);
     }
 
     public static MockDatabaseWrapper getInstance() {

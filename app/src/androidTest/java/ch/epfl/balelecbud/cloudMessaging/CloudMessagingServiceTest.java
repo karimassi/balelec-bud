@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.cloudMessaging;
 
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
@@ -23,6 +25,7 @@ import ch.epfl.balelecbud.notifications.NotificationMessageTest;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
@@ -32,7 +35,7 @@ public class CloudMessagingServiceTest {
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final CloudMessagingService cloudMessagingService = new CloudMessagingService();
     private final User user = MockDatabaseWrapper.celine;
-    private final String token = MockDatabaseWrapper.token;
+    private final String token = MockDatabaseWrapper.token1;
 
     private UiDevice device;
 
@@ -43,6 +46,7 @@ public class CloudMessagingServiceTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
+                    BalelecbudApplication.setAppContext(ApplicationProvider.getApplicationContext());
                     mockAuth.signOut();
                     mockAuth.setCurrentUser(user);
                     TokenUtil.setToken(token);
@@ -91,6 +95,6 @@ public class CloudMessagingServiceTest {
     private RemoteMessage emptyRemoteMessage() {
         Map<String, String> message = new HashMap<>();
         return new RemoteMessage.Builder("ID").setData(message)
-                .setMessageType(Message.MESSAGE_TYPE_GENERAL).build();
+                .setMessageType(getAppContext().getString(R.string.message_type_general)).build();
     }
 }

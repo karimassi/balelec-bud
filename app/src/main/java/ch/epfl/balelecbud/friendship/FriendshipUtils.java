@@ -8,10 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.cloudMessaging.Message;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 
 public class FriendshipUtils {
@@ -20,6 +23,9 @@ public class FriendshipUtils {
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(getAppAuthenticator().getCurrentUser().getUid(), true);
         getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, friend.getUid(), toStore);
+
+        Message.sendFriendshipMessage(getAppAuthenticator().getCurrentUser(), friend.getUid(),
+                getAppContext().getString(R.string.type_friend_request));
     }
 
     public static void removeFriend(User friend) {
@@ -44,6 +50,9 @@ public class FriendshipUtils {
         getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, sender.getUid(), toStore);
 
         deleteRequest(sender, getAppAuthenticator().getCurrentUser());
+
+        Message.sendFriendshipMessage(getAppAuthenticator().getCurrentUser(), sender.getUid(),
+                getAppContext().getString(R.string.type_accept_request));
     }
 
     public static void deleteRequest(User sender, User receiver) {

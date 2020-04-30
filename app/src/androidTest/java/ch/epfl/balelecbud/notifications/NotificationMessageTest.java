@@ -13,12 +13,12 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.cloudMessaging.Message;
-import ch.epfl.balelecbud.cloudMessaging.TokenUtil;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static org.junit.Assert.assertNotNull;
 
 public class NotificationMessageTest {
@@ -30,12 +30,7 @@ public class NotificationMessageTest {
 
     @Rule
     public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    super.beforeActivityLaunched();
-                }
-            };
+            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
 
     @Before
     public void setup() {
@@ -50,7 +45,16 @@ public class NotificationMessageTest {
 
     @Test
     public void scheduleGeneralNotificationTest() {
-        Map<String, String> message = Message.createMessage(title, body, Message.MESSAGE_TYPE_GENERAL);
+        scheduleNotificationTest(getAppContext().getString(R.string.message_type_general));
+    }
+
+    @Test
+    public void scheduleSocialNotificationTest() {
+        scheduleNotificationTest(getAppContext().getString(R.string.message_type_social));
+    }
+
+    private void scheduleNotificationTest(String type) {
+        Map<String, String> message = Message.createMessage(title, body, type);
         NotificationMessage.getInstance().scheduleNotification(mActivityRule.getActivity(), message);
         verifyNotification(device, title, body);
     }
