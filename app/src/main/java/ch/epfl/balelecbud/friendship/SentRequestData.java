@@ -11,6 +11,7 @@ import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
 import static ch.epfl.balelecbud.friendship.FriendshipUtils.getUsersFromUids;
+import static ch.epfl.balelecbud.util.database.DatabaseWrapper.DOCUMENT_ID_OPERAND;
 
 public class SentRequestData extends RecyclerViewData<User, SentRequestViewHolder> {
 
@@ -24,7 +25,7 @@ public class SentRequestData extends RecyclerViewData<User, SentRequestViewHolde
     @Override
     public void reload() {
         MyQuery myQuery = new MyQuery(DatabaseWrapper.FRIEND_REQUESTS_PATH,
-                new MyWhereClause(currentUser.getUid(), MyWhereClause.Operator.EQUAL, true));
+                new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()));
         getAppDatabaseWrapper().query(myQuery)
                 .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(new ArrayList<>(uids.get(0).keySet()))))
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));

@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.android.gms.location.LocationResult;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,13 +27,18 @@ import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
+
+import static ch.epfl.balelecbud.util.database.DatabaseWrapper.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 
 @RunWith(AndroidJUnit4.class)
 public class LocationServiceTest {
     private final static String LOCATION_KEY = "com.google.android.gms.location.EXTRA_LOCATION_RESULT";
     private LocationService ls;
     private final Authenticator mockAuth = MockAuthenticator.getInstance();
-    private final DatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
     private final Random random = new Random(42);
 
     @BeforeClass
@@ -46,6 +52,11 @@ public class LocationServiceTest {
         ls = new LocationService();
         mockAuth.setCurrentUser(new User("abc@epfl.ch", "abc", "10"));
         ls.onCreate();
+    }
+
+    @After
+    public void tearDown() {
+        mockDB.resetMockDatabase();
     }
 
     private Intent getIntent(android.location.Location l) {
@@ -66,13 +77,11 @@ public class LocationServiceTest {
     }
 
     private void checkStoredOnDB(Location location) throws ExecutionException, InterruptedException {
-//        Assert.assertEquals(
-//                location,
-//                mockDB.getCustomDocument(
-//                        DatabaseWrapper.LOCATIONS_PATH,
-//                        mockAuth.getCurrentUser().getUid(),
-//                        Location.class).get()
-//        );
+        MyQuery query = new MyQuery(DatabaseWrapper.LOCATIONS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, mockAuth.getCurrentUser().getUid()));
+        Assert.assertEquals(
+                location,
+                mockDB.queryWithType(query, Location.class).thenApply(locations -> locations.get(0)).get()
+        );
     }
 
     @Test

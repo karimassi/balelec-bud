@@ -37,7 +37,6 @@ public class ScheduleActivityWithSubscribedConcertTest {
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
             SlotData.setIntentLauncher(intent -> { });
-            //refreshRecyclerView();
             mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
         }
 
@@ -46,6 +45,12 @@ public class ScheduleActivityWithSubscribedConcertTest {
             Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
             FlowUtil.packCallback(new Slot[]{slot1}, intent);
             return intent;
+        }
+
+        @Override
+        protected void afterActivityFinished() {
+            super.afterActivityFinished();
+            mock.resetMockDatabase();
         }
     };
 
@@ -86,7 +91,7 @@ public class ScheduleActivityWithSubscribedConcertTest {
     }
 
     @Test
-    public void testSubscribedConcertIsChecked() throws Throwable {
+    public void testSubscribedConcertIsChecked() {
         mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
         mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
 

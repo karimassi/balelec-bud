@@ -29,7 +29,6 @@ import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
 @RunWith(AndroidJUnit4.class)
 public class ConcertFlowTest {
     private ConcertOfInterestDatabase db;
-    private ConcertFlow flow;
 
     @Before
     public void setup() {

@@ -35,6 +35,12 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
                 protected void beforeActivityLaunched() {
                     BalelecbudApplication.setAppDatabaseWrapper(mock);
                 }
+
+                @Override
+                protected void afterActivityFinished() {
+                    super.afterActivityFinished();
+                    mock.resetMockDatabase();
+                }
             };
 
     @Before
@@ -51,27 +57,6 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
     @Test
     public void testCanAddPOIToDatabase() {
         mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
-
-        refreshRecyclerView();
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(0)), pointOfInterest1);
-    }
-
-
-    @Test
-    public void testCanDeleteFromDatabase() {
-        mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
-        mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest2);
-
-        refreshRecyclerView();
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(0)), pointOfInterest1);
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(1)), pointOfInterest2);
-
-        mock.deleteDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest2);
 
         refreshRecyclerView();
 

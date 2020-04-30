@@ -3,6 +3,7 @@ package ch.epfl.balelecbud.pointOfInterest;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,6 +40,11 @@ public class PointOfInterestUtilsTest {
         for(Object obj : locations){
             db.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, Integer.toString(i++), obj);
         }
+    }
+
+    @After
+    public void tearDown() {
+        db.resetMockDatabase();
     }
 
     private List<Location> getResList(List<MyWhereClause> clauses)

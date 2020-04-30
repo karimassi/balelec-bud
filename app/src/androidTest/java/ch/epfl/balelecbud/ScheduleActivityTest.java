@@ -58,7 +58,12 @@ public class ScheduleActivityTest extends BasicActivityTest {
                         break;
                 }
             });
+        }
 
+        @Override
+        protected void afterActivityFinished() {
+            super.afterActivityFinished();
+            mock.resetMockDatabase();
         }
 
         @Override
@@ -79,33 +84,6 @@ public class ScheduleActivityTest extends BasicActivityTest {
     @Test
     public void testRecyclerViewVisible() {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testItemModification() throws Throwable {
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
-
-        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
-
-        refreshRecyclerView();
-
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
-
-        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
-
-        refreshRecyclerView();
-
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
-
-        mock.deleteDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot1);
-        refreshRecyclerView();
-
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
-
-        mock.deleteDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, slot2);
-        refreshRecyclerView();
-
-        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
     @Test

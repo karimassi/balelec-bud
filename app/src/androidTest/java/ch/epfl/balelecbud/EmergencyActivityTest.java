@@ -3,37 +3,31 @@ package ch.epfl.balelecbud;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
 
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.models.emergency.Emergency;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
-import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static junit.framework.TestCase.assertEquals;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import static org.hamcrest.core.IsNull.notNullValue;
 
 @RunWith(AndroidJUnit4.class)
 public class EmergencyActivityTest extends BasicActivityTest {
@@ -52,6 +46,12 @@ public class EmergencyActivityTest extends BasicActivityTest {
                 protected void beforeActivityLaunched() {
                     BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
                     BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
+                }
+
+                @Override
+                protected void afterActivityFinished() {
+                    super.afterActivityFinished();
+                    mockDB.resetMockDatabase();
                 }
             };
 
@@ -75,13 +75,22 @@ public class EmergencyActivityTest extends BasicActivityTest {
     }
 
     @Test
-    public void emergencyIsCorrectlySent() throws ExecutionException, InterruptedException {
-
+    public void emergencyIsCorrectlySent() throws Throwable {
         submitEmergency("Theft", "I lost something");
-        MyQuery query = new MyQuery(DatabaseWrapper.EMERGENCIES_PATH, new MyWhereClause("category", MyWhereClause.Operator.EQUAL, "Theft"));
-        Emergency res = mockDB.queryWithType(query, Emergency.class).thenApply(emergencies -> emergencies.get(0)).get();
-        assertThat(res, notNullValue());
-        assertEquals(res.getMessage(), "I lost something");
+        MyQuery query = new MyQuery(DatabaseWrapper.EMERGENCIES_PATH, new ArrayList<>());
+        TestAsyncUtils sync = new TestAsyncUtils();
+        mockDB.queryWithType(query, Emergency.class).thenApply(emergencies -> emergencies.get(0)).whenComplete((emergency, throwable) -> {
+            if (throwable == null) {
+                sync.assertNotNull(emergency);
+                sync.assertEquals(emergency.getMessage(), "I lost something");
+
+            } else {
+                sync.fail(throwable);
+            }
+            sync.call();
+        });
+        sync.waitCall(1);
+        sync.assertNoFailedTests();
     }
 
 

@@ -31,14 +31,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class EmergencyInfoActivityTest extends BasicActivityTest{
 
-    final EmergencyInfo info1 = new EmergencyInfo("To much alcool","Seek assistance");
+    final EmergencyInfo info1 = new EmergencyInfo("To much alcohol","Seek assistance");
     final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
-
-    @Before
-    public void setup(){
-        mock.resetDocument(DatabaseWrapper.EMERGENCY_INFO_PATH);
-    }
 
     @Rule
     public final ActivityTestRule<EmergencyInfoActivity> mActivityRule = new ActivityTestRule<EmergencyInfoActivity>(EmergencyInfoActivity.class) {
@@ -46,7 +41,18 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
+
+        @Override
+        protected void afterActivityFinished() {
+            super.afterActivityFinished();
+            mock.resetMockDatabase();
+        }
     };
+
+    @Before
+    public void setup(){
+        mock.resetDocument(DatabaseWrapper.EMERGENCY_INFO_PATH);
+    }
 
     @Test
     public void testEmergencyInfoRecyclerViewIsDisplayed() {
@@ -58,54 +64,6 @@ public class EmergencyInfoActivityTest extends BasicActivityTest{
         mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, info1);
         onView(withId(R.id.swipe_refresh_layout_emergency_info)).perform(swipeDown());
         testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), info1);
-    }
-
-    @Ignore("Currently modifying info does not make sens")
-    @Test
-    public void testCanModifyInfoFromDatabase() throws Throwable {
-        mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info1);
-        mock.updateDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, 0, info2 );
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), info2);
-    }
-
-    @Ignore("Currently modifying info does not make sens")
-    @Test
-    public void testCantModifyInfoFromDatabaseThatIsNotThere() throws Throwable {
-        final EmergencyInfo emergencyInfoModified = new EmergencyInfo();
-
-        mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info1);
-        mock.updateDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, 0, emergencyInfoModified);
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), emergencyInfoModified);
-    }
-
-    @Test
-    public void testCanDeleteInfoFromDatabase() {
-
-
-        mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, info1);
-        mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, info2);
-
-        onView(withId(R.id.swipe_refresh_layout_emergency_info)).perform(swipeDown());
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), info1);
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(1)), info2);
-        onView(withId(R.id.emergencyInfoRecyclerView)).check(matches(hasChildCount(2)));
-
-        mock.deleteDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, info2);
-
-        onView(withId(R.id.swipe_refresh_layout_emergency_info)).perform(swipeDown());
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), info1);
-        onView(withId(R.id.emergencyInfoRecyclerView)).check(matches(hasChildCount(1)));
-    }
-
-    @Ignore("What this should do is unclear")
-    @Test
-    public void testCantDeleteInfoFromEmptyDatabase() throws Throwable {
-        final EmergencyInfo info = new EmergencyInfo();
-        mock.deleteDocument(DatabaseWrapper.EMERGENCY_INFO_PATH,info);
     }
 
     private void testInfoInView(ViewInteraction viewInteraction, EmergencyInfo information) {

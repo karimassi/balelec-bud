@@ -48,6 +48,12 @@ public class EmergencyNumberActivityTest extends BasicActivityTest {
             mock.resetDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH);
             mock.storeDocument(DatabaseWrapper.EMERGENCY_NUMBER_PATH, num1);
         }
+
+        @Override
+        protected void afterActivityFinished() {
+            super.afterActivityFinished();
+            mock.resetMockDatabase();
+        }
     };
 
     @Test

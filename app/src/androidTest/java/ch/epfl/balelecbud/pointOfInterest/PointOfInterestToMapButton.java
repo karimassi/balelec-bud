@@ -41,15 +41,21 @@ public class PointOfInterestToMapButton {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     MockAuthenticator mockAuth = MockAuthenticator.getInstance();
-                    MockDatabaseWrapper mockBd = MockDatabaseWrapper.getInstance();
-                    BalelecbudApplication.setAppDatabaseWrapper(mockBd);
+                    MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+                    BalelecbudApplication.setAppDatabaseWrapper(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     mockAuth.setCurrentUser(alex);
-                    mockBd.resetDocument(POINT_OF_INTEREST_PATH);
-                    mockBd.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest1);
-                    mockBd.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest2);
+                    mockDB.resetDocument(POINT_OF_INTEREST_PATH);
+                    mockDB.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest1);
+                    mockDB.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest2);
                     MapViewActivity.setMockCallback(mapboxMap -> {
                     });
+                }
+
+                @Override
+                protected void afterActivityFinished() {
+                    super.afterActivityFinished();
+                    MockDatabaseWrapper.getInstance().resetMockDatabase();
                 }
             };
 
@@ -75,13 +81,13 @@ public class PointOfInterestToMapButton {
         clickOnButtonAndCheckMapOpen(1);
     }
 
-    private void clickOnButtonAndCheckMapOpenAtCorrectLocation(int i, PointOfInterest pointOfInterest1) throws InterruptedException {
+    private void clickOnButtonAndCheckMapOpenAtCorrectLocation(int i, PointOfInterest poi) throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
         onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), i), 5)).perform(click());
         mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
             public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
-                sync.assertThat(defaultLocation, is(pointOfInterest1.getLocation()));
+                sync.assertThat(defaultLocation, is(poi.getLocation()));
                 sync.call();
             }
 

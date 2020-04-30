@@ -72,6 +72,12 @@ public class ConcertNotificationTest {
                     });
                     BalelecbudApplication.setAppDatabaseWrapper(mock);
                 }
+
+                @Override
+                protected void afterActivityFinished() {
+                    super.afterActivityFinished();
+                    mock.resetMockDatabase();
+                }
             };
     private final Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3",
             Timestamp.now(), Timestamp.now());

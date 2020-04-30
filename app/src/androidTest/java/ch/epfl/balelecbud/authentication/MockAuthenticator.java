@@ -9,6 +9,11 @@ import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
+
+import static ch.epfl.balelecbud.util.database.DatabaseWrapper.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 
 public class MockAuthenticator implements Authenticator {
 
@@ -28,12 +33,12 @@ public class MockAuthenticator implements Authenticator {
 
     @Override
     public CompletableFuture<User> signIn(final String email, final String password) {
-//        if (users.containsKey(email) && Objects.equals(users.get(email), password)) {
-//            return MockDatabaseWrapper.getInstance().getCustomDocument(DatabaseWrapper.USERS_PATH, "0", User.class);
-//        } else {
-//            return CompletableFutureUtils.getExceptionalFuture("Failed login");
-//        }
-        return null;
+        if (users.containsKey(email) && Objects.equals(users.get(email), password)) {
+            MyQuery query = new MyQuery(DatabaseWrapper.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, "0"));
+            return MockDatabaseWrapper.getInstance().queryWithType(query, User.class).thenApply(users -> users.get(0));
+        } else {
+            return CompletableFutureUtils.getExceptionalFuture("Failed login");
+        }
     }
 
     @Override

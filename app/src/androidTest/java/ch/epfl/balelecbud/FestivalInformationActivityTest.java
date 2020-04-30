@@ -39,6 +39,12 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppDatabaseWrapper(mock);
         }
+
+        @Override
+        protected void afterActivityFinished() {
+            super.afterActivityFinished();
+            mock.resetMockDatabase();
+        }
     };
 
     @Test
@@ -52,28 +58,6 @@ public class FestivalInformationActivityTest extends BasicActivityTest {
         mock.storeDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info);
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
-    }
-
-    @Test
-    public void testCanDeleteInfoFromDatabase() {
-        final FestivalInformation info1 = new FestivalInformation("Bad", "Hello it's a me, bad");
-        final FestivalInformation info2 = new FestivalInformation("Good", "Hello it's a me, good");
-
-        mock.storeDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info1);
-        mock.storeDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info2);
-
-        onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(1)), info2);
-        onView(withId(R.id.festivalInfoRecyclerView)).check(matches(hasChildCount(2)));
-
-        mock.deleteDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info2);
-
-        onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
-        onView(withId(R.id.festivalInfoRecyclerView)).check(matches(hasChildCount(1)));
     }
 
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {

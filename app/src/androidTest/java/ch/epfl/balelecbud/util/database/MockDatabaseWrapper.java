@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
+@SuppressWarnings("ALL")
 public class MockDatabaseWrapper implements DatabaseWrapper {
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
@@ -61,20 +61,32 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, Consumer<Location>> friendsLocationListener = new HashMap<>();
 
-    private final HashMap<String, HashMap<String, Object>> database = new HashMap<>();
+    private Map<String, Map<String, Object>> databasePOJO;
+    private Map<String, Map<String, Map<String, Boolean>>> database;
 
     private MockDatabaseWrapper() {
+        resetMockDatabase();
+    }
 
-        database.put(DatabaseWrapper.USERS_PATH, new HashMap<>());
+    public static MockDatabaseWrapper getInstance() {
+        return instance;
+    }
+
+    public void resetMockDatabase() {
+        databasePOJO = new HashMap<>();
+        database = new HashMap<>();
+
+        databasePOJO.put(DatabaseWrapper.USERS_PATH, new HashMap<>());
+        databasePOJO.put(DatabaseWrapper.CONCERT_SLOTS_PATH, new HashMap<>());
+        databasePOJO.put(DatabaseWrapper.EMERGENCIES_PATH, new HashMap<>());
+        databasePOJO.put(DatabaseWrapper.EMERGENCY_INFO_PATH, new HashMap<>());
+        databasePOJO.put(DatabaseWrapper.EMERGENCY_NUMBER_PATH, new HashMap<>());
+        databasePOJO.put(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new HashMap<>());
+        databasePOJO.put(DatabaseWrapper.LOCATIONS_PATH, new HashMap<>());
+        databasePOJO.put(DatabaseWrapper.POINT_OF_INTEREST_PATH, new HashMap<>());
+
         database.put(DatabaseWrapper.FRIENDSHIPS_PATH, new HashMap<>());
         database.put(DatabaseWrapper.FRIEND_REQUESTS_PATH, new HashMap<>());
-        database.put(DatabaseWrapper.CONCERT_SLOTS_PATH, new HashMap<>());
-        database.put(DatabaseWrapper.EMERGENCIES_PATH, new HashMap<>());
-        database.put(DatabaseWrapper.EMERGENCY_INFO_PATH, new HashMap<>());
-        database.put(DatabaseWrapper.EMERGENCY_NUMBER_PATH, new HashMap<>());
-        database.put(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, new HashMap<>());
-        database.put(DatabaseWrapper.LOCATIONS_PATH, new HashMap<>());
-        database.put(DatabaseWrapper.POINT_OF_INTEREST_PATH, new HashMap<>());
 
 
         storeDocument(USERS_PATH, karim);
@@ -94,9 +106,6 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
     }
 
-    public static MockDatabaseWrapper getInstance() {
-        return instance;
-    }
 
     @Override
     public void unregisterDocumentListener(String collectionName, String documentID) {
@@ -106,7 +115,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
                 break;
             default:
                 throw new IllegalArgumentException("MockDataBaseWrapper.unregisterDocumentListener()" +
-                        " is not configure for collection = [" + collectionName + "]");
+                        " is not configured for collection = [" + collectionName + "]");
         }
     }
 
@@ -115,22 +124,22 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         switch (collectionName) {
             case DatabaseWrapper.LOCATIONS_PATH:
                 friendsLocationListener.put(documentID, (Consumer<Location>) consumer);
-                ((Consumer<Location>) consumer).accept(locations.get(documentID));
+                ((Consumer<Location>) consumer).accept( (Location) databasePOJO.get(collectionName).get(documentID));
                 break;
             default:
-                throw new IllegalArgumentException("MockDataBaseWrapper.listenDocument() is not configure" +
+                throw new IllegalArgumentException("MockDataBaseWrapper.listenDocument() is not configured" +
                         " for collection = [" + collectionName + "]");
         }
     }
 
     private List<Object> getCollectionItems(String collectionName) {
-        return new ArrayList<>(database.get(collectionName).values());
+        return new ArrayList<>(databasePOJO.get(collectionName).values());
     }
 
     @Override
     public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
         List<T> queryResult = new LinkedList<>();
-        Map<String, Object> collection = database.get(query.getCollectionName());
+        Map<String, Object> collection = databasePOJO.get(query.getCollectionName());
         if (MockQueryUtils.queryContainsDocumentIdClause(query)) {
             T result = (T) collection.get(MockQueryUtils.getRightOperandFromDocumentIdClause(query));
             queryResult.add(result);
@@ -150,7 +159,7 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
     @Override
     public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
         List<Map<String, Object>> queryResult = new LinkedList<>();
-        Map<String, Object> collection = database.get(query.getCollectionName());
+        Map<String, Map<String, Boolean>> collection = database.get(query.getCollectionName());
         if (MockQueryUtils.queryContainsDocumentIdClause(query)) {
             Object result = collection.get(MockQueryUtils.getRightOperandFromDocumentIdClause(query));
             queryResult.add((Map<String, Object>) result);
@@ -166,43 +175,61 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         Log.d(TAG, "storeDocument() called with: collectionName = [" + collectionName + "], document = [" + document + "]");
         if (document instanceof User) {
             User user = (User) document;
-            database.get(collectionName).put(user.getUid(), user);
+            databasePOJO.get(collectionName).put(user.getUid(), user);
             database.get(DatabaseWrapper.FRIEND_REQUESTS_PATH).put(user.getUid(), new HashMap<>());
             database.get(DatabaseWrapper.FRIENDSHIPS_PATH).put(user.getUid(), new HashMap<>());
-
         } else {
-            database.get(collectionName).put(generateRandomID(), document);
+            databasePOJO.get(collectionName).put(generateRandomID(), document);
         }
+        Log.d(this.getClass().getSimpleName(), databasePOJO.toString());
         Log.d(this.getClass().getSimpleName(), database.toString());
+
     }
 
     @Override
     public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
         Log.d(TAG, "storeDocumentWithID() called with: collectionName = [" + collectionName + "], document = [" + document + "]");
         switch (collectionName) {
-            case DatabaseWrapper.USERS_PATH:
-                throw new IllegalArgumentException("Cannot add user with custom identifier");
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
+                database.get(collectionName).get(documentID).putAll((Map<String, Boolean>)document);
+                break;
             case DatabaseWrapper.LOCATIONS_PATH:
+                databasePOJO.get(collectionName).put(documentID, document);
                 if (friendsLocationListener.containsKey(documentID))
                     friendsLocationListener.get(documentID).accept((Location) document);
                 break;
+            case DatabaseWrapper.USERS_PATH:
+                User user = (User) document;
+                if (user.getUid() != documentID)
+                    throw new IllegalArgumentException("Cannot add user with custom identifier");
+                storeDocument(collectionName, document);
             default:
+                databasePOJO.get(collectionName).put(documentID, document);
                 break;
         }
-        database.get(collectionName).put(documentID, document);
+        Log.d(this.getClass().getSimpleName(), databasePOJO.toString());
         Log.d(this.getClass().getSimpleName(), database.toString());
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
     public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
-        for (String key : updates.keySet()) {
-            if (updates.get(key).equals(FieldValue.delete())) {
-                ((Map<String, Object>) database.get(collectionName).get(documentID)).remove(key);
-            } else {
-                ((Map<String, Object>) database.get(collectionName).get(documentID)).put(key, updates.get(key));
-            }
+        switch (collectionName) {
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
+                for (String key : updates.keySet()) {
+                    if (updates.get(key).equals(FieldValue.delete())) {
+                        database.get(collectionName).get(documentID).remove(key);
+                    } else {
+                        database.get(collectionName).get(documentID).put(key, (Boolean) updates.get(key));
+                    }
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Cannot update custom POJO documents");
         }
+
     }
 
     public void updateDocument(String collectionName, int documentID, Object update) {
@@ -212,78 +239,29 @@ public class MockDatabaseWrapper implements DatabaseWrapper {
         }
     }
 
-    public void deleteDocument(String collectionName, Object document) {
-        switch (collectionName) {
-            case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
-                festivalInfos.remove(document);
-                break;
-            case DatabaseWrapper.POINT_OF_INTEREST_PATH:
-                pointOfInterests.remove(document);
-                break;
-            case DatabaseWrapper.EMERGENCY_INFO_PATH:
-                emergencyInfos.remove(document);
-            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
-                emergencyNumbers.remove(document);
-            case DatabaseWrapper.CONCERT_SLOTS_PATH:
-                slots.remove(document);
-                break;
-            case DatabaseWrapper.EMERGENCIES_PATH:
-                emergencies.remove(document);
-                break;
-            default:
-                throw new IllegalArgumentException("unsupported collectionName" + collectionName);
-        }
-    }
-
     @Override
     public void deleteDocumentWithID(String collectionName, String documentID) {
         switch (collectionName) {
-            case DatabaseWrapper.USERS_PATH:
-                users.remove(documentID);
-                break;
             case DatabaseWrapper.FRIENDSHIPS_PATH:
-                friendships.remove(documentID);
-                break;
             case DatabaseWrapper.FRIEND_REQUESTS_PATH:
-                friendRequests.remove(documentID);
+                throw new UnsupportedOperationException();
+            default:
+                databasePOJO.get(collectionName).remove(documentID);
                 break;
         }
-    }
-
-    public void resetFriendshipsAndRequests() {
-        for (Map<String, Boolean> m : friendships.values()) {
-            m.clear();
-        }
-        for (Map<String, Boolean> m : friendRequests.values()) {
-            m.clear();
-        }
-        friendsLocationListener.clear();
     }
 
     public void resetDocument(String collectionName) {
         switch (collectionName) {
-            case DatabaseWrapper.POINT_OF_INTEREST_PATH:
-                pointOfInterests.clear();
-                break;
-            case DatabaseWrapper.LOCATIONS_PATH:
-                locations.clear();
-                break;
-            case DatabaseWrapper.FESTIVAL_INFORMATION_PATH:
-                festivalInfos.clear();
-                break;
-            case DatabaseWrapper.EMERGENCY_INFO_PATH:
-                emergencyInfos.clear();
-            case DatabaseWrapper.CONCERT_SLOTS_PATH:
-                slots.clear();
-                break;
-            case DatabaseWrapper.EMERGENCIES_PATH:
-                emergencies.clear();
-                break;
-            case DatabaseWrapper.EMERGENCY_NUMBER_PATH:
-                emergencyNumbers.clear();
+            case DatabaseWrapper.FRIEND_REQUESTS_PATH:
+            case DatabaseWrapper.FRIENDSHIPS_PATH:
+                for (Map o : database.get(collectionName).values()) {
+                    o.clear();
+                }
+                friendsLocationListener.clear();
                 break;
             default:
-                throw new IllegalArgumentException("unsupported collectionName");
+                databasePOJO.get(collectionName).clear();
         }
     }
 

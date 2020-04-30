@@ -57,6 +57,12 @@ public class MapViewActivityTest extends BasicActivityTest {
                     });
                     mockAuth.setCurrentUser(MockDatabaseWrapper.celine);
                 }
+
+                @Override
+                protected void afterActivityFinished() {
+                    super.afterActivityFinished();
+                    mockDB.resetMockDatabase();
+                }
             };
 
     @Test

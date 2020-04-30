@@ -63,6 +63,12 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
                     FriendshipUtils.acceptRequest(alex);
                     mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), karimLocation);
                 }
+
+                @Override
+                protected void afterActivityFinished() {
+                    super.afterActivityFinished();
+                    mockDB.resetMockDatabase();
+                }
             };
     private final Location newKarimLocation = new Location(1, 2);
     private final Location alexLocation = new Location(3, 3);
@@ -70,7 +76,8 @@ public class MapViewActivityWithFriendTest extends BasicActivityTest {
     @After
     public void cleanup() {
         mockDB.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
-        mockDB.resetFriendshipsAndRequests();
+        mockDB.resetDocument(DatabaseWrapper.FRIENDSHIPS_PATH);
+        mockDB.resetDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH);
     }
 
     @Test
