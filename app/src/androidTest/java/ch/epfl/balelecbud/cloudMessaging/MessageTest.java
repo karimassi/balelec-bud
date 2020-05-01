@@ -23,7 +23,7 @@ import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.notifications.NotificationMessageTest;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
@@ -36,11 +36,11 @@ import static org.junit.Assert.assertTrue;
 public class MessageTest {
 
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
-    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mockDB = MockDatabase.getInstance();
     private final MockMessagingService mockMessagingService = MockMessagingService.getInstance();
-    private final User user = MockDatabaseWrapper.celine;
-    private final User friend = MockDatabaseWrapper.karim;
-    private final String token = MockDatabaseWrapper.token1;
+    private final User user = MockDatabase.celine;
+    private final String token = MockDatabase.token1;
+    private final User friend = MockDatabase.karim;
     private final String title = "This title is the best!";
     private final String body = "This body is good :)";
 
@@ -52,7 +52,7 @@ public class MessageTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
-                    BalelecbudApplication.setAppDatabaseWrapper(mockDB);
+                    BalelecbudApplication.setAppDatabase(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     BalelecbudApplication.setAppMessagingService(mockMessagingService);
                     BalelecbudApplication.setAppContext(ApplicationProvider.getApplicationContext());
@@ -90,7 +90,7 @@ public class MessageTest {
 
     @Test
     public void sendFriendRequestMessageWithoutToken() {
-        Message.sendFriendshipMessage(MockDatabaseWrapper.axel, user.getUid(),
+        Message.sendFriendshipMessage(MockDatabase.axel, user.getUid(),
                 getAppContext().getString(R.string.type_friend_request));
         assertNull(device.findObject(By.text(getAppContext().getString(R.string.friend_request_title))));
     }
@@ -104,7 +104,7 @@ public class MessageTest {
 
     @Test
     public void sendAcceptRequestMessageWithoutToken() {
-        Message.sendFriendshipMessage(MockDatabaseWrapper.axel, user.getUid(),
+        Message.sendFriendshipMessage(MockDatabase.axel, user.getUid(),
                 getAppContext().getString(R.string.type_accept_request));
         assertNull(device.findObject(By.text(getAppContext().getString(R.string.accept_request_title))));
     }
@@ -119,7 +119,7 @@ public class MessageTest {
     @Test
     public void sendMessageToUserWithoutToken() {
         Message message = new Message(title, body, getAppContext().getString(R.string.message_type_general));
-        message.sendMessage(MockDatabaseWrapper.axel.getUid());
+        message.sendMessage(MockDatabase.axel.getUid());
         device.openNotification();
         assertNull(device.findObject(By.text(title)));
     }

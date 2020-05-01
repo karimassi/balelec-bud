@@ -23,13 +23,12 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
+import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
+import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
 
 @RunWith(AndroidJUnit4.class)
 public class ConcertFlowTest {
     private ConcertOfInterestDatabase db;
-    private ConcertFlow flow;
 
     @Before
     public void setup() {

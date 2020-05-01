@@ -24,21 +24,26 @@ import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
+
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 
 @RunWith(AndroidJUnit4.class)
 public class LocationServiceTest {
     private final static String LOCATION_KEY = "com.google.android.gms.location.EXTRA_LOCATION_RESULT";
     private LocationService ls;
     private final Authenticator mockAuth = MockAuthenticator.getInstance();
-    private final DatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mockDB = MockDatabase.getInstance();
     private final Random random = new Random(42);
 
     @BeforeClass
     public static void setUpMock() {
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
     }
 
     @Before
@@ -60,18 +65,16 @@ public class LocationServiceTest {
 
     private void checkDoesNotChangeOnDBWithIntent(Intent intent) throws ExecutionException, InterruptedException {
         Location l = new Location(random.nextDouble(), random.nextDouble());
-        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, mockAuth.getCurrentUser().getUid(), l);
+        mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, mockAuth.getCurrentUser().getUid(), l);
         ls.onHandleIntent(intent);
         checkStoredOnDB(l);
     }
 
     private void checkStoredOnDB(Location location) throws ExecutionException, InterruptedException {
+        MyQuery query = new MyQuery(Database.LOCATIONS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, mockAuth.getCurrentUser().getUid()));
         Assert.assertEquals(
                 location,
-                mockDB.getCustomDocument(
-                        DatabaseWrapper.LOCATIONS_PATH,
-                        mockAuth.getCurrentUser().getUid(),
-                        Location.class).get()
+                mockDB.queryWithType(query, Location.class).thenApply(locations -> locations.get(0)).get()
         );
     }
 

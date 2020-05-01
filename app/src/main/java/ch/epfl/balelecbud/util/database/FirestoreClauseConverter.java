@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud.util.database;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -8,6 +9,8 @@ import uk.co.mgbramwell.geofire.android.GeoFire;
 import uk.co.mgbramwell.geofire.android.model.Distance;
 import uk.co.mgbramwell.geofire.android.model.DistanceUnit;
 import uk.co.mgbramwell.geofire.android.model.QueryLocation;
+
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
 
 public class FirestoreClauseConverter implements MyClauseVisitor<Query> {
 
@@ -41,8 +44,13 @@ public class FirestoreClauseConverter implements MyClauseVisitor<Query> {
             // default is equal, necessary because java is stupid and does not see we are matching on
             // all possible values of the enum
             default:
-                queryToCreate = queryToCreate.whereEqualTo(leftOperand, rightOperand);
+                if (leftOperand.equals(DOCUMENT_ID_OPERAND)) {
+                    queryToCreate = queryToCreate.whereEqualTo(FieldPath.documentId(), rightOperand);
+                } else {
+                    queryToCreate = queryToCreate.whereEqualTo(leftOperand, rightOperand);
+                }
         }
+
     }
 
 

@@ -11,15 +11,15 @@ import ch.epfl.balelecbud.cloudMessaging.CloudMessagingService;
 import ch.epfl.balelecbud.cloudMessaging.MessagingService;
 import ch.epfl.balelecbud.notifications.NotificationMessage;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.FirestoreDatabase;
 import ch.epfl.balelecbud.util.http.HttpClient;
 import ch.epfl.balelecbud.util.http.VolleyHttpClient;
 
 public class BalelecbudApplication extends Application {
 
     private static Context appContext;
-    private static DatabaseWrapper appDatabaseWrapper;
+    private static Database appDatabase;
     private static Authenticator appAuthenticator;
     private static HttpClient httpClient;
     private static MessagingService appMessagingService;
@@ -28,8 +28,8 @@ public class BalelecbudApplication extends Application {
         return appContext;
     }
 
-    public static DatabaseWrapper getAppDatabaseWrapper() {
-        return appDatabaseWrapper;
+    public static Database getAppDatabase() {
+        return appDatabase;
     }
 
     public static Authenticator getAppAuthenticator() {
@@ -48,8 +48,8 @@ public class BalelecbudApplication extends Application {
     public void onCreate() {
         super.onCreate();
         appContext = getApplicationContext();
-        if (appDatabaseWrapper == null)
-            appDatabaseWrapper = FirestoreDatabaseWrapper.getInstance();
+        if (appDatabase == null)
+            appDatabase = FirestoreDatabase.getInstance();
         if (appAuthenticator == null)
             appAuthenticator = FirebaseAuthenticator.getInstance();
         if (httpClient == null)
@@ -66,8 +66,8 @@ public class BalelecbudApplication extends Application {
     }
 
     @VisibleForTesting
-    public static void setAppDatabaseWrapper(DatabaseWrapper databaseWrapper) {
-        appDatabaseWrapper = databaseWrapper;
+    public static void setAppDatabase(Database database) {
+        appDatabase = database;
     }
 
     @VisibleForTesting

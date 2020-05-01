@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MyQuery;
 
 public class EmergencyNumbersActivity extends BasicActivity {
@@ -36,7 +36,7 @@ public class EmergencyNumbersActivity extends BasicActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BalelecbudApplication.getAppDatabaseWrapper();
+        BalelecbudApplication.getAppDatabase();
 
         setContentView(R.layout.activity_emergency_numbers);
         configureToolBar(R.id.emergency_numbers_activity_toolbar);
@@ -56,7 +56,7 @@ public class EmergencyNumbersActivity extends BasicActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        BalelecbudApplication.getAppDatabaseWrapper().query( new MyQuery(DatabaseWrapper. EMERGENCY_NUMBER_PATH, new LinkedList<>()), EmergencyNumber.class).whenComplete((res, err) -> {
+        BalelecbudApplication.getAppDatabase().queryWithType( new MyQuery(Database. EMERGENCY_NUMBER_PATH, new LinkedList<>()), EmergencyNumber.class).whenComplete((res, err) -> {
             for (EmergencyNumber number : res) {
                 repertoryMap.put(number.getName(), number.getNumber());
                 Log.d("numer", number.getName());

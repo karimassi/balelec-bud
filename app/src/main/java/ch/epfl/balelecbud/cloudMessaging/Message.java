@@ -7,13 +7,19 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
+
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.database.FirestoreDatabaseWrapper;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
@@ -33,10 +39,11 @@ public class Message {
 
     public static void sendFriendshipMessage(User user, String toSend, String type) {
         Log.d(TAG, "Sending friendship message, type: " + type);
-        BalelecbudApplication.getAppDatabaseWrapper()
-                .getDocument(FirestoreDatabaseWrapper.TOKENS_PATH, user.getUid())
+        MyQuery query = new MyQuery(Database.TOKENS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, user.getUid()));
+        BalelecbudApplication.getAppDatabase()
+                .query(query)
                 .whenCompleteAsync((t, throwable) -> {
-                    if( t != null ) {
+                    if( throwable == null && t.size() > 0 ) {
                         if(type.equals(getAppContext().getString(R.string.type_friend_request))) {
                             new Message(getAppContext().getString(R.string.friend_request_title),
                                     user.getDisplayName() + getAppContext().getString(R.string.friend_request_body),
@@ -56,11 +63,12 @@ public class Message {
     public void sendMessage(String uid) {
         Log.d(TAG, "In send message, uid: " + uid);
 
-        BalelecbudApplication.getAppDatabaseWrapper()
-                .getDocument(FirestoreDatabaseWrapper.TOKENS_PATH, uid)
+        MyQuery query = new MyQuery(Database.TOKENS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, uid));
+        BalelecbudApplication.getAppDatabase()
+                .query(query)
                 .whenCompleteAsync((t, throwable) -> {
                     if( t != null ) {
-                        String token = (String) t.get("token");
+                        String token = new ArrayList<>(t.get(0).keySet()).get(0);
                         Log.d(TAG, "In send message, token: " + token);
 
                         JSONObject send = new JSONObject();

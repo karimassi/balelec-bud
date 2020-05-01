@@ -20,16 +20,16 @@ import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
+import static ch.epfl.balelecbud.util.database.MockDatabase.celine;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewWithPOITest {
-    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mockDB = MockDatabase.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
 
     private final PointOfInterest atm = new PointOfInterest(new Location(1, 2),
@@ -41,7 +41,7 @@ public class MapViewWithPOITest {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
-                    BalelecbudApplication.setAppDatabaseWrapper(mockDB);
+                    BalelecbudApplication.setAppDatabase(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     MapViewActivity.setMockCallback(mapboxMap -> {
                     });
@@ -57,13 +57,13 @@ public class MapViewWithPOITest {
                         }
                     });
                     mockAuth.setCurrentUser(celine);
-                    mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, atm);
+                    mockDB.storeDocument(Database.POINT_OF_INTEREST_PATH, atm);
                 }
             };
 
     @After
     public void cleanup() {
-        mockDB.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
+        mockDB.resetDocument(Database.POINT_OF_INTEREST_PATH);
     }
 
     private void assertNameAndLocation(MyMarker.Builder markerBuilder, TestAsyncUtils sync, PointOfInterest poi) {

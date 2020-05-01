@@ -22,7 +22,7 @@ import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.notifications.NotificationMessageTest;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
@@ -34,8 +34,9 @@ public class CloudMessagingServiceTest {
 
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final CloudMessagingService cloudMessagingService = new CloudMessagingService();
-    private final User user = MockDatabaseWrapper.celine;
-    private final String token = MockDatabaseWrapper.token1;
+    private final User user = MockDatabase.celine;
+    private final String token = MockDatabase.token1;
+
 
     private UiDevice device;
 
@@ -46,6 +47,7 @@ public class CloudMessagingServiceTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
+                    BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
                     BalelecbudApplication.setAppContext(ApplicationProvider.getApplicationContext());
                     mockAuth.signOut();
                     mockAuth.setCurrentUser(user);

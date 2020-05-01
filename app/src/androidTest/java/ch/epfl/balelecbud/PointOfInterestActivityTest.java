@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
@@ -21,25 +21,24 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest1;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest2;
+import static ch.epfl.balelecbud.util.database.MockDatabase.pointOfInterest1;
 
 @RunWith(AndroidJUnit4.class)
 public class PointOfInterestActivityTest extends BasicActivityTest {
 
-    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mock = MockDatabase.getInstance();
     @Rule
     public final ActivityTestRule<PointOfInterestActivity> mActivityRule =
             new ActivityTestRule<PointOfInterestActivity>(PointOfInterestActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
-                    BalelecbudApplication.setAppDatabaseWrapper(mock);
+                    BalelecbudApplication.setAppDatabase(mock);
                 }
             };
 
     @Before
     public void setup() {
-        mock.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
+        mock.resetDocument(Database.POINT_OF_INTEREST_PATH);
         refreshRecyclerView();
     }
 
@@ -50,28 +49,7 @@ public class PointOfInterestActivityTest extends BasicActivityTest {
 
     @Test
     public void testCanAddPOIToDatabase() {
-        mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
-
-        refreshRecyclerView();
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(0)), pointOfInterest1);
-    }
-
-
-    @Test
-    public void testCanDeleteFromDatabase() {
-        mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
-        mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest2);
-
-        refreshRecyclerView();
-
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(0)), pointOfInterest1);
-        testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
-                atPosition(1)), pointOfInterest2);
-
-        mock.deleteDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest2);
+        mock.storeDocument(Database.POINT_OF_INTEREST_PATH, pointOfInterest1);
 
         refreshRecyclerView();
 
