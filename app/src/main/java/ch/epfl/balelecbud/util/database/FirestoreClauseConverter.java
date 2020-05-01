@@ -27,9 +27,6 @@ public class FirestoreClauseConverter implements MyClauseVisitor<Query> {
     public void visit(MyWhereClause clause) {
         Object rightOperand = clause.getRightOperand();
         String leftOperand = clause.getLeftOperand();
-//        if (leftOperand.equals("documentId")) {
-//            queryToCreate = queryToCreate.whereEqualTo(FieldPath.documentId(), rightOperand);
-//        }
         switch (clause.getOp()) {
             case LESS_THAN:
                 queryToCreate = queryToCreate.whereLessThan(leftOperand, rightOperand);

@@ -28,8 +28,6 @@ public class FirebaseAuthenticator implements Authenticator {
                                 new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, getCurrentUid())),
                                 User.class)
                         .thenApply(users -> users.get(0)));
-//                        .getCustomDocument(Database.USERS_PATH,
-//                                getCurrentUid(), User.class));
     }
 
     @Override

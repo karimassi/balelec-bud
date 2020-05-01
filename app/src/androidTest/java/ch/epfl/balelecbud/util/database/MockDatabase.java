@@ -62,9 +62,13 @@ public class MockDatabase implements Database {
     }
 
     public void resetDatabase() {
-        databasePOJO = new HashMap<>();
-        database = new HashMap<>();
+        initDatabasePOJO();
+        initDatabase();
+        fillDB();
+    }
 
+    private void initDatabasePOJO() {
+        databasePOJO = new HashMap<>();
         databasePOJO.put(Database.USERS_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.CONCERT_SLOTS_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.EMERGENCIES_PATH, new LinkedHashMap<>());
@@ -73,12 +77,17 @@ public class MockDatabase implements Database {
         databasePOJO.put(Database.FESTIVAL_INFORMATION_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.LOCATIONS_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.POINT_OF_INTEREST_PATH, new LinkedHashMap<>());
+    }
 
+    private void initDatabase() {
+        database = new HashMap<>();
         database.put(Database.FRIENDSHIPS_PATH, new LinkedHashMap<>());
         database.put(Database.FRIEND_REQUESTS_PATH, new LinkedHashMap<>());
         database.put(Database.SENT_REQUESTS_PATH, new LinkedHashMap<>());
         database.put(Database.TOKENS_PATH, new LinkedHashMap<>());
+    }
 
+    private void fillDB() {
         storeDocument(USERS_PATH, karim);
         storeDocument(USERS_PATH, celine);
         storeDocument(USERS_PATH, alex);
@@ -103,7 +112,6 @@ public class MockDatabase implements Database {
         slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3));
         slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
     }
-
 
     public static MockDatabase getInstance() {
         return instance;
@@ -142,7 +150,7 @@ public class MockDatabase implements Database {
             T result = (T) collection.get(MockQueryUtils.getRightOperandFromDocumentIdClause(query));
             queryResult.add(result);
         } else {
-            List<Object> collectionItems = getCollectionItems(query.getCollectionName());
+            List<Object> collectionItems = new  ArrayList<>(databasePOJO.get(query.getCollectionName()).values());
             for (Object elem : collectionItems) {
                 queryResult.add(tClass.cast(elem));
             }
@@ -270,10 +278,6 @@ public class MockDatabase implements Database {
 
     public String generateRandomID() {
         return UUID.randomUUID().toString();
-    }
-
-    private List<Object> getCollectionItems(String collectionName) {
-        return new ArrayList<>(databasePOJO.get(collectionName).values());
     }
 
     private void logContents() {
