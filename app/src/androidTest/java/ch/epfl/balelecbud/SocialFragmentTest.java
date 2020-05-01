@@ -5,7 +5,7 @@ import android.os.SystemClock;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -53,17 +53,19 @@ public class SocialFragmentTest extends RootActivityTest {
     protected void setUpBeforeActivityLaunched() {
         super.setUpBeforeActivityLaunched();
         mockAuth.signOut();
+        BalelecbudApplication.setAppAuthenticator(mockAuth);
+        BalelecbudApplication.setAppDatabaseWrapper(mockDb);
         mockAuth.setCurrentUser(currentUser);
         mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);
-        cleanUp();
     }
 
-    @After
-    public void cleanUp() {
+    @Before
+    public void setup() {
         mockDb.resetFriendshipsAndRequests();
         createFriendship(otherUser);
         createRequest(newFriend, currentUser);
         createRequest(currentUser, requestedUser);
+        onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
     }
 
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {
@@ -271,25 +273,25 @@ public class SocialFragmentTest extends RootActivityTest {
     }
 
     @Test
-    public void addFriendDialogValidEmail() throws InterruptedException {
+    public void addFriendDialogValidEmail() throws Throwable {
         onView(withId(R.id.fab_add_friends)).perform(click());
         onView(withId(R.id.edit_text_email_add_friend))
                 .perform(typeText(otherUser.getEmail())).perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
-        TestAsyncUtils sync = new TestAsyncUtils();
+        TestAsyncUtils sync2 = new TestAsyncUtils();
         mockDb.getDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, otherUser.getUid())
                 .whenComplete((stringObjectMap, throwable) -> {
                     if (stringObjectMap != null) {
-                        sync.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
+                        sync2.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
                     } else {
-                        sync.fail();
+                        sync2.fail();
                     }
-                    sync.call();
+                    sync2.call();
                 });
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
+        sync2.waitCall(1);
+        sync2.assertCalled(1);
+        sync2.assertNoFailedTests();
     }
 
     @Override

@@ -4,6 +4,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,11 @@ public class EmergencyInfoFragmentTest extends RootActivityTest{
     final EmergencyInfo info1 = new EmergencyInfo("To much alcool","Seek assistance");
     final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
+
+    @Before
+    public void setup() {
+        mock.resetDocument(DatabaseWrapper.EMERGENCY_INFO_PATH);
+    }
 
     /**@Before
     public void setup(){
@@ -87,6 +93,7 @@ public class EmergencyInfoFragmentTest extends RootActivityTest{
         testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), emergencyInfoModified);
     }
 
+    @Ignore
     @Test
     public void testCanDeleteInfoFromDatabase() {
 
@@ -97,14 +104,14 @@ public class EmergencyInfoFragmentTest extends RootActivityTest{
         onView(withId(R.id.swipe_refresh_layout_emergency_info)).perform(swipeDown());
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), info1);
-        //testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(1)), info2);
+        testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(1)), info2);
         onView(withId(R.id.emergencyInfoRecyclerView)).check(matches(hasChildCount(2)));
 
         mock.deleteDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, info2);
 
         onView(withId(R.id.swipe_refresh_layout_emergency_info)).perform(swipeDown());
 
-        //testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), info1);
+        testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), info1);
         onView(withId(R.id.emergencyInfoRecyclerView)).check(matches(hasChildCount(1)));
     }
 
