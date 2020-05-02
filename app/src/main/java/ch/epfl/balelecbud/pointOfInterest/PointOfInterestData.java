@@ -10,11 +10,11 @@ import java.util.List;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.map.MapViewFragment;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 public class PointOfInterestData extends RecyclerViewData<PointOfInterest, PointOfInterestHolder> {
 
@@ -30,8 +30,8 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
     public void reload() {
         clearAll();
         lastRecordedAffluence.clear();
-        MyQuery query = new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>());
-        getAppDatabaseWrapper().query(query, PointOfInterest.class)
+        MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>());
+        getAppDatabase().queryWithType(query, PointOfInterest.class)
                 .thenCompose(PointOfInterestUtils::computeAffluence)
                 .thenAccept(this::postResults);
     }

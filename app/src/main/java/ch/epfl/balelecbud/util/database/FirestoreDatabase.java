@@ -4,29 +4,32 @@ import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
 
-public class FirestoreDatabaseWrapper implements DatabaseWrapper {
-    private static final String TAG = FirestoreDatabaseWrapper.class.getSimpleName();
-    private static final FirestoreDatabaseWrapper instance = new FirestoreDatabaseWrapper();
+public class FirestoreDatabase implements Database {
+    private static final String TAG = FirestoreDatabase.class.getSimpleName();
+    private static final FirestoreDatabase instance = new FirestoreDatabase();
     private final Map<String, ListenerRegistration> registrations = new HashMap<>();
 
-    public static FirestoreDatabaseWrapper getInstance() {
+    public static FirestoreDatabase getInstance() {
         return instance;
     }
+
+    private FirestoreDatabase() {}
+
 
     @Override
     public void unregisterDocumentListener(String collectionName, String documentID) {
@@ -53,38 +56,6 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public <T> CompletableFuture<T> getCustomDocument(final String collectionName,
-                                                      final String documentID,
-                                                      final Class<T> type) {
-        CompletableFuture<DocumentSnapshot> result =
-                new TaskToCompletableFutureAdapter<>(
-                        getCollectionReference(collectionName).document(documentID).get());
-        return result.thenApply(documentSnapshot -> documentSnapshot.toObject(type));
-    }
-
-    @Override
-    public CompletableFuture<Map<String, Object>> getDocument(String collectionName,
-                                                              String documentID) {
-        CompletableFuture<DocumentSnapshot> result =
-                new TaskToCompletableFutureAdapter<>(
-                        getCollectionReference(collectionName).document(documentID).get());
-        return result.thenApply(DocumentSnapshot::getData);
-    }
-
-
-    @Override
-    public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName,
-                                                                  String fieldName,
-                                                                  String fieldValue,
-                                                                  final Class<T> type) {
-        CompletableFuture<QuerySnapshot> result =
-                new TaskToCompletableFutureAdapter<>(
-                        getCollectionReference(collectionName)
-                                .whereEqualTo(fieldName, fieldValue).limit(1).get());
-        return result.thenApply(querySnapshot -> querySnapshot.getDocuments().get(0).toObject(type));
-    }
-
-    @Override
     public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
         getCollectionReference(collectionName).document(documentID).update(updates);
     }
@@ -107,16 +78,22 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass) {
+    public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, final Class<T> tClass) {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
         return future.thenApply(value -> value.toObjects(tClass));
     }
 
-    public CompletableFuture<List<String>> queryIds(MyQuery query) {
+    public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
-        return future.thenApply(value -> value.getDocuments().stream().map(DocumentSnapshot::getId).collect(Collectors.toList()));
+        return future.thenApply( value -> {
+            List<Map<String, Object>> result = new ArrayList<>();
+            for (QueryDocumentSnapshot documentSnapshot: value) {
+                result.add(documentSnapshot.getData());
+            }
+            return result;
+        });
     }
 
     private CollectionReference getCollectionReference(String collectionName) {
@@ -127,9 +104,4 @@ public class FirestoreDatabaseWrapper implements DatabaseWrapper {
         return FirebaseFirestore.getInstance().document(documentPath);
     }
 
-    @Override
-    public void unregisterListeners() {
-        for(ListenerRegistration l : registrations.values())
-            l.remove();
-    }
 }

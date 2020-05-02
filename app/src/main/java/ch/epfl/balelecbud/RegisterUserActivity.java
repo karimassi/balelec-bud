@@ -10,11 +10,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.util.StringUtils.isEmailValid;
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
 
 public class RegisterUserActivity extends AppCompatActivity {
     private EditText nameField;
@@ -99,16 +102,17 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     private void onAuthComplete() {
-        getAppDatabaseWrapper()
-                .getCustomDocument(DatabaseWrapper.USERS_PATH, getAppAuthenticator().getCurrentUid(), User.class)
-                .whenComplete((user, throwable) -> {
+        MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, getAppAuthenticator().getCurrentUid()));
+        getAppDatabase()
+                .queryWithType(query, User.class)
+                .whenComplete((users, throwable) -> {
                     if (throwable != null) {
                         Toast.makeText(
                                 RegisterUserActivity.this,
                                 throwable.getCause().getLocalizedMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        getAppAuthenticator().setCurrentUser(user);
+                        getAppAuthenticator().setCurrentUser(users.get(0));
                         Intent intent = new Intent(RegisterUserActivity.this, RootActivity.class);
                         startActivity(intent);
                         finish();

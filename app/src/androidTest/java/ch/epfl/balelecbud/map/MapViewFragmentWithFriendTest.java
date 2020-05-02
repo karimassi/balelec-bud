@@ -11,25 +11,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.camille;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.karim;
-import static org.junit.Assert.assertEquals;
+import static ch.epfl.balelecbud.util.database.MockDatabase.alex;
+import static ch.epfl.balelecbud.util.database.MockDatabase.celine;
+import static ch.epfl.balelecbud.util.database.MockDatabase.karim;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewFragmentWithFriendTest {
-    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mockDB = MockDatabase.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final Location karimLocation = new Location(2, 4);
     private final Location newKarimLocation = new Location(1, 2);
@@ -38,18 +34,19 @@ public class MapViewFragmentWithFriendTest {
     @Before
     public void setup() {
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
         cleanUp();
         mockAuth.setCurrentUser(celine);
         FriendshipUtils.acceptRequest(karim);
         FriendshipUtils.acceptRequest(alex);
-        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), karimLocation);
+        mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, karim.getUid(), karimLocation);
     }
 
     @After
     public void cleanUp() {
-        mockDB.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
-        mockDB.resetFriendshipsAndRequests();
+        mockDB.resetDocument(Database.LOCATIONS_PATH);
+        mockDB.resetDocument(Database.FRIENDSHIPS_PATH);
+        mockDB.resetDocument(Database.FRIEND_REQUESTS_PATH);
     }
 
     @Test
@@ -105,7 +102,7 @@ public class MapViewFragmentWithFriendTest {
         FragmentScenario.launchInContainer(MapViewFragment.class);
 
         sync.waitCall(2);
-        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, karim.getUid(), newKarimLocation);
+        mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, karim.getUid(), newKarimLocation);
         sync.waitCall(3);
         sync.assertCalled(3);
         sync.assertNoFailedTests();
@@ -119,7 +116,7 @@ public class MapViewFragmentWithFriendTest {
         FragmentScenario.launchInContainer(MapViewFragment.class);
 
         sync.waitCall(2);
-        mockDB.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, alex.getUid(), alexLocation);
+        mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, alex.getUid(), alexLocation);
         sync.waitCall(3);
         sync.assertCalled(3);
         sync.assertNoFailedTests();

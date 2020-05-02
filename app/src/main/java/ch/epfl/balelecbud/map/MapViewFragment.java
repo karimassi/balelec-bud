@@ -25,11 +25,11 @@ import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MyQuery;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 public class MapViewFragment extends Fragment {
     public final static String TAG = MapViewFragment.class.getSimpleName();
@@ -136,8 +136,8 @@ public class MapViewFragment extends Fragment {
 
     private void unregisterListeners() {
         FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser())
-                .thenAccept(friendsIds -> friendsIds.forEach(id -> getAppDatabaseWrapper()
-                        .unregisterDocumentListener(DatabaseWrapper.LOCATIONS_PATH, id)));
+                .thenAccept(friendsIds -> friendsIds.forEach(id -> getAppDatabase()
+                        .unregisterDocumentListener(Database.LOCATIONS_PATH, id)));
     }
 
     public void displayWaitingPOI() {
@@ -177,7 +177,7 @@ public class MapViewFragment extends Fragment {
 
     private void listenFriendLocation(User friend) {
         Log.d(TAG, "listenFriendLocation() called with: friend = [" + friend + "]");
-        getAppDatabaseWrapper().listenDocument(DatabaseWrapper.LOCATIONS_PATH, friend.getUid(),
+        getAppDatabase().listenDocument(Database.LOCATIONS_PATH, friend.getUid(),
                 location -> updateFriendLocation(friend, location), Location.class);
     }
 
@@ -198,7 +198,7 @@ public class MapViewFragment extends Fragment {
     }
 
     private void displayPointsOfInterests() {
-        getAppDatabaseWrapper().query(new MyQuery(DatabaseWrapper.POINT_OF_INTEREST_PATH, new LinkedList<>()),
+        getAppDatabase().queryWithType(new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>()),
                 PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
             for (PointOfInterest poi : pointOfInterests) {
                 if (myMap == null) {

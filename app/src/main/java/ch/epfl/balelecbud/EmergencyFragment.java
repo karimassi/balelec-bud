@@ -17,11 +17,10 @@ import com.google.firebase.Timestamp;
 
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.models.emergency.EmergencyType;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
-
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 public class EmergencyFragment extends Fragment {
 
@@ -67,7 +66,7 @@ public class EmergencyFragment extends Fragment {
                 String currentUserUid = getAppAuthenticator().getCurrentUser().getUid();
                 Timestamp currentTimestamp = Timestamp.now();
                 Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
-                getAppDatabaseWrapper().storeDocument(DatabaseWrapper.EMERGENCIES_PATH, mEmergency);
+                getAppDatabase().storeDocument(Database.EMERGENCIES_PATH, mEmergency);
                 Toast.makeText(getActivity(), R.string.emergency_sent_message, Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }else{

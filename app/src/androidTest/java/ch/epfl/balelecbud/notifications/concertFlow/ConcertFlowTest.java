@@ -17,19 +17,18 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
-import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
+import ch.epfl.balelecbud.notifications.NotificationInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot1;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.slot2;
+import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
+import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
 
 @RunWith(AndroidJUnit4.class)
 public class ConcertFlowTest {
     private ConcertOfInterestDatabase db;
-    private ConcertFlow flow;
 
     @Before
     public void setup() {
@@ -42,7 +41,7 @@ public class ConcertFlowTest {
     }
 
     private void setDummyNotificationScheduler() {
-        ConcertFlow.setNotificationScheduler(new NotificationSchedulerInterface() {
+        ConcertFlow.setNotificationScheduler(new NotificationInterface<Slot>() {
             @Override
             public void scheduleNotification(Context context, Slot slot) { }
 
@@ -61,7 +60,7 @@ public class ConcertFlowTest {
     @Test
     public void notificationSchedulerIsCalledWhenNewConcertOfInterestAdded() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        ConcertFlow.setNotificationScheduler(new NotificationSchedulerInterface() {
+        ConcertFlow.setNotificationScheduler(new NotificationInterface<Slot>() {
             @Override
             public void scheduleNotification(Context context, Slot slot) {
                 sync.assertEquals(slot1, slot);
@@ -109,9 +108,9 @@ public class ConcertFlowTest {
     }
 
     @NotNull
-    private NotificationSchedulerInterface getScheduler(TestAsyncUtils sync,
-                                                        Consumer<Slot> cancel) {
-        return new NotificationSchedulerInterface() {
+    private NotificationInterface getScheduler(TestAsyncUtils sync,
+                                               Consumer<Slot> cancel) {
+        return new NotificationInterface<Slot>() {
             private int received = 0;
             @Override
             public void scheduleNotification(Context context, Slot slot) {

@@ -56,7 +56,6 @@ public class SocialFragment extends Fragment {
             AddFriendFragment dialog = AddFriendFragment.newInstance(getAppAuthenticator().getCurrentUser());
             dialog.show(activity.getSupportFragmentManager(), getString(R.string.add_friend_title));
         });
-
     }
 
     private void setupFragmentAdapter() {

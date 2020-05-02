@@ -18,9 +18,10 @@ import java.util.Map;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.notifications.NotificationInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 
-public class NotificationScheduler implements NotificationSchedulerInterface {
+public class NotificationScheduler implements NotificationInterface<Slot> {
 
     private static final String TAG = "ConcertSoon.Scheduler";
     private static final String CHANNEL_ID = "CONCERT_SOON_CHANNEL_ID";
@@ -42,17 +43,17 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
 
 
     @Override
-    public void scheduleNotification(Context context, Slot slot) {
+    public void scheduleNotification(Context context, Slot object) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(context.getString(R.string.concert_soon_notification_title))
-                .setContentText(slot.getArtistName() + " starts in 15 minutes on " + slot.getSceneName())
+                .setContentText(object.getArtistName() + " starts in 15 minutes on " + object.getSceneName())
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.my_notification_icone)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
         //what should be launched when notification clicked
         Intent intent = new Intent(context, RootActivity.class);
-        int notificationId = slot.getId();
+        int notificationId = object.getId();
         PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(activity);
 
@@ -61,7 +62,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
         Intent notificationIntent = new Intent(context, NotificationProvider.class);
         notificationIntent.putExtra(NotificationProvider.NOTIFICATION_ID, notificationId);
         notificationIntent.putExtra(NotificationProvider.NOTIFICATION, notification);
-        notificationIntent.putExtra(NotificationProvider.SLOT_ID, slot.getId());
+        notificationIntent.putExtra(NotificationProvider.SLOT_ID, object.getId());
         notificationIntent.setAction(CONCERT_SOON_ACTION);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -69,7 +70,7 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
 
         //calculate the waking up time
         Calendar cal = Calendar.getInstance();
-        cal.setTime(slot.getStartTime().toDate());
+        cal.setTime(object.getStartTime().toDate());
         cal.add(Calendar.MINUTE, -15);
         long timeToWakeUp = cal.getTimeInMillis();
 
@@ -78,8 +79,8 @@ public class NotificationScheduler implements NotificationSchedulerInterface {
     }
 
     @Override
-    public void cancelNotification(Context context, Slot slot) {
-        int id = slot.getId();
+    public void cancelNotification(Context context, Slot object) {
+        int id = object.getId();
         if (pendingIntents.containsKey(id)) {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             alarmManager.cancel(pendingIntents.get(id));

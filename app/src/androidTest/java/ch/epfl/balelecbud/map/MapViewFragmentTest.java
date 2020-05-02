@@ -1,12 +1,9 @@
 package ch.epfl.balelecbud.map;
 
 import android.app.PendingIntent;
-import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.testing.FragmentScenario;
-import androidx.lifecycle.Lifecycle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.android.gms.location.LocationRequest;
@@ -17,26 +14,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.EmergencyNumbersFragment;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.RootActivity;
-import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.camille;
+import static ch.epfl.balelecbud.util.database.MockDatabase.camille;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewFragmentTest {
@@ -56,7 +47,7 @@ public class MapViewFragmentTest {
 
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         MockAuthenticator.getInstance().setCurrentUser(camille);
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
     }
 
     @Ignore("Should get back to this")

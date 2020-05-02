@@ -23,10 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyNumber;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.Database;
 
 public class EmergencyNumbersFragment extends Fragment {
+
     public static final int PERMISSION_TO_CALL_CODE = 991;
     private boolean callPermissionGranted;
     private ListView numbersListView;
@@ -47,7 +48,7 @@ public class EmergencyNumbersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BalelecbudApplication.getAppDatabaseWrapper();
+        BalelecbudApplication.getAppDatabase();
     }
 
     @Override
@@ -58,9 +59,7 @@ public class EmergencyNumbersFragment extends Fragment {
                 getActivity(),
                 android.R.layout.simple_list_item_1,
                 numberList);
-
-        numbersListView.setAdapter(arrayAdapter);
-        BalelecbudApplication.getAppDatabaseWrapper().query( new MyQuery(DatabaseWrapper. EMERGENCY_NUMBER_PATH, new LinkedList<>()), EmergencyNumber.class).whenComplete((res, err) -> {
+        BalelecbudApplication.getAppDatabase().queryWithType( new MyQuery(Database. EMERGENCY_NUMBER_PATH, new LinkedList<>()), EmergencyNumber.class).whenComplete((res, err) -> {
             for (EmergencyNumber number : res) {
                 repertoryMap.put(number.getName(), number.getNumber());
                 Log.d("numer", number.getName());
@@ -116,6 +115,4 @@ public class EmergencyNumbersFragment extends Fragment {
 
         }
     }
-
-
 }

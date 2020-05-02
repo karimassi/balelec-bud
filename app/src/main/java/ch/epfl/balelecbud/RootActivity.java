@@ -24,7 +24,7 @@ import ch.epfl.balelecbud.settings.SettingsMainFragment;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.location.LocationUtil.disableLocation;
 import static ch.epfl.balelecbud.location.LocationUtil.isLocationActive;
 
@@ -269,7 +269,6 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     protected void signOut() {
-        getAppDatabaseWrapper().unregisterListeners();
         getAppAuthenticator().signOut();
         if (isLocationActive())
             disableLocation();

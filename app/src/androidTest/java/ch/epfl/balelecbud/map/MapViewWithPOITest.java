@@ -4,39 +4,31 @@ import android.app.PendingIntent;
 
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.location.LocationRequest;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.RootActivity;
-import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.karim;
+import static ch.epfl.balelecbud.util.database.MockDatabase.celine;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewWithPOITest {
-    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mockDB = MockDatabase.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
 
     private final PointOfInterest atm = new PointOfInterest(new Location(1, 2),
@@ -44,7 +36,7 @@ public class MapViewWithPOITest {
 
     @Before
     public void setup() {
-        BalelecbudApplication.setAppDatabaseWrapper(mockDB);
+        BalelecbudApplication.setAppDatabase(mockDB);
         BalelecbudApplication.setAppAuthenticator(mockAuth);
         MapViewFragment.setMockCallback(mapboxMap -> {
         });
@@ -60,13 +52,13 @@ public class MapViewWithPOITest {
             }
         });
         mockAuth.setCurrentUser(celine);
-        mockDB.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
-        mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, atm);
+        mockDB.resetDocument(Database.POINT_OF_INTEREST_PATH);
+        mockDB.storeDocument(Database.POINT_OF_INTEREST_PATH, atm);
     }
 
     @After
     public void cleanUp() {
-        mockDB.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
+        mockDB.resetDocument(Database.POINT_OF_INTEREST_PATH);
     }
 
     private void assertNameAndLocation(MyMarker.Builder markerBuilder, TestAsyncUtils sync, PointOfInterest poi) {
