@@ -1,9 +1,12 @@
 package ch.epfl.balelecbud;
 
+import androidx.fragment.app.testing.FragmentScenario;
+import androidx.lifecycle.Lifecycle;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,16 +24,17 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
 
 @RunWith(AndroidJUnit4.class)
-public class FestivalInformationFragmentTest extends RootActivityTest {
+public class FestivalInformationFragmentTest {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
-    @Override
-    protected void setUpBeforeActivityLaunched() {
-        super.setUpBeforeActivityLaunched();
-        cleanUp();
+    @Before
+    public void setup() {
+        BalelecbudApplication.setAppDatabaseWrapper(mock);
+        FragmentScenario.launchInContainer(FestivalInformationFragment.class);
     }
 
     @After
@@ -48,11 +52,9 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
         final FestivalInformation info = new FestivalInformation("New", "Hello it's a me, new");
         mock.storeDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info);
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
-        //testInfoInView(onView(nthChildOf(withId(R.id.festivalInfoRecyclerView), 0)), info);
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
     }
 
-    @Ignore
     @Test
     public void testCanDeleteInfoFromDatabase() {
         final FestivalInformation info1 = new FestivalInformation("Bad", "Hello it's a me, bad");
@@ -65,8 +67,6 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(1)), info2);
-        //testInfoInView(onView(nthChildOf(withId(R.id.festivalInfoRecyclerView), 0)), info1);
-        //testInfoInView(onView(nthChildOf(withId(R.id.festivalInfoRecyclerView), 1)), info2);
         onView(withId(R.id.festivalInfoRecyclerView)).check(matches(hasChildCount(2)));
 
         mock.deleteDocument(DatabaseWrapper.FESTIVAL_INFORMATION_PATH, info2);
@@ -74,22 +74,11 @@ public class FestivalInformationFragmentTest extends RootActivityTest {
         onView(withId(R.id.swipe_refresh_layout_festival_info)).perform(swipeDown());
 
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info1);
-        //testInfoInView(onView(nthChildOf(withId(R.id.festivalInfoRecyclerView), 0)), info1);
         onView(withId(R.id.festivalInfoRecyclerView)).check(matches(hasChildCount(1)));
     }
 
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {
         viewInteraction.check(matches(hasDescendant(withText(information.getTitle()))));
         viewInteraction.check(matches(hasDescendant(withText(information.getInformation()))));
-    }
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_info;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.festivalInfoRecyclerView;
     }
 }

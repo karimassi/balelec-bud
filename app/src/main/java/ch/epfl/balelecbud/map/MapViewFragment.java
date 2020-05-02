@@ -35,7 +35,7 @@ public class MapViewFragment extends Fragment {
     public final static String TAG = MapViewFragment.class.getSimpleName();
     private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
     private MapView mapView;
-    private MyMap myMap;
+    private static MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
     private List<PointOfInterest> waitingPOI = new LinkedList<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
@@ -44,6 +44,11 @@ public class MapViewFragment extends Fragment {
     @VisibleForTesting
     public static void setMockCallback(com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback) {
         MapViewFragment.mockCallback = mockCallback;
+    }
+
+    @VisibleForTesting
+    public static void setMockMap(MyMap map) {
+        myMap = map;
     }
 
     public static MapViewFragment newInstance() {
@@ -57,7 +62,7 @@ public class MapViewFragment extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_main_map, container, false);
         mapView = inflatedView.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
-        if (mockCallback != null) {
+        if (myMap != null) {
             mapView.getMapAsync(mockCallback);
         } else {
             mapView.getMapAsync(mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));
@@ -68,6 +73,11 @@ public class MapViewFragment extends Fragment {
         defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
         requestFriendsLocations();
         displayPointsOfInterests();
+
+        if (myMap != null) {
+            onMapReady(myMap);
+        }
+
         return inflatedView;
     }
 

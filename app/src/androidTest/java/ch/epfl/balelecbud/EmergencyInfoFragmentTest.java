@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud;
 
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.emergency.models.EmergencyInfo;
+import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -24,7 +26,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyInfoFragmentTest extends RootActivityTest{
+public class EmergencyInfoFragmentTest {
 
     final EmergencyInfo info1 = new EmergencyInfo("To much alcool","Seek assistance");
     final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
@@ -33,27 +35,8 @@ public class EmergencyInfoFragmentTest extends RootActivityTest{
     @Before
     public void setup() {
         mock.resetDocument(DatabaseWrapper.EMERGENCY_INFO_PATH);
-    }
-
-    /**@Before
-    public void setup(){
-        mock.resetDocument(DatabaseWrapper.EMERGENCY_INFO_PATH);
-    }**/
-
-    /**@Rule
-    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppDatabaseWrapper(mock);
-        }
-    };**/
-
-    @Override
-    protected void setUpBeforeActivityLaunched() {
-        super.setUpBeforeActivityLaunched();
-        cleanUp();
-        mock.resetDocument(DatabaseWrapper.EMERGENCY_INFO_PATH);
         BalelecbudApplication.setAppDatabaseWrapper(mock);
+        FragmentScenario.launchInContainer(EmergencyInfoFragment.class);
     }
 
     @After
@@ -93,10 +76,8 @@ public class EmergencyInfoFragmentTest extends RootActivityTest{
         testInfoInView(onView(new RecyclerViewMatcher(R.id.emergencyInfoRecyclerView).atPosition(0)), emergencyInfoModified);
     }
 
-    @Ignore
     @Test
     public void testCanDeleteInfoFromDatabase() {
-
 
         mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, info1);
         mock.storeDocument(DatabaseWrapper.EMERGENCY_INFO_PATH, info2);
@@ -127,13 +108,4 @@ public class EmergencyInfoFragmentTest extends RootActivityTest{
         viewInteraction.check(matches(hasDescendant(withText(information.getInstruction()))));
     }
 
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_emergency_info;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.emergencyInfoRecyclerView;
-    }
 }

@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.map;
 
 import android.app.PendingIntent;
 
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -18,6 +19,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.friendship.FriendshipUtils;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
@@ -27,7 +29,9 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
 
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.celine;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.karim;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -38,41 +42,30 @@ public class MapViewWithPOITest {
     private final PointOfInterest atm = new PointOfInterest(new Location(1, 2),
             "credit suisse", PointOfInterestType.ATM);
 
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule =
-            new ActivityTestRule<RootActivity>(RootActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    super.beforeActivityLaunched();
-                    BalelecbudApplication.setAppDatabaseWrapper(mockDB);
-                    BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    MapViewFragment.setMockCallback(mapboxMap -> {
-                    });
-                    LocationUtil.setLocationClient(new LocationClient() {
-                        @Override
-                        public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-
-                        }
-
-                        @Override
-                        public void removeLocationUpdates(PendingIntent intent) {
-
-                        }
-                    });
-                    mockAuth.setCurrentUser(celine);
-                    mockDB.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
-                    mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, atm);
-                }
-            };
-
     @Before
-    public void openMap() {
-        RootActivityTest.openDrawer();
-        RootActivityTest.clickItem(R.id.activity_main_drawer_map, R.id.map_view);
+    public void setup() {
+        BalelecbudApplication.setAppDatabaseWrapper(mockDB);
+        BalelecbudApplication.setAppAuthenticator(mockAuth);
+        MapViewFragment.setMockCallback(mapboxMap -> {
+        });
+        LocationUtil.setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+
+            }
+
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+
+            }
+        });
+        mockAuth.setCurrentUser(celine);
+        mockDB.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
+        mockDB.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, atm);
     }
 
     @After
-    public void cleanup() {
+    public void cleanUp() {
         mockDB.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
     }
 
@@ -85,8 +78,8 @@ public class MapViewWithPOITest {
     @Test
     public void onePoiShowsOneMarkerOnMap() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity().getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
-        fragment.onMapReady(new MyMap() {
+
+        MyMap mockMap = new MyMap() {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
@@ -100,7 +93,11 @@ public class MapViewWithPOITest {
                 sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }
-        });
+        };
+
+        MapViewFragment.setMockMap(mockMap);
+        FragmentScenario.launchInContainer(MapViewFragment.class);
+
         sync.waitCall(2);
         sync.assertCalled(2);
         sync.assertNoFailedTests();

@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 public class FestivalInformationFragment extends Fragment {
 
     public static FestivalInformationFragment newInstance() {
-        return (new FestivalInformationFragment());
+        return new FestivalInformationFragment();
     }
 
     @Override

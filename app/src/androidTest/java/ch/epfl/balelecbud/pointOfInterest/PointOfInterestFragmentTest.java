@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -11,8 +12,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.EmergencyFragment;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivityTest;
+import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.DatabaseWrapper;
 import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
@@ -24,24 +27,21 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.camille;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest1;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest2;
 
 @RunWith(AndroidJUnit4.class)
-public class PointOfInterestFragmentTest extends RootActivityTest {
+public class PointOfInterestFragmentTest  {
 
     private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
 
-    @Override
-    protected void setUpBeforeActivityLaunched() {
-        super.setUpBeforeActivityLaunched();
-        BalelecbudApplication.setAppDatabaseWrapper(mock);
-        //cleanUp();
-    }
-
     @Before
     public void setup() {
+        BalelecbudApplication.setAppDatabaseWrapper(mock);
+        //cleanUp();
         mock.resetDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH);
+        FragmentScenario.launchInContainer(PointOfInterestFragment.class);
         refreshRecyclerView();
     }
 
@@ -65,7 +65,6 @@ public class PointOfInterestFragmentTest extends RootActivityTest {
                 atPosition(0)), pointOfInterest1);
     }
 
-    @Ignore
     @Test
     public void testCanDeleteFromDatabase() {
         mock.storeDocument(DatabaseWrapper.POINT_OF_INTEREST_PATH, pointOfInterest1);
@@ -95,13 +94,4 @@ public class PointOfInterestFragmentTest extends RootActivityTest {
         viewInteraction.check(matches(hasDescendant(withText(poi.getType().toString()))));
     }
 
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_poi;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.pointOfInterestRecyclerView;
-    }
 }

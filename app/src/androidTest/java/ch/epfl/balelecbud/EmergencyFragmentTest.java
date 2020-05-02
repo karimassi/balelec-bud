@@ -1,7 +1,9 @@
 package ch.epfl.balelecbud;
 
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,22 +31,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyFragmentTest extends RootActivityTest {
+public class EmergencyFragmentTest {
 
-    private final User user = MockDatabaseWrapper.camille;
     private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
-    private final Authenticator mockAuthenticator = MockAuthenticator.getInstance();
 
-    @Override
-    protected void setUpBeforeActivityLaunched() {
-        super.setUpBeforeActivityLaunched();
+    @Before
+    public void setup() {
         mockDB.resetDocument(DatabaseWrapper.EMERGENCIES_PATH);
+        BalelecbudApplication.setAppDatabaseWrapper(mockDB);
+        FragmentScenario.launchInContainer(EmergencyFragment.class);
     }
 
     @Test
-    public void testSubmitEmergencyButtonIsDisplayedWhenButtonClicked() throws InterruptedException {
+    public void testSubmitEmergencyButtonIsDisplayedWhenButtonClicked()  {
         onView(withId(R.id.buttonAskForHelp)).perform(click());
-        Thread.sleep(1000);
         onView(withId(R.id.buttonEmergencySubmit)).check(matches(isDisplayed()));
     }
 
@@ -69,15 +69,5 @@ public class EmergencyFragmentTest extends RootActivityTest {
         onView(withText(category)).inRoot(isPlatformPopup()).perform(click());
         onView(withId(R.id.textEmergencyMessage)).perform(typeText(message)).perform(closeSoftKeyboard());
         onView(withId(R.id.buttonEmergencySubmit)).perform(click());
-    }
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_emergency;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.fragment_emergency_linear_layout;
     }
 }
