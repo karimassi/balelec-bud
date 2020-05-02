@@ -6,8 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,11 +24,21 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyInfoFragmentTest {
+public class EmergencyInfoFragmentTest extends RootActivityTest{
 
     final EmergencyInfo info1 = new EmergencyInfo("To much alcohol","Seek assistance");
     final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
     private final MockDatabase mock = MockDatabase.getInstance();
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_emergency_info;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.emergencyInfoRecyclerView;
+    }
 
     @Before
     public void setup() {
@@ -59,5 +68,4 @@ public class EmergencyInfoFragmentTest {
         viewInteraction.check(matches(hasDescendant(withText(information.getName()))));
         viewInteraction.check(matches(hasDescendant(withText(information.getInstruction()))));
     }
-
 }

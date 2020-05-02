@@ -31,7 +31,7 @@ public class FestivalInformationFragment extends Fragment {
     @Override public void onStart() {
         super.onStart();
         RecyclerView recyclerView = getActivity().findViewById(R.id.festivalInfoRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // Not sure about this one
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
         RecyclerViewData<FestivalInformation, FestivalInformationHolder> data = new FestivalInformationData();

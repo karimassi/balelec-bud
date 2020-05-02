@@ -1,15 +1,12 @@
 package ch.epfl.balelecbud;
 
-import android.content.Intent;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.schedule.SlotData;
-import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
@@ -26,22 +23,14 @@ import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleFragmentWithSubscribedConcertTest extends RootActivityTest {
+
     private MockDatabase mock = MockDatabase.getInstance();
 
     @Override
-    protected void setUpBeforeActivityLaunched() {
+    protected void setUpBeforeActivityLaunched(){
         super.setUpBeforeActivityLaunched();
-        cleanUp();
+        BalelecbudApplication.setAppDatabase(mock);
         SlotData.setIntentLauncher(intent -> { });
-    }
-
-    @Override
-    protected void openFragmentUnderTest() {
-        refreshRecyclerView();
-    }
-
-    @After
-    public void cleanUp() {
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
     }
 
@@ -55,10 +44,18 @@ public class ScheduleFragmentWithSubscribedConcertTest extends RootActivityTest 
         return R.id.scheduleRecyclerView;
     }
 
+    /**
     @Override
-    protected Intent addInfoToActivityIntent(Intent intent) {
+    protected Intent getActivityIntent() {
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
         FlowUtil.packCallback(new Slot[]{slot1}, intent);
         return intent;
+    }**/
+
+    @Before
+    public void setUpMockIntentLauncher() {
+        mock.resetDocument(Database.CONCERT_SLOTS_PATH);
+        refreshRecyclerView();
     }
 
     @Test

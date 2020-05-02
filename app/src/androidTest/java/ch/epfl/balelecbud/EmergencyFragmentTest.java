@@ -4,7 +4,6 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,7 +41,7 @@ public class EmergencyFragmentTest {
     }
 
     @Test
-    public void testSubmitEmergencyButtonIsDisplayedWhenButtonClicked()  {
+    public void testSubmitEmergencyButtonIsDisplayedWhenButtonClicked() {
         onView(withId(R.id.buttonAskForHelp)).perform(click());
         onView(withId(R.id.buttonEmergencySubmit)).check(matches(isDisplayed()));
     }
@@ -52,7 +51,6 @@ public class EmergencyFragmentTest {
         onView(withId(R.id.buttonAskForHelp)).check(matches(isDisplayed()));
     }
 
-    @Ignore
     @Test
     public void emergencyIsCorrectlySent() throws Throwable {
         submitEmergency("Theft", "I lost something");

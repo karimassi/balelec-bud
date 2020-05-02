@@ -36,7 +36,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition;
@@ -56,9 +55,8 @@ public class SocialFragmentTest extends RootActivityTest {
     private final MockDatabase mockDb = MockDatabase.getInstance();
 
     @Override
-    protected void setUpBeforeActivityLaunched() {
+    protected void setUpBeforeActivityLaunched(){
         super.setUpBeforeActivityLaunched();
-        mockAuth.signOut();
         BalelecbudApplication.setAppAuthenticator(mockAuth);
         BalelecbudApplication.setAppDatabase(mockDb);
         mockAuth.setCurrentUser(currentUser);
@@ -74,6 +72,7 @@ public class SocialFragmentTest extends RootActivityTest {
         createRequest(newFriend, currentUser);
         createRequest(currentUser, requestedUser);
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
+
     }
 
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {
@@ -285,7 +284,7 @@ public class SocialFragmentTest extends RootActivityTest {
     }
 
     @Test
-    public void addFriendDialogValidEmail() throws Throwable {
+    public void addFriendDialogValidEmail() throws InterruptedException {
         onView(withId(R.id.fab_add_friends)).perform(click());
         onView(withId(R.id.edit_text_email_add_friend))
                 .perform(typeText(otherUser.getEmail())).perform(closeSoftKeyboard());

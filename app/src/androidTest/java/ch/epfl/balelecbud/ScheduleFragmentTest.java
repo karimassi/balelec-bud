@@ -1,11 +1,9 @@
 package ch.epfl.balelecbud;
 
-import android.content.Intent;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,18 +28,20 @@ import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
 
 @RunWith(AndroidJUnit4.class)
-public class ScheduleFragmentTest extends RootActivityTest{
+public class ScheduleFragmentTest extends RootActivityTest {
     private final MockDatabase mock = MockDatabase.getInstance();
 
-    @Override
-    protected Intent addInfoToActivityIntent(Intent intent) {
-        FlowUtil.packCallback(new Slot[]{}, intent);
-        return intent;
-    }
+    /**@Override
+    protected Intent getActivityIntent() {
+    Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
+    FlowUtil.packCallback(new Slot[]{}, intent);
+    return intent;
+    }**/
 
     @Override
     protected void setUpBeforeActivityLaunched() {
         super.setUpBeforeActivityLaunched();
+        BalelecbudApplication.setAppDatabase(mock);
         SlotData.setIntentLauncher(intent -> {
             if (intent.getAction() == null)
                 Assert.fail();
@@ -57,17 +57,22 @@ public class ScheduleFragmentTest extends RootActivityTest{
                     break;
             }
         });
-        cleanUp();
     }
 
     @Override
-    protected void openFragmentUnderTest() {
-        refreshRecyclerView();
+    protected int getItemId() {
+        return R.id.activity_main_drawer_schedule;
     }
 
-    @After
-    public void cleanUp() {
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.scheduleRecyclerView;
+    }
+
+    @Before
+    public void setup() {
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
+        refreshRecyclerView();
     }
 
     @Test
@@ -158,15 +163,5 @@ public class ScheduleFragmentTest extends RootActivityTest{
 
     private void refreshRecyclerView() {
         onView(withId(R.id.swipe_refresh_layout_schedule)).perform(swipeDown());
-    }
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_schedule;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.scheduleRecyclerView;
     }
 }

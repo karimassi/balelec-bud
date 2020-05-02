@@ -32,6 +32,7 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class MapViewFragmentTest {
 
+
     @Before
     public void setup() {
 
@@ -53,7 +54,7 @@ public class MapViewFragmentTest {
     @Ignore("Should get back to this")
     @Test
     public void testMapViewIsNotNull() {
-//        RootActivity mActivity = mActivityRule.getActivity();
+//        Activity mActivity = super.mActivityRule.getActivity();
 //        View viewById = mActivity.findViewById(R.id.map_view);
 //        assertNotNull(viewById);
     }
@@ -138,5 +139,4 @@ public class MapViewFragmentTest {
     public void testOnLowMemory() throws Throwable {
 //        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onLowMemory());
     }
-
 }

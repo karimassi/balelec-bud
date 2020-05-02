@@ -124,7 +124,4 @@ public abstract class RootActivityTest {
         onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 
-    public void waitIdle() {
-        device.waitForIdle();
-    }
 }

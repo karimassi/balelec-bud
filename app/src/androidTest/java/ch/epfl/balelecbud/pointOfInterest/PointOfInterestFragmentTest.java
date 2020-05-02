@@ -7,15 +7,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.EmergencyFragment;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.RootActivityTest;
-import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
