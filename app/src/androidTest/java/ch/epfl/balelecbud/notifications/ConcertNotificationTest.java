@@ -34,8 +34,8 @@ import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.schedule.SlotData;
 import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -54,7 +54,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class ConcertNotificationTest {
 
-    private final MockDatabaseWrapper mock = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mock = MockDatabase.getInstance();
     @Rule
     public final ActivityTestRule<RootActivity> mActivityRule =
             new ActivityTestRule<RootActivity>(RootActivity.class) {
@@ -70,7 +70,7 @@ public class ConcertNotificationTest {
                         public void removeLocationUpdates(PendingIntent intent) {
                         }
                     });
-                    BalelecbudApplication.setAppDatabaseWrapper(mock);
+                    BalelecbudApplication.setAppDatabase(mock);
                 }
             };
     private final Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3",
@@ -86,9 +86,9 @@ public class ConcertNotificationTest {
             device.waitForWindowUpdate(null, 1_000);
         }
         // quit the notifications center if it happens to be open
-        clearNotifications();
+        NotificationMessageTest.clearNotifications(device);
 
-        mock.resetDocument(DatabaseWrapper.CONCERT_SLOTS_PATH);
+        mock.resetDocument(Database.CONCERT_SLOTS_PATH);
         SlotData.setIntentLauncher(null);
         this.db = Room.inMemoryDatabaseBuilder(
                 getApplicationContext(),
@@ -100,15 +100,7 @@ public class ConcertNotificationTest {
     @After
     public void tearDown() {
         this.db.close();
-        clearNotifications();
-    }
-
-    private void clearNotifications() {
-        device.openNotification();
-        UiObject2 button = device.findObject(By.text("CLEAR ALL"));
-        if (button != null) button.click();
-        device.pressBack();
-
+        NotificationMessageTest.clearNotifications(device);
     }
 
     @Test
@@ -151,7 +143,7 @@ public class ConcertNotificationTest {
         Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
                 new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
 
-        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, s1);
+        mock.storeDocument(Database.CONCERT_SLOTS_PATH, s1);
 
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
@@ -171,7 +163,7 @@ public class ConcertNotificationTest {
 
     private void checkSwitchAfter(Runnable runnable, Slot s, boolean switchStateAfter) throws Throwable {
 
-        mock.storeDocument(DatabaseWrapper.CONCERT_SLOTS_PATH, s);
+        mock.storeDocument(Database.CONCERT_SLOTS_PATH, s);
 
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
@@ -186,11 +178,8 @@ public class ConcertNotificationTest {
         String expectedTitle = mActivityRule.getActivity().getString(R.string.concert_soon_notification_title);
         String expectedText = "Le nom de mon artiste starts in 15 minutes on Scene 3";
 
-        device.openNotification();
-        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(expectedTitle)), 30_000));
-        UiObject2 title = device.findObject(By.text(expectedTitle));
-        assertNotNull(title);
-        assertNotNull(device.findObject(By.text(expectedText)));
+        UiObject2 title = NotificationMessageTest.verifyNotification(device, expectedTitle, expectedText);
+
         title.click();
     }
 
@@ -218,5 +207,4 @@ public class ConcertNotificationTest {
     private void refreshRecyclerView() {
         onView(withId(R.id.swipe_refresh_layout_schedule)).perform(swipeDown());
     }
-
 }

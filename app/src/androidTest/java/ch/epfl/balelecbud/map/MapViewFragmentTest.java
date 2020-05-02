@@ -1,12 +1,9 @@
 package ch.epfl.balelecbud.map;
 
 import android.app.PendingIntent;
-import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.testing.FragmentScenario;
-import androidx.lifecycle.Lifecycle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.android.gms.location.LocationRequest;
@@ -17,29 +14,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.EmergencyNumbersFragment;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.RootActivityTest;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.camille;
+import static ch.epfl.balelecbud.util.database.MockDatabase.celine;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
-public class MapViewFragmentTest {
+public class MapViewFragmentTest extends RootActivityTest {
+    private final MockDatabase mockDB = MockDatabase.getInstance();
+    private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
 
     @Before
     public void setup() {
@@ -55,14 +49,25 @@ public class MapViewFragmentTest {
         });
 
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
-        MockAuthenticator.getInstance().setCurrentUser(camille);
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        MockAuthenticator.getInstance().setCurrentUser(celine);
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
+    }
+
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_map;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.activity_map_linear_layout;
     }
 
     @Ignore("Should get back to this")
     @Test
     public void testMapViewIsNotNull() {
-//        RootActivity mActivity = mActivityRule.getActivity();
+//        Activity mActivity = super.mActivityRule.getActivity();
 //        View viewById = mActivity.findViewById(R.id.map_view);
 //        assertNotNull(viewById);
     }
@@ -147,5 +152,4 @@ public class MapViewFragmentTest {
     public void testOnLowMemory() throws Throwable {
 //        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onLowMemory());
     }
-
 }

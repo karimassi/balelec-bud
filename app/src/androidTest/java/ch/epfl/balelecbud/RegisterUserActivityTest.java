@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud;
 
 import android.Manifest;
+import android.util.Log;
 import android.view.View;
 
 import androidx.test.espresso.intent.Intents;
@@ -21,9 +22,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -34,6 +38,8 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
 
@@ -72,9 +78,11 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
                 }
             };
 
+    private MockDatabase mockDB = MockDatabase.getInstance();
+
     @Before
     public void setUp() throws Throwable {
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppDatabase(mockDB);
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         logout();
     }
@@ -138,8 +146,29 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     }
 
     @Test
+    public void testRegisterSavesUserOnDB() throws Throwable {
+        String email = "testregister" + randomInt() + "@gmail.com";
+        TestAsyncUtils sync = new TestAsyncUtils();
+        enterValuesAndClick("name", email, "123123", "123123");
+
+        MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, MockAuthenticator.getInstance().getCurrentUid()));
+        mockDB.queryWithType(query, User.class).whenComplete((users, throwable) -> {
+            if (throwable == null) {
+                sync.assertEquals(email, users.get(0).getEmail());
+                sync.assertEquals("name", users.get(0).getDisplayName());
+                sync.call();
+            } else {
+                sync.fail();
+            }
+        });
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
+    }
+
+    @Test
     public void testCanRegisterFailDB() {
-        BalelecbudApplication.setAppDatabaseWrapper(new DatabaseWrapper() {
+        BalelecbudApplication.setAppDatabase(new Database() {
             @Override
             public void unregisterDocumentListener(String collectionName, String documentID) { }
 
@@ -147,30 +176,12 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
             public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) { }
 
             @Override
-            public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
+            public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
                 return null;
             }
 
             @Override
-            public CompletableFuture<List<String>> queryIds(MyQuery query) {
-                return null;
-            }
-
-            @Override
-            public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
-                return CompletableFuture.completedFuture(null).thenCompose(o -> {
-                    throw new RuntimeException("Failed to store document");
-                });
-            }
-
-            @Override
-            public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
-                return null;
-            }
-
-            @Override
-            public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName,
-                                                                          String fieldName, String fieldValue, Class<T> type) {
+            public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
                 return null;
             }
 

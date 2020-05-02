@@ -58,7 +58,6 @@
     <string name="tab_received_requests">Received requests</string>
     <string name="tab_sent_requests">Sent requests</string>
 
-
     <!-- DIALOG   -->
     <string name="add_friend_title">Add a friend</string>
     <string name="add_friend_request">Request</string>
@@ -87,7 +86,7 @@
     <!-- POI -->
     <string name="go_to_map">Go to map</string>
 
-    <!-- Settings -->
+    <!-- SETTINGS -->
     <string name="location_enable_key">LOCATION_ENABLE_KEY"</string>
     <string name="location_enable_title">Enable location usage</string>
 
@@ -95,9 +94,28 @@
     <string name="location_info_title">Location usage is not allowed</string>
     <string name="location_info_summary">Click here to allow it</string>
 
+    <!--  CLOUD MESSAGING  -->
+    <string name="message_channel_name">Notification Message Channel</string>
+    <string name="fcm_key">key=AAAAIEByxFA:APA91bHhnxIzhsfli52m8kq9uP9VWvIB972DTJYz85_ndFCzeDEzEDdgiYVjrVo8yM9npWNH5VchrfNqWw--1-SXB35YS7HIX04_-_9FmiUdJAlYzrRnN2B9q__7t9hXWsIC_rkzgRiv</string>
+    <string name="fcm_base_url">https://fcm.googleapis.com/fcm/send</string>
+    <string name="message_type_general">MESSAGE TYPE GENERAL</string>
+    <string name="message_type_social">MESSAGE TYPE SOCIAL</string>
+    <string name="data_key_title">title</string>
+    <string name="data_key_body">body</string>
+    <string name="data_key_type">type</string>
+
+    <!--  FRIENDSHIP NOTIFICATIONS  -->
+    <string name="type_friend_request">TYPE FRIEND REQUEST</string>
+    <string name="type_accept_request">TYPE ACCEPT REQUEST</string>
+    <string name="friend_request_title">You received a friend request!</string>
+    <string name="friend_request_body">\ sent you a friend request</string>
+    <string name="accept_request_title">You have a new friend!</string>
+    <string name="accept_request_body">\ accepted your friend request</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="msg_token_fmt" />
 
 
 </resources>

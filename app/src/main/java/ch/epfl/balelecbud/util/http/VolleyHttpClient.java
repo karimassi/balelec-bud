@@ -4,10 +4,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonElement;
 
+import org.json.JSONObject;
+
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-
 
 public class VolleyHttpClient implements HttpClient {
 
@@ -26,10 +27,14 @@ public class VolleyHttpClient implements HttpClient {
         return request;
     }
 
+    @Override
+    public CompletableFuture<JsonElement> post(String url, JSONObject r) {
+        HttpPostRequest request = new HttpPostRequest(url, r);
+        queue.add(request.getPostRequest());
+        return request;
+    }
+
     public static HttpClient getInstance() {
         return instance;
     }
-
-
-
 }

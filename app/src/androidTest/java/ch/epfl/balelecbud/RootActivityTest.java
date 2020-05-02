@@ -21,7 +21,7 @@ import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.map.MapViewFragment;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.http.MockHttpClient;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -30,7 +30,7 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.camille;
+import static ch.epfl.balelecbud.util.database.MockDatabase.celine;
 
 public abstract class RootActivityTest {
     private static UiDevice device = UiDevice.getInstance(getInstrumentation());
@@ -57,8 +57,8 @@ public abstract class RootActivityTest {
 
     protected void setUpBeforeActivityLaunched() {
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
-        MockAuthenticator.getInstance().setCurrentUser(camille);
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        MockAuthenticator.getInstance().setCurrentUser(celine);
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
         BalelecbudApplication.setHttpClient(MockHttpClient.getInstance());
         MapViewFragment.setMockCallback(mapboxMap -> {
         });

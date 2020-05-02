@@ -1,7 +1,6 @@
 package ch.epfl.balelecbud;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ public class FestivalInformationFragment extends Fragment {
     @Override public void onStart() {
         super.onStart();
         RecyclerView recyclerView = getActivity().findViewById(R.id.festivalInfoRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // Not sure about this one
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
         RecyclerViewData<FestivalInformation, FestivalInformationHolder> data = new FestivalInformationData();
@@ -42,5 +41,4 @@ public class FestivalInformationFragment extends Fragment {
         SwipeRefreshLayout refreshLayout = getView().findViewById(R.id.swipe_refresh_layout_festival_info);
         adapter.setOnRefreshListener(refreshLayout);
     }
-
 }
