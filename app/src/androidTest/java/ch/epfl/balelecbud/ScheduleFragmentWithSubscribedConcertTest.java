@@ -1,7 +1,6 @@
 package ch.epfl.balelecbud;
 
-import android.content.Intent;
-
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
@@ -9,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.schedule.SlotData;
-import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
@@ -25,39 +23,25 @@ import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
 
 @RunWith(AndroidJUnit4.class)
-public class ScheduleFragmentWithSubscribedConcertTest extends RootActivityTest {
+public class ScheduleFragmentWithSubscribedConcertTest {
 
     private MockDatabase mock = MockDatabase.getInstance();
 
-    @Override
-    protected void setUpBeforeActivityLaunched(){
-        super.setUpBeforeActivityLaunched();
+    @Before
+    public void setUp() {
         BalelecbudApplication.setAppDatabase(mock);
         SlotData.setIntentLauncher(intent -> { });
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
-    }
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_schedule;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.scheduleRecyclerView;
-    }
-
-    @Before
-    public void setUpMockIntentLauncher() {
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
         refreshRecyclerView();
+        FragmentScenario.launchInContainer(ScheduleFragment.class);
     }
 
-    @Override
+    /** What do do with this ?
     protected Intent addInfoToActivityIntent(Intent intent) {
         FlowUtil.packCallback(new Slot[]{slot1}, intent);
         return intent;
-    }
+    }**/
 
 
     @Test

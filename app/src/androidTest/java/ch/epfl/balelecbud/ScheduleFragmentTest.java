@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud;
 
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Assert;
@@ -58,6 +59,7 @@ public class ScheduleFragmentTest  {
         });
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
         refreshRecyclerView();
+        FragmentScenario.launchInContainer(ScheduleFragment.class);
     }
 
     @Test

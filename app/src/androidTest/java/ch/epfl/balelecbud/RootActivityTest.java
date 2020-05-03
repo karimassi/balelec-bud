@@ -14,7 +14,9 @@ import androidx.test.uiautomator.UiDevice;
 import com.google.android.gms.location.LocationRequest;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
+import org.junit.Test;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
@@ -30,6 +32,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.util.database.MockDatabase.camille;
+import static org.junit.Assert.assertFalse;
 
 public abstract class RootActivityTest {
     protected static UiDevice device = UiDevice.getInstance(getInstrumentation());
@@ -103,6 +106,87 @@ public abstract class RootActivityTest {
         onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
         device.waitForIdle();
         onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testDrawer() {
+        openDrawer();
+        onView(withId(R.id.headerImageView)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void openInfoActivityFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_info, R.id.festivalInfoRecyclerView);
+    }
+
+    @Test
+    public void testBackPress() {
+        openDrawer();
+        device.pressBack();
+        device.waitForIdle();
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
+        device.pressBack();
+        device.waitForIdle();
+    }
+
+    @Test
+    public void openScheduleActivityFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
+    }
+
+    @Test
+    public void signOutFromDrawer() {
+        openDrawer();
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
+        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
+    }
+
+    @Ignore
+    @Test
+    public void openPOIActivityFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_poi, R.id.pointOfInterestRecyclerView);
+    }
+
+    @Test
+    public void openMapActivityFromDrawer() {
+        MapViewFragment.setMockCallback(googleMap -> {});
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_map, R.id.map_view);
+    }
+
+    @Test
+    public void openTransportActivityFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_transport, R.id.transport_fragment_container);
+    }
+
+    @Test
+    public void openSocialActivityFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_social, R.id.tabs_social);
+    }
+
+    @Test
+    public void signOutDisableLocation() {
+        LocationUtil.enableLocation();
+        LocationUtil.setLocationClient(new LocationClient() {
+            @Override
+            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
+            }
+
+            @Override
+            public void removeLocationUpdates(PendingIntent intent) {
+            }
+        });
+        openDrawer();
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
+        assertFalse(LocationUtil.isLocationActive());
     }
 
 }

@@ -235,14 +235,4 @@ public class SocialFragmentTest {
         onView(withId(R.id.fab_add_friends)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(matches(isDisplayed()));
     }
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_social;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.activity_social_linear_layout;
-    }
 }
