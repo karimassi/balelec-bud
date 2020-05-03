@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Picture;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
@@ -15,6 +16,10 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -36,15 +41,21 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.EasyMock2Matchers.equalTo;
 
 @RunWith(AndroidJUnit4.class)
 public class PicturesActivityTest extends BasicActivityTest {
+    UiDevice mDevice;
 
     // IntentsTestRule is an extension of ActivityTestRule. IntentsTestRule sets up Espresso-Intents
     // before each Test is executed to allow stubbing and validation of intents.
     @Rule
     public IntentsTestRule<PicturesActivity> intentsRule = new IntentsTestRule<>(PicturesActivity.class);
+    @Before
+    public void setUp() throws Exception{
+        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    }
 
     @Test
     public void cameraShouldOpenWithButtonPressed() {
@@ -62,11 +73,25 @@ public class PicturesActivityTest extends BasicActivityTest {
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.takePicBtn)).perform(click());
+        allowPermissionsIfNeeded();
 
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         intended(toPackage("com.android.camera2"));
     }
 
+    private static void allowPermissionsIfNeeded() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            UiDevice device = UiDevice.getInstance(getInstrumentation());
+            UiObject allowPermissions = device.findObject(new UiSelector().text("ALLOW"));
+            if (allowPermissions.exists()) {
+                try {
+                    allowPermissions.click();
+                } catch (UiObjectNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 
     @Test
