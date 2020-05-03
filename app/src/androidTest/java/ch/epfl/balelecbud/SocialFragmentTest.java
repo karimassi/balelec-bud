@@ -36,7 +36,7 @@ import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition;
 
 @RunWith(AndroidJUnit4.class)
-public class SocialFragmentTest extends RootActivityTest {
+public class SocialFragmentTest {
 
     private final User currentUser = MockDatabase.karim;
     private final User otherUser = MockDatabase.celine;
@@ -46,17 +46,12 @@ public class SocialFragmentTest extends RootActivityTest {
     private final Authenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabase mockDb = MockDatabase.getInstance();
 
-    @Override
-    protected void setUpBeforeActivityLaunched(){
-        super.setUpBeforeActivityLaunched();
+    @Before
+    public void setup() {
         BalelecbudApplication.setAppAuthenticator(mockAuth);
         BalelecbudApplication.setAppDatabase(mockDb);
         mockAuth.setCurrentUser(currentUser);
         mockDb.storeDocument(Database.USERS_PATH, newFriend);
-    }
-
-    @Before
-    public void setup() {
         mockDb.resetDocument(Database.FRIENDSHIPS_PATH);
         mockDb.resetDocument(Database.FRIEND_REQUESTS_PATH);
         mockDb.resetDocument(Database.SENT_REQUESTS_PATH);

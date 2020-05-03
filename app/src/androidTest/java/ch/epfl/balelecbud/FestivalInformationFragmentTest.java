@@ -25,7 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class FestivalInformationFragmentTest extends RootActivityTest{
+public class FestivalInformationFragmentTest {
 
     private final MockDatabase mock = MockDatabase.getInstance();
 
@@ -79,15 +79,5 @@ public class FestivalInformationFragmentTest extends RootActivityTest{
     private void testInfoInView(ViewInteraction viewInteraction, FestivalInformation information) {
         viewInteraction.check(matches(hasDescendant(withText(information.getTitle()))));
         viewInteraction.check(matches(hasDescendant(withText(information.getInformation()))));
-    }
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_info;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.activity_festival_info_linear_layout;
     }
 }

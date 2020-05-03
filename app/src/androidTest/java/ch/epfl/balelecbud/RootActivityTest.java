@@ -72,6 +72,7 @@ public abstract class RootActivityTest {
         });
     }
 
+    /**
     protected void openFragmentUnderTest() {
         openDrawer();
         clickItem(getItemId(), getViewToDisplayId());
@@ -79,6 +80,7 @@ public abstract class RootActivityTest {
 
     protected abstract int getItemId();
     protected abstract int getViewToDisplayId();
+     **/
 
     @Before
     public void grantPermission() {
@@ -87,7 +89,7 @@ public abstract class RootActivityTest {
             device.waitForWindowUpdate(null, 1000);
         }
 
-        openFragmentUnderTest();
+        //openFragmentUnderTest();
     }
 
     public static void openDrawer() {

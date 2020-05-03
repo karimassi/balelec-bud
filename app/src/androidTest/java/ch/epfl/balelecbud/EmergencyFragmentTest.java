@@ -26,7 +26,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyFragmentTest extends RootActivityTest{
+public class EmergencyFragmentTest {
 
     private final MockDatabase mockDB = MockDatabase.getInstance();
 
@@ -74,15 +74,5 @@ public class EmergencyFragmentTest extends RootActivityTest{
         onView(withText(category)).inRoot(isPlatformPopup()).perform(click());
         onView(withId(R.id.textEmergencyMessage)).perform(typeText(message)).perform(closeSoftKeyboard());
         onView(withId(R.id.buttonEmergencySubmit)).perform(click());
-    }
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_emergency;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.fragment_emergency_linear_layout;
     }
 }

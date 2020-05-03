@@ -28,7 +28,7 @@ import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
 
 @RunWith(AndroidJUnit4.class)
-public class ScheduleFragmentTest extends RootActivityTest {
+public class ScheduleFragmentTest  {
     private final MockDatabase mock = MockDatabase.getInstance();
 
     /**@Override
@@ -38,9 +38,8 @@ public class ScheduleFragmentTest extends RootActivityTest {
     return intent;
     }**/
 
-    @Override
-    protected void setUpBeforeActivityLaunched() {
-        super.setUpBeforeActivityLaunched();
+    @Before
+    public void setup() {
         BalelecbudApplication.setAppDatabase(mock);
         SlotData.setIntentLauncher(intent -> {
             if (intent.getAction() == null)
@@ -57,20 +56,6 @@ public class ScheduleFragmentTest extends RootActivityTest {
                     break;
             }
         });
-    }
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_schedule;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.scheduleRecyclerView;
-    }
-
-    @Before
-    public void setup() {
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
         refreshRecyclerView();
     }

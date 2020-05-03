@@ -24,21 +24,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyInfoFragmentTest extends RootActivityTest{
+public class EmergencyInfoFragmentTest {
 
     final EmergencyInfo info1 = new EmergencyInfo("To much alcohol","Seek assistance");
     final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
     private final MockDatabase mock = MockDatabase.getInstance();
-
-    @Override
-    protected int getItemId() {
-        return R.id.activity_main_drawer_emergency_info;
-    }
-
-    @Override
-    protected int getViewToDisplayId() {
-        return R.id.emergencyInfoRecyclerView;
-    }
 
     @Before
     public void setup() {
