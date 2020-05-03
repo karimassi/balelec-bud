@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 public class TokenUtil {
 
@@ -26,9 +26,9 @@ public class TokenUtil {
             Log.d(TAG, "Storing token in  database for user: " + uid);
             Log.d(TAG, "Token: " + token);
             if(token != null && uid != null) {
-                Map<String, String> toStore = new HashMap<>();
-                toStore.put("token", token);
-                getAppDatabaseWrapper().storeDocumentWithID(DatabaseWrapper.TOKENS_PATH, uid, toStore);
+                Map<String, Boolean> toStore = new HashMap<>();
+                toStore.put(token, true);
+                getAppDatabase().storeDocumentWithID(Database.TOKENS_PATH, uid, toStore);
                 Log.d(TAG, "Stored the new token");
                 token = null;
             }

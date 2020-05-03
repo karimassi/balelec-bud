@@ -18,7 +18,7 @@ import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.map.MapViewActivity;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -26,7 +26,7 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
+import static ch.epfl.balelecbud.util.database.MockDatabase.alex;
 import static org.junit.Assert.assertFalse;
 
 public abstract class BasicActivityTest {
@@ -40,7 +40,7 @@ public abstract class BasicActivityTest {
     public void passIDsToBasicActivityTest() {
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         MockAuthenticator.getInstance().setCurrentUser(alex);
-        BalelecbudApplication.setAppDatabaseWrapper(MockDatabaseWrapper.getInstance());
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
         device = UiDevice.getInstance(getInstrumentation());
         setIds();
     }

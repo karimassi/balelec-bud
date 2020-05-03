@@ -21,8 +21,10 @@ import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -37,29 +39,33 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition;
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class SocialActivityTest extends BasicActivityTest {
 
-    private final User currentUser = MockDatabaseWrapper.karim;
-    private final User otherUser = MockDatabaseWrapper.celine;
-    private final User newFriend = MockDatabaseWrapper.axel;
-    private final User requestedUser = MockDatabaseWrapper.gaspard;
+    private final User currentUser = MockDatabase.karim;
+    private final User otherUser = MockDatabase.celine;
+    private final User newFriend = MockDatabase.axel;
+    private final User requestedUser = MockDatabase.gaspard;
 
     private final Authenticator mockAuth = MockAuthenticator.getInstance();
-    private final MockDatabaseWrapper mockDb = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mockDb = MockDatabase.getInstance();
 
     @Rule
     public final ActivityTestRule<SocialActivity> mActivityRule = new ActivityTestRule<SocialActivity>(SocialActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             BalelecbudApplication.setAppAuthenticator(mockAuth);
-            BalelecbudApplication.setAppDatabaseWrapper(mockDb);
+            BalelecbudApplication.setAppDatabase(mockDb);
             mockAuth.setCurrentUser(currentUser);
-            mockDb.storeDocument(DatabaseWrapper.USERS_PATH, newFriend);
+            mockDb.storeDocument(Database.USERS_PATH, newFriend);
         }
     };
 
@@ -75,17 +81,21 @@ public class SocialActivityTest extends BasicActivityTest {
     private void createFriendship(User user) {
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(user.getUid(), true);
-        mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, currentUser.getUid(), toStore);
+        mockDb.storeDocumentWithID(Database.FRIENDSHIPS_PATH, currentUser.getUid(), toStore);
 
         toStore = new HashMap<>();
         toStore.put(currentUser.getUid(), true);
-        mockDb.storeDocumentWithID(DatabaseWrapper.FRIENDSHIPS_PATH, user.getUid(), toStore);
+        mockDb.storeDocumentWithID(Database.FRIENDSHIPS_PATH, user.getUid(), toStore);
     }
 
     private void createRequest(User from, User to) {
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(from.getUid(), true);
-        mockDb.storeDocumentWithID(DatabaseWrapper.FRIEND_REQUESTS_PATH, to.getUid(), toStore);
+        mockDb.storeDocumentWithID(Database.FRIEND_REQUESTS_PATH, to.getUid(), toStore);
+
+        toStore = new HashMap<>();
+        toStore.put(to.getUid(), true);
+        getAppDatabase().storeDocumentWithID(Database.SENT_REQUESTS_PATH, from.getUid(), toStore);
     }
 
     private void selectTab(int position) {
@@ -95,7 +105,9 @@ public class SocialActivityTest extends BasicActivityTest {
 
     @Before
     public void setup() {
-        mockDb.resetFriendshipsAndRequests();
+        mockDb.resetDocument(Database.FRIENDSHIPS_PATH);
+        mockDb.resetDocument(Database.FRIEND_REQUESTS_PATH);
+        mockDb.resetDocument(Database.SENT_REQUESTS_PATH);
         createFriendship(otherUser);
         createRequest(newFriend, currentUser);
         createRequest(currentUser, requestedUser);
@@ -285,7 +297,8 @@ public class SocialActivityTest extends BasicActivityTest {
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
         TestAsyncUtils sync = new TestAsyncUtils();
-        mockDb.getDocument(DatabaseWrapper.FRIEND_REQUESTS_PATH, otherUser.getUid())
+        MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, otherUser.getUid()));
+        mockDb.query(query).thenApply(maps -> maps.get(0))
                 .whenComplete((stringObjectMap, throwable) -> {
                     if (stringObjectMap != null) {
                         sync.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));

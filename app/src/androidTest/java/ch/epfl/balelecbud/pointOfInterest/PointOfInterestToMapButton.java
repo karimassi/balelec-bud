@@ -18,7 +18,7 @@ import ch.epfl.balelecbud.map.MyMap;
 import ch.epfl.balelecbud.map.MyMarker;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -26,10 +26,10 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
-import static ch.epfl.balelecbud.util.database.DatabaseWrapper.POINT_OF_INTEREST_PATH;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest1;
-import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.pointOfInterest2;
+import static ch.epfl.balelecbud.util.database.Database.POINT_OF_INTEREST_PATH;
+import static ch.epfl.balelecbud.util.database.MockDatabase.alex;
+import static ch.epfl.balelecbud.util.database.MockDatabase.pointOfInterest1;
+import static ch.epfl.balelecbud.util.database.MockDatabase.pointOfInterest2;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -41,13 +41,13 @@ public class PointOfInterestToMapButton {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     MockAuthenticator mockAuth = MockAuthenticator.getInstance();
-                    MockDatabaseWrapper mockBd = MockDatabaseWrapper.getInstance();
-                    BalelecbudApplication.setAppDatabaseWrapper(mockBd);
+                    MockDatabase mockDB = MockDatabase.getInstance();
+                    BalelecbudApplication.setAppDatabase(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     mockAuth.setCurrentUser(alex);
-                    mockBd.resetDocument(POINT_OF_INTEREST_PATH);
-                    mockBd.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest1);
-                    mockBd.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest2);
+                    mockDB.resetDocument(POINT_OF_INTEREST_PATH);
+                    mockDB.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest1);
+                    mockDB.storeDocument(POINT_OF_INTEREST_PATH, pointOfInterest2);
                     MapViewActivity.setMockCallback(mapboxMap -> {
                     });
                 }
@@ -75,13 +75,13 @@ public class PointOfInterestToMapButton {
         clickOnButtonAndCheckMapOpen(1);
     }
 
-    private void clickOnButtonAndCheckMapOpenAtCorrectLocation(int i, PointOfInterest pointOfInterest1) throws InterruptedException {
+    private void clickOnButtonAndCheckMapOpenAtCorrectLocation(int i, PointOfInterest poi) throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
         onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), i), 5)).perform(click());
         mActivityRule.getActivity().onMapReady(new MyMap() {
             @Override
             public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
-                sync.assertThat(defaultLocation, is(pointOfInterest1.getLocation()));
+                sync.assertThat(defaultLocation, is(poi.getLocation()));
                 sync.call();
             }
 
