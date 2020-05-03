@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud;
 
+import android.content.Intent;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
@@ -7,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.schedule.SlotData;
+import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
@@ -44,19 +47,18 @@ public class ScheduleFragmentWithSubscribedConcertTest extends RootActivityTest 
         return R.id.scheduleRecyclerView;
     }
 
-    /**
-    @Override
-    protected Intent getActivityIntent() {
-        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
-        FlowUtil.packCallback(new Slot[]{slot1}, intent);
-        return intent;
-    }**/
-
     @Before
     public void setUpMockIntentLauncher() {
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
         refreshRecyclerView();
     }
+
+    @Override
+    protected Intent addInfoToActivityIntent(Intent intent) {
+        FlowUtil.packCallback(new Slot[]{slot1}, intent);
+        return intent;
+    }
+
 
     @Test
     public void testUnSubscribeToAConcert() throws Throwable {

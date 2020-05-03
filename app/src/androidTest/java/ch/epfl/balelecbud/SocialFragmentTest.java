@@ -2,6 +2,7 @@ package ch.epfl.balelecbud;
 
 import android.os.SystemClock;
 
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -15,22 +16,16 @@ import java.util.Map;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.friendship.FriendshipUtils;
+import ch.epfl.balelecbud.friendship.SocialFragment;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
-import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
-import ch.epfl.balelecbud.util.database.MyQuery;
-import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -39,9 +34,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition;
-import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
-import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
-import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class SocialFragmentTest extends RootActivityTest {
@@ -72,7 +64,7 @@ public class SocialFragmentTest extends RootActivityTest {
         createRequest(newFriend, currentUser);
         createRequest(currentUser, requestedUser);
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
-
+        FragmentScenario.launchInContainer(SocialFragment.class);
     }
 
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {
@@ -247,63 +239,6 @@ public class SocialFragmentTest extends RootActivityTest {
     public void floatingActionButtonCreatesFragment() {
         onView(withId(R.id.fab_add_friends)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void addFriendDialogDismissedOnCancel() {
-        onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withText(R.string.add_friend_cancel)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
-    }
-
-    @Test
-    public void addFriendDialogInvalidEmail() {
-        onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText("fakemail"))
-                .perform(closeSoftKeyboard());
-        onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
-
-        onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(""))
-                .perform(closeSoftKeyboard());
-        onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
-    }
-
-    @Test
-    public void addFriendDialogOwnEmail() {
-        onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(currentUser.getEmail()))
-                .perform(closeSoftKeyboard());
-        onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withText(R.string.add_own_as_friend))
-                .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
-    }
-
-    @Test
-    public void addFriendDialogValidEmail() throws InterruptedException {
-        onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend))
-                .perform(typeText(otherUser.getEmail())).perform(closeSoftKeyboard());
-        onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
-        TestAsyncUtils sync = new TestAsyncUtils();
-        MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, otherUser.getUid()));
-        mockDb.query(query).thenApply(maps -> maps.get(0))
-                .whenComplete((stringObjectMap, throwable) -> {
-                    if (stringObjectMap != null) {
-                        sync.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
-                    } else {
-                        sync.fail();
-                    }
-                    sync.call();
-                });
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
     }
 
     @Override

@@ -15,7 +15,6 @@ import com.google.android.gms.location.LocationRequest;
 
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
@@ -33,7 +32,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static ch.epfl.balelecbud.util.database.MockDatabase.camille;
 
 public abstract class RootActivityTest {
-    private static UiDevice device = UiDevice.getInstance(getInstrumentation());
+    protected static UiDevice device = UiDevice.getInstance(getInstrumentation());
 
     @Rule
     public final ActivityTestRule<RootActivity> mActivityRule =
@@ -91,16 +90,6 @@ public abstract class RootActivityTest {
         openFragmentUnderTest();
     }
 
-    @Test
-    public void testBackPress() {
-        openDrawer();
-        device.pressBack();
-        device.waitForIdle();
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
-        device.pressBack();
-        device.waitForIdle();
-    }
-
     public static void openDrawer() {
         device.pressBack();
         onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
@@ -112,16 +101,6 @@ public abstract class RootActivityTest {
         onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
         device.waitForIdle();
         onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void signOutFromDrawer() {
-        openDrawer();
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
-        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 
 }

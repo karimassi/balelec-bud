@@ -9,9 +9,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
-import ch.epfl.balelecbud.authentication.Authenticator;
-import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
@@ -29,7 +26,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyFragmentTest {
+public class EmergencyFragmentTest extends RootActivityTest{
 
     private final MockDatabase mockDB = MockDatabase.getInstance();
 
@@ -77,5 +74,15 @@ public class EmergencyFragmentTest {
         onView(withText(category)).inRoot(isPlatformPopup()).perform(click());
         onView(withId(R.id.textEmergencyMessage)).perform(typeText(message)).perform(closeSoftKeyboard());
         onView(withId(R.id.buttonEmergencySubmit)).perform(click());
+    }
+
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_emergency;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+        return R.id.fragment_emergency_linear_layout;
     }
 }

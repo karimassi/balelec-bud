@@ -24,7 +24,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
-public class EmergencyNumberActivityTest {
+public class EmergencyNumberActivityTest extends RootActivityTest{
 
 
     final EmergencyNumber num1 = new EmergencyNumber("Help","115");
@@ -63,4 +63,13 @@ public class EmergencyNumberActivityTest {
 
     }
 
+    @Override
+    protected int getItemId() {
+        return R.id.activity_main_drawer_emergency_numbers;
+    }
+
+    @Override
+    protected int getViewToDisplayId() {
+         return R.id.emergency_number_layout;
+    }
 }

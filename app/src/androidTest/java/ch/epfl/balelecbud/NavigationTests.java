@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud;
 
 import android.app.PendingIntent;
+import android.view.Gravity;
 
 import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -17,6 +18,7 @@ import ch.epfl.balelecbud.map.MapViewFragment;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertFalse;
@@ -52,9 +54,29 @@ public class NavigationTests extends RootActivityTest {
     }
 
     @Test
+    public void testBackPress() {
+        openDrawer();
+        device.pressBack();
+        device.waitForIdle();
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
+        device.pressBack();
+        device.waitForIdle();
+    }
+
+    @Test
     public void openScheduleActivityFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
+    }
+
+    @Test
+    public void signOutFromDrawer() {
+        openDrawer();
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
+        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 
     @Ignore
