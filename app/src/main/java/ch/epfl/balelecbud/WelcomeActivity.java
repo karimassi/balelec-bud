@@ -5,6 +5,7 @@ import android.os.Bundle;
 import ch.epfl.balelecbud.cloudMessaging.TokenUtil;
 
 public class WelcomeActivity extends BasicActivity {
+
     private static final String TAG = WelcomeActivity.class.getSimpleName();
 
     @Override
