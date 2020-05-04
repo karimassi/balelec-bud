@@ -20,7 +20,7 @@ import ch.epfl.balelecbud.map.MapViewFragment;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestFragment;
 import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.settings.SettingsMainFragment;
+import ch.epfl.balelecbud.settings.SettingsFragment;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
@@ -153,8 +153,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showSettingsFragment() {
-        Fragment fragmentSettings = SettingsMainFragment.newInstance();
-        this.startTransactionFragment(fragmentSettings, SettingsMainFragment.TAG);
+        Fragment fragmentSettings = SettingsFragment.newInstance();
+        this.startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {
