@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.pointOfInterest;
 
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -27,6 +28,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
+import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
 import static ch.epfl.balelecbud.util.database.Database.POINT_OF_INTEREST_PATH;
 import static ch.epfl.balelecbud.util.database.MockDatabase.alex;
 import static ch.epfl.balelecbud.util.database.MockDatabase.pointOfInterest1;
@@ -34,7 +36,7 @@ import static ch.epfl.balelecbud.util.database.MockDatabase.pointOfInterest2;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
-public class PointOfInterestToMapButton {
+public class PointOfInterestToMapButtonTest {
     @Rule
     public ActivityTestRule<RootActivity> mActivityRule =
             new ActivityTestRule<RootActivity>(RootActivity.class) {
@@ -61,7 +63,8 @@ public class PointOfInterestToMapButton {
     }
 
     private void clickOnButtonAndCheckMapOpen(int i) {
-        onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), i), 5)).perform(click());
+        onView(withId(R.id.pointOfInterestRecyclerView)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, clickChildViewWithId(R.id.go_to_map)));
         onView(withId(R.id.map_view)).check(matches(isDisplayed()));
     }
 
@@ -70,41 +73,9 @@ public class PointOfInterestToMapButton {
         clickOnButtonAndCheckMapOpen(0);
     }
 
-
     @Test
     public void opensTheMapWhenClickOnAPOI2Button() {
         clickOnButtonAndCheckMapOpen(1);
     }
 
-    private void clickOnButtonAndCheckMapOpenAtCorrectLocation(int i, PointOfInterest poi) throws InterruptedException {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        onView(nthChildOf(nthChildOf(withId(R.id.pointOfInterestRecyclerView), i), 5)).perform(click());
-        MapViewFragment fragment = (MapViewFragment) mActivityRule.getActivity()
-                .getSupportFragmentManager().findFragmentByTag(MapViewFragment.TAG);
-        fragment.onMapReady(new MyMap() {
-            @Override
-            public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
-                sync.assertThat(defaultLocation, is(poi.getLocation()));
-                sync.call();
-            }
-
-            @Override
-            public MyMarker addMarker(MyMarker.Builder markerBuilder) {
-                return null;
-            }
-        });
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
-    }
-
-    @Test
-    public void mapOpensToTheCorrectLocationForPOI1() throws InterruptedException {
-        clickOnButtonAndCheckMapOpenAtCorrectLocation(0, pointOfInterest1);
-    }
-
-    @Test
-    public void mapOpensToTheCorrectLocationForPOI2() throws InterruptedException {
-        clickOnButtonAndCheckMapOpenAtCorrectLocation(1, pointOfInterest2);
-    }
 }

@@ -1,15 +1,18 @@
 package ch.epfl.balelecbud.map;
 
+import android.app.Activity;
 import android.app.PendingIntent;
+import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.android.gms.location.LocationRequest;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,6 +22,7 @@ import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 
@@ -26,16 +30,16 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
 import static ch.epfl.balelecbud.util.database.MockDatabase.camille;
+import static ch.epfl.balelecbud.util.database.MockDatabase.pointOfInterest1;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewFragmentTest {
 
-
     @Before
     public void setup() {
-
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -51,12 +55,18 @@ public class MapViewFragmentTest {
         BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
     }
 
-    @Ignore("Should get back to this")
     @Test
-    public void testMapViewIsNotNull() {
-//        Activity mActivity = super.mActivityRule.getActivity();
-//        View viewById = mActivity.findViewById(R.id.map_view);
-//        assertNotNull(viewById);
+    public void testMapViewIsNotNull() throws Throwable{
+        TestAsyncUtils sync = new TestAsyncUtils();
+        FragmentScenario.launchInContainer(MapViewFragment.class).onFragment(fragment -> {
+            Activity mActivity = fragment.getActivity();
+            View viewById = mActivity.findViewById(R.id.map_view);
+            sync.assertNotNull(viewById);
+            sync.call();
+        });
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
@@ -74,7 +84,7 @@ public class MapViewFragmentTest {
 
         sync.waitCall(1);
         sync.assertCalled(1);
-        //sync.assertNoFailedTests();
+        sync.assertNoFailedTests();
     }
 
     @Test
@@ -87,7 +97,7 @@ public class MapViewFragmentTest {
 
         sync.waitCall(1);
         sync.assertCalled(1);
-        //sync.assertNoFailedTests();
+        sync.assertNoFailedTests();
         LocationUtil.disableLocation();
     }
 
@@ -130,13 +140,42 @@ public class MapViewFragmentTest {
         FragmentScenario.launchInContainer(MapViewFragment.class);
 
         sync.waitCall(1);
-        //sync.assertNoFailedTests();
+        sync.assertNoFailedTests();
         sync.assertCalled(1);
     }
 
-    @Ignore("Should get back to this")
     @Test
-    public void testOnLowMemory() throws Throwable {
-//        runOnUIThreadAndWait(() -> this.mActivityRule.getActivity().onLowMemory());
+    public void testOpenMapWithPOILocationInBundle() throws Throwable{
+        TestAsyncUtils sync = new TestAsyncUtils();
+        MyMap mockMap = new MyMap() {
+            @Override
+            public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
+                sync.assertThat(defaultLocation, is(pointOfInterest1.getLocation()));
+                sync.call();
+            }
+
+            @Override
+            public MyMarker addMarker(MyMarker.Builder markerBuilder) {
+                return null;
+            }
+        };
+        MapViewFragment.setMockMap(mockMap);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("location", pointOfInterest1.getLocation());
+        FragmentScenario.launchInContainer(MapViewFragment.class, bundle);
+
+        sync.waitCall(1);
+        sync.assertNoFailedTests();
+        sync.assertCalled(1);
+    }
+
+
+
+    @Test
+    public void testOnLowMemory() {
+        FragmentScenario.launchInContainer(MapViewFragment.class).onFragment(fragment -> {
+            Activity mActivity = fragment.getActivity();
+            mActivity.onLowMemory();
+        });
     }
 }

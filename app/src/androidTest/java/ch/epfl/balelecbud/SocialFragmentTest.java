@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud;
 
+import android.os.Bundle;
 import android.os.SystemClock;
 
 import androidx.fragment.app.testing.FragmentScenario;
@@ -58,8 +59,11 @@ public class SocialFragmentTest {
         createFriendship(otherUser);
         createRequest(newFriend, currentUser);
         createRequest(currentUser, requestedUser);
+
+
+        FragmentScenario.launchInContainer(SocialFragment.class, null, R.style.Theme_AppCompat, null);
+
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
-        FragmentScenario.launchInContainer(SocialFragment.class);
     }
 
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {

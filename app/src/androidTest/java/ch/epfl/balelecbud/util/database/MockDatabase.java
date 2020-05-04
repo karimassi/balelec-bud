@@ -95,6 +95,8 @@ public class MockDatabase implements Database {
         storeDocument(USERS_PATH, alex);
         storeDocument(USERS_PATH, axel);
         storeDocument(USERS_PATH, gaspard);
+        storeDocument(USERS_PATH, camille);
+
 
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(token1, true);
@@ -283,7 +285,7 @@ public class MockDatabase implements Database {
     }
 
     private void logContents() {
-        Log.d(TAG, databasePOJO.toString() + "\n" + database.toString());
+        Log.d(TAG, databasePOJO.toString() + "\n" + database.toString() + "\n" + friendsLocationListener.toString());
     }
 
 }

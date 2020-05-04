@@ -22,7 +22,6 @@ import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 public class ScheduleFragment extends Fragment {
     
     private static final String TAG = ScheduleFragment.class.getSimpleName();
-    private FragmentActivity activity;
     private List<Slot> slots;
 
     public static ScheduleFragment newInstance() {
@@ -38,7 +37,6 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        activity = this.getActivity();
         Log.v(TAG, "onCreate: Creation of the activity");
         RecyclerView rvSchedule = getView().findViewById(R.id.scheduleRecyclerView);
 

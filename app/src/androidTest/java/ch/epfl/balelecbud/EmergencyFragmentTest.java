@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import ch.epfl.balelecbud.emergency.SubmitEmergencyFragment;
+import ch.epfl.balelecbud.friendship.AddFriendFragment;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
@@ -34,7 +36,7 @@ public class EmergencyFragmentTest {
     public void setup() {
         mockDB.resetDocument(MockDatabase.EMERGENCIES_PATH);
         BalelecbudApplication.setAppDatabase(mockDB);
-        FragmentScenario.launchInContainer(EmergencyFragment.class);
+        FragmentScenario.launchInContainer(EmergencyFragment.class, null, R.style.Theme_AppCompat, null);
     }
 
     @Test

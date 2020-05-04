@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.Timestamp;
 
+import ch.epfl.balelecbud.emergency.SubmitEmergencyFragment;
+import ch.epfl.balelecbud.friendship.AddFriendFragment;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.models.emergency.EmergencyType;
 import ch.epfl.balelecbud.util.database.Database;
@@ -44,34 +46,8 @@ public class EmergencyFragment extends Fragment {
 
     private void InitiateViewWithValues() {
         mShowEmergencyDialog.setOnClickListener(v -> {
-            AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
-            View mView = getLayoutInflater().inflate(R.layout.dialog_emergency,null);
-            mBuilder.setView(mView);
-            AlertDialog dialog = mBuilder.create();
-            final EditText mEmergencyMessage = mView.findViewById(R.id.textEmergencyMessage);
-            final Spinner mEmergencyCategory = mView.findViewById(R.id.spinnerEmergencyCategories);
-            Button mEmergencySubmit = mView.findViewById(R.id.buttonEmergencySubmit);
-            mEmergencyCategory.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, EmergencyType.values()));
-            submitEmergency(dialog, mEmergencyMessage, mEmergencyCategory, mEmergencySubmit);
-
-            dialog.show();
-        });
-    }
-
-    private void submitEmergency(AlertDialog dialog, EditText mEmergencyMessage, Spinner mEmergencyCategory, Button mEmergencySubmit) {
-        mEmergencySubmit.setOnClickListener(v1 -> {
-            String emergencyMessage = mEmergencyMessage.getText().toString();
-            EmergencyType emergencyType = EmergencyType.valueOf(mEmergencyCategory.getSelectedItem().toString().toUpperCase());
-            if(!emergencyMessage.isEmpty()){
-                String currentUserUid = getAppAuthenticator().getCurrentUser().getUid();
-                Timestamp currentTimestamp = Timestamp.now();
-                Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
-                getAppDatabase().storeDocument(Database.EMERGENCIES_PATH, mEmergency);
-                Toast.makeText(getActivity(), R.string.emergency_sent_message, Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }else{
-                Toast.makeText(getActivity(), R.string.emergency_not_sent_message, Toast.LENGTH_SHORT).show();
-            }
+            SubmitEmergencyFragment dialog = SubmitEmergencyFragment.newInstance();
+            dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.declare_an_emergency));
         });
     }
 }

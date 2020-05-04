@@ -23,7 +23,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.balelecbud.util.database.MockDatabase.pointOfInterest2;
 import static ch.epfl.balelecbud.util.database.MockDatabase.pointOfInterest1;
 
 @RunWith(AndroidJUnit4.class)
@@ -34,7 +33,6 @@ public class PointOfInterestFragmentTest  {
     @Before
     public void setup() {
         BalelecbudApplication.setAppDatabase(mock);
-        //cleanUp();
         mock.resetDocument(Database.POINT_OF_INTEREST_PATH);
         FragmentScenario.launchInContainer(PointOfInterestFragment.class);
         refreshRecyclerView();

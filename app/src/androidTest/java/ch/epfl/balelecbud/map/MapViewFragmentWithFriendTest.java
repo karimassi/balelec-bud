@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud.map;
 
 import androidx.fragment.app.testing.FragmentScenario;
+import androidx.lifecycle.Lifecycle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,7 @@ import ch.epfl.balelecbud.util.database.MockDatabase;
 import static ch.epfl.balelecbud.util.database.MockDatabase.alex;
 import static ch.epfl.balelecbud.util.database.MockDatabase.celine;
 import static ch.epfl.balelecbud.util.database.MockDatabase.karim;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewFragmentWithFriendTest {
@@ -153,12 +155,12 @@ public class MapViewFragmentWithFriendTest {
         sync.assertEquals(MarkerType.FRIEND, markerBuilder.getType());
     }
 
-    @Ignore("Should get back to this")
     @Test
     public void signOutClearListeners() {
-//        assertEquals(2, mockDB.getFriendsLocationListenerCount());
-//        super.signOutFromDrawer();
-//        assertEquals(0, mockDB.getFriendsLocationListenerCount());
+        FragmentScenario scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        assertEquals(2, mockDB.getFriendsLocationListenerCount());
+        scenario.moveToState(Lifecycle.State.DESTROYED);
+        assertEquals(0, mockDB.getFriendsLocationListenerCount());
     }
 
 }
