@@ -1,7 +1,11 @@
 package ch.epfl.balelecbud;
 
+import android.os.Bundle;
+
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.google.common.collect.Lists;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,18 +35,13 @@ public class ScheduleFragmentWithSubscribedConcertTest {
     public void setUp() {
         mock.resetDatabase();
         BalelecbudApplication.setAppDatabase(mock);
-        SlotData.setIntentLauncher(intent -> { });
+        SlotData.setIntentLauncher(intent -> {});
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
-        refreshRecyclerView();
-        FragmentScenario.launchInContainer(ScheduleFragment.class);
+        Bundle arguments = new Bundle();
+        arguments.putParcelableArrayList("slots", Lists.newArrayList(slot1));
+        FragmentScenario.launchInContainer(ScheduleFragment.class, arguments);
     }
-
-    /** What do do with this ?
-    protected Intent addInfoToActivityIntent(Intent intent) {
-        FlowUtil.packCallback(new Slot[]{slot1}, intent);
-        return intent;
-    }**/
 
 
     @Test

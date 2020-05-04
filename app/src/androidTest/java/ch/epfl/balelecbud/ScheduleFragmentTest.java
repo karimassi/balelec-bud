@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud;
 
+import android.os.Bundle;
+
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -7,6 +9,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
 
 import ch.epfl.balelecbud.schedule.SlotData;
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -32,13 +36,6 @@ import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
 public class ScheduleFragmentTest  {
     private final MockDatabase mock = MockDatabase.getInstance();
 
-    /**@Override
-    protected Intent getActivityIntent() {
-    Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ScheduleActivity.class);
-    FlowUtil.packCallback(new Slot[]{}, intent);
-    return intent;
-    }**/
-
     @Before
     public void setup() {
         mock.resetDatabase();
@@ -59,8 +56,9 @@ public class ScheduleFragmentTest  {
             }
         });
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);
-        refreshRecyclerView();
-        FragmentScenario.launchInContainer(ScheduleFragment.class);
+        Bundle arguments = new Bundle();
+        arguments.putParcelableArrayList("slots", new ArrayList<>());
+        FragmentScenario.launchInContainer(ScheduleFragment.class, arguments);
     }
 
     @Test
@@ -81,6 +79,7 @@ public class ScheduleFragmentTest  {
         mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
 
         refreshRecyclerView();
+
 
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
 

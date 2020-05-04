@@ -9,13 +9,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.room.Room;
 
-import java.util.Arrays;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 import java.util.function.Consumer;
 
+import ch.epfl.balelecbud.notifications.NotificationInterface;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDAO;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
-import ch.epfl.balelecbud.notifications.NotificationInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
@@ -116,9 +118,9 @@ public class ConcertFlow extends IntentService {
     }
 
     private void getAllScheduledConcert(Intent callbackIntent) {
-        Slot[] res = this.concertOfInterestDAO.getAllConcertOfInterest();
-        Log.d(TAG, "getAllScheduledConcert: " + Arrays.toString(res));
-        launcher.accept(FlowUtil.packCallback(res, callbackIntent));
+        List<Slot> res = this.concertOfInterestDAO.getAllConcertOfInterestList();
+        Log.d(TAG, "getAllScheduledConcert: " + res.toString());
+        launcher.accept(FlowUtil.packCallback(Lists.newArrayList(res), callbackIntent));
     }
 
     private void scheduleNewConcert(final Slot newSlot) {
