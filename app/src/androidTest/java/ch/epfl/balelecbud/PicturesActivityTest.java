@@ -81,15 +81,8 @@ public class PicturesActivityTest extends BasicActivityTest {
 
     private static void allowPermissionsIfNeeded() {
         if (Build.VERSION.SDK_INT >= 23) {
-            UiDevice device = UiDevice.getInstance(getInstrumentation());
-            UiObject allowPermissions = device.findObject(new UiSelector().text("ALLOW"));
-            if (allowPermissions.exists()) {
-                try {
-                    allowPermissions.click();
-                } catch (UiObjectNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+            if (mDevice.hasObject(By.text("ALLOW"))
+                mDevice.findObject(By.text("ALLOW")).click();
         }
     }
 
