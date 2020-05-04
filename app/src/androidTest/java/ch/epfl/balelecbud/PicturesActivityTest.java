@@ -16,6 +16,7 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
@@ -46,7 +47,7 @@ import static org.hamcrest.EasyMock2Matchers.equalTo;
 
 @RunWith(AndroidJUnit4.class)
 public class PicturesActivityTest extends BasicActivityTest {
-    private UiDevice mDevice;
+    private static UiDevice mDevice;
 
     // IntentsTestRule is an extension of ActivityTestRule. IntentsTestRule sets up Espresso-Intents
     // before each Test is executed to allow stubbing and validation of intents.
@@ -81,8 +82,9 @@ public class PicturesActivityTest extends BasicActivityTest {
 
     private static void allowPermissionsIfNeeded() {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (mDevice.hasObject(By.text("ALLOW"))
+            if (mDevice.hasObject(By.text("ALLOW")) {
                 mDevice.findObject(By.text("ALLOW")).click();
+            }
         }
     }
 
