@@ -41,6 +41,7 @@ public class ScheduleFragmentTest  {
 
     @Before
     public void setup() {
+        mock.resetDatabase();
         BalelecbudApplication.setAppDatabase(mock);
         SlotData.setIntentLauncher(intent -> {
             if (intent.getAction() == null)

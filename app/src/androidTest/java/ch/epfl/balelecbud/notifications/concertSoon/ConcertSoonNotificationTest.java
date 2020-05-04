@@ -25,6 +25,7 @@ import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertEquals;
@@ -38,6 +39,7 @@ public class ConcertSoonNotificationTest {
 
     @Before
     public void setup() {
+        MockDatabase.getInstance().resetDatabase();
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {

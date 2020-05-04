@@ -36,6 +36,7 @@ public class MapViewWithPOITest {
 
     @Before
     public void setup() {
+        MockDatabase.getInstance().resetDatabase();
         BalelecbudApplication.setAppDatabase(mockDB);
         BalelecbudApplication.setAppAuthenticator(mockAuth);
         MapViewFragment.setMockCallback(mapboxMap -> {

@@ -45,6 +45,7 @@ public class PointOfInterestToMapButtonTest {
                     super.beforeActivityLaunched();
                     MockAuthenticator mockAuth = MockAuthenticator.getInstance();
                     MockDatabase mockDB = MockDatabase.getInstance();
+                    mockDB.resetDatabase();
                     BalelecbudApplication.setAppDatabase(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     mockAuth.setCurrentUser(alex);

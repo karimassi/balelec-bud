@@ -31,6 +31,7 @@ public class FestivalInformationFragmentTest {
 
     @Before
     public void setup() {
+        mock.resetDatabase();
         BalelecbudApplication.setAppDatabase(mock);
         FragmentScenario.launchInContainer(FestivalInformationFragment.class);
     }

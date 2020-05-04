@@ -49,7 +49,7 @@ public class MapViewFragmentTest {
             public void removeLocationUpdates(PendingIntent intent) {
             }
         });
-
+        MockDatabase.getInstance().resetDatabase();
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         MockAuthenticator.getInstance().setCurrentUser(camille);
         BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
@@ -88,7 +88,7 @@ public class MapViewFragmentTest {
     }
 
     @Test
-    public void whenLocationIfOnLocationOnMapIsDisable() throws Throwable {
+    public void whenLocationIsOnLocationOnMapIsDisabled() throws Throwable {
         LocationUtil.enableLocation();
         TestAsyncUtils sync = new TestAsyncUtils();
 

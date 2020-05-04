@@ -46,6 +46,7 @@ public class CloudMessagingServiceTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
+                    MockDatabase.getInstance().resetDatabase();
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
                     BalelecbudApplication.setAppContext(ApplicationProvider.getApplicationContext());

@@ -36,6 +36,7 @@ public class TokenUtilTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
+                    mockDB.resetDatabase();
                     BalelecbudApplication.setAppDatabase(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     mockAuth.signOut();

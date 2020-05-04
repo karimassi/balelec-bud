@@ -29,6 +29,7 @@ public class ScheduleFragmentWithSubscribedConcertTest {
 
     @Before
     public void setUp() {
+        mock.resetDatabase();
         BalelecbudApplication.setAppDatabase(mock);
         SlotData.setIntentLauncher(intent -> { });
         mock.resetDocument(Database.CONCERT_SLOTS_PATH);

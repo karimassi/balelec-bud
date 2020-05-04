@@ -27,11 +27,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class EmergencyInfoFragmentTest {
 
     final EmergencyInfo info1 = new EmergencyInfo("To much alcohol","Seek assistance");
-    final EmergencyInfo info2 = new EmergencyInfo("Lost","Check your location on the map");
     private final MockDatabase mock = MockDatabase.getInstance();
 
     @Before
     public void setup() {
+        mock.resetDatabase();
         mock.resetDocument(Database.EMERGENCY_INFO_PATH);
         BalelecbudApplication.setAppDatabase(mock);
         FragmentScenario.launchInContainer(EmergencyInfoFragment.class);

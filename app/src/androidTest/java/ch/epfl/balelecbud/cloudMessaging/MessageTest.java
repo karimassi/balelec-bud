@@ -52,6 +52,7 @@ public class MessageTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
+                    mockDB.resetDatabase();
                     BalelecbudApplication.setAppDatabase(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     BalelecbudApplication.setAppMessagingService(mockMessagingService);

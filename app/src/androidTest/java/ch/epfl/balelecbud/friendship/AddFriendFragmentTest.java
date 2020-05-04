@@ -52,6 +52,7 @@ public class AddFriendFragmentTest {
 
     @Before
     public void setup() {
+        mockDb.resetDatabase();
         BalelecbudApplication.setAppAuthenticator(mockAuth);
         BalelecbudApplication.setAppDatabase(mockDb);
         mockAuth.setCurrentUser(currentUser);

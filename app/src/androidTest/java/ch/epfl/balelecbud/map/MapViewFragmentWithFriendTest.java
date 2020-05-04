@@ -35,6 +35,7 @@ public class MapViewFragmentWithFriendTest {
 
     @Before
     public void setup() {
+        MockDatabase.getInstance().resetDatabase();
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
         cleanUp();

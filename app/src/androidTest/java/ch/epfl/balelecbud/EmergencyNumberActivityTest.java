@@ -32,6 +32,7 @@ public class EmergencyNumberActivityTest {
 
     @Before
     public void setup() {
+        mock.resetDatabase();
         mock.resetDocument(Database.EMERGENCY_NUMBER_PATH);
         mock.storeDocument(Database.EMERGENCY_NUMBER_PATH, num1);
         BalelecbudApplication.setAppDatabase(mock);

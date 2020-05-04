@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.emergency.SubmitEmergencyFragment;
 import ch.epfl.balelecbud.friendship.AddFriendFragment;
 import ch.epfl.balelecbud.models.emergency.Emergency;
@@ -26,16 +27,21 @@ import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.util.database.MockDatabase.karim;
 
 @RunWith(AndroidJUnit4.class)
 public class EmergencyFragmentTest {
 
     private final MockDatabase mockDB = MockDatabase.getInstance();
+    private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
 
     @Before
     public void setup() {
+        mockDB.resetDatabase();
         mockDB.resetDocument(MockDatabase.EMERGENCIES_PATH);
+        mockAuth.setCurrentUser(karim);
         BalelecbudApplication.setAppDatabase(mockDB);
+        BalelecbudApplication.setAppAuthenticator(mockAuth);
         FragmentScenario.launchInContainer(EmergencyFragment.class, null, R.style.Theme_AppCompat, null);
     }
 

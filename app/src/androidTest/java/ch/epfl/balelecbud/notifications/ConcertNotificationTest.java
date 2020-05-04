@@ -61,6 +61,7 @@ public class ConcertNotificationTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
+                    MockDatabase.getInstance().resetDatabase();
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
                         public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
