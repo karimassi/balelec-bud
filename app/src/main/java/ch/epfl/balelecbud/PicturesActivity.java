@@ -34,9 +34,9 @@ import java.util.Date;
 
 public class PicturesActivity extends BasicActivity {
 
-    ImageView imageView;
-    Button cameraButton;
-    String currentPhotoPath;
+    private ImageView imageView;
+    private Button cameraButton;
+    private String currentPhotoPath;
 
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
