@@ -82,7 +82,7 @@ public class PicturesActivityTest extends BasicActivityTest {
 
     private static void allowPermissionsIfNeeded() {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (mDevice.hasObject(By.text("ALLOW")) {
+            if (mDevice.hasObject(By.text("ALLOW"))){
                 mDevice.findObject(By.text("ALLOW")).click();
             }
         }
