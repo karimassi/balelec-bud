@@ -46,7 +46,7 @@ import static org.hamcrest.EasyMock2Matchers.equalTo;
 
 @RunWith(AndroidJUnit4.class)
 public class PicturesActivityTest extends BasicActivityTest {
-    UiDevice mDevice;
+    private UiDevice mDevice;
 
     // IntentsTestRule is an extension of ActivityTestRule. IntentsTestRule sets up Espresso-Intents
     // before each Test is executed to allow stubbing and validation of intents.
