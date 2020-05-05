@@ -187,7 +187,7 @@ public class SocialFragmentTest {
                 .check(matches(hasDescendant(withText(otherUser.getDisplayName()))));
     }
 
-    private void deleteAndCheck(int tab, User user1, User user2, int id1, int id2){
+    private void deleteAndCheck(int tab, User user1, User user2){
         selectTab(tab);
         FriendshipUtils.deleteRequest(user1, user2);
     }
@@ -199,13 +199,13 @@ public class SocialFragmentTest {
 
     @Test
     public void receivedRequestRemovedUpdatesListAfterRefresh() {
-        deleteAndCheck(1, newFriend, currentUser, R.id.swipe_refresh_layout_friend_requests, R.id.recycler_view_friend_requests);
+        deleteAndCheck(1, newFriend, currentUser);
         swipeDownAndCheck(R.id.swipe_refresh_layout_friend_requests, R.id.recycler_view_friend_requests, 0);
     }
 
     @Test
     public void sentRequestRemovedUpdatesListAfterRefresh() {
-        deleteAndCheck(2, currentUser, requestedUser, R.id.swipe_refresh_layout_sent_requests, R.id.recycler_view_sent_request);
+        deleteAndCheck(2, currentUser, requestedUser);
         swipeDownAndCheck(R.id.swipe_refresh_layout_sent_requests, R.id.recycler_view_sent_request, 0);
     }
 
