@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud;
 
-import android.os.Bundle;
 import android.os.SystemClock;
 
 import androidx.fragment.app.testing.FragmentScenario;
@@ -67,6 +66,18 @@ public class SocialFragmentTest {
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
     }
 
+    private void selectAndRequest(int tab, User user1, User user2){
+        selectTab(tab);
+        createRequest(user1, user2);
+    }
+
+    private void selectAndCheck(int tab, int id, User user1){
+        selectTab(tab);
+        onView(withId(id)).check(matches(hasChildCount(1)));
+        onView(new RecyclerViewMatcher(id).atPosition(0))
+                .check(matches(hasDescendant(withText(user1.getDisplayName()))));
+    }
+
     private void onTabClickOnChildAndSwipe(int tab, int recyclerViewId, int child, int layoutId) {
         selectTab(tab);
         onView(withId(recyclerViewId)).perform(RecyclerViewActions.
@@ -108,10 +119,8 @@ public class SocialFragmentTest {
 
     @Test
     public void friendsShownTest() {
-        selectTab(0);
-        onView(withId(R.id.recycler_view_friends)).check(matches(hasChildCount(1)));
-        onView(new RecyclerViewMatcher(R.id.recycler_view_friends).atPosition(0))
-                .check(matches(hasDescendant(withText(otherUser.getDisplayName()))));
+        selectAndCheck(0, R.id.recycler_view_friends, otherUser);
+
         onView(withId(R.id.swipe_refresh_layout_friends)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friends)).check(matches(hasChildCount(1)));
     }
@@ -147,28 +156,21 @@ public class SocialFragmentTest {
 
     @Test
     public void receivedRequestsShownTest() {
-        selectTab(1);
-        onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(1)));
-        onView(new RecyclerViewMatcher(R.id.recycler_view_friend_requests).atPosition(0))
-                .check(matches(hasDescendant(withText(newFriend.getDisplayName()))));
+        selectAndCheck(1,R.id.recycler_view_friend_requests, newFriend);
         onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(1)));
     }
 
     @Test
     public void sentRequestsShownTest() {
-        selectTab(2);
-        onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(1)));
-        onView(new RecyclerViewMatcher(R.id.recycler_view_sent_request).atPosition(0))
-                .check(matches(hasDescendant(withText(requestedUser.getDisplayName()))));
+        selectAndCheck(2,R.id.recycler_view_sent_request, requestedUser);
         onView(withId(R.id.swipe_refresh_layout_sent_requests)).perform(swipeDown());
         onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(1)));
     }
 
     @Test
     public void receivedRequestsAddedUpdatesListAfterRefresh() {
-        selectTab(1);
-        createRequest(otherUser, currentUser);
+        selectAndRequest(1, otherUser, currentUser);
 
         onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(1)));
         onView(new RecyclerViewMatcher(R.id.recycler_view_friend_requests).atPosition(0))
@@ -182,8 +184,7 @@ public class SocialFragmentTest {
 
     @Test
     public void sentRequestsAddedUpdatesListAfterRefresh() {
-        selectTab(2);
-        createRequest(currentUser, otherUser);
+        selectAndRequest(2, currentUser, otherUser);
 
         onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(1)));
         onView(new RecyclerViewMatcher(R.id.recycler_view_sent_request).atPosition(0))
@@ -195,21 +196,21 @@ public class SocialFragmentTest {
                 .check(matches(hasDescendant(withText(otherUser.getDisplayName()))));
     }
 
+    private void deleteAndCheck(int tab, User user1, User user2, int id1, int id2){
+        selectTab(tab);
+        FriendshipUtils.deleteRequest(user1, user2);
+        onView(withId(id1)).perform(swipeDown());
+        onView(withId(id2)).check(matches(hasChildCount(0)));
+    }
 
     @Test
     public void receivedRequestRemovedUpdatesListAfterRefresh() {
-        selectTab(1);
-        FriendshipUtils.deleteRequest(newFriend, currentUser);
-        onView(withId(R.id.swipe_refresh_layout_friend_requests)).perform(swipeDown());
-        onView(withId(R.id.recycler_view_friend_requests)).check(matches(hasChildCount(0)));
+        deleteAndCheck(1, newFriend, currentUser, R.id.swipe_refresh_layout_friend_requests, R.id.recycler_view_friend_requests);
     }
 
     @Test
     public void sentRequestRemovedUpdatesListAfterRefresh() {
-        selectTab(2);
-        FriendshipUtils.deleteRequest(currentUser, requestedUser);
-        onView(withId(R.id.swipe_refresh_layout_sent_requests)).perform(swipeDown());
-        onView(withId(R.id.recycler_view_sent_request)).check(matches(hasChildCount(0)));
+        deleteAndCheck(2, currentUser, requestedUser, R.id.swipe_refresh_layout_sent_requests, R.id.recycler_view_sent_request);
     }
 
     @Test
