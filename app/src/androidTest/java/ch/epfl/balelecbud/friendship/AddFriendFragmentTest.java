@@ -25,16 +25,12 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -81,28 +77,26 @@ public class AddFriendFragmentTest {
 
     }
 
-    @Test
-    public void addFriendDialogInvalidEmail() {
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText("fakemail"))
+    private void typeEmailAndCheck(String mail){
+        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(mail))
                 .perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
+    }
+
+    @Test
+    public void addFriendDialogInvalidEmail() {
+        typeEmailAndCheck("fakemail");
     }
 
     @Test
     public void addFriendDialogEmptyEmail() {
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(""))
-                .perform(closeSoftKeyboard());
-        onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
+        typeEmailAndCheck("");
     }
 
     @Test
     public void addFriendDialogOwnEmail() {
-        onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(currentUser.getEmail()))
-                .perform(closeSoftKeyboard());
-        onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
+        typeEmailAndCheck(currentUser.getEmail());
     }
 
     @Test
