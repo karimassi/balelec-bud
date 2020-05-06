@@ -11,6 +11,7 @@ import ch.epfl.balelecbud.cloudMessaging.CloudMessagingService;
 import ch.epfl.balelecbud.cloudMessaging.MessagingService;
 import ch.epfl.balelecbud.notifications.NotificationMessage;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
+import ch.epfl.balelecbud.util.database.CachedDatabase;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.FirestoreDatabase;
 import ch.epfl.balelecbud.util.http.HttpClient;
@@ -49,7 +50,7 @@ public class BalelecbudApplication extends Application {
         super.onCreate();
         appContext = getApplicationContext();
         if (appDatabase == null)
-            appDatabase = FirestoreDatabase.getInstance();
+            appDatabase = CachedDatabase.getInstance();
         if (appAuthenticator == null)
             appAuthenticator = FirebaseAuthenticator.getInstance();
         if (httpClient == null)

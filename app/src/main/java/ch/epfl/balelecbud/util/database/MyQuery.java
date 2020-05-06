@@ -40,4 +40,23 @@ public class MyQuery {
     public MyGeoClause getGeoClause() {
         return geoClause;
     }
+
+    public boolean hasDocumentIdOperand() {
+        for (MyWhereClause clause: getWhereClauses()) {
+            if (clause.getLeftOperand().equals(Database.DOCUMENT_ID_OPERAND)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getIdOperand() {
+        for (MyWhereClause clause: getWhereClauses()) {
+            if (clause.getLeftOperand().equals(Database.DOCUMENT_ID_OPERAND)) {
+                return (String) clause.getRightOperand();
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
 }
