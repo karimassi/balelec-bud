@@ -12,16 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.database.MyWhereClause;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
-import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.models.User;
-
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
 public class Message {
 

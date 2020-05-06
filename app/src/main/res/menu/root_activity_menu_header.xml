@@ -7,6 +7,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/activity_main_drawer_home"
+            android:icon="@mipmap/info"
+            android:title="Home" />
+        <item
             android:id="@+id/activity_main_drawer_info"
             android:icon="@mipmap/info"
             android:title="Information" />
@@ -30,6 +34,18 @@
             android:id="@+id/activity_main_drawer_social"
             android:icon="@mipmap/social"
             android:title="Social" />
+        <item
+            android:id="@+id/activity_main_drawer_emergency"
+            android:icon="@mipmap/info"
+            android:title="Emergency" />
+        <item
+            android:id="@+id/activity_main_drawer_emergency_info"
+            android:icon="@mipmap/info"
+            android:title="Emergency Informations" />
+        <item
+            android:id="@+id/activity_main_drawer_emergency_numbers"
+            android:icon="@mipmap/info"
+            android:title="Emergency Numbers" />
         <item
             android:id="@+id/activity_main_drawer_settings"
             android:icon="@drawable/settings"
