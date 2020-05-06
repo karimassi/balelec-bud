@@ -21,7 +21,7 @@ import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewActivityTest extends BasicActivityTest {
-    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mockDB = MockDatabase.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
 
     @Rule
@@ -42,7 +42,8 @@ public class MapViewActivityTest extends BasicActivityTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
-                    BalelecbudApplication.setAppDatabaseWrapper(mockDB);
+                    mockDB.resetDatabase();
+                    BalelecbudApplication.setAppDatabase(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     MapViewActivity.setMockCallback(mapboxMap -> {
                     });
@@ -55,7 +56,7 @@ public class MapViewActivityTest extends BasicActivityTest {
                         public void removeLocationUpdates(PendingIntent intent) {
                         }
                     });
-                    mockAuth.setCurrentUser(MockDatabaseWrapper.celine);
+                    mockAuth.setCurrentUser(MockDatabase.celine);
                 }
             };
 

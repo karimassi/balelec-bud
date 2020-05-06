@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.pointOfInterest;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +16,8 @@ import java.util.concurrent.ExecutionException;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.database.MyWhereClause;
 
@@ -26,7 +25,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class PointOfInterestUtilsTest {
 
-    private final MockDatabaseWrapper db = MockDatabaseWrapper.getInstance();
+    private final MockDatabase db = MockDatabase.getInstance();
     private final static Location l1 = new Location(1, 1);
     private final static Location l2 = new Location(1, 2);
     private final static Location l3 = new Location(2, 1);
@@ -35,17 +34,17 @@ public class PointOfInterestUtilsTest {
     @Before
     public void setup(){
         List<Location> locations = Lists.newArrayList(l1, l2, l3, l4);
-        db.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
+        db.resetDocument(Database.LOCATIONS_PATH);
         int i = 0;
         for(Object obj : locations){
-            db.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, Integer.toString(i++), obj);
+            db.storeDocumentWithID(Database.LOCATIONS_PATH, Integer.toString(i++), obj);
         }
     }
 
     private List<Location> getResList(List<MyWhereClause> clauses)
             throws InterruptedException, ExecutionException {
-        MyQuery query = new MyQuery(DatabaseWrapper.LOCATIONS_PATH, clauses);
-        CompletableFuture<List<Location>> result = db.query(query, Location.class);
+        MyQuery query = new MyQuery(Database.LOCATIONS_PATH, clauses);
+        CompletableFuture<List<Location>> result = db.queryWithType(query, Location.class);
         return result.get();
     }
 
@@ -102,16 +101,16 @@ public class PointOfInterestUtilsTest {
 
     @Test
     public void getAmountNearPOIReturnsExpectedAmount() throws ExecutionException, InterruptedException {
-        db.resetDocument(DatabaseWrapper.LOCATIONS_PATH);
+        db.resetDocument(Database.LOCATIONS_PATH);
         ArrayList<Location> locations = Lists.newArrayList(new Location(46.51812, 6.56900),
                 new Location(46.51814, 6.56911));
 
         int index = 0;
         for (Location loc : locations) {
-            db.storeDocumentWithID(DatabaseWrapper.LOCATIONS_PATH, Integer.toString(index++), loc);
+            db.storeDocumentWithID(Database.LOCATIONS_PATH, Integer.toString(index++), loc);
         }
 
-        BalelecbudApplication.setAppDatabaseWrapper(db);
+        BalelecbudApplication.setAppDatabase(db);
 
         PointOfInterest p1 = new PointOfInterest(new Location(46.51808,6.56906),
                 "whatever", PointOfInterestType.STAGE);

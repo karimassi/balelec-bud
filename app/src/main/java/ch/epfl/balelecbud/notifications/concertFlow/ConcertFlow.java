@@ -12,16 +12,17 @@ import androidx.room.Room;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+import ch.epfl.balelecbud.WelcomeActivity;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDAO;
 import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
-import ch.epfl.balelecbud.notifications.concertSoon.NotificationSchedulerInterface;
+import ch.epfl.balelecbud.notifications.NotificationInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 public class ConcertFlow extends IntentService {
     private static final String TAG = ConcertFlow.class.getSimpleName();
-    private static NotificationSchedulerInterface scheduler;
+    private static NotificationInterface scheduler;
     private static ConcertOfInterestDatabase mockDb = null;
     private static Consumer<Intent> launcher = null;
     private ConcertOfInterestDAO concertOfInterestDAO;
@@ -37,7 +38,7 @@ public class ConcertFlow extends IntentService {
     }
 
     @VisibleForTesting
-    public static void setNotificationScheduler(NotificationSchedulerInterface scheduler) {
+    public static void setNotificationScheduler(NotificationInterface scheduler) {
         ConcertFlow.scheduler = scheduler;
     }
 

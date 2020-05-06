@@ -5,33 +5,30 @@ import java.util.concurrent.CompletableFuture;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public interface DatabaseWrapper {
+public interface Database {
 
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
-    String TRANSPORT_PATH = "transports";
     String EMERGENCY_INFO_PATH = "emergencyInfo";
     String CONCERT_SLOTS_PATH = "concertSlots";
     String USERS_PATH = "users";
+    String TOKENS_PATH = "tokens";
     String LOCATIONS_PATH = "locations";
     String FRIENDSHIPS_PATH = "friendships";
     String FRIEND_REQUESTS_PATH = "friendRequests";
+    String SENT_REQUESTS_PATH = "sentRequests";
     String EMERGENCY_NUMBER_PATH = "emergencyNumbers";
     String EMERGENCIES_PATH = "emergencies";
+
+    String DOCUMENT_ID_OPERAND = "documentId";
 
     void unregisterDocumentListener(String collectionName, String documentID);
 
     <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);
     
-    <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
+    <T> CompletableFuture<List<T>> queryWithType(MyQuery query, final Class<T> tClass);
 
-    CompletableFuture<List<String>> queryIds(MyQuery query);
-    
-    <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type);
-
-    CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID);
-
-    <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName, String fieldName, String fieldValue, Class<T> type);
+    CompletableFuture<List<Map<String, Object>>> query(MyQuery query);
 
     void updateDocument(String collectionName, String documentID, Map<String,Object> updates);
 

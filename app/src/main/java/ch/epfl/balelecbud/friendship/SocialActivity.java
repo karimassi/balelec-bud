@@ -47,7 +47,6 @@ public class SocialActivity extends BasicActivity {
             AddFriendFragment dialog = AddFriendFragment.newInstance(getAppAuthenticator().getCurrentUser());
             dialog.show(getSupportFragmentManager(), getString(R.string.add_friend_title));
         });
-
     }
 
     private void setupFragmentAdapter() {
