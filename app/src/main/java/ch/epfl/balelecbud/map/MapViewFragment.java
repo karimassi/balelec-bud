@@ -169,7 +169,7 @@ public class MapViewFragment extends Fragment {
 
     private void listenFriendsLocationById(List<String> friendIds) {
         for (String friendId : friendIds) {
-            CompletableFuture<User> friend = FriendshipUtils.getUserFromUid(friendId);
+            CompletableFuture<User> friend = FriendshipUtils.getUserFromUid(friendId, Database.Source.REMOTE);
             friend.thenAccept(user -> Log.d(TAG, "listenFriendsLocationById: get user = [" + user.toString() + "]"));
             friend.thenAccept(this::listenFriendLocation);
         }

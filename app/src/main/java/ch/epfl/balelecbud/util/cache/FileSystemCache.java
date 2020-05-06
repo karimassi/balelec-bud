@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -25,13 +24,22 @@ import ch.epfl.balelecbud.util.database.MyQuery;
 
 public class FileSystemCache implements Cache {
 
-    private final String jsonSuffix = ".json";
+    Gson gson;
+    Context context;
+
+    public FileSystemCache() {
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        context = BalelecbudApplication.getAppContext();
+    }
 
     @Override
     public boolean contains(MyQuery query) {
         Context context = BalelecbudApplication.getAppContext();
         File cacheFile = new File(context.getCacheDir(), query.getCollectionName());
         if (cacheFile.exists()) {
+            if (query.getGeoClause() != null) {
+                return false;
+            }
             if (query.getWhereClauses().isEmpty()) return true;
             if (query.hasDocumentIdOperand()) {
                 File requestedFile = new File(cacheFile, query.getIdOperand());
@@ -42,52 +50,45 @@ public class FileSystemCache implements Cache {
         return false;
     }
 
-    @Override
-    public boolean contains(String collectionName, Object o) {
-        return false;
-    }
-
-    @Override
-    public <T> CompletableFuture<List<T>> get(MyQuery query, Class<T> tClass) throws FileNotFoundException {
+    private File[] getMatchingFiles(MyQuery query) {
         Context context = BalelecbudApplication.getAppContext();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         File cacheFile = new File(context.getCacheDir(), query.getCollectionName());
         FilenameFilter filenameFilter = (dir, name) -> {
             if (query.hasDocumentIdOperand()) return name.equals(query.getIdOperand());
             else return true;
         };
+        return cacheFile.listFiles(filenameFilter);
+    }
+
+    @Override
+    public <T> CompletableFuture<List<T>> get(MyQuery query, Class<T> tClass) throws IOException {
         List<T> items = new ArrayList<>();
-        for (File file : cacheFile.listFiles(filenameFilter)) {
+        for (File file : getMatchingFiles(query)) {
             FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader(fis);
             items.add(gson.fromJson(isr, tClass));
+            isr.close();
+            fis.close();
         }
         return CompletableFuture.completedFuture(items);
     }
 
     @Override
-    public CompletableFuture<List<Map<String, Object>>> get(MyQuery query) throws FileNotFoundException {
-        Context context = BalelecbudApplication.getAppContext();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        File cacheFile = new File(context.getCacheDir(), query.getCollectionName());
-        FilenameFilter filenameFilter = (dir, name) -> {
-            if (query.hasDocumentIdOperand()) return name.equals(query.getIdOperand());
-            else return true;
-        };
+    public CompletableFuture<List<Map<String, Object>>> get(MyQuery query) throws IOException {
         List<Map<String, Object>> items = new ArrayList<>();
-        for (File file : cacheFile.listFiles(filenameFilter)) {
+        for (File file : getMatchingFiles(query)) {
             FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader(fis);
             Type type = new TypeToken<Map<String, Object>>(){}.getType();
             items.add(gson.fromJson(isr, type));
+            isr.close();
+            fis.close();
         }
         return CompletableFuture.completedFuture(items);
     }
 
     @Override
-    public <T> void put(String collectionName, String id, T document) throws IOException {
-        Context context = BalelecbudApplication.getAppContext();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public void put(String collectionName, String id, Object document) throws IOException {
         File cacheFile = new File(context.getCacheDir(), collectionName);
         cacheFile.mkdir();
         if (!cacheFile.exists()) {
@@ -102,25 +103,14 @@ public class FileSystemCache implements Cache {
     }
 
     @Override
-    public void put(String collectionName, String id, Map<String, Object> document) throws IOException {
-        Context context = BalelecbudApplication.getAppContext();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public void flush(String collectionName) {
         File cacheFile = new File(context.getCacheDir(), collectionName);
-        cacheFile.mkdir();
-        if (!cacheFile.exists()) {
-            cacheFile = new File(context.getFilesDir(), collectionName);
+        if (cacheFile.isDirectory()) {
+            for (File file : cacheFile.listFiles()) {
+                file.delete();
+            }
         }
-        File toStore = new File(cacheFile, id);
-        FileOutputStream fos = new FileOutputStream(toStore);
-        OutputStreamWriter osw =new OutputStreamWriter(fos);
-        gson.toJson(document, osw);
-        osw.close();
-        fos.close();
-    }
-
-    @Override
-    public void flush() {
-
+        cacheFile.delete();
     }
 
 

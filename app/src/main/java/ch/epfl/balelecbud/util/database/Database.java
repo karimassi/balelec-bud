@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 
 public interface Database {
 
+    enum Source {REMOTE, CACHE};
+
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
     String EMERGENCY_INFO_PATH = "emergencyInfo";

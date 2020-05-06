@@ -18,6 +18,7 @@ import ch.epfl.balelecbud.util.database.MyWhereClause;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.Database.FRIENDSHIPS_PATH;
 import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
@@ -75,35 +76,27 @@ public class FriendshipUtils {
                 sender.getUid(), updates);
     }
 
-    public static List<CompletableFuture<User>> getUsersFromUids(List<String> uidList) {
+    public static List<CompletableFuture<User>> getUsersFromUids(List<String> uidList, Database.Source preferredSource) {
         final List<CompletableFuture<User>> cfs = new ArrayList<>();
         for (String uid : uidList) {
-            cfs.add(FriendshipUtils.getUserFromUid(uid));
+            cfs.add(FriendshipUtils.getUserFromUid(uid, preferredSource));
         }
         return cfs;
     }
 
-    public static CompletableFuture<User> getUserFromUid(String uid) {
-        MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, uid));
+    public static CompletableFuture<User> getUserFromUid(String uid, Database.Source preferredSource) {
+        MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, uid), preferredSource);
         return getAppDatabase().queryWithType(query, User.class).thenApply(users -> users.get(0));
     }
 
-    public static CompletableFuture<User> getUserFromEmail(String email) {
-        MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause("email", EQUAL, email));
+    public static CompletableFuture<User> getUserFromEmail(String email, Database.Source preferredSource) {
+        MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause("email", EQUAL, email), preferredSource);
         return getAppDatabase()
                 .queryWithType(query, User.class).thenApply(users -> users.get(0));
     }
 
-    public static CompletableFuture<List<String>> getRequestsUids(User user) {
-        return getUidsFromCollection(user, Database.FRIEND_REQUESTS_PATH);
-    }
-
     public static CompletableFuture<List<String>> getFriendsUids(User user) {
-        return getUidsFromCollection(user, Database.FRIENDSHIPS_PATH);
-    }
-
-    private static CompletableFuture<List<String>> getUidsFromCollection(User user, String collectionName) {
-        MyQuery query = new MyQuery(collectionName, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, user.getUid()));
+        MyQuery query = new MyQuery(FRIENDSHIPS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, user.getUid()));
         return getAppDatabase().query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet()));
     }
 }

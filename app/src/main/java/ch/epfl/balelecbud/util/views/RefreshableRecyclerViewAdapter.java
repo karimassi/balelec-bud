@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import ch.epfl.balelecbud.util.database.Database;
+
 public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
 
     private final ViewHolderFactory<B> factory;
@@ -19,11 +21,11 @@ public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder
         this.data = data;
         this.itemId = itemId;
         data.setAdapter(this);
-        data.reload();
+        data.reload(Database.Source.CACHE);
     }
 
     public void reloadData(){
-        data.reload();
+        data.reload(Database.Source.REMOTE);
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout refreshLayout) {

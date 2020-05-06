@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.epfl.balelecbud.util.database.Database;
+
 public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
 
     protected final List<A> data = new LinkedList<>();
@@ -15,7 +17,7 @@ public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
         this.rvAdapter = adapter;
     }
 
-    public abstract void reload();
+    public abstract void reload(Database.Source preferredSource);
 
     public abstract void bind(int index, B viewHolder);
 

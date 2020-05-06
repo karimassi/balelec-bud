@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.util.database;
 
 import android.util.Log;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.function.Consumer;
 import ch.epfl.balelecbud.util.cache.Cache;
 import ch.epfl.balelecbud.util.cache.FileSystemCache;
 
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 public class CachedDatabase implements Database {
 
@@ -45,16 +43,19 @@ public class CachedDatabase implements Database {
     @Override
     public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
         CompletableFuture<List<T>> result = CompletableFuture.completedFuture(new ArrayList<>());
-        if (cache.contains(query)) {
+        if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
+            Log.d(TAG, "Fetching from cache");
             try {
                 result = cache.get(query, tClass);
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 Log.d(TAG, "queryWithType: " + e.getLocalizedMessage());
             }
         } else {
+            Log.d(TAG, "Fecthing from remote");
             result = database.queryWithType(query, tClass);
             result.whenComplete((ts, throwable) -> {
                 if (throwable == null) {
+                    cache.flush(query.getCollectionName());
                     for (T t : ts) {
                         String id = query.hasDocumentIdOperand() ? query.getIdOperand() : String.valueOf(t.hashCode());
                         try {
@@ -72,16 +73,19 @@ public class CachedDatabase implements Database {
     @Override
     public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
         CompletableFuture<List<Map<String, Object>>> result = CompletableFuture.completedFuture(new ArrayList<>());
-        if (cache.contains(query)) {
+        if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
+            Log.d(TAG, "Fetching from cache");
             try {
                 result = cache.get(query);
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 Log.d(TAG, "query: " + e.getLocalizedMessage());
             }
         } else {
+            Log.d(TAG, "Fecthing from remote");
             result = database.query(query);
             result.whenComplete((maps, throwable) -> {
                if (throwable == null) {
+                   cache.flush(query.getCollectionName());
                    for (Map m : maps) {
                        String id = query.hasDocumentIdOperand() ? query.getIdOperand() : String.valueOf(m.hashCode());
                        try {
