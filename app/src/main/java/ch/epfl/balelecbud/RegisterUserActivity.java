@@ -113,7 +113,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     } else {
                         getAppAuthenticator().setCurrentUser(users.get(0));
-                        Intent intent = new Intent(RegisterUserActivity.this, WelcomeActivity.class);
+                        Intent intent = new Intent(RegisterUserActivity.this, RootActivity.class);
                         startActivity(intent);
                         finish();
                     }
