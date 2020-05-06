@@ -8,4 +8,14 @@
     tools:context=".WelcomeFragment"
     android:gravity="center"
     android:background="@drawable/blek_main_root"
-    android:orientation="vertical" />
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/listen_on_spotify_button"
+        android:layout_width="188.96dp"
+        android:layout_height="56.64dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="500dp"
+        android:background="@drawable/spotify_logo_white" />
+
+</LinearLayout>

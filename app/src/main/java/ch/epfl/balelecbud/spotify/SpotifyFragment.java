@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.Track;import ch.epfl.balelecbud.BasicActivity;
+import com.spotify.protocol.types.Track;
 
 public class SpotifyFragment extends Fragment {
 
@@ -72,7 +72,7 @@ public class SpotifyFragment extends Fragment {
     /* Welcome: attributes
     private static final String SPOTIFY_CLIENT_ID = "7a2fb16c68b44c5b9fc7397f6d25f714";
     private static final String REDIRECT_URI = "ch.epfl.balelecbud://callback";
-    private static final String BALELEC_PLAYLIST = "spotify:playlist:37i9dQZF1DX7K31D69s4M1";
+    private static final String BALELEC_PLAYLIST = "spotify:playlist:48yI8Gqy44311pEJggXyp3";
     private static final String DOWNLOAD_MESSAGE = "Download Spotify and log-in to listen to the Balelec playlist";
     private static final String LOGIN_MESSAGE = "Go to Spotify and log-in to listen to the Balelec playlist";
 
