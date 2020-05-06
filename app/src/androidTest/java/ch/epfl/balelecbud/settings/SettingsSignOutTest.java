@@ -11,11 +11,10 @@ import ch.epfl.balelecbud.authentication.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 
 public class SettingsSignOutTest {
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
@@ -29,10 +28,9 @@ public class SettingsSignOutTest {
         }
     };
 
-
     @Test
     public void whenSignedOutSignOutIsNotDisplayed() {
-        onView(withText(R.string.sign_out_text)).check(matches(not(isDisplayed())));
+        onView(withText(R.string.sign_out_text)).check(doesNotExist());
     }
 
     @Test
@@ -49,7 +47,7 @@ public class SettingsSignOutTest {
     @Test
     public void whenSignedOutICanRegister() {
         onView(withText(R.string.click_to_sign_in)).perform(click());
-        onView(withId(R.id.buttonLoginToRegister)).perform(click());
+        onView(withText(R.string.action_no_account)).perform(click());
         onView(withText(R.string.register)).check(matches(isDisplayed()));
     }
 }

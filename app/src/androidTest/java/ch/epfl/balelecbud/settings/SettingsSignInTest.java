@@ -17,11 +17,11 @@ import ch.epfl.balelecbud.location.LocationUtil;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.balelecbud.util.database.MockDatabaseWrapper.alex;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertFalse;
 
 public class SettingsSignInTest {
@@ -38,7 +38,7 @@ public class SettingsSignInTest {
 
     @Test
     public void whenSignedInSignInIsNotDisplayed() {
-        onView(withText(R.string.click_to_sign_in)).check(matches(not(isDisplayed())));
+        onView(withText(R.string.click_to_sign_in)).check(doesNotExist());
     }
 
     @Test
