@@ -8,10 +8,10 @@
 
     <ListView
         android:id="@+id/numbersListView"
-        android:layout_width="399dp"
-        android:layout_height="640dp"
-        android:layout_marginTop="66dp"
-        android:layout_marginBottom="25dp"
+        android:layout_width="@dimen/emergency_nb_width"
+        android:layout_height="@dimen/emergency_nb_height"
+        android:layout_marginTop="@dimen/emergency_nb_margin_top"
+        android:layout_marginBottom="@dimen/emergency_nb_margin_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

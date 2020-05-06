@@ -6,8 +6,6 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
-import org.junit.Ignore;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,14 +35,6 @@ public class EmergencyNumberActivityTest {
         mock.storeDocument(Database.EMERGENCY_NUMBER_PATH, num1);
         BalelecbudApplication.setAppDatabase(mock);
         FragmentScenario.launchInContainer(EmergencyNumbersFragment.class);
-    }
-
-    @Ignore("The list view can never be null")
-    @Test
-    public void testListViewIsNonNull() {
-//        RootActivity mActivity = mActivityRule.getActivity();
-//        View viewById = mActivity.findViewById(R.id.numbersListView);
-//        assertThat(viewById, notNullValue());
     }
 
     @Test

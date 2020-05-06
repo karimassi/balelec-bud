@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud;
 
-import android.app.PendingIntent;
 import android.view.Gravity;
 
 import androidx.test.espresso.contrib.DrawerActions;
@@ -8,14 +7,9 @@ import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiDevice;
 
-import com.google.android.gms.location.LocationRequest;
-
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.balelecbud.location.LocationClient;
-import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.map.MapViewFragment;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -24,7 +18,6 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.junit.Assert.assertFalse;
 
 public class RootActivityTests {
     private static UiDevice device = UiDevice.getInstance(getInstrumentation());
@@ -42,21 +35,21 @@ public class RootActivityTests {
         device.waitForIdle();
     }
 
-    public static void openDrawer() {
+    private static void openDrawer() {
         device.pressBack();
         onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
         device.waitForIdle();
         onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
     }
 
-    public static void clickItem(int itemId, int viewToDisplayId) {
+    private static void clickItem(int itemId, int viewToDisplayId) {
         onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
         device.waitForIdle();
         onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void signOutFromDrawer() {
+    public void canSignOutFromDrawer() {
         openDrawer();
         onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
         onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
@@ -72,87 +65,54 @@ public class RootActivityTests {
     }
 
     @Test
-    public void openInfoActivityFromDrawer() {
+    public void canOpenInfoActivityFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_info, R.id.festivalInfoRecyclerView);
     }
 
     @Test
-    public void openScheduleActivityFromDrawer() {
+    public void canOpenScheduleActivityFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
     }
 
     @Test
-    public void openPOIActivityFromDrawer() {
+    public void canOpenPOIActivityFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_poi, R.id.pointOfInterestRecyclerView);
     }
 
-    @Ignore
     @Test
-    public void openMapActivityFromDrawer() {
-        MapViewFragment.setMockCallback(googleMap -> {});
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_map, R.id.map_view);
-    }
-
-    @Test
-    public void openEmergencyActivityFromDrawer() {
+    public void canOpenEmergencyActivityFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {});
         openDrawer();
         clickItem(R.id.activity_main_drawer_emergency, R.id.fragment_emergency_linear_layout);
     }
 
     @Test
-    public void openEmergencyInfoActivityFromDrawer() {
+    public void canOpenEmergencyInfoActivityFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {});
         openDrawer();
         clickItem(R.id.activity_main_drawer_emergency_info, R.id.emergency_info_constraint_layout);
     }
 
     @Test
-    public void openEmergencyNumbersActivityFromDrawer() {
+    public void canOpenEmergencyNumbersActivityFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {});
         openDrawer();
         clickItem(R.id.activity_main_drawer_emergency_numbers, R.id.emergency_number_layout);
     }
 
     @Test
-    public void openSettingsActivityFromDrawer() {
+    public void canOpenSettingsActivityFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {});
         openDrawer();
         onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_settings));
     }
 
     @Test
-    public void openTransportActivityFromDrawer() {
+    public void canOpenTransportActivityFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_transport, R.id.transport_fragment_container);
-    }
-
-    @Ignore
-    @Test
-    public void openSocialActivityFromDrawer() {
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_social, R.id.tabs_social);
-    }
-
-    @Ignore
-    @Test
-    public void signOutDisableLocation() {
-        LocationUtil.enableLocation();
-        LocationUtil.setLocationClient(new LocationClient() {
-            @Override
-            public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
-            }
-
-            @Override
-            public void removeLocationUpdates(PendingIntent intent) {
-            }
-        });
-        openDrawer();
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
-        assertFalse(LocationUtil.isLocationActive());
     }
 }

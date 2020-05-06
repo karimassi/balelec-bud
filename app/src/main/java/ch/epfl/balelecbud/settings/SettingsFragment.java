@@ -21,12 +21,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         return new SettingsFragment();
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        return inflater.inflate(R.layout.fragment_settings, container, false);
-//    }
-
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);

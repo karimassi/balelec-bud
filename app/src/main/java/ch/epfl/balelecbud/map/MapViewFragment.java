@@ -62,7 +62,7 @@ public class MapViewFragment extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_main_map, container, false);
         mapView = inflatedView.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
-        if (myMap != null) {
+        if (mockCallback != null) {
             mapView.getMapAsync(mockCallback);
         } else {
             mapView.getMapAsync(mapboxMap -> onMapReady(new MapboxMapAdapter(mapboxMap)));

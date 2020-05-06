@@ -16,8 +16,8 @@
             android:id="@+id/emergencyInfoRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="@dimen/poi_margin"
+            android:layout_marginRight="@dimen/poi_margin"
             app:layoutManager="LinearLayoutManager"
             tools:context=".EmergencyInformationActivity"
             tools:listitem="@layout/item_emergencyinfo" />

@@ -54,9 +54,9 @@ public class FestivalInformationFragmentTest {
         testInfoInView(onView(new RecyclerViewMatcher(R.id.festivalInfoRecyclerView).atPosition(0)), info);
     }
 
-    @Ignore
+    @Ignore("Should not be able to delete from Database for now but it's eventually a feature we'd like to implement so ignore the test for now")
     @Test
-    public void testCanDeleteInfoFromDatabase() {
+    public void testDeletedInfoIsNotDisplayed() {
         final FestivalInformation info1 = new FestivalInformation("Bad", "Hello it's a me, bad");
         final FestivalInformation info2 = new FestivalInformation("Good", "Hello it's a me, good");
 

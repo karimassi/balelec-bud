@@ -82,16 +82,6 @@ public class ScheduleFragmentTest  {
 
 
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
-
-//        mock.deleteDocument(Database.CONCERT_SLOTS_PATH, slot1);
-//        refreshRecyclerView();
-//
-//        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
-//
-//        mock.deleteDocument(Database.CONCERT_SLOTS_PATH, slot2);
-//        refreshRecyclerView();
-//
-//        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
     }
 
     @Test
