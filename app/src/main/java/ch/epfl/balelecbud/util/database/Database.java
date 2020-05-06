@@ -25,7 +25,7 @@ public interface Database {
     void unregisterDocumentListener(String collectionName, String documentID);
 
     <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);
-    
+
     <T> CompletableFuture<List<T>> queryWithType(MyQuery query, final Class<T> tClass);
 
     CompletableFuture<List<Map<String, Object>>> query(MyQuery query);
@@ -39,3 +39,4 @@ public interface Database {
     void deleteDocumentWithID(String collectionName, String documentID);
 
 }
+

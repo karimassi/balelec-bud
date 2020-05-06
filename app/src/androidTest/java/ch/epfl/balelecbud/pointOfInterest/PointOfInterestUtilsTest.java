@@ -33,6 +33,7 @@ public class PointOfInterestUtilsTest {
 
     @Before
     public void setup(){
+        db.resetDatabase();
         List<Location> locations = Lists.newArrayList(l1, l2, l3, l4);
         db.resetDocument(Database.LOCATIONS_PATH);
         int i = 0;

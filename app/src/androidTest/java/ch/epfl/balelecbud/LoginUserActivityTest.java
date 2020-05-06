@@ -2,6 +2,7 @@ package ch.epfl.balelecbud;
 
 import android.Manifest;
 
+import androidx.test.espresso.Root;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -103,7 +104,7 @@ public class LoginUserActivityTest extends BasicAuthenticationTest{
         enterEmail("karim@epfl.ch");
         enterPassword("123456");
         onView(withId(R.id.buttonLogin)).perform(click());
-        intended(hasComponent(WelcomeActivity.class.getName()));
+        intended(hasComponent(RootActivity.class.getName()));
     }
 
     @Test

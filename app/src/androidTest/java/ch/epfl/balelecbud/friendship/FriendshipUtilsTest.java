@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.LoginUserActivity;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
@@ -35,6 +36,7 @@ public class FriendshipUtilsTest {
 
     @Before
     public void setup() {
+        db.resetDatabase();
         BalelecbudApplication.setAppDatabase(db);
         BalelecbudApplication.setAppAuthenticator(authenticator);
         authenticator.signOut();
@@ -42,8 +44,8 @@ public class FriendshipUtilsTest {
     }
 
     @Rule
-    public final ActivityTestRule<LoginUserActivity> mActivityRule =
-            new ActivityTestRule<>(LoginUserActivity.class);
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<>(RootActivity.class);
 
     private void addFriend(final User friend) throws Throwable {
         runOnUIThreadAndWait(() -> FriendshipUtils.addFriend(friend));

@@ -3,13 +3,10 @@ package ch.epfl.balelecbud.util.intents;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -109,9 +106,9 @@ public final class FlowUtil {
      * @return       the given intent with the slots packed in it
      */
     @NonNull
-    public static Intent packCallback(Slot[] slots, @NonNull Intent intent) {
+    public static Intent packCallback(ArrayList<Slot> slots, @NonNull Intent intent) {
         intent.setAction(RECEIVE_ALL_CONCERT);
-        intent.putExtra(CALLBACK, slots);
+        intent.putParcelableArrayListExtra(CALLBACK, slots);
         return intent;
     }
 
@@ -121,24 +118,11 @@ public final class FlowUtil {
      * @param intent the intent to retrieve the array from
      * @return       a list of the slots stored in the intent or null if the Intent wasn't properly formatted
      */
-    public static List<Slot> unpackCallback(@NonNull Intent intent) {
+    public static ArrayList<Slot> unpackCallback(@NonNull Intent intent) {
         if (RECEIVE_ALL_CONCERT.equals(intent.getAction())) {
-            Parcelable[] ps = intent.getParcelableArrayExtra(CALLBACK);
-            if (ps != null)
-                return retrieveSlots(ps);
+            return intent.getParcelableArrayListExtra(CALLBACK);
         }
         return null;
-    }
-
-    @NonNull
-    private static List<Slot> retrieveSlots(@NonNull Parcelable[] ps) {
-        Log.d("FlowUtil", "unpackCallback: ps = " + Arrays.toString(ps));
-        List<Slot> slots = new LinkedList<>();
-        for (Parcelable p : ps) {
-            if (p instanceof Slot)
-                slots.add((Slot) p);
-        }
-        return slots;
     }
 
     /**

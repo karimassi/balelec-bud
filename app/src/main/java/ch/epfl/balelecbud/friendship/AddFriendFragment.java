@@ -3,6 +3,7 @@ package ch.epfl.balelecbud.friendship;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -13,10 +14,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.ScheduleFragment;
 import ch.epfl.balelecbud.models.User;
 
 public class AddFriendFragment extends DialogFragment {
+
     private EditText editTextAddFriend;
+    private static final String TAG = AddFriendFragment.class.getSimpleName();
 
     @NonNull
     @Override
@@ -24,7 +28,7 @@ public class AddFriendFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_add_friend, null);
-
+        Log.d(TAG, "onCreateDialog: view inflated");
         editTextAddFriend = view.findViewById(R.id.edit_text_email_add_friend);
 
         builder.setView(view)
