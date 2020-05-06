@@ -70,7 +70,7 @@ public class ConcertSoonNotificationTest {
         String expectedTitle = mActivityRule.getActivity().getString(R.string.concert_soon_notification_title);
         String expectedText = "Le nom de mon artiste starts in 15 minutes on Scene 3";
         Context ctx = mActivityRule.getActivity().getApplicationContext();
-        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", Timestamp.now(), Timestamp.now());
+        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", "path1", Timestamp.now(), Timestamp.now());
 
         NotificationScheduler ns = NotificationScheduler.getInstance();
         ns.scheduleNotification(ctx, s);
@@ -98,7 +98,7 @@ public class ConcertSoonNotificationTest {
         // which leaves plenty of time to cancel it
         cal.add(Calendar.SECOND, 5);
         cal.add(Calendar.MINUTE, 15);
-        Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3",
+        Slot s = new Slot(0, "Le nom de mon artiste", "path2", "Scene 3",
                 new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
 
         NotificationScheduler ns = NotificationScheduler.getInstance();
