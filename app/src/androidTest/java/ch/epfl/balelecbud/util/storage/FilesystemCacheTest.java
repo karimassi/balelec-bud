@@ -35,7 +35,6 @@ public class FilesystemCacheTest {
     public void flushDeletesFiles() throws IOException {
         String fileName = "whatever";
         fsCache.put(File.createTempFile("tmpPrefix", "tmpFile"), fileName);
-        List<File> cachedFiles = Arrays.asList(fsCache.getCacheDirectory().listFiles());
         assertTrue(fsCache.contains(fileName));
         fsCache.flush();
         assertFalse(fsCache.contains(fileName));

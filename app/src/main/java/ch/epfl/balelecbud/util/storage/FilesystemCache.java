@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.VisibleForTesting;
 
+import com.google.common.io.Files;
+
 import java.io.File;
 import java.io.IOError;
 import java.io.IOException;
@@ -19,12 +21,11 @@ public class FilesystemCache implements Cache {
     private static final String TAG = FilesystemCache.class.getSimpleName();
     private File cacheDir;
 
-    FilesystemCache(){
+    public FilesystemCache(){
         cacheDir = getCacheDirectory();
     }
 
-    @VisibleForTesting
-    public File getCacheDirectory(){
+    private File getCacheDirectory(){
         Context ctx = BalelecbudApplication.getAppContext();
         File dir = new File(ctx.getFilesDir(), "cache");
         if(!dir.exists()){
@@ -32,6 +33,12 @@ public class FilesystemCache implements Cache {
                 //TODO throw an exception and catch it in CachedStorage, then we do not try
                 //     to access the cache
                 Log.w(TAG, "could not create cache directory");
+            }
+        }
+        File artistsImagesDir = new File(dir, "artists_images");
+        if(!artistsImagesDir.exists()){
+            if(!artistsImagesDir.mkdir()){
+                Log.w(TAG, "could not create cache/artists_images directory");
             }
         }
         return dir;
@@ -50,10 +57,14 @@ public class FilesystemCache implements Cache {
     @Override
     public File put(File file, String name) {
         File newFile = new File(cacheDir, name);
-        if (file.renameTo(newFile)) {
+
+        try{
+            Files.move(file, newFile);
             return newFile;
-        } else {
-            throw new IOError(new IOException("could not rename file"));
+        } catch (IOException e) {
+            Log.w(TAG, "could not move file");
+            Log.w(TAG, e.getMessage());
+            return file;
         }
     }
 

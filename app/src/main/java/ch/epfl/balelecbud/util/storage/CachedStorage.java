@@ -34,7 +34,8 @@ public class CachedStorage implements Storage {
         if (cache.contains(name)) {
             return cache.get(name);
         } else {
-            return inner.getFile(name).thenApply(innerFile -> cache.put(innerFile, name));
+            return inner.getFile(name)
+                    .thenApply(innerFile -> cache.put(innerFile, name));
         }
     }
 
