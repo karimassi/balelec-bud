@@ -18,9 +18,12 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
@@ -47,9 +50,8 @@ public class LoginUserTest {
         // empty email empty password
         enterEmail("");
         enterPassword("");
-        onView(withId(R.id.buttonLogin)).perform(click());
-        onView(withId(R.id.editTextEmailLogin)).check(matches(hasErrorText("Email required!")));
-        onView(withId(R.id.editTextPasswordLogin)).check(matches(hasErrorText("Password required!")));
+        onView(withText(R.string.action_sign_in)).perform(click());
+        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -57,9 +59,10 @@ public class LoginUserTest {
         // invalid email empty pws
         enterEmail("fakemail");
         enterPassword("");
-        onView(withId(R.id.buttonLogin)).perform(click());
         onView(withId(R.id.editTextEmailLogin)).check(matches(hasErrorText("Enter a valid email!")));
         onView(withId(R.id.editTextPasswordLogin)).check(matches(hasErrorText("Password required!")));
+        onView(withText(R.string.action_sign_in)).perform(click());
+        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -67,8 +70,9 @@ public class LoginUserTest {
         // valid email empty pws
         enterEmail("fakemail@correct.ch");
         enterPassword("");
-        onView(withId(R.id.buttonLogin)).perform(click());
         onView(withId(R.id.editTextPasswordLogin)).check(matches(hasErrorText("Password required!")));
+        onView(withText(R.string.action_sign_in)).perform(click());
+        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -76,31 +80,32 @@ public class LoginUserTest {
         // invalid email non-empty pws
         enterEmail("fakemail");
         enterPassword("1234");
-        onView(withId(R.id.buttonLogin)).perform(click());
         onView(withId(R.id.editTextEmailLogin)).check(matches(hasErrorText("Enter a valid email!")));
+        onView(withText(R.string.action_sign_in)).perform(click());
+        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testValidNoExistingAccount() {
         enterEmail("doesnotexist@gmail.ch");
         enterPassword("123456");
-        onView(withId(R.id.buttonLogin)).perform(click());
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
+        onView(withText(R.string.action_sign_in)).perform(click());
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testCanLogIn() {
         enterEmail("karim@epfl.ch");
         enterPassword("123456");
-        onView(withId(R.id.buttonLogin)).perform(click());
+        onView(withText(R.string.action_sign_in)).perform(click());
         assertNotNull(mockAuth.getCurrentUser());
-        onView(withText(mActivityRule.getActivity().getString(R.string.sign_out_text)));
+        onView(withText(R.string.sign_out_text));
     }
 
     @Test
     public void testGoToRegister() {
-        onView(withId(R.id.buttonLoginToRegister)).perform(click());
-        onView(withText(R.string.register)).check(matches(isDisplayed()));
+        onView(withText(R.string.action_no_account)).perform(click());
+        onView(allOf(withText(R.string.register), not(isClickable()))).check(matches(isDisplayed()));
     }
 
     private void enterEmail(String email) {
