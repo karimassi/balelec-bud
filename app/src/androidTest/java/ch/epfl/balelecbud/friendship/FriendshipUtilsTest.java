@@ -1,10 +1,8 @@
 package ch.epfl.balelecbud.friendship;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -13,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.LoginUserActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
@@ -38,10 +35,6 @@ public class FriendshipUtilsTest {
         authenticator.signOut();
         authenticator.setCurrentUser(sender);
     }
-
-    @Rule
-    public final ActivityTestRule<LoginUserActivity> mActivityRule =
-            new ActivityTestRule<>(LoginUserActivity.class);
 
     private void addFriend(final User friend) throws Throwable {
         runOnUIThreadAndWait(() -> FriendshipUtils.addFriend(friend));

@@ -39,8 +39,7 @@ public class AddFriendFragment extends DialogFragment {
                     }
 
                 })
-                .setNegativeButton(R.string.add_friend_cancel,
-                        (dialog, id) -> AddFriendFragment.this.getDialog().cancel());
+                .setNegativeButton(R.string.cancel, (dialog, id) ->dialog.cancel());
         return builder.create();
     }
 

@@ -246,7 +246,7 @@ public class SocialActivityTest extends BasicActivityTest {
     @Test
     public void addFriendDialogDismissedOnCancel() {
         onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withText(R.string.add_friend_cancel)).perform(click());
+        onView(withText(R.string.cancel)).perform(click());
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
     }
 

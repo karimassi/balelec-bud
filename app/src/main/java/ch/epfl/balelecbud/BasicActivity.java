@@ -14,6 +14,7 @@ import com.google.android.material.navigation.NavigationView;
 import ch.epfl.balelecbud.friendship.SocialActivity;
 import ch.epfl.balelecbud.map.MapViewActivity;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.settings.LoginUserFragment;
 import ch.epfl.balelecbud.settings.SettingsActivity;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
@@ -93,7 +94,7 @@ public abstract class BasicActivity extends AppCompatActivity implements Navigat
         getAppAuthenticator().signOut();
         if (isLocationActive())
             disableLocation();
-        Intent intent = new Intent(this, LoginUserActivity.class);
+        Intent intent = new Intent(this, LoginUserFragment.class);
         startActivity(intent);
         finish();
     }

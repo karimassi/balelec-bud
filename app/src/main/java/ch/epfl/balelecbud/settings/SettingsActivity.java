@@ -42,15 +42,15 @@ public class SettingsActivity extends BasicActivity {
                     grantResults,
                     () -> {
                         Log.i(TAG, "onRequestPermissionsResult: Permission request canceled");
-                        fragment.updatePreferencesVisibility(false);
+                        fragment.updateLocationPreferencesVisibility(false);
                     },
                     () -> {
                         Log.i(TAG, "onRequestPermissionsResult: Permission granted");
-                        fragment.updatePreferencesVisibility(true);
+                        fragment.updateLocationPreferencesVisibility(true);
                     },
                     () -> {
                         Log.i(TAG, "onRequestPermissionsResult: Permission denied");
-                        fragment.updatePreferencesVisibility(false);
+                        fragment.updateLocationPreferencesVisibility(false);
                     });
         }
     }
