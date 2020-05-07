@@ -48,8 +48,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
         findPreference(SIGN_OUT_KEY).setOnPreferenceClickListener(preference -> {
             getAppAuthenticator().signOut();
-            if (LocationUtil.isLocationActive())
+            if (LocationUtil.isLocationActive()) {
                 LocationUtil.disableLocation();
+                updateLocationPreferencesVisibility(false);
+            }
             updateLoginStatus(false);
             return true;
         });

@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.authentication;
 
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.concurrent.CompletableFuture;
@@ -21,6 +23,11 @@ public class FirebaseAuthenticator implements Authenticator {
     private FirebaseAuthenticator() { }
 
     @Override
+    public CompletableFuture<String> signInAnonymously() {
+        return new TaskToCompletableFutureAdapter<>(mAuth.signInAnonymously()).thenApply(authResult -> getCurrentUid());
+    }
+
+    @Override
     public CompletableFuture<User> signIn(String email, String password) {
         return new TaskToCompletableFutureAdapter<>(mAuth.signInWithEmailAndPassword(email, password))
                 .thenCompose(authResult -> FirestoreDatabase.getInstance()
@@ -32,7 +39,8 @@ public class FirebaseAuthenticator implements Authenticator {
 
     @Override
     public CompletableFuture<Void> createAccount(final String name, final String email, String password) {
-        return new TaskToCompletableFutureAdapter<>(mAuth.createUserWithEmailAndPassword(email, password))
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+        return new TaskToCompletableFutureAdapter<>(mAuth.getCurrentUser().linkWithCredential(credential))
                 .thenCompose(authResult -> FirestoreDatabase.getInstance()
                         .storeDocumentWithID(Database.USERS_PATH, getCurrentUid(),
                                 new User(email, name, getCurrentUid())));
