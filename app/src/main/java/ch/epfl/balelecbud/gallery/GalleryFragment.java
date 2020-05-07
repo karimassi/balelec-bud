@@ -35,8 +35,4 @@ public class GalleryFragment extends Fragment {
         GalleryAdapter adapter = new GalleryAdapter(getActivity(), R.layout.item_gallery, images);
         simpleList.setAdapter(adapter);
     }
-
-    public void setImages(ArrayList<Integer> images){
-        this.images = images;
-    }
 }
