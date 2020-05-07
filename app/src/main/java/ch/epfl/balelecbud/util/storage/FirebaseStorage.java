@@ -26,30 +26,27 @@ public class FirebaseStorage implements Storage {
     @Override
     public CompletableFuture<File> getFile(String path) {
 
-        StorageReference storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReference();
-        File localFile = null;
-        try {
-           localFile = File.createTempFile("images", "jpg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         CompletableFuture<File> future = new CompletableFuture<>();
 
-        File finalLocalFile = localFile;
-
-        storageRef.child(path).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                Log.w(TAG, "Download of " + path + " succeeded");
-                future.complete(finalLocalFile);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.w(TAG, "Download of " + path + " failed");
-            }
-        });
+        try {
+            StorageReference storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReference();
+            final File localFile = File.createTempFile("images", "jpg");
+            storageRef.child(path).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Log.w(TAG, "Download of " + path + " succeeded");
+                    future.complete(localFile);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.w(TAG, "Download of " + path + " failed");
+                    future.completeExceptionally(exception);
+                }
+            });
+        } catch (IOException e) {
+            future.completeExceptionally(e);
+        }
 
         return future;
     }

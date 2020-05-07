@@ -56,7 +56,6 @@ public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
 
-
         CompletableFuture<File> imageDownload = getAppStorage().getFile("artists_images/" + slot.getImageFileName());
         imageDownload.whenComplete((file, t) -> {
             Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());

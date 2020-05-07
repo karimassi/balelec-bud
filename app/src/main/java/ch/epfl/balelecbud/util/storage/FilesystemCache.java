@@ -28,18 +28,12 @@ public class FilesystemCache implements Cache {
     private File getCacheDirectory(){
         Context ctx = BalelecbudApplication.getAppContext();
         File dir = new File(ctx.getFilesDir(), "cache");
-        if(!dir.exists()){
-            if(!dir.mkdir()){
-                //TODO throw an exception and catch it in CachedStorage, then we do not try
-                //     to access the cache
+        if(!dir.exists() && !dir.mkdir()){
                 Log.w(TAG, "could not create cache directory");
-            }
         }
         File artistsImagesDir = new File(dir, "artists_images");
-        if(!artistsImagesDir.exists()){
-            if(!artistsImagesDir.mkdir()){
+        if(!artistsImagesDir.exists() && !artistsImagesDir.mkdir()){
                 Log.w(TAG, "could not create cache/artists_images directory");
-            }
         }
         return dir;
     }
