@@ -6,14 +6,20 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Picture;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
@@ -80,6 +86,18 @@ public class PicturesActivityTest extends BasicActivityTest {
         intended(toPackage("com.android.camera2"));
     }
 
+    @Test
+    public void cameraIsSavingImageToView() {
+        Bitmap icon = Bitmap.createBitmap(1,1, Bitmap.Config.ARGB_8888);
+        Intent resultData = new Intent();
+        resultData.putExtra("data", icon);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+        intending(toPackage("com.android.camera2")).respondWith(result);
+        hasImage();
+
+    }
+
+
     private static void allowPermissionsIfNeeded() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (mDevice.hasObject(By.text("ALLOW"))){
@@ -87,6 +105,20 @@ public class PicturesActivityTest extends BasicActivityTest {
             }
         }
     }
+
+    private boolean hasImage() {
+        ImageView view = intentsRule.getActivity().findViewById(R.id.picturesImageView);
+        Drawable drawable = view.getDrawable();
+        boolean hasImage = (drawable != null);
+
+        if (hasImage && (drawable instanceof BitmapDrawable)) {
+            hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
+        }
+
+        return hasImage;
+    }
+
+
 
 
     @Test
