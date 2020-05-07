@@ -74,7 +74,7 @@ public class LocationServiceTest {
         MyQuery query = new MyQuery(Database.LOCATIONS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, mockAuth.getCurrentUid()));
         Assert.assertEquals(
                 location,
-                mockDB.queryWithType(query, Location.class).thenApply(locations -> locations.get(0)).get()
+                mockDB.query(query, Location.class).thenApply(locations -> locations.get(0)).get()
         );
     }
 

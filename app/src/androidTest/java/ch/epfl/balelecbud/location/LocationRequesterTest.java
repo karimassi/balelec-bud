@@ -30,6 +30,7 @@ import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.settings.SettingsFragment;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -53,6 +54,7 @@ public class LocationRequesterTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
+                    MockDatabase.getInstance().resetDatabase();
                     setDumLocationClient();
 
                 }

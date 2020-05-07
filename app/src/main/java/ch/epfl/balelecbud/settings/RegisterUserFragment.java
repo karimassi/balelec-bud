@@ -157,7 +157,7 @@ public class RegisterUserFragment extends DialogFragment {
 
     private void onAuthComplete() {
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, getAppAuthenticator().getCurrentUid()));
-        getAppDatabase().queryWithType(query, User.class)
+        getAppDatabase().query(query, User.class)
                 .whenComplete((users, throwable) -> {
                     Log.d(TAG, "onAuthComplete() called with users = [ " + users + " ], throwable = [ " + throwable + " ]");
                     if (throwable != null) {

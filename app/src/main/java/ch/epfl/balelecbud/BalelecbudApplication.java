@@ -11,6 +11,9 @@ import ch.epfl.balelecbud.cloudMessaging.CloudMessagingService;
 import ch.epfl.balelecbud.cloudMessaging.MessagingService;
 import ch.epfl.balelecbud.notifications.NotificationMessage;
 import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
+import ch.epfl.balelecbud.util.cache.Cache;
+import ch.epfl.balelecbud.util.cache.FilesystemCache;
+import ch.epfl.balelecbud.util.database.CachedDatabase;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.FirestoreDatabase;
 import ch.epfl.balelecbud.util.http.HttpClient;
@@ -20,6 +23,8 @@ public class BalelecbudApplication extends Application {
 
     private static Context appContext;
     private static Database appDatabase;
+    private static Cache appCache;
+    private static Database remoteDatabase;
     private static Authenticator appAuthenticator;
     private static HttpClient httpClient;
     private static MessagingService appMessagingService;
@@ -40,6 +45,14 @@ public class BalelecbudApplication extends Application {
         return httpClient;
     }
 
+    public static Database getRemoteDatabase() {
+        return remoteDatabase;
+    }
+
+    public static Cache getAppCache() {
+        return appCache;
+    }
+
     public static MessagingService getMessagingService() {
         return appMessagingService;
     }
@@ -48,8 +61,12 @@ public class BalelecbudApplication extends Application {
     public void onCreate() {
         super.onCreate();
         appContext = getApplicationContext();
+        if (remoteDatabase == null)
+            remoteDatabase = FirestoreDatabase.getInstance();
+        if (appCache == null)
+            appCache = FilesystemCache.getInstance();
         if (appDatabase == null)
-            appDatabase = FirestoreDatabase.getInstance();
+            appDatabase = CachedDatabase.getInstance();
         if (appAuthenticator == null)
             appAuthenticator = FirebaseAuthenticator.getInstance();
         if (httpClient == null)
@@ -68,6 +85,11 @@ public class BalelecbudApplication extends Application {
     @VisibleForTesting
     public static void setAppDatabase(Database database) {
         appDatabase = database;
+    }
+
+    @VisibleForTesting
+    public static void setRemoteDatabase(Database database) {
+        remoteDatabase = database;
     }
 
     @VisibleForTesting

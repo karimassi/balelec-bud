@@ -134,7 +134,7 @@ public class RegisterUserTest {
         enterValuesAndClick("name", email, "123123", "123123");
 
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, MockAuthenticator.getInstance().getCurrentUid()));
-        mockDB.queryWithType(query, User.class).whenComplete((users, throwable) -> {
+        mockDB.query(query, User.class).whenComplete((users, throwable) -> {
             if (throwable == null) {
                 sync.assertEquals(email, users.get(0).getEmail());
                 sync.assertEquals("name", users.get(0).getDisplayName());
@@ -156,7 +156,7 @@ public class RegisterUserTest {
             @Override
             public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) { }
             @Override
-            public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) { return null; }
+            public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) { return null; }
             @Override
             public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) { return null; }
             @Override

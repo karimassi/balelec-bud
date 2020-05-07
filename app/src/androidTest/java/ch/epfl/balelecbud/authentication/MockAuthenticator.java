@@ -42,7 +42,7 @@ public class MockAuthenticator implements Authenticator {
     public CompletableFuture<User> signIn(final String email, final String password) {
         if (users.containsKey(email) && Objects.equals(users.get(email), password)) {
             MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, "0"));
-            return MockDatabase.getInstance().queryWithType(query, User.class).thenApply(users -> users.get(0));
+            return MockDatabase.getInstance().query(query, User.class).thenApply(users -> users.get(0));
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed login");
         }
