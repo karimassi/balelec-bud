@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ public class WelcomeFragment extends Fragment {
 
     private static final String TAG = WelcomeFragment.class.getSimpleName();
     private SpotifyAppRemote spotifyAppRemote;
-    private Activity activity = this.getActivity();
 
     public static WelcomeFragment newInstance() {
         return (new WelcomeFragment());
@@ -30,34 +28,37 @@ public class WelcomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TokenUtil.storeToken();
-
-        activity.findViewById(R.id.listen_on_spotify_button).setOnClickListener(v -> connect());
-
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    private void connect() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        getView().findViewById(R.id.listen_on_spotify_button).setOnClickListener(v -> spotifyConnect());
+    }
+
+    private void spotifyConnect() {
         Log.d(TAG, "Trying to connect Spotify");
         ConnectionParams connectionParams =
-                new ConnectionParams.Builder(this.getString(R.string.spotify_client_id))
-                        .setRedirectUri(this.getString(R.string.spotify_redirect_uri))
+                new ConnectionParams.Builder(getContext().getString(R.string.spotify_client_id))
+                        .setRedirectUri(getContext().getString(R.string.spotify_redirect_uri))
                         .showAuthView(true)
                         .build();
 
-        SpotifyAppRemote.connect(activity, connectionParams,
+        SpotifyAppRemote.connect(getContext(), connectionParams,
                 new Connector.ConnectionListener() {
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                         Log.d(TAG, "Connected Spotify successfully!");
                         WelcomeFragment.this.spotifyAppRemote = spotifyAppRemote;
                         WelcomeFragment.this.spotifyAppRemote.getPlayerApi()
-                                .play(activity.getString(R.string.spotify_balelec_playlist));
+                                .play(getContext().getString(R.string.spotify_balelec_playlist));
                     }
 
                     public void onFailure(Throwable throwable) {
                         Log.d(TAG, "Failed to connect Spotify");
-                        Toast.makeText(activity, (throwable.getMessage() != null)
-                                        ? activity.getString(R.string.login_spotify_message)
-                                        : activity.getString(R.string.download_spotify_message),
+                        Toast.makeText(BalelecbudApplication.getAppContext(), (throwable.getMessage() != null)
+                                        ? getContext().getString(R.string.login_spotify_message)
+                                        : getContext().getString(R.string.download_spotify_message),
                                 Toast.LENGTH_LONG).show();
                     }
                 });

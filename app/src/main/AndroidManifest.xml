@@ -28,7 +28,6 @@
         <activity android:name=".LoginUserActivity" />
         <activity android:name=".RegisterUserActivity" />
         <activity android:name=".RootActivity" />
-
         <service
             android:name=".location.LocationService"
             android:exported="false" />
