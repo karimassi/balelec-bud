@@ -14,7 +14,6 @@ import ch.epfl.balelecbud.util.cache.Cache;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppCache;
 import static ch.epfl.balelecbud.BalelecbudApplication.getRemoteDatabase;
 
-
 public class CachedDatabase implements Database {
 
     private static final String TAG = CachedDatabase.class.getSimpleName();

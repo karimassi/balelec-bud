@@ -40,12 +40,12 @@ public class CachedDatabaseTest {
 
     private MockDatabase remoteDatabase;
     private CachedDatabase appDatabase;
-    Cache appCache;
+    private Cache appCache;
 
-    private FestivalInformation freshInfo = new FestivalInformation("Information", "Fresh information");
-    private FestivalInformation staleInfo = new FestivalInformation("Information", "Stale information");
-    private Map<String, Object> freshFriend = new HashMap<>();
-    private Map<String, Object> staleFriend = new HashMap<>();
+    private final FestivalInformation freshInfo = new FestivalInformation("Information", "Fresh information");
+    private final FestivalInformation staleInfo = new FestivalInformation("Information", "Stale information");
+    private final Map<String, Object> freshFriend = new HashMap<>();
+    private final Map<String, Object> staleFriend = new HashMap<>();
 
     @Before
     public void setup() throws IOException {

@@ -1,8 +1,6 @@
 package ch.epfl.balelecbud.util.cache;
 
 
-import android.util.Log;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Assert;
@@ -14,9 +12,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.models.Location;
@@ -41,7 +37,7 @@ import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 @RunWith(AndroidJUnit4.class)
 public class FilesystemCacheTest {
 
-    private Cache appCache = BalelecbudApplication.getAppCache();
+    private final Cache appCache = BalelecbudApplication.getAppCache();
 
     @Before
     public void setup() {
@@ -50,7 +46,7 @@ public class FilesystemCacheTest {
     }
 
     @Test
-    public void containsCorrectForCollectionRetrieval() throws IOException {
+    public void testContainsForCollectionRetrieval() throws IOException {
         MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, Collections.emptyList());
         Assert.assertFalse(appCache.contains(query));
         appCache.put(Database.CONCERT_SLOTS_PATH, "0", slot1);
@@ -60,7 +56,7 @@ public class FilesystemCacheTest {
     }
 
     @Test
-    public void containsCorrectForPerIdRetrieval() throws IOException {
+    public void testContainsForPerIdRetrieval() throws IOException {
         appCache.put(Database.USERS_PATH, karim.getUid(), karim);
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, karim.getUid()));
         Assert.assertTrue(appCache.contains(query));
@@ -69,21 +65,21 @@ public class FilesystemCacheTest {
     }
 
     @Test
-    public void containsWithGeoclauseQueryFalse() throws IOException {
+    public void testContainsWithGeoclauseQuery() throws IOException {
         appCache.put(Database.LOCATIONS_PATH, "0", Location.DEFAULT_LOCATION);
         MyQuery query = new MyQuery(Database.LOCATIONS_PATH, new MyGeoClause(0, 0, 1));
         Assert.assertFalse(appCache.contains(query));
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void containsWithFieldWhereClauseFalse() throws IOException {
+    public void testContainsWithFieldWhereClause() throws IOException {
         appCache.put(Database.USERS_PATH, karim.getUid(), karim);
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause("email", EQUAL, karim.getEmail()));
         appCache.contains(query);
     }
 
     @Test
-    public void putGetWorksCorrectlyWithCustomTypes() throws Throwable {
+    public void testPutAndGetWithCustomTypes() throws Throwable {
         appCache.put(Database.CONCERT_SLOTS_PATH, "0", slot1);
         appCache.put(Database.CONCERT_SLOTS_PATH, "1", slot2);
 
@@ -99,7 +95,7 @@ public class FilesystemCacheTest {
     }
 
     @Test
-    public void putGetWorksCorrectlyWithMapTypes() throws Throwable {
+    public void testPutAndGetWithMapTypes() throws Throwable {
         Map<String, Object> f1 = new HashMap<>();
         f1.put("0", true);
         appCache.put(Database.FRIENDSHIPS_PATH, "1", f1);
@@ -136,24 +132,4 @@ public class FilesystemCacheTest {
         Assert.assertFalse(appCache.contains(new MyQuery(Database.TOKENS_PATH, Collections.emptyList())));
 
     }
-
-
-//    private void assertMapResults(List<Map<String, Object>> expected,
-//                                  CompletableFuture<List<Map<String, Object>>> actual) throws Throwable{
-//        TestAsyncUtils sync = new TestAsyncUtils();
-//        actual.whenComplete((list, throwable) -> {
-//            if (throwable == null) {
-//                Log.d("TEST", "assertResults: " + expected.toString());
-//                Log.d("TEST", "assertResults: " + list.toString());
-//                sync.assertEquals(expected, list);
-//                sync.call();
-//            } else {
-//                sync.fail();
-//            }
-//        });
-//        sync.waitCall(1);
-//        sync.assertCalled(1);
-//        sync.assertNoFailedTests();
-//    }
-
 }

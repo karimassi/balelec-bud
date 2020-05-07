@@ -24,8 +24,8 @@ import ch.epfl.balelecbud.util.database.MyQuery;
 
 public class FilesystemCache implements Cache {
 
-    Gson gson;
-    Context context;
+    private Gson gson;
+    private Context context;
 
     private static FilesystemCache instance = new FilesystemCache();
 

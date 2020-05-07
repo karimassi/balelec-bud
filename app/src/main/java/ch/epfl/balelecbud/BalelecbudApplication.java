@@ -5,8 +5,6 @@ import android.content.Context;
 
 import androidx.annotation.VisibleForTesting;
 
-import java.io.File;
-
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
 import ch.epfl.balelecbud.cloudMessaging.CloudMessagingService;
