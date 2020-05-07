@@ -34,7 +34,7 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        getView().findViewById(R.id.listen_on_spotify_button).setOnClickListener(v -> spotifyConnect());
+        getView().findViewById(R.id.spotify_button).setOnClickListener(v -> spotifyConnect());
     }
 
     private void spotifyConnect() {

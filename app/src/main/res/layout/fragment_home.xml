@@ -11,7 +11,7 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/listen_on_spotify_button"
+        android:id="@+id/spotify_button"
         android:layout_width="@dimen/spotify_button_width"
         android:layout_height="@dimen/spotify_button_height"
         android:layout_gravity="center"
