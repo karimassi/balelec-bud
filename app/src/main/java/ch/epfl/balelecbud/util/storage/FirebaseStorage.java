@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.util.TaskToCompletableFutureAdapter;
+
 public class FirebaseStorage implements Storage {
 
     private static final String TAG = FirebaseStorage.class.getSimpleName();
@@ -28,26 +30,13 @@ public class FirebaseStorage implements Storage {
 
         CompletableFuture<File> future = new CompletableFuture<>();
 
+        StorageReference storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReference();
         try {
-            StorageReference storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReference();
             final File localFile = File.createTempFile("images", "jpg");
-            storageRef.child(path).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.w(TAG, "Download of " + path + " succeeded");
-                    future.complete(localFile);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.w(TAG, "Download of " + path + " failed");
-                    future.completeExceptionally(exception);
-                }
-            });
+            future = new TaskToCompletableFutureAdapter<FileDownloadTask.TaskSnapshot>(storageRef.child(path).getFile(localFile)).thenApply(x -> localFile);
         } catch (IOException e) {
             future.completeExceptionally(e);
         }
-
         return future;
     }
 }
