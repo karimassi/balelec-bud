@@ -27,7 +27,7 @@ import java.util.Calendar;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
@@ -56,11 +56,12 @@ public class ConcertNotificationTest {
 
     private final MockDatabase mock = MockDatabase.getInstance();
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
+                    MockDatabase.getInstance().resetDatabase();
                     LocationUtil.setLocationClient(new LocationClient() {
                         @Override
                         public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -123,8 +124,8 @@ public class ConcertNotificationTest {
         Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
                 new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
         checkSwitchAfter(() -> {
-            openInfoActivityFrom(R.id.schedule_activity_drawer_layout, R.id.schedule_activity_nav_view);
-            openScheduleActivityFrom(R.id.festival_info_activity_drawer_layout, R.id.festival_info_activity_nav_view);
+            openInfoActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
+            openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
             Log.v("mySuperTag", "executed subscribeToAConcertKeepItSubscribed");
         }, s1, true);
         onView(getItemInSchedule(0, 3)).perform(click());

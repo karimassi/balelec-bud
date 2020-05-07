@@ -1,0 +1,211 @@
+package ch.epfl.balelecbud;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+
+import ch.epfl.balelecbud.friendship.SocialFragment;
+import ch.epfl.balelecbud.map.MapViewFragment;
+import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.pointOfInterest.PointOfInterestFragment;
+import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.settings.SettingsFragment;
+import ch.epfl.balelecbud.util.intents.FlowUtil;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.location.LocationUtil.disableLocation;
+import static ch.epfl.balelecbud.location.LocationUtil.isLocationActive;
+
+public class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = RootActivity.class.getSimpleName();
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_root);
+        this.configureToolBar();
+        this.configureDrawerLayout();
+        this.configureNavigationView();
+
+        ArrayList<Slot> slots = FlowUtil.unpackCallback(getIntent());
+        if (slots != null) {
+            ScheduleFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
+            if (!fragmentSchedule.isVisible()) {
+                startTransactionFragment(fragmentSchedule, "SCHEDULE");
+            }
+        } else {
+            this.showFirstFragment();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.activity_main_drawer_home:
+                this.showHomeFragment();
+                break;
+            case R.id.activity_main_drawer_info:
+                this.showInfoFragment();
+                break;
+            case R.id.activity_main_drawer_schedule:
+                this.showScheduleFragment();
+                break;
+            case R.id.activity_main_drawer_poi:
+                this.showPoiFragment();
+                break;
+            case R.id.activity_main_drawer_map:
+                this.showMapFragment();
+                break;
+            case R.id.activity_main_drawer_transport:
+                this.showTransportFragment();
+                break;
+            case R.id.activity_main_drawer_social:
+                this.showSocialFragment();
+                break;
+            case R.id.activity_main_drawer_emergency:
+                this.showEmergencyFragment();
+                break;
+            case R.id.activity_main_drawer_emergency_info:
+                this.showEmergencyInfoFragment();
+                break;
+            case R.id.activity_main_drawer_emergency_numbers:
+                this.showEmergencyNumbersFragment();
+                break;
+            case R.id.activity_main_drawer_settings:
+                this.showSettingsFragment();
+                break;
+            case R.id.sign_out_button:
+                signOut();
+                break;
+            default:
+                break;
+        }
+        this.drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void showHomeFragment() {
+        WelcomeFragment fragmentHome = WelcomeFragment.newInstance();
+        this.startTransactionFragment(fragmentHome, "HOME");
+    }
+
+    private void showInfoFragment() {
+        Fragment fragmentInfo = FestivalInformationFragment.newInstance();
+        this.startTransactionFragment(fragmentInfo, "INFO");
+    }
+
+    private void showScheduleFragment() {
+        Intent intent = new Intent(this, ConcertFlow.class);
+        intent.setAction(FlowUtil.GET_ALL_CONCERT);
+        intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(this, RootActivity.class));
+        startService(intent);
+    }
+
+    private void showPoiFragment() {
+        Fragment fragmentPoi = PointOfInterestFragment.newInstance();
+        this.startTransactionFragment(fragmentPoi, "POI");
+    }
+
+    private void showMapFragment() {
+        MapViewFragment fragmentMap = MapViewFragment.newInstance();
+        this.startTransactionFragment(fragmentMap, MapViewFragment.TAG);
+    }
+
+    private void showTransportFragment() {
+        Fragment fragmentTransport = TransportFragment.newInstance();
+        this.startTransactionFragment(fragmentTransport, "TRANSPORT");
+    }
+
+    private void showSocialFragment() {
+        Fragment fragmentSocial = SocialFragment.newInstance();
+        this.startTransactionFragment(fragmentSocial, "SOCIAL");
+    }
+
+    private void showEmergencyFragment() {
+        Fragment fragmentEmergency = EmergencyFragment.newInstance();
+        this.startTransactionFragment(fragmentEmergency, "EMERGENCY");
+    }
+
+    private void showEmergencyInfoFragment() {
+        Fragment fragmentEmergencyInfo = EmergencyInfoFragment.newInstance();
+        this.startTransactionFragment(fragmentEmergencyInfo, "EMERGENCY_INFO");
+    }
+
+    private void showEmergencyNumbersFragment() {
+        Fragment fragmentEmergencyNumbers = EmergencyNumbersFragment.newInstance();
+        this.startTransactionFragment(fragmentEmergencyNumbers, "EMERGENCY_NUMBERS");
+    }
+
+    private void showSettingsFragment() {
+        Fragment fragmentSettings = SettingsFragment.newInstance();
+        this.startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
+    }
+
+    private void startTransactionFragment(Fragment fragment, String tag) {
+        if (!fragment.isVisible()) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.root_activity_frame_layout, fragment, tag)
+                    .addToBackStack(tag).commit();
+        }
+    }
+
+    private void showFirstFragment() {
+        Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.root_activity_frame_layout);
+        if (visibleFragment == null) {
+            this.showHomeFragment();
+            this.navigationView.getMenu().getItem(0).setChecked(true);
+        }
+    }
+
+    protected void configureToolBar() {
+        this.toolbar = findViewById(R.id.root_activity_toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    protected void configureDrawerLayout() {
+        this.drawerLayout = findViewById(R.id.root_activity_drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    protected void configureNavigationView() {
+        this.navigationView = findViewById(R.id.root_activity_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // 5 - Handle back click to close menu
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    protected void signOut() {
+        getAppAuthenticator().signOut();
+        if (isLocationActive())
+            disableLocation();
+        Intent intent = new Intent(this, LoginUserActivity.class);
+        startActivity(intent);
+        finish();
+    }
+}
