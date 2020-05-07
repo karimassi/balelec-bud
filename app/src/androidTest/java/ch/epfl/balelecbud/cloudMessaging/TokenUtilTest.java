@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
@@ -31,11 +31,12 @@ public class TokenUtilTest {
 
 
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
+                    mockDB.resetDatabase();
                     BalelecbudApplication.setAppDatabase(mockDB);
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
                     mockAuth.signOut();

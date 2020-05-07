@@ -14,8 +14,9 @@ import org.junit.Test;
 import java.util.Map;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.cloudMessaging.Message;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
@@ -29,8 +30,8 @@ public class NotificationMessageTest {
     private UiDevice device;
 
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<>(RootActivity.class);
 
     @Before
     public void setup() {

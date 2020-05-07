@@ -103,4 +103,5 @@ public class FirestoreDatabase implements Database {
     private DocumentReference getDocumentReference(String documentPath) {
         return FirebaseFirestore.getInstance().document(documentPath);
     }
+
 }

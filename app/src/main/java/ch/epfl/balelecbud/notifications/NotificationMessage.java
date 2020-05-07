@@ -15,8 +15,8 @@ import androidx.core.app.NotificationManagerCompat;
 import java.util.Map;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
-import ch.epfl.balelecbud.friendship.SocialActivity;
+import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.friendship.SocialFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
@@ -65,9 +65,9 @@ public class NotificationMessage implements NotificationInterface<Map<String, St
     private Intent getIntent(Context context, String type) {
         Log.d("NotificationMessage", "type: " + type);
         if(type.equals(context.getString(R.string.message_type_social))) {
-            return new Intent(context, SocialActivity.class);
+            return new Intent(context, SocialFragment.class);
         }
-        return new Intent(context, WelcomeActivity.class);
+        return new Intent(context, RootActivity.class);
     }
 
     @Override

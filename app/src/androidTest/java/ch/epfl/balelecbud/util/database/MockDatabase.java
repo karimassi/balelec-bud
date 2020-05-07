@@ -28,12 +28,14 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 public class MockDatabase implements Database {
     public static final User karim =
             new User("karim@epfl.ch", "karim", MockAuthenticator.provideUid());
+    public static final User camille =
+            new User("camille@epfl.ch", "camille", MockAuthenticator.provideUid());
     public static final User celine =
             new User("celine@epfl.ch", "celine", MockAuthenticator.provideUid());
     public static final User alex =
             new User("alex@epfl.ch", "alex", MockAuthenticator.provideUid());
     public static final User axel =
-            new User("axel@epfl.ch", "celine", MockAuthenticator.provideUid());
+            new User("axel@epfl.ch", "axel", MockAuthenticator.provideUid());
     public static final User gaspard =
             new User("gaspard@epfl.ch", "gaspard", MockAuthenticator.provideUid());
     public static final PointOfInterest pointOfInterest1 = new PointOfInterest(
@@ -93,6 +95,8 @@ public class MockDatabase implements Database {
         storeDocument(USERS_PATH, alex);
         storeDocument(USERS_PATH, axel);
         storeDocument(USERS_PATH, gaspard);
+        storeDocument(USERS_PATH, camille);
+
 
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(token1, true);
@@ -281,7 +285,7 @@ public class MockDatabase implements Database {
     }
 
     private void logContents() {
-        Log.d(TAG, databasePOJO.toString() + "\n" + database.toString());
+        Log.d(TAG, databasePOJO.toString() + "\n" + database.toString() + "\n" + friendsLocationListener.toString());
     }
 
 }

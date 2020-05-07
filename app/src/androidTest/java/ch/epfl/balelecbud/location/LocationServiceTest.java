@@ -48,6 +48,7 @@ public class LocationServiceTest {
 
     @Before
     public void setUp() {
+        mockDB.resetDatabase();
         ls = new LocationService();
         mockAuth.setCurrentUser(new User("abc@epfl.ch", "abc", "10"));
         ls.onCreate();

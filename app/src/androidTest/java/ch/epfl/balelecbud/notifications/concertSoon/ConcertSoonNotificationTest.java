@@ -21,10 +21,11 @@ import org.junit.runner.RunWith;
 import java.util.Calendar;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.WelcomeActivity;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertEquals;
@@ -33,12 +34,12 @@ import static junit.framework.TestCase.assertNull;
 @RunWith(AndroidJUnit4.class)
 public class ConcertSoonNotificationTest {
 
-    //activity does not matter so chose WelcomeActivity
     @Rule
-    public final ActivityTestRule<WelcomeActivity> mActivityRule = new ActivityTestRule<>(WelcomeActivity.class);
+    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class);
 
     @Before
     public void setup() {
+        MockDatabase.getInstance().resetDatabase();
         LocationUtil.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
