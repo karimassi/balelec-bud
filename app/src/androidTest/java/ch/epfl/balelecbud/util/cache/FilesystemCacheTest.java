@@ -29,6 +29,8 @@ import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MockDatabase.assertQueryMapResults;
+import static ch.epfl.balelecbud.util.database.MockDatabase.assertQueryResults;
 import static ch.epfl.balelecbud.util.database.MockDatabase.axel;
 import static ch.epfl.balelecbud.util.database.MockDatabase.karim;
 import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
@@ -85,12 +87,14 @@ public class FilesystemCacheTest {
         appCache.put(Database.CONCERT_SLOTS_PATH, "0", slot1);
         appCache.put(Database.CONCERT_SLOTS_PATH, "1", slot2);
 
+        TestAsyncUtils sync = new TestAsyncUtils();
         MyQuery query = new MyQuery(Database.CONCERT_SLOTS_PATH, Collections.emptyList());
-        assertCustomResults(Arrays.asList(slot1, slot2), appCache.get(query, Slot.class));
+        assertQueryResults(sync, Arrays.asList(slot1, slot2), appCache.get(query, Slot.class));
 
+        sync = new TestAsyncUtils();
         query = new MyQuery(Database.CONCERT_SLOTS_PATH,
                     new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, "0"));
-        assertCustomResults(Collections.singletonList(slot1), appCache.get(query, Slot.class));
+        assertQueryResults(sync, Collections.singletonList(slot1), appCache.get(query, Slot.class));
 
     }
 
@@ -103,12 +107,14 @@ public class FilesystemCacheTest {
         f2.put("1", true);
         appCache.put(Database.FRIENDSHIPS_PATH, "0", f2);
 
+        TestAsyncUtils sync = new TestAsyncUtils();
         MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH, Collections.emptyList());
-        assertMapResults(Arrays.asList(f1, f2), appCache.get(query));
+        assertQueryMapResults(sync, Arrays.asList(f1, f2), appCache.get(query));
 
+        sync = new TestAsyncUtils();
         query = new MyQuery(Database.FRIENDSHIPS_PATH,
                 new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, "0"));
-        assertMapResults(Collections.singletonList(f2), appCache.get(query));
+        assertQueryMapResults(sync, Collections.singletonList(f2), appCache.get(query));
 
 
     }
@@ -131,38 +137,23 @@ public class FilesystemCacheTest {
 
     }
 
-    private <T> void assertCustomResults(List<T> expected, CompletableFuture<List<T>> actual) throws Throwable {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        actual.whenComplete((list, throwable) -> {
-            if (throwable == null) {
-                sync.assertEquals(expected, list);
-                sync.call();
-            } else {
-                sync.fail();
-            }
-        });
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
-    }
 
-    private void assertMapResults(List<Map<String, Object>> expected,
-                                  CompletableFuture<List<Map<String, Object>>> actual) throws Throwable{
-
-        TestAsyncUtils sync = new TestAsyncUtils();
-        actual.whenComplete((list, throwable) -> {
-            if (throwable == null) {
-                Log.d("TEST", "assertResults: " + expected.toString());
-                Log.d("TEST", "assertResults: " + list.toString());
-                sync.assertEquals(expected, list);
-                sync.call();
-            } else {
-                sync.fail();
-            }
-        });
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
-    }
+//    private void assertMapResults(List<Map<String, Object>> expected,
+//                                  CompletableFuture<List<Map<String, Object>>> actual) throws Throwable{
+//        TestAsyncUtils sync = new TestAsyncUtils();
+//        actual.whenComplete((list, throwable) -> {
+//            if (throwable == null) {
+//                Log.d("TEST", "assertResults: " + expected.toString());
+//                Log.d("TEST", "assertResults: " + list.toString());
+//                sync.assertEquals(expected, list);
+//                sync.call();
+//            } else {
+//                sync.fail();
+//            }
+//        });
+//        sync.waitCall(1);
+//        sync.assertCalled(1);
+//        sync.assertNoFailedTests();
+//    }
 
 }

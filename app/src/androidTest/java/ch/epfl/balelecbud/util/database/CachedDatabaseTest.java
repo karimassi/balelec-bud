@@ -1,8 +1,6 @@
 package ch.epfl.balelecbud.util.database;
 
 
-import android.util.Log;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.firebase.firestore.FieldValue;
@@ -13,8 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +30,8 @@ import static ch.epfl.balelecbud.util.database.Database.FRIEND_REQUESTS_PATH;
 import static ch.epfl.balelecbud.util.database.Database.LOCATIONS_PATH;
 import static ch.epfl.balelecbud.util.database.Database.Source.CACHE;
 import static ch.epfl.balelecbud.util.database.Database.Source.REMOTE;
-import static ch.epfl.balelecbud.util.database.Database.TOKENS_PATH;
+import static ch.epfl.balelecbud.util.database.MockDatabase.assertQueryMapResults;
+import static ch.epfl.balelecbud.util.database.MockDatabase.assertQueryResults;
 import static ch.epfl.balelecbud.util.database.MockDatabase.karim;
 import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 
@@ -120,38 +117,15 @@ public class CachedDatabaseTest {
 
     }
 
-    private <T> void assertResults(List<T> expected, CompletableFuture<List<T>> actual) throws Throwable {
+    private <T> void assertResults(List<T> expected, CompletableFuture<List<T>> actual) throws Throwable{
         TestAsyncUtils sync = new TestAsyncUtils();
-        actual.whenComplete((list, throwable) -> {
-            if (throwable == null) {
-                sync.assertEquals(expected, list);
-                sync.call();
-            } else {
-                sync.fail();
-            }
-        });
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
+        assertQueryResults(sync, expected, actual);
     }
 
     private void assertMapResults(List<Map<String, Object>> expected,
                                   CompletableFuture<List<Map<String, Object>>> actual) throws Throwable{
-
         TestAsyncUtils sync = new TestAsyncUtils();
-        actual.whenComplete((list, throwable) -> {
-            if (throwable == null) {
-                Log.d("TEST", "assertResults: " + expected.toString());
-                Log.d("TEST", "assertResults: " + list.toString());
-                sync.assertEquals(expected, list);
-                sync.call();
-            } else {
-                sync.fail();
-            }
-        });
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
+        assertQueryMapResults(sync, expected, actual);
     }
 
 }

@@ -45,14 +45,12 @@ public class CachedDatabase implements Database {
     public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
         CompletableFuture<List<T>> result = CompletableFuture.completedFuture(new ArrayList<>());
         if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
-            Log.d(TAG, "Fetching from cache");
             try {
                 result = cache.get(query, tClass);
             } catch (IOException e) {
                 Log.d(TAG, "query: " + e.getLocalizedMessage());
             }
         } else {
-            Log.d(TAG, "Fetching from remote");
             result = getRemoteDatabase().query(query, tClass);
             result.whenComplete((ts, throwable) -> {
                 if (throwable == null) {
@@ -75,14 +73,12 @@ public class CachedDatabase implements Database {
     public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
         CompletableFuture<List<Map<String, Object>>> result = CompletableFuture.completedFuture(new ArrayList<>());
         if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
-            Log.d(TAG, "Fetching from cache");
             try {
                 result = cache.get(query);
             } catch (IOException e) {
                 Log.d(TAG, "query: " + e.getLocalizedMessage());
             }
         } else {
-            Log.d(TAG, "Fetching from remote");
             result = getRemoteDatabase().query(query);
             result.whenComplete((maps, throwable) -> {
                if (throwable == null) {
