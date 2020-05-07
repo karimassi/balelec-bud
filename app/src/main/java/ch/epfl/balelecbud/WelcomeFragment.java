@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
 
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -62,5 +63,10 @@ public class WelcomeFragment extends Fragment {
                                 Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    @VisibleForTesting
+    public SpotifyAppRemote getSpotifyAppRemote() {
+        return spotifyAppRemote;
     }
 }
