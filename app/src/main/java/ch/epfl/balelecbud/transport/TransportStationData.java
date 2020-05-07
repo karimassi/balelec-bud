@@ -4,6 +4,7 @@ package ch.epfl.balelecbud.transport;
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.transport.objects.TransportStation;
 import ch.epfl.balelecbud.util.CompletableFutureUtils;
+import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.views.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
@@ -18,7 +19,7 @@ public class TransportStationData extends RecyclerViewData<TransportStation, Tra
     }
 
     @Override
-    public void reload() {
+    public void reload(Database.Source preferredSource) {
         TransportUtil.getNearbyStations(userLocation)
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }

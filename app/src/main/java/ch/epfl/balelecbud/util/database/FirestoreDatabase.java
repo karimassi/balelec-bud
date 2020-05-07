@@ -78,7 +78,7 @@ public class FirestoreDatabase implements Database {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, final Class<T> tClass) {
+    public <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass) {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
         return future.thenApply(value -> value.toObjects(tClass));

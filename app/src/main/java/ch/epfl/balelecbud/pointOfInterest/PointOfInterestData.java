@@ -27,11 +27,11 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
 
     //TODO change to not have rv flicker at some point
     @Override
-    public void reload() {
+    public void reload(Database.Source preferredSource) {
         clearAll();
         lastRecordedAffluence.clear();
-        MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>());
-        getAppDatabase().queryWithType(query, PointOfInterest.class)
+        MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>(), preferredSource);
+        getAppDatabase().query(query, PointOfInterest.class)
                 .thenCompose(PointOfInterestUtils::computeAffluence)
                 .thenAccept(this::postResults);
     }

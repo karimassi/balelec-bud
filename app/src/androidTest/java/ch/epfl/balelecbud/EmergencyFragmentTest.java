@@ -10,8 +10,6 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.emergency.SubmitEmergencyFragment;
-import ch.epfl.balelecbud.friendship.AddFriendFragment;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
@@ -61,7 +59,7 @@ public class EmergencyFragmentTest {
         submitEmergency("Theft", "I lost something");
         MyQuery query = new MyQuery(Database.EMERGENCIES_PATH, new ArrayList<>());
         TestAsyncUtils sync = new TestAsyncUtils();
-        mockDB.queryWithType(query, Emergency.class).thenApply(emergencies -> emergencies.get(0)).whenComplete((emergency, throwable) -> {
+        mockDB.query(query, Emergency.class).thenApply(emergencies -> emergencies.get(0)).whenComplete((emergency, throwable) -> {
             if (throwable == null) {
                 sync.assertNotNull(emergency);
                 sync.assertEquals(emergency.getMessage(), "I lost something");

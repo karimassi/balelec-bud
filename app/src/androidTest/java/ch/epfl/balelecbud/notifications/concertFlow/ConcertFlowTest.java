@@ -20,6 +20,7 @@ import ch.epfl.balelecbud.notifications.concertFlow.objects.ConcertOfInterestDat
 import ch.epfl.balelecbud.notifications.NotificationInterface;
 import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
@@ -32,6 +33,7 @@ public class ConcertFlowTest {
 
     @Before
     public void setup() {
+        MockDatabase.getInstance().resetDatabase();
         this.db = Room.inMemoryDatabaseBuilder(
                 getApplicationContext(),
                 ConcertOfInterestDatabase.class

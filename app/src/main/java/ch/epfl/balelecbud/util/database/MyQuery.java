@@ -5,28 +5,42 @@ import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 
-public class MyQuery {
+public class  MyQuery {
 
     private final String collectionName;
     private final List<MyWhereClause> whereClauses;
     private final MyGeoClause geoClause;
+    private final Database.Source source;
+
+    public MyQuery(String collectionName, MyWhereClause whereClause, Database.Source source) {
+        this(collectionName, Lists.newArrayList(whereClause), source);
+    }
 
     public MyQuery(String collectionName, MyWhereClause whereClause) {
-        this(collectionName, Lists.newArrayList(whereClause));
+        this(collectionName, whereClause, Database.Source.REMOTE);
     }
 
     public MyQuery(String collectionName, MyGeoClause geoClause) {
-        this(collectionName, Collections.emptyList(), geoClause);
+        this(collectionName, Collections.emptyList(), geoClause, Database.Source.REMOTE);
+    }
+
+    public MyQuery(String collectionName, MyGeoClause geoClause, Database.Source source) {
+        this(collectionName, Collections.emptyList(), geoClause, source);
     }
 
     public MyQuery(String collectionName, List<MyWhereClause> whereClauses) {
-        this(collectionName, whereClauses, null);
+        this(collectionName, whereClauses, null, Database.Source.REMOTE);
     }
 
-    public MyQuery(String collectionName, List<MyWhereClause> whereClauses, MyGeoClause geoClause) {
+    public MyQuery(String collectionName, List<MyWhereClause> whereClauses, Database.Source source) {
+        this(collectionName, whereClauses, null, source);
+    }
+
+    public MyQuery(String collectionName, List<MyWhereClause> whereClauses, MyGeoClause geoClause, Database.Source source) {
         this.collectionName = collectionName;
         this.whereClauses = whereClauses;
         this.geoClause = geoClause;
+        this.source = source;
     }
 
     public String getCollectionName() {
@@ -40,4 +54,27 @@ public class MyQuery {
     public MyGeoClause getGeoClause() {
         return geoClause;
     }
+
+    public boolean hasDocumentIdOperand() {
+        for (MyWhereClause clause: getWhereClauses()) {
+            if (clause.getLeftOperand().equals(Database.DOCUMENT_ID_OPERAND)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getIdOperand() {
+        for (MyWhereClause clause: getWhereClauses()) {
+            if (clause.getLeftOperand().equals(Database.DOCUMENT_ID_OPERAND)) {
+                return (String) clause.getRightOperand();
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public Database.Source getSource() {
+        return source;
+    }
+
 }
