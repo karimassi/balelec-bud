@@ -18,6 +18,7 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
+import ch.epfl.balelecbud.util.storage.MockStorage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -30,16 +31,20 @@ import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleActivityTest extends BasicActivityTest {
-    private final MockDatabase mock = MockDatabase.getInstance();
+
+    private final MockDatabase mockDatabase = MockDatabase.getInstance();
+    private final MockStorage mockStorage = new MockStorage();
 
     @Rule
     public final ActivityTestRule<ScheduleActivity> mActivityRule = new ActivityTestRule<ScheduleActivity>(ScheduleActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppDatabase(mock);
+            BalelecbudApplication.setAppDatabase(mockDatabase);
+            BalelecbudApplication.setAppStorage(mockStorage);
             SlotData.setIntentLauncher(intent -> {
                 if (intent.getAction() == null)
                     Assert.fail();
@@ -67,7 +72,8 @@ public class ScheduleActivityTest extends BasicActivityTest {
 
     @Before
     public void setup() {
-        mock.resetDocument(Database.CONCERT_SLOTS_PATH);
+        mockDatabase.resetDocument(Database.CONCERT_SLOTS_PATH);
+        mockStorage.setAccessCount(0);
         refreshRecyclerView();
     }
 
@@ -78,13 +84,15 @@ public class ScheduleActivityTest extends BasicActivityTest {
 
     @Test
     public void testCaseForRecyclerItems() throws Throwable {
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
 
         refreshRecyclerView();
 
         checkSlot(0, slot1);
         checkSlot(1, slot2);
+
+        assertEquals(mockStorage.getAccessCount(), 2);
     }
 
     private void checkSlot(int i, Slot slot1) {
@@ -101,7 +109,7 @@ public class ScheduleActivityTest extends BasicActivityTest {
     @Test
     public void testCanSubscribeToAConcert() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
 
         refreshRecyclerView();
 
