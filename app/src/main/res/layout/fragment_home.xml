@@ -12,9 +12,9 @@
 
     <Button
         android:id="@+id/listen_on_spotify_button"
-        android:layout_width="113.376dp"
-        android:layout_height="32.784dp"
+        android:layout_width="@dimen/spotify_button_width"
+        android:layout_height="@dimen/spotify_button_height"
         android:layout_gravity="center"
-        android:layout_marginTop="411dp"
+        android:layout_marginTop="@dimen/spotify_button_margin_top"
         android:background="@drawable/spotify_logo_white" />
 </LinearLayout>
