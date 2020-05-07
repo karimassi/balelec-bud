@@ -3,7 +3,6 @@ package ch.epfl.balelecbud.settings;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.util.StringUtils;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.util.StringUtils.isEmailValid;
@@ -26,27 +26,15 @@ public class LoginUserFragment extends DialogFragment {
     private final SettingsFragment settingsFragment;
     private EditText emailField;
     private EditText passwordField;
-    private TextWatcher watcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(validateEntry());
-        }
-    };
-
-    static LoginUserFragment newInstance(SettingsFragment settingsFragment) {
-        return new LoginUserFragment(settingsFragment);
-    }
+    private TextWatcher watcher = StringUtils.getTextWater(() ->
+            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(validateEntry()));
 
     private LoginUserFragment(SettingsFragment settingsFragment) {
         this.settingsFragment = settingsFragment;
+    }
+
+    static LoginUserFragment newInstance(SettingsFragment settingsFragment) {
+        return new LoginUserFragment(settingsFragment);
     }
 
     @NonNull

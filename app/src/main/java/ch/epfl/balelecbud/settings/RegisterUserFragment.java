@@ -3,7 +3,6 @@ package ch.epfl.balelecbud.settings;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.StringUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MyQuery;
 import ch.epfl.balelecbud.util.database.MyWhereClause;
@@ -34,20 +34,8 @@ public class RegisterUserFragment extends DialogFragment {
     private EditText emailField;
     private EditText passwordField;
     private EditText repeatPasswordField;
-    private TextWatcher watcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(validateEntry());
-        }
-    };
+    private TextWatcher watcher = StringUtils.getTextWater(() ->
+            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(validateEntry()));
 
     @NonNull
     @Override
@@ -56,15 +44,7 @@ public class RegisterUserFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_register_user, null);
 
-        nameField = view.findViewById(R.id.editTextNameRegister);
-        emailField = view.findViewById(R.id.editTextEmailRegister);
-        passwordField = view.findViewById(R.id.editTextPasswordRegister);
-        repeatPasswordField = view.findViewById(R.id.editTextRepeatPasswordRegister);
-
-        nameField.addTextChangedListener(watcher);
-        emailField.addTextChangedListener(watcher);
-        passwordField.addTextChangedListener(watcher);
-        repeatPasswordField.addTextChangedListener(watcher);
+        setUpFields(view);
 
         builder.setView(view).setTitle(R.string.register)
                 .setPositiveButton(R.string.action_register, (dialog, id) ->
@@ -84,6 +64,18 @@ public class RegisterUserFragment extends DialogFragment {
         });
         validateEntry();
         return builder.create();
+    }
+
+    private void setUpFields(View view) {
+        nameField = view.findViewById(R.id.editTextNameRegister);
+        emailField = view.findViewById(R.id.editTextEmailRegister);
+        passwordField = view.findViewById(R.id.editTextPasswordRegister);
+        repeatPasswordField = view.findViewById(R.id.editTextRepeatPasswordRegister);
+
+        nameField.addTextChangedListener(watcher);
+        emailField.addTextChangedListener(watcher);
+        passwordField.addTextChangedListener(watcher);
+        repeatPasswordField.addTextChangedListener(watcher);
     }
 
     private RegisterUserFragment(SettingsFragment settingsFragment) {
@@ -158,7 +150,7 @@ public class RegisterUserFragment extends DialogFragment {
         String name = nameField.getText().toString();
         if (TextUtils.isEmpty(name)) {
             nameField.setError(getString(R.string.require_name));
-           return false;
+            return false;
         }
         return true;
     }

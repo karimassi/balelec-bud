@@ -53,36 +53,19 @@ public class AnonymousTest {
                     sync.call();
                     return null;
                 }
-
                 @Override
-                public CompletableFuture<User> signIn(String email, String password) {
-                    return null;
-                }
-
+                public CompletableFuture<User> signIn(String email, String password) { return null; }
                 @Override
-                public CompletableFuture<Void> createAccount(String name, String email, String password) {
-                    return null;
-                }
-
+                public CompletableFuture<Void> createAccount(String name, String email, String password) { return null; }
                 @Override
-                public String getCurrentUid() {
-                    return null;
-                }
-
+                public String getCurrentUid() { return null; }
                 @Override
-                public User getCurrentUser() {
-                    return null;
-                }
-
+                public User getCurrentUser() { return null; }
                 @Override
-                public void signOut() {
-                }
-
+                public void signOut() { }
                 @Override
-                public void setCurrentUser(User user) {
-                }
+                public void setCurrentUser(User user) { }
             });
-            MapViewFragment.setMockCallback(mapboxMap -> {});
         }
     };
 
@@ -112,6 +95,7 @@ public class AnonymousTest {
 
     @Test
     public void whenNotSignedInMapWorks() {
+        MapViewFragment.setMockCallback(mapboxMap -> {});
         openFragment(R.id.activity_main_drawer_map);
         onView(withId(R.id.map_view)).check(matches(isDisplayed()));
     }

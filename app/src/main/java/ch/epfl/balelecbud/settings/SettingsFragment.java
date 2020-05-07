@@ -33,14 +33,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         LOCATION_INFO_KEY = getString(R.string.location_info_key);
         SIGN_IN_KEY = getString(R.string.sign_in_key);
         SIGN_OUT_KEY = getString(R.string.sign_out_key);
-        findPreference(LOCATION_ENABLE_KEY).setOnPreferenceChangeListener((preference, new_value) -> {
-            LocationUtil.updateLocation((boolean) new_value);
-            return true;
-        });
-        findPreference(LOCATION_INFO_KEY).setOnPreferenceClickListener(preference -> {
-            LocationUtil.requestLocationPermission(this);
-            return true;
-        });
+        setUpLocationPreferences();
+        setUpLoginPreferences();
+    }
+
+    private void setUpLoginPreferences() {
         findPreference(SIGN_IN_KEY).setOnPreferenceClickListener(preference -> {
             DialogFragment dialog = LoginUserFragment.newInstance(this);
             dialog.show(getParentFragmentManager(), LoginUserFragment.TAG);
@@ -56,13 +53,24 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             updateLoginStatus(false);
             return true;
         });
-        boolean permissionGranted =
-                (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-        updateLocationPreferencesVisibility(permissionGranted);
         updateLoginStatus(getAppAuthenticator().getCurrentUser() != null);
     }
 
-    private void updateLocationPreferencesVisibility(boolean permissionGranted){
+    private void setUpLocationPreferences() {
+        findPreference(LOCATION_ENABLE_KEY).setOnPreferenceChangeListener((preference, new_value) -> {
+            LocationUtil.updateLocation((boolean) new_value);
+            return true;
+        });
+        findPreference(LOCATION_INFO_KEY).setOnPreferenceClickListener(preference -> {
+            LocationUtil.requestLocationPermission(this);
+            return true;
+        });
+        boolean permissionGranted =
+                (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+        updateLocationPreferencesVisibility(permissionGranted);
+    }
+
+    private void updateLocationPreferencesVisibility(boolean permissionGranted) {
         findPreference(LOCATION_ENABLE_KEY).setVisible(permissionGranted);
         findPreference(LOCATION_INFO_KEY).setVisible(!permissionGranted);
     }

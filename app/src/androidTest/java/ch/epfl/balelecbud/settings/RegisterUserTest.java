@@ -1,17 +1,12 @@
 package ch.epfl.balelecbud.settings;
 
-import android.view.Gravity;
 import android.view.View;
 
-import androidx.test.espresso.contrib.DrawerActions;
-import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.UiDevice;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,10 +18,10 @@ import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
@@ -37,12 +32,10 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.Matchers.anyOf;
@@ -65,34 +58,13 @@ public class RegisterUserTest {
 
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
     private final MockDatabase mockDB = MockDatabase.getInstance();
-    private final UiDevice device = UiDevice.getInstance(getInstrumentation());
-
-
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule =
-            new ActivityTestRule<RootActivity>(RootActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    super.beforeActivityLaunched();
-                    BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
-                    mockAuth.signOut();
-                }
-            };
-
-
-    private void openFragment() {
-        device.pressBack();
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        device.waitForIdle();
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_settings));
-        device.waitForIdle();
-    }
 
     @Before
     public void setUp() {
-        openFragment();
+        BalelecbudApplication.setAppAuthenticator(mockAuth);
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
+        mockAuth.signOut();
+        FragmentScenario.launchInContainer(SettingsFragment.class, null, R.style.Theme_AppCompat, null);
         onView(withText(R.string.not_sign_in)).perform(click());
         onView(withText(R.string.action_no_account)).perform(click());
     }
@@ -180,41 +152,23 @@ public class RegisterUserTest {
     public void testCanRegisterFailDB() {
         BalelecbudApplication.setAppDatabase(new Database() {
             @Override
-            public void unregisterDocumentListener(String collectionName, String documentID) {
-            }
-
+            public void unregisterDocumentListener(String collectionName, String documentID) { }
             @Override
-            public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) {
-            }
-
+            public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) { }
             @Override
-            public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
-                return null;
-            }
-
+            public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) { return null; }
             @Override
-            public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
-                return null;
-            }
-
+            public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) { return null; }
             @Override
-            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
-            }
-
+            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) { }
             @Override
-            public <T> void storeDocument(String collectionName, T document) {
-            }
-
+            public <T> void storeDocument(String collectionName, T document) { }
             @Override
             public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
-                return CompletableFuture.completedFuture(null).thenApply(o -> {
-                    throw new RuntimeException("Failed to store document");
-                });
+                return CompletableFutureUtils.getExceptionalFuture("Failed to store document");
             }
-
             @Override
-            public void deleteDocumentWithID(String collectionName, String documentID) {
-            }
+            public void deleteDocumentWithID(String collectionName, String documentID) { }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
         onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
