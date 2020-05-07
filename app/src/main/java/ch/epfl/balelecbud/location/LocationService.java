@@ -11,10 +11,10 @@ import com.google.android.gms.location.LocationResult;
 
 import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabaseWrapper;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 public class LocationService extends IntentService {
     private static final String TAG = LocationService.class.getSimpleName();
@@ -48,8 +48,8 @@ public class LocationService extends IntentService {
         if (result != null && result.getLastLocation() != null) {
             Log.d(TAG, "handleLocationFromIntent: userId = " + this.user.getUid());
             android.location.Location lastLocation = result.getLastLocation();
-            getAppDatabaseWrapper().storeDocumentWithID(
-                    DatabaseWrapper.LOCATIONS_PATH,
+            getAppDatabase().storeDocumentWithID(
+                    Database.LOCATIONS_PATH,
                     this.user.getUid(),
                     new Location(lastLocation.getLatitude(), lastLocation.getLongitude())
             );

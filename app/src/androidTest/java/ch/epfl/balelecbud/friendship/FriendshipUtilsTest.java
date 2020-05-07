@@ -1,36 +1,45 @@
 package ch.epfl.balelecbud.friendship;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
+import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 
 @RunWith(AndroidJUnit4.class)
 public class FriendshipUtilsTest {
 
-    private final DatabaseWrapper db = MockDatabaseWrapper.getInstance();
+    @Rule
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<>(RootActivity.class);
+    private final MockDatabase db = MockDatabase.getInstance();
     private final Authenticator authenticator = MockAuthenticator.getInstance();
-    private final User sender = MockDatabaseWrapper.karim;
-    private final User recipient = MockDatabaseWrapper.celine;
+    private final User sender = MockDatabase.karim;
+    private final User recipient = MockDatabase.celine;
 
     @Before
     public void setup() {
-        BalelecbudApplication.setAppDatabaseWrapper(db);
+        db.resetDatabase();
+        BalelecbudApplication.setAppDatabase(db);
         BalelecbudApplication.setAppAuthenticator(authenticator);
         authenticator.signOut();
         authenticator.setCurrentUser(sender);
@@ -48,12 +57,12 @@ public class FriendshipUtilsTest {
         runOnUIThreadAndWait(() -> FriendshipUtils.removeFriend(user));
     }
 
-    private void checkResult(CompletableFuture<HashMap> document, Map<String, Boolean> expected)
+    private void checkResult(CompletableFuture<List<String>> document, List<String> expected)
             throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        document.whenComplete((hashMap, throwable) -> {
+        document.whenComplete((strings, throwable) -> {
             if (throwable == null) {
-                sync.assertEquals(expected, hashMap);
+                sync.assertEquals(expected, strings);
             } else {
                 sync.fail(throwable);
             }
@@ -69,27 +78,29 @@ public class FriendshipUtilsTest {
     }
 
     @Test
-    public void addFriendCreatesRequest() throws Throwable{
+    public void addFriendCreatesRequest() throws Throwable {
         addFriend(recipient);
+        final List<String> result = new ArrayList<>();
+        result.add(sender.getUid());
 
-        final Map<String, Boolean> result = new HashMap<>();
-        result.put(sender.getUid(), true);
-
-        checkResult(db.getCustomDocument("friendRequests", recipient.getUid(), HashMap.class),
-                result);
+        MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH,
+                new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
+        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), result);
     }
 
     @Test
     public void acceptRequestCreatedFriendship() throws Throwable {
+        addFriend(recipient);
         authenticator.signOut();
         authenticator.setCurrentUser(recipient);
-        final Map<String, Boolean> result = new HashMap<>();
-        result.put(sender.getUid(), true);
+        final List<String> result = new ArrayList<>();
+        result.add(sender.getUid());
 
         acceptRequest(sender);
 
-        checkResult(db.getCustomDocument("friendships", recipient.getUid(), HashMap.class),
-                result);
+        MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH,
+                new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
+        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), result);
     }
 
     @Test
@@ -98,7 +109,8 @@ public class FriendshipUtilsTest {
         acceptRequest(sender);
         deleteFriend(recipient);
 
-        checkResult(db.getCustomDocument("friendships", recipient.getUid(), HashMap.class),
-                new HashMap<>());
+        MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH,
+                new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
+        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), new ArrayList<>());
     }
 }

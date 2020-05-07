@@ -16,30 +16,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WelcomeActivity">
+        <activity android:name=".RootActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EmergencyInfoActivity" />
-        <activity android:name=".EmergencyNumbersActivity" />
-        <activity android:name=".FestivalInformationActivity" />
-        <activity android:name=".PointOfInterestActivity" />
-        <activity android:name=".EmergencyActivity" />
-        <activity android:name=".settings.SettingsActivity" />
-        <activity
-            android:name=".TransportActivity"
-            android:parentActivityName="ch.epfl.balelecbud.WelcomeActivity">
-        </activity>
-        <activity android:name=".ScheduleActivity" />
-        <activity android:name=".friendship.SocialActivity"/>
-        <activity
-            android:name=".map.MapViewActivity"
-            android:label="@string/title_activity_map"
-            android:parentActivityName=".WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".location.LocationService"

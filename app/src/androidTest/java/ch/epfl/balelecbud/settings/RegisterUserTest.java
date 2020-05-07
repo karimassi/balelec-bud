@@ -1,9 +1,13 @@
 package ch.epfl.balelecbud.settings;
 
+import android.view.Gravity;
 import android.view.View;
 
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -19,24 +23,30 @@ import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
-import ch.epfl.balelecbud.util.database.DatabaseWrapper;
-import ch.epfl.balelecbud.util.database.MockDatabaseWrapper;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.util.database.Database;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
+import ch.epfl.balelecbud.util.database.MyWhereClause;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserTest {
@@ -54,20 +64,35 @@ public class RegisterUserTest {
     private final Matcher<View> pwdRepeatNoError = not(anyOf(pwdRepeatRequiredError, pwdsDoNotMatchError));
 
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
-    private final MockDatabaseWrapper mockDB = MockDatabaseWrapper.getInstance();
+    private final MockDatabase mockDB = MockDatabase.getInstance();
+    private final UiDevice device = UiDevice.getInstance(getInstrumentation());
+
+
     @Rule
-    public final ActivityTestRule<SettingsActivity> mActivityRule =
-            new ActivityTestRule<SettingsActivity>(SettingsActivity.class) {
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
+                    super.beforeActivityLaunched();
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
-                    BalelecbudApplication.setAppDatabaseWrapper(mockDB);
+                    BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
                     mockAuth.signOut();
                 }
             };
 
+
+    private void openFragment() {
+        device.pressBack();
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        device.waitForIdle();
+        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_settings));
+        device.waitForIdle();
+    }
+
     @Before
     public void setUp() {
+        openFragment();
         onView(withText(R.string.not_sign_in)).perform(click());
         onView(withText(R.string.action_no_account)).perform(click());
     }
@@ -133,15 +158,27 @@ public class RegisterUserTest {
     @Test
     public void testRegisterSavesUserOnDB() throws Throwable {
         String email = "testregister" + randomInt() + "@gmail.com";
+        TestAsyncUtils sync = new TestAsyncUtils();
         enterValuesAndClick("name", email, "123123", "123123");
 
-        assertEquals(email, mockDB.getCustomDocument(DatabaseWrapper.USERS_PATH, mockAuth.getCurrentUid(), User.class).get().getEmail());
-        assertEquals("name", mockDB.getCustomDocument(DatabaseWrapper.USERS_PATH, mockAuth.getCurrentUid(), User.class).get().getDisplayName());
+        MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, MockAuthenticator.getInstance().getCurrentUid()));
+        mockDB.queryWithType(query, User.class).whenComplete((users, throwable) -> {
+            if (throwable == null) {
+                sync.assertEquals(email, users.get(0).getEmail());
+                sync.assertEquals("name", users.get(0).getDisplayName());
+                sync.call();
+            } else {
+                sync.fail();
+            }
+        });
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
     public void testCanRegisterFailDB() {
-        BalelecbudApplication.setAppDatabaseWrapper(new DatabaseWrapper() {
+        BalelecbudApplication.setAppDatabase(new Database() {
             @Override
             public void unregisterDocumentListener(String collectionName, String documentID) {
             }
@@ -151,30 +188,12 @@ public class RegisterUserTest {
             }
 
             @Override
-            public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
+            public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
                 return null;
             }
 
             @Override
-            public CompletableFuture<List<String>> queryIds(MyQuery query) {
-                return null;
-            }
-
-            @Override
-            public <T> CompletableFuture<T> getCustomDocument(String collectionName, String documentID, Class<T> type) {
-                return CompletableFuture.completedFuture(null).thenCompose(o -> {
-                    throw new RuntimeException("Failed to store document");
-                });
-            }
-
-            @Override
-            public CompletableFuture<Map<String, Object>> getDocument(String collectionName, String documentID) {
-                return null;
-            }
-
-            @Override
-            public <T> CompletableFuture<T> getDocumentWithFieldCondition(String collectionName,
-                                                                          String fieldName, String fieldValue, Class<T> type) {
+            public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
                 return null;
             }
 

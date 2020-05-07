@@ -1,7 +1,12 @@
 package ch.epfl.balelecbud.settings;
 
+import android.view.Gravity;
+
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -17,11 +23,13 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertNotNull;
@@ -29,19 +37,32 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class LoginUserTest {
     private MockAuthenticator mockAuth = MockAuthenticator.getInstance();
+    private UiDevice device = UiDevice.getInstance(getInstrumentation());
 
     @Rule
-    public final ActivityTestRule<SettingsActivity> mActivityRule =
-            new ActivityTestRule<SettingsActivity>(SettingsActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            BalelecbudApplication.setAppAuthenticator(mockAuth);
-            mockAuth.signOut();
-        }
-    };
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    super.beforeActivityLaunched();
+                    BalelecbudApplication.setAppAuthenticator(mockAuth);
+                    mockAuth.signOut();
+
+                }
+            };
+
+    private void openFragment() {
+        device.pressBack();
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        device.waitForIdle();
+        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_settings));
+        device.waitForIdle();
+    }
 
     @Before
     public void setUp() {
+        openFragment();
         onView(withText(R.string.not_sign_in)).perform(click());
     }
 
