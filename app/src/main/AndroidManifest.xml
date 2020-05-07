@@ -32,7 +32,7 @@
         <activity android:name=".EmergencyNumbersFragment" />
         <activity android:name=".LoginUserActivity" />
         <activity android:name=".RegisterUserActivity" />
-        <activity android:name=".PicturesActivity"/>
+        <activity android:name=".PicturesFragment"/>
         <activity android:name=".RootActivity" />
 
         <provider
