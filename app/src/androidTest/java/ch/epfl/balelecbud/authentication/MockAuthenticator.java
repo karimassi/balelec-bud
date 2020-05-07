@@ -81,6 +81,7 @@ public class MockAuthenticator implements Authenticator {
     @Override
     public void setCurrentUser(User user) {
         if(currentUser == null) {
+            currentUserID = user.getUid();
             currentUser = user;
         }
     }

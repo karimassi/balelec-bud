@@ -12,37 +12,76 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.concurrent.CompletableFuture;
+
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.map.MapViewFragment;
+import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.setAppDatabase;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class AnonymousTest {
     private final UiDevice device = UiDevice.getInstance(getInstrumentation());
     private final MockDatabase mockDB = MockDatabase.getInstance();
-    private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
+    private TestAsyncUtils sync;
 
     @Rule
     public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             super.beforeActivityLaunched();
+            sync = new TestAsyncUtils();
             setAppDatabase(mockDB);
-            setAppAuthenticator(mockAuth);
-            mockAuth.signOut();
+            setAppAuthenticator(new Authenticator() {
+                @Override
+                public CompletableFuture<String> signInAnonymously() {
+                    sync.call();
+                    return null;
+                }
+
+                @Override
+                public CompletableFuture<User> signIn(String email, String password) {
+                    return null;
+                }
+
+                @Override
+                public CompletableFuture<Void> createAccount(String name, String email, String password) {
+                    return null;
+                }
+
+                @Override
+                public String getCurrentUid() {
+                    return null;
+                }
+
+                @Override
+                public User getCurrentUser() {
+                    return null;
+                }
+
+                @Override
+                public void signOut() {
+                }
+
+                @Override
+                public void setCurrentUser(User user) {
+                }
+            });
             MapViewFragment.setMockCallback(mapboxMap -> {});
         }
     };
@@ -56,14 +95,18 @@ public class AnonymousTest {
     }
 
     @Test
-    public void whenNotSignedInCreateAnonymousUser() {
-        assertNotNull(mockAuth.getCurrentUid());
+    public void whenNotSignedInCreateAnonymousUser() throws InterruptedException {
+        device.waitForIdle();
+        sync.waitCall(1);
+        sync.assertCalled(1);
     }
 
     @Test
     public void whenNotSignedInSocialIsDisable() {
         openFragment(R.id.activity_main_drawer_social);
-        onView(withText(R.string.require_sign_in)).check(matches(isDisplayed()));
+        onView(withText(R.string.require_sign_in))
+                .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
+                .check(matches(isDisplayed()));
         onView(withId(R.id.tabs_social)).check(doesNotExist());
     }
 

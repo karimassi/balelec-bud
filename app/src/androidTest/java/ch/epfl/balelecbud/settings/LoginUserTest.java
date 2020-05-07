@@ -17,6 +17,7 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
+import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -46,8 +47,8 @@ public class LoginUserTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     BalelecbudApplication.setAppAuthenticator(mockAuth);
+                    BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
                     mockAuth.signOut();
-
                 }
             };
 

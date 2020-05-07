@@ -2,7 +2,9 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +25,8 @@ import ch.epfl.balelecbud.schedule.models.Slot;
 import ch.epfl.balelecbud.settings.SettingsFragment;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+
 public class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = RootActivity.class.getSimpleName();
@@ -38,6 +42,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         this.configureDrawerLayout();
         this.configureNavigationView();
 
+        setUpUser();
+
         ArrayList<Slot> slots = FlowUtil.unpackCallback(getIntent());
         if (slots != null) {
             ScheduleFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
@@ -46,6 +52,13 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             }
         } else {
             this.showFirstFragment();
+        }
+    }
+
+    private void setUpUser() {
+        if (getAppAuthenticator().getCurrentUid() == null) {
+            Log.d(TAG, "setUpUser: creating anonymous user");
+            getAppAuthenticator().signInAnonymously();
         }
     }
 
@@ -126,8 +139,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showSocialFragment() {
-        Fragment fragmentSocial = SocialFragment.newInstance();
-        this.startTransactionFragment(fragmentSocial, "SOCIAL");
+        if (getAppAuthenticator().getCurrentUser() == null) {
+            Toast.makeText(this, R.string.require_sign_in, Toast.LENGTH_LONG).show();
+        } else {
+            Fragment fragmentSocial = SocialFragment.newInstance();
+            this.startTransactionFragment(fragmentSocial, "SOCIAL");
+        }
     }
 
     private void showEmergencyFragment() {

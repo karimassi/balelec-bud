@@ -48,6 +48,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
         findPreference(SIGN_OUT_KEY).setOnPreferenceClickListener(preference -> {
             getAppAuthenticator().signOut();
+            getAppAuthenticator().signInAnonymously();
             if (LocationUtil.isLocationActive()) {
                 LocationUtil.disableLocation();
                 updateLocationPreferencesVisibility(false);

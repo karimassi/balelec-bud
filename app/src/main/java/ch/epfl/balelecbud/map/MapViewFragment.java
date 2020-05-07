@@ -71,7 +71,8 @@ public class MapViewFragment extends Fragment {
         Bundle arguments = getArguments();
         Location location = arguments != null ? arguments.getParcelable("location") : null;
         defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
-        requestFriendsLocations();
+        if (getAppAuthenticator().getCurrentUser() != null)
+            requestFriendsLocations();
         displayPointsOfInterests();
 
         if (myMap != null) {
