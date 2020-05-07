@@ -51,8 +51,8 @@ public class WelcomeFragment extends Fragment {
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                         Log.d(TAG, "Connected Spotify successfully!");
                         WelcomeFragment.this.spotifyAppRemote = spotifyAppRemote;
-                        WelcomeFragment.this.spotifyAppRemote.getPlayerApi()
-                                .play(getContext().getString(R.string.spotify_balelec_playlist));
+                        WelcomeFragment.this.spotifyAppRemote.getPlayerApi().play(getContext().getString(R.string.spotify_balelec_playlist));
+                        Toast.makeText(BalelecbudApplication.getAppContext(), getContext().getString(R.string.playing_spotify_message), Toast.LENGTH_LONG).show();
                     }
 
                     public void onFailure(Throwable throwable) {

@@ -64,7 +64,7 @@
     <string name="add_friend_cancel">Cancel</string>
     <string name="add_friend_email_hint">Enter your friend\'s email</string>
     <string name="add_own_as_friend">You can\'t add yourself as a friend :-)</string>
-    <string name="add_friend_request_sent">Friend request sent to </string>
+    <string name="add_friend_request_sent">Friend request sent to \</string>
 
     <!--  FRIEND ITEM  -->
     <string name="remove_friend">Unfriend</string>
@@ -118,6 +118,7 @@
     <string name="spotify_balelec_playlist">spotify:playlist:48yI8Gqy44311pEJggXyp3</string>
     <string name="download_spotify_message">Download Spotify free and log-in to listen to the Balelec playlist</string>
     <string name="login_spotify_message">Go to Spotify and log-in to listen to the Balelec playlist</string>
+    <string name="playing_spotify_message">Playing the Balelec playlist on Spotify</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
