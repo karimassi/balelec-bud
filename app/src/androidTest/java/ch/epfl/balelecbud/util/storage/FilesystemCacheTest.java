@@ -5,14 +5,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import ch.epfl.balelecbud.testUtils.FileUtils;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -51,22 +47,13 @@ public class FilesystemCacheTest {
     @Test
     public void canReadFilePutInPreviously() throws IOException {
         String fileName = "whatever";
-        String stringContent = "This is the content of a file";
-        char[] content = stringContent.toCharArray();
-        File tmp = File.createTempFile("tmpPrefix", "tmpFile");
-
-        FileWriter writer = new FileWriter(tmp);
-        writer.write(content);
-        writer.close();
+        String expected = "This is the content of a file";
+        File tmp = FileUtils.createFileWithContent(expected, fileName);
 
         fsCache.put(tmp, fileName);
         File result = fsCache.get(fileName).getNow(null);
         assertNotNull(result);
 
-        FileReader reader = new FileReader(result);
-        char[] contentResult = new char[stringContent.length()];
-        assertEquals(reader.read(contentResult), stringContent.length());
-
-        assertArrayEquals(content, contentResult);
+        assertTrue(FileUtils.checkContent(result, expected));
     }
 }

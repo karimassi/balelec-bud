@@ -3,12 +3,9 @@ package ch.epfl.balelecbud.util.storage;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.VisibleForTesting;
-
 import com.google.common.io.Files;
 
 import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -49,17 +46,10 @@ public class FilesystemCache implements Cache {
     }
 
     @Override
-    public File put(File file, String name) {
+    public File put(File file, String name) throws IOException {
         File newFile = new File(cacheDir, name);
-
-        try{
-            Files.move(file, newFile);
-            return newFile;
-        } catch (IOException e) {
-            Log.w(TAG, "could not move file");
-            Log.w(TAG, e.getMessage());
-            return file;
-        }
+        Files.move(file, newFile);
+        return newFile;
     }
 
     @Override

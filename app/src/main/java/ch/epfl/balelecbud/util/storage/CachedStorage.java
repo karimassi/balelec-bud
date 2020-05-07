@@ -1,16 +1,8 @@
 package ch.epfl.balelecbud.util.storage;
 
-import android.content.Context;
-
 import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-
-import ch.epfl.balelecbud.BalelecbudApplication;
 
 /**
  * Uses the decorator pattern, may seem slightly redundant now since the inner Storage already
@@ -35,7 +27,13 @@ public class CachedStorage implements Storage {
             return cache.get(name);
         } else {
             return inner.getFile(name)
-                    .thenApply(innerFile -> cache.put(innerFile, name));
+                    .thenApply(innerFile -> {
+                        try {
+                            return cache.put(innerFile, name);
+                        } catch (IOException e) {
+                            return innerFile;
+                        }
+                    });
         }
     }
 
