@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -68,7 +69,7 @@ public class RegisterUserFragment extends DialogFragment {
                                 nameField.getText().toString(),
                                 emailField.getText().toString(),
                                 passwordField.getText().toString()))
-                .setNeutralButton(R.string.action_no_account, (dialog, which) -> {
+                .setNeutralButton(R.string.action_existing_account, (dialog, which) -> {
                     dismiss();
                     DialogFragment registerDialog = LoginUserFragment.newInstance(settingsFragment);
                     registerDialog.show(getActivity().getSupportFragmentManager(), LoginUserFragment.TAG);
@@ -78,10 +79,11 @@ public class RegisterUserFragment extends DialogFragment {
             AlertDialog dialog = ((AlertDialog) getDialog());
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         });
+        validateEntry();
         return builder.create();
     }
 
-    RegisterUserFragment(SettingsFragment settingsFragment) {
+    private RegisterUserFragment(SettingsFragment settingsFragment) {
         this.settingsFragment = settingsFragment;
     }
 
@@ -90,10 +92,11 @@ public class RegisterUserFragment extends DialogFragment {
             return;
 
         getAppAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
+            Log.d(TAG, "whenComplete() called with: aVoid = [" + aVoid + "], throwable = [" + throwable + "]");
             if (throwable != null) {
                 Toast.makeText(
                         getContext(),
-                        throwable.getCause().getLocalizedMessage(),
+                        throwable.getLocalizedMessage(),
                         Toast.LENGTH_SHORT).show();
             } else {
                 onAuthComplete();
@@ -121,6 +124,9 @@ public class RegisterUserFragment extends DialogFragment {
     }
 
     private boolean isPasswordsValid() {
+        passwordField.setError(null);
+        repeatPasswordField.setError(null);
+
         boolean valid = true;
         String password = passwordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
@@ -137,7 +143,7 @@ public class RegisterUserFragment extends DialogFragment {
             valid = false;
         }
 
-        if (!passwordRepeated.equals(password)) {
+        if (valid && !passwordRepeated.equals(password)) {
             passwordField.setError(getString(R.string.mismatch_password));
             repeatPasswordField.setError(getString(R.string.mismatch_password));
             valid = false;

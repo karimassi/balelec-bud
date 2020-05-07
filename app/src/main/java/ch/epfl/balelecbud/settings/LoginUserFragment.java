@@ -45,7 +45,7 @@ public class LoginUserFragment extends DialogFragment {
         return new LoginUserFragment(settingsFragment);
     }
 
-    LoginUserFragment(SettingsFragment settingsFragment) {
+    private LoginUserFragment(SettingsFragment settingsFragment) {
         this.settingsFragment = settingsFragment;
     }
 

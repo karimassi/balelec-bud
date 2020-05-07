@@ -69,7 +69,7 @@ public class RegisterUserTest {
     @Before
     public void setUp() {
         onView(withText(R.string.not_sign_in)).perform(click());
-        onView(withId(R.id.buttonLoginToRegister)).perform(click());
+        onView(withText(R.string.action_no_account)).perform(click());
     }
 
     @Test
@@ -108,19 +108,19 @@ public class RegisterUserTest {
     @Test
     public void testCantRegisterInvalidEmailShortPassword() {
         // invalid email invalid password
-        enterValuesAndClick("name", "invalidemail", "124", "124");
-        checkErrors(nameNoError, emailInvalidError, pwdTooShortError, pwdRepeatNoError);
+        enterValuesAndClick("name", "invalidemail", "124", "");
+        checkErrors(nameNoError, emailInvalidError, pwdTooShortError, pwdRepeatRequiredError);
     }
 
     @Test
     public void testRegisterExistingAccount() {
         enterValuesAndClick("name", "karim@epfl.ch", "123456", "123456");
-        onView(withText(R.string.register)).check(matches(isDisplayed()));
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testGoToLogin() {
-        onView(withId(R.id.buttonRegisterToLogin)).perform(click());
+        onView(withText(R.string.action_existing_account)).perform(click());
         onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
@@ -198,7 +198,7 @@ public class RegisterUserTest {
             }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
-        onView(withText(R.string.register)).check(matches(isDisplayed()));
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
     private void checkErrors(Matcher<View> nameMatcher,
@@ -216,7 +216,7 @@ public class RegisterUserTest {
         onView(withId(R.id.editTextEmailRegister)).perform(typeText(email)).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordRegister)).perform(typeText(pwd)).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextRepeatPasswordRegister)).perform(typeText(pwd2)).perform(closeSoftKeyboard());
-        onView(withId(R.id.buttonRegister)).perform(click());
+        onView(withText(R.string.action_register)).perform(click());
     }
 
     private String randomInt() {
