@@ -86,13 +86,13 @@ public class FriendshipUtils {
 
     public static CompletableFuture<User> getUserFromUid(String uid, Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, uid), preferredSource);
-        return getAppDatabase().queryWithType(query, User.class).thenApply(users -> users.get(0));
+        return getAppDatabase().query(query, User.class).thenApply(users -> users.get(0));
     }
 
     public static CompletableFuture<User> getUserFromEmail(String email, Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause("email", EQUAL, email), preferredSource);
         return getAppDatabase()
-                .queryWithType(query, User.class).thenApply(users -> users.get(0));
+                .query(query, User.class).thenApply(users -> users.get(0));
     }
 
     public static CompletableFuture<List<String>> getFriendsUids(User user) {

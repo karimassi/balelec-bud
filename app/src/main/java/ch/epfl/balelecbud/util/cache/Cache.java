@@ -19,4 +19,6 @@ public interface Cache {
 
     void flush(String collectionName);
 
+    void flush();
+
 }

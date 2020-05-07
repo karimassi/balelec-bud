@@ -64,6 +64,7 @@ public class MockDatabase implements Database {
     }
 
     public void resetDatabase() {
+        friendsLocationListener.clear();
         initDatabasePOJO();
         initDatabase();
         fillDB();
@@ -147,7 +148,7 @@ public class MockDatabase implements Database {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
+    public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
         List<T> queryResult = new LinkedList<>();
         Map<String, Object> collection = databasePOJO.get(query.getCollectionName());
         if (MockQueryUtils.queryContainsDocumentIdClause(query)) {

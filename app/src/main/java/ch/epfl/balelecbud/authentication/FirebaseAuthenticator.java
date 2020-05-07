@@ -24,7 +24,7 @@ public class FirebaseAuthenticator implements Authenticator {
     public CompletableFuture<User> signIn(String email, String password) {
         return new TaskToCompletableFutureAdapter<>(mAuth.signInWithEmailAndPassword(email, password))
                 .thenCompose(authResult -> FirestoreDatabase.getInstance()
-                        .queryWithType(new MyQuery(Database.USERS_PATH,
+                        .query(new MyQuery(Database.USERS_PATH,
                                 new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, getCurrentUid())),
                                 User.class)
                         .thenApply(users -> users.get(0)));

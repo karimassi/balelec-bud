@@ -10,19 +10,20 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.util.cache.Cache;
-import ch.epfl.balelecbud.util.cache.FileSystemCache;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppCache;
+import static ch.epfl.balelecbud.BalelecbudApplication.getRemoteDatabase;
 
 
 public class CachedDatabase implements Database {
 
     private static final String TAG = CachedDatabase.class.getSimpleName();
 
-    private Database database;
     private Cache cache;
-    private static CachedDatabase instance = new CachedDatabase(FirestoreDatabase.getInstance(), new FileSystemCache());
 
-    private CachedDatabase(Database database, Cache cache) {
-        this.database = database;
+    private static CachedDatabase instance = new CachedDatabase(getAppCache());
+
+    private CachedDatabase(Cache cache) {
         this.cache = cache;
     }
 
@@ -32,27 +33,27 @@ public class CachedDatabase implements Database {
 
     @Override
     public void unregisterDocumentListener(String collectionName, String documentID) {
-        database.unregisterDocumentListener(collectionName, documentID);
+        getRemoteDatabase().unregisterDocumentListener(collectionName, documentID);
     }
 
     @Override
     public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) {
-        database.listenDocument(collectionName, documentID, consumer, type);
+        getRemoteDatabase().listenDocument(collectionName, documentID, consumer, type);
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
+    public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
         CompletableFuture<List<T>> result = CompletableFuture.completedFuture(new ArrayList<>());
         if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
             Log.d(TAG, "Fetching from cache");
             try {
                 result = cache.get(query, tClass);
             } catch (IOException e) {
-                Log.d(TAG, "queryWithType: " + e.getLocalizedMessage());
+                Log.d(TAG, "query: " + e.getLocalizedMessage());
             }
         } else {
-            Log.d(TAG, "Fecthing from remote");
-            result = database.queryWithType(query, tClass);
+            Log.d(TAG, "Fetching from remote");
+            result = getRemoteDatabase().query(query, tClass);
             result.whenComplete((ts, throwable) -> {
                 if (throwable == null) {
                     cache.flush(query.getCollectionName());
@@ -61,7 +62,7 @@ public class CachedDatabase implements Database {
                         try {
                             cache.put(query.getCollectionName(), id, t);
                         } catch (IOException e) {
-                            Log.d(TAG, "queryWithType: " + e.getLocalizedMessage());
+                            Log.d(TAG, "query: " + e.getLocalizedMessage());
                         }
                     }
                 }
@@ -81,8 +82,8 @@ public class CachedDatabase implements Database {
                 Log.d(TAG, "query: " + e.getLocalizedMessage());
             }
         } else {
-            Log.d(TAG, "Fecthing from remote");
-            result = database.query(query);
+            Log.d(TAG, "Fetching from remote");
+            result = getRemoteDatabase().query(query);
             result.whenComplete((maps, throwable) -> {
                if (throwable == null) {
                    cache.flush(query.getCollectionName());
@@ -102,21 +103,21 @@ public class CachedDatabase implements Database {
 
     @Override
     public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
-        database.updateDocument(collectionName, documentID, updates);
+        getRemoteDatabase().updateDocument(collectionName, documentID, updates);
     }
 
     @Override
     public <T> void storeDocument(String collectionName, T document) {
-        database.storeDocument(collectionName, document);
+        getRemoteDatabase().storeDocument(collectionName, document);
     }
 
     @Override
     public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
-        return database.storeDocumentWithID(collectionName, documentID, document);
+        return getRemoteDatabase().storeDocumentWithID(collectionName, documentID, document);
     }
 
     @Override
     public void deleteDocumentWithID(String collectionName, String documentID) {
-        database.deleteDocumentWithID(collectionName, documentID);
+        getRemoteDatabase().deleteDocumentWithID(collectionName, documentID);
     }
 }

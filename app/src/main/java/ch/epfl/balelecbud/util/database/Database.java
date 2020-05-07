@@ -28,7 +28,7 @@ public interface Database {
 
     <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);
 
-    <T> CompletableFuture<List<T>> queryWithType(MyQuery query, final Class<T> tClass);
+    <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
 
     CompletableFuture<List<Map<String, Object>>> query(MyQuery query);
 

@@ -31,7 +31,7 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
         clearAll();
         lastRecordedAffluence.clear();
         MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>(), preferredSource);
-        getAppDatabase().queryWithType(query, PointOfInterest.class)
+        getAppDatabase().query(query, PointOfInterest.class)
                 .thenCompose(PointOfInterestUtils::computeAffluence)
                 .thenAccept(this::postResults);
     }

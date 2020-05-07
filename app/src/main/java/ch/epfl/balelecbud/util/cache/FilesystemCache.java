@@ -22,14 +22,20 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.util.database.MyQuery;
 
-public class FileSystemCache implements Cache {
+public class FilesystemCache implements Cache {
 
     Gson gson;
     Context context;
 
-    public FileSystemCache() {
+    private static FilesystemCache instance = new FilesystemCache();
+
+    private FilesystemCache() {
         gson = new GsonBuilder().setPrettyPrinting().create();
         context = BalelecbudApplication.getAppContext();
+    }
+
+    public static FilesystemCache getInstance() {
+        return instance;
     }
 
     @Override
@@ -91,9 +97,6 @@ public class FileSystemCache implements Cache {
     public void put(String collectionName, String id, Object document) throws IOException {
         File cacheFile = new File(context.getCacheDir(), collectionName);
         cacheFile.mkdir();
-        if (!cacheFile.exists()) {
-            cacheFile = new File(context.getFilesDir(), collectionName);
-        }
         File toStore = new File(cacheFile, id);
         FileOutputStream fos = new FileOutputStream(toStore);
         OutputStreamWriter osw =new OutputStreamWriter(fos);
@@ -105,13 +108,16 @@ public class FileSystemCache implements Cache {
     @Override
     public void flush(String collectionName) {
         File cacheFile = new File(context.getCacheDir(), collectionName);
-        if (cacheFile.isDirectory()) {
-            for (File file : cacheFile.listFiles()) {
-                file.delete();
-            }
+        for (File file : cacheFile.listFiles()) {
+            file.delete();
         }
         cacheFile.delete();
     }
 
-
+    @Override
+    public void flush() {
+        for (File file: context.getCacheDir().listFiles()) {
+            flush(file.getName());
+        }
+    }
 }

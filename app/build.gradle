@@ -83,7 +83,7 @@ dependencies {
     debugImplementation 'androidx.fragment:fragment-testing:1.2.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    def room_version = "2.2.4"
+    def room_version = "2.2.5"
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"

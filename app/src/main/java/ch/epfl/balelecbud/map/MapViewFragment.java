@@ -198,7 +198,7 @@ public class MapViewFragment extends Fragment {
     }
 
     private void displayPointsOfInterests() {
-        getAppDatabase().queryWithType(new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>()),
+        getAppDatabase().query(new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>()),
                 PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
             for (PointOfInterest poi : pointOfInterests) {
                 if (myMap == null) {
