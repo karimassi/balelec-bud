@@ -16,6 +16,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 
 import ch.epfl.balelecbud.friendship.SocialFragment;
+import ch.epfl.balelecbud.gallery.GalleryFragment;
 import ch.epfl.balelecbud.map.MapViewFragment;
 import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestFragment;
@@ -90,6 +91,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_settings:
                 this.showSettingsFragment();
                 break;
+            case R.id.activity_main_drawer_gallery:
+                this.showGalleryFragment();
+                break;
             case R.id.sign_out_button:
                 signOut();
                 break;
@@ -155,6 +159,11 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private void showSettingsFragment() {
         Fragment fragmentSettings = SettingsFragment.newInstance();
         this.startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
+    }
+
+    private void showGalleryFragment() {
+        GalleryFragment fragmentGallery = GalleryFragment.newInstance();
+        this.startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {
