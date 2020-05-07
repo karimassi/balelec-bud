@@ -50,28 +50,18 @@ public class LoginUserTest {
     public void testCantSignInInvalidEmailEmptyPassword() {
         // invalid email empty pws
         enterAndCheckErrors("fakemail", "", "Enter a valid email!", "Password required!");
-//        enterAndClick("fakemail", "");
-//        onView(withId(R.id.editTextEmailLogin)).check(matches(hasErrorText("Enter a valid email!")));
-//        onView(withId(R.id.editTextPasswordLogin)).check(matches(hasErrorText("Password required!")));
-//        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testCantSignInvalidEmailEmptyPassword() {
         // valid email empty pws
         enterAndCheckErrors("fakemail@correct.ch", "", null, "Password required!");
-//        enterAndClick("fakemail@correct.ch", "");
-//        onView(withId(R.id.editTextPasswordLogin)).check(matches(hasErrorText("Password required!")));
-//        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testCantSignInInvalidEmail() {
         // invalid email non-empty pws
         enterAndCheckErrors("fakemail", "1234", "Enter a valid email!", null);
-//        enterAndClick("fakemail", "1234");
-//        onView(withId(R.id.editTextEmailLogin)).check(matches(hasErrorText("Enter a valid email!")));
-//        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     private void enterAndCheckErrors(String email, String pwd, String emailErrorText, String pwdErrorText) {
