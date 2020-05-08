@@ -61,12 +61,6 @@ public class LoginUserTest {
         enterAndCheckErrors("fakemail@correct.ch", "", null, "Password required!");
     }
 
-    @Test
-    public void testCantSignInInvalidEmail() {
-        // invalid email non-empty pws
-        enterAndCheckErrors("fakemail", "123456", "Enter a valid email!", null);
-    }
-
     private void enterAndCheckErrors(String email, String pwd, String emailErrorText, String pwdErrorText) {
         enterAndClick(email, pwd);
         onView(withId(R.id.editTextEmailLogin)).check(matches(hasErrorText(emailErrorText)));
