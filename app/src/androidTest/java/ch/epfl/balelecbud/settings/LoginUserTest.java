@@ -4,6 +4,7 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -59,6 +60,13 @@ public class LoginUserTest {
     public void testCantSignInvalidEmailEmptyPassword() {
         // valid email empty pws
         enterAndCheckErrors("fakemail@correct.ch", "", null, "Password required!");
+    }
+
+    @Ignore("Redundant")
+    @Test
+    public void testCantSignInInvalidEmail() {
+        // invalid email non-empty pws
+        enterAndCheckErrors("fakemail", "123456", "Enter a valid email!", null);
     }
 
     private void enterAndCheckErrors(String email, String pwd, String emailErrorText, String pwdErrorText) {
