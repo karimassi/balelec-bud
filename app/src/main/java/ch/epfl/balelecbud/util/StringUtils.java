@@ -23,6 +23,7 @@ public class StringUtils {
     }
 
     public static boolean isEmailValid(Context context, EditText emailField) {
+        emailField.setError(null);
         String email = emailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
             emailField.setError(context.getString(R.string.require_email));
