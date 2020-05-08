@@ -18,10 +18,14 @@ import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.FirestoreDatabase;
 import ch.epfl.balelecbud.util.http.HttpClient;
 import ch.epfl.balelecbud.util.http.VolleyHttpClient;
+import ch.epfl.balelecbud.util.storage.CachedStorage;
+import ch.epfl.balelecbud.util.storage.FirebaseStorage;
+import ch.epfl.balelecbud.util.storage.Storage;
 
 public class BalelecbudApplication extends Application {
 
     private static Context appContext;
+    private static Storage appStorage;
     private static Database appDatabase;
     private static Cache appCache;
     private static Database remoteDatabase;
@@ -57,6 +61,10 @@ public class BalelecbudApplication extends Application {
         return appMessagingService;
     }
 
+    public static Storage getAppStorage() {
+        return appStorage;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -69,6 +77,8 @@ public class BalelecbudApplication extends Application {
             appDatabase = CachedDatabase.getInstance();
         if (appAuthenticator == null)
             appAuthenticator = FirebaseAuthenticator.getInstance();
+        if (appStorage == null)
+            appStorage = new CachedStorage(FirebaseStorage.getInstance(), new ch.epfl.balelecbud.util.storage.FilesystemCache());
         if (httpClient == null)
             httpClient = VolleyHttpClient.getInstance();
         if (appMessagingService == null)
@@ -106,4 +116,10 @@ public class BalelecbudApplication extends Application {
     public static void setAppMessagingService(MessagingService messagingService) {
         appMessagingService = messagingService;
     }
+
+    @VisibleForTesting
+    public static void setAppStorage(Storage storage) {
+        appStorage = storage;
+    }
+
 }
