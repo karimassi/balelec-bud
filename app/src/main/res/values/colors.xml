@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="blek_orange">#FA8400</color>
     <color name="blek_blue">#00EACD</color>
+    <color name="blek_darker_blue">#00B8A2</color>
 </resources>

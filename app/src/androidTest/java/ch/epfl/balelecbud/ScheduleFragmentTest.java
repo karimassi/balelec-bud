@@ -18,6 +18,7 @@ import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
+import ch.epfl.balelecbud.util.storage.MockStorage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -31,15 +32,20 @@ import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static ch.epfl.balelecbud.util.database.MockDatabase.slot1;
 import static ch.epfl.balelecbud.util.database.MockDatabase.slot2;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class ScheduleFragmentTest  {
-    private final MockDatabase mock = MockDatabase.getInstance();
+    private final MockDatabase mockDatabase = MockDatabase.getInstance();
+    private final MockStorage mockStorage = new MockStorage();
 
     @Before
     public void setup() {
-        mock.resetDatabase();
-        BalelecbudApplication.setAppDatabase(mock);
+        mockDatabase.resetDatabase();
+        mockStorage.setAccessCount(0);
+        BalelecbudApplication.setAppDatabase(mockDatabase);
+        BalelecbudApplication.setAppStorage(mockStorage);
+
         SlotData.setIntentLauncher(intent -> {
             if (intent.getAction() == null)
                 Assert.fail();
@@ -55,7 +61,7 @@ public class ScheduleFragmentTest  {
                     break;
             }
         });
-        mock.resetDocument(Database.CONCERT_SLOTS_PATH);
+        mockDatabase.resetDocument(Database.CONCERT_SLOTS_PATH);
         Bundle arguments = new Bundle();
         arguments.putParcelableArrayList("slots", new ArrayList<>());
         FragmentScenario.launchInContainer(ScheduleFragment.class, arguments);
@@ -70,13 +76,13 @@ public class ScheduleFragmentTest  {
     public void testItemModification() {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
 
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
 
         refreshRecyclerView();
 
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
 
         refreshRecyclerView();
 
@@ -87,13 +93,15 @@ public class ScheduleFragmentTest  {
     @Test
     public void testCaseForRecyclerItems() {
 
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
 
         refreshRecyclerView();
 
         checkSlot(0, slot1);
         checkSlot(1, slot2);
+
+        assertEquals(mockStorage.getAccessCount(), 2);
     }
 
     private void checkSlot(int i, Slot slot1) {
@@ -110,7 +118,7 @@ public class ScheduleFragmentTest  {
     @Test
     public void testCanSubscribeToAConcert() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
 
         refreshRecyclerView();
 

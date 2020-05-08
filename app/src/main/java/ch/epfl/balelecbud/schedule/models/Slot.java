@@ -19,15 +19,17 @@ public class Slot implements Parcelable {
 
     private String artistName;
     private String sceneName;
+    private String imageFileName;
     private Timestamp startTime;
     private Timestamp endTime;
 
-    public Slot(int id, String artistName, String sceneName, Timestamp startTime, Timestamp endTime) {
+    public Slot(int id, String artistName, String sceneName, String imageFileName, Timestamp startTime, Timestamp endTime) {
         this.id = id;
         this.artistName = artistName;
         this.sceneName = sceneName;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.imageFileName = imageFileName;
     }
 
     @Ignore
@@ -37,6 +39,7 @@ public class Slot implements Parcelable {
         id = in.readInt();
         artistName = in.readString();
         sceneName = in.readString();
+        imageFileName = in.readString();
         startTime = in.readParcelable(Timestamp.class.getClassLoader());
         endTime = in.readParcelable(Timestamp.class.getClassLoader());
     }
@@ -69,6 +72,10 @@ public class Slot implements Parcelable {
         return sceneName;
     }
 
+    public String getImageFileName() {
+        return imageFileName;
+    }
+
     public String getTimeSlot(){
         return StringUtils.timestampToScheduleString(startTime) + " - " +
                 StringUtils.timestampToScheduleString(endTime);
@@ -81,7 +88,8 @@ public class Slot implements Parcelable {
                 && ((Slot) obj).getArtistName().equals(artistName)
                 && ((Slot) obj).getStartTime().equals(startTime)
                 && ((Slot) obj).getEndTime().equals(endTime)
-                && ((Slot) obj).getSceneName().equals(sceneName);
+                && ((Slot) obj).getSceneName().equals(sceneName)
+                && ((Slot) obj).getImageFileName().equals(imageFileName);
     }
 
     @Override
@@ -94,6 +102,7 @@ public class Slot implements Parcelable {
         dest.writeInt(id);
         dest.writeString(artistName);
         dest.writeString(sceneName);
+        dest.writeString(imageFileName);
         dest.writeParcelable(startTime, flags);
         dest.writeParcelable(endTime, flags);
     }

@@ -108,8 +108,11 @@ public class FilesystemCache implements Cache {
     @Override
     public void flush(String collectionName) {
         File cacheFile = new File(context.getCacheDir(), collectionName);
-        for (File file : cacheFile.listFiles()) {
-            file.delete();
+        File[] entries = cacheFile.listFiles();
+        if(entries != null){
+            for (File file : cacheFile.listFiles()) {
+                file.delete();
+            }
         }
         cacheFile.delete();
     }
