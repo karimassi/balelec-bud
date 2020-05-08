@@ -13,6 +13,7 @@ import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -37,6 +38,8 @@ public class LoginUserTest {
         mockAuth.signOut();
         FragmentScenario.launchInContainer(SettingsFragment.class, null, R.style.Theme_AppCompat, null);
         onView(withText(R.string.not_sign_in)).perform(click());
+        onView(withId(R.id.editTextEmailLogin)).perform(clearText());
+        onView(withId(R.id.editTextPasswordLogin)).perform(clearText());
     }
 
     @Test
@@ -61,7 +64,7 @@ public class LoginUserTest {
     @Test
     public void testCantSignInInvalidEmail() {
         // invalid email non-empty pws
-        enterAndCheckErrors("fakemail", "1234", "Enter a valid email!", null);
+        enterAndCheckErrors("fakemail", "123456", "Enter a valid email!", null);
     }
 
     private void enterAndCheckErrors(String email, String pwd, String emailErrorText, String pwdErrorText) {
