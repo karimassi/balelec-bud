@@ -44,9 +44,10 @@ public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
     }
 
     @Override
-    public void reload() {
-        MyQuery query = new MyQuery(Database.CONCERT_SLOTS_PATH, new LinkedList<>());
-        getAppDatabase().queryWithType(query, Slot.class).whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
+    public void reload(Database.Source preferredSource) {
+        MyQuery query = new MyQuery(Database.CONCERT_SLOTS_PATH, new LinkedList<>(), preferredSource);
+        getAppDatabase().query(query, Slot.class)
+                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 
     @Override

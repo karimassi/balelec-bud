@@ -45,7 +45,7 @@ public class PointOfInterestUtilsTest {
     private List<Location> getResList(List<MyWhereClause> clauses)
             throws InterruptedException, ExecutionException {
         MyQuery query = new MyQuery(Database.LOCATIONS_PATH, clauses);
-        CompletableFuture<List<Location>> result = db.queryWithType(query, Location.class);
+        CompletableFuture<List<Location>> result = db.query(query, Location.class);
         return result.get();
     }
 

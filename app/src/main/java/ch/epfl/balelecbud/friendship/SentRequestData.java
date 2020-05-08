@@ -23,11 +23,12 @@ public class SentRequestData extends RecyclerViewData<User, SentRequestViewHolde
     }
 
     @Override
-    public void reload() {
+    public void reload(Database.Source preferredSource) {
         MyQuery myQuery = new MyQuery(Database.SENT_REQUESTS_PATH,
-                new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()));
+                new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()), preferredSource);
         getAppDatabase().query(myQuery)
-                .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(new ArrayList<>(uids.get(0).keySet()))))
+                .thenApply(maps -> new ArrayList<>(maps.get(0).keySet()))
+                .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(uids, preferredSource)))
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 

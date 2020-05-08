@@ -12,9 +12,9 @@ import ch.epfl.balelecbud.util.views.RecyclerViewData;
 public class EmergencyInfoData extends RecyclerViewData<EmergencyInfo, EmergencyInfoHolder> {
 
         @Override
-        public void reload() {
-            MyQuery query = new MyQuery(Database.EMERGENCY_INFO_PATH, new LinkedList<>());
-            BalelecbudApplication.getAppDatabase().queryWithType(query, EmergencyInfo.class)
+        public void reload(Database.Source preferredSource) {
+            MyQuery query = new MyQuery(Database.EMERGENCY_INFO_PATH, new LinkedList<>(), preferredSource);
+            BalelecbudApplication.getAppDatabase().query(query, EmergencyInfo.class)
                     .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
         }
 
