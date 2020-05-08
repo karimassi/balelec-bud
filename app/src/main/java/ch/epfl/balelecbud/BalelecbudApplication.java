@@ -19,7 +19,6 @@ import ch.epfl.balelecbud.util.database.FirestoreDatabase;
 import ch.epfl.balelecbud.util.http.HttpClient;
 import ch.epfl.balelecbud.util.http.VolleyHttpClient;
 import ch.epfl.balelecbud.util.storage.CachedStorage;
-import ch.epfl.balelecbud.util.storage.FilesystemCache;
 import ch.epfl.balelecbud.util.storage.FirebaseStorage;
 import ch.epfl.balelecbud.util.storage.Storage;
 
@@ -79,7 +78,7 @@ public class BalelecbudApplication extends Application {
         if (appAuthenticator == null)
             appAuthenticator = FirebaseAuthenticator.getInstance();
         if (appStorage == null)
-            appStorage = new CachedStorage(FirebaseStorage.getInstance(), new FilesystemCache());
+            appStorage = new CachedStorage(FirebaseStorage.getInstance(), new ch.epfl.balelecbud.util.storage.FilesystemCache());
         if (httpClient == null)
             httpClient = VolleyHttpClient.getInstance();
         if (appMessagingService == null)
