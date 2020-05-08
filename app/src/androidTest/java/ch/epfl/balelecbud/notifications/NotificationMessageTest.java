@@ -15,11 +15,13 @@ import java.util.Map;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.cloudMessaging.Message;
-import ch.epfl.balelecbud.util.database.MockDatabase;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
+import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
+import static ch.epfl.balelecbud.util.database.MockDatabase.celine;
 import static org.junit.Assert.assertNotNull;
 
 public class NotificationMessageTest {
@@ -31,7 +33,14 @@ public class NotificationMessageTest {
 
     @Rule
     public final ActivityTestRule<RootActivity> mActivityRule =
-            new ActivityTestRule<>(RootActivity.class);
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    super.beforeActivityLaunched();
+                    setAppAuthenticator(MockAuthenticator.getInstance());
+                    MockAuthenticator.getInstance().setCurrentUser(celine);
+                }
+            };
 
     @Before
     public void setup() {

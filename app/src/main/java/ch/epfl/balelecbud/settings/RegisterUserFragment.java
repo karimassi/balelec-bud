@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.cloudMessaging.TokenUtil;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.StringUtils;
 import ch.epfl.balelecbud.util.database.Database;
@@ -167,8 +168,8 @@ public class RegisterUserFragment extends DialogFragment {
                     } else {
                         getAppAuthenticator().setCurrentUser(users.get(0));
                         settingsFragment.updateLoginStatus(true);
+                        TokenUtil.storeToken();
                     }
                 });
-
     }
 }

@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.cloudMessaging.TokenUtil;
 import ch.epfl.balelecbud.util.StringUtils;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
@@ -90,6 +91,7 @@ public class LoginUserFragment extends DialogFragment {
         if (!isEmailValid(getContext(), emailField))
             valid = false;
 
+        passwordField.setError(null);
         String password = passwordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
             passwordField.setError(getString(R.string.require_password));
@@ -99,6 +101,7 @@ public class LoginUserFragment extends DialogFragment {
     }
 
     private void onAuthComplete() {
+        TokenUtil.storeToken();
         settingsFragment.updateLoginStatus(true);
     }
 }

@@ -56,7 +56,7 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setUpUser() {
-        if (getAppAuthenticator().getCurrentUid() == null) {
+        if (getAppAuthenticator().getCurrentUser() == null || getAppAuthenticator().getCurrentUid() == null) {
             Log.d(TAG, "setUpUser: creating anonymous user");
             getAppAuthenticator().signInAnonymously();
         }
