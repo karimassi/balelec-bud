@@ -27,7 +27,7 @@ public class LoginUserFragment extends DialogFragment {
     private final SettingsFragment settingsFragment;
     private EditText emailField;
     private EditText passwordField;
-    private TextWatcher watcher = StringUtils.getTextWater(() ->
+    private TextWatcher watcher = StringUtils.getTextWatcher(() ->
             ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(validateEntry()));
 
     private LoginUserFragment(SettingsFragment settingsFragment) {

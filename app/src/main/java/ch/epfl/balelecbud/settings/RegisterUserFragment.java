@@ -35,7 +35,7 @@ public class RegisterUserFragment extends DialogFragment {
     private EditText emailField;
     private EditText passwordField;
     private EditText repeatPasswordField;
-    private TextWatcher watcher = StringUtils.getTextWater(() ->
+    private TextWatcher watcher = StringUtils.getTextWatcher(() ->
             ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(validateEntry()));
 
     @NonNull

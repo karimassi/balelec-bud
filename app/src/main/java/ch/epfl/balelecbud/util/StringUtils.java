@@ -40,7 +40,7 @@ public class StringUtils {
         return dateFormat.format(date);
     }
 
-    public static TextWatcher getTextWater(Runnable run) {
+    public static TextWatcher getTextWatcher(Runnable run) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
