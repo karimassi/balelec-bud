@@ -71,6 +71,7 @@ public class MapViewFragment extends Fragment {
         Bundle arguments = getArguments();
         Location location = arguments != null ? arguments.getParcelable("location") : null;
         defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
+
         requestFriendsLocations();
         displayPointsOfInterests();
 
@@ -161,10 +162,12 @@ public class MapViewFragment extends Fragment {
     }
 
     private void requestFriendsLocations() {
-        Log.d(TAG, "requestFriendsLocations: requesting friendsUids");
-        CompletableFuture<List<String>> friendsUids = FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser());
-        friendsUids.thenAccept(friendsIds -> Log.d(TAG, "requestFriendsLocations: friendsIds = [" + friendsIds.toString() + "]"));
-        friendsUids.thenAccept(this::listenFriendsLocationById);
+        if (getAppAuthenticator().getCurrentUser() != null) {
+            Log.d(TAG, "requestFriendsLocations: requesting friendsUids");
+            CompletableFuture<List<String>> friendsUids = FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser());
+            friendsUids.thenAccept(friendsIds -> Log.d(TAG, "requestFriendsLocations: friendsIds = [" + friendsIds.toString() + "]"));
+            friendsUids.thenAccept(this::listenFriendsLocationById);
+        }
     }
 
     private void listenFriendsLocationById(List<String> friendIds) {

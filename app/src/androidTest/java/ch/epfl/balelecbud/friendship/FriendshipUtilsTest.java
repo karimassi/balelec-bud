@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.LoginUserActivity;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
@@ -29,6 +28,9 @@ import static ch.epfl.balelecbud.testUtils.TestAsyncUtils.runOnUIThreadAndWait;
 @RunWith(AndroidJUnit4.class)
 public class FriendshipUtilsTest {
 
+    @Rule
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<>(RootActivity.class);
     private final MockDatabase db = MockDatabase.getInstance();
     private final Authenticator authenticator = MockAuthenticator.getInstance();
     private final User sender = MockDatabase.karim;
@@ -42,10 +44,6 @@ public class FriendshipUtilsTest {
         authenticator.signOut();
         authenticator.setCurrentUser(sender);
     }
-
-    @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule =
-            new ActivityTestRule<>(RootActivity.class);
 
     private void addFriend(final User friend) throws Throwable {
         runOnUIThreadAndWait(() -> FriendshipUtils.addFriend(friend));
@@ -80,14 +78,14 @@ public class FriendshipUtilsTest {
     }
 
     @Test
-    public void addFriendCreatesRequest() throws Throwable{
+    public void addFriendCreatesRequest() throws Throwable {
         addFriend(recipient);
         final List<String> result = new ArrayList<>();
         result.add(sender.getUid());
 
         MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH,
                 new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
-        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())),result);
+        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), result);
     }
 
     @Test
@@ -102,7 +100,7 @@ public class FriendshipUtilsTest {
 
         MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH,
                 new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
-        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())),result);
+        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), result);
     }
 
     @Test

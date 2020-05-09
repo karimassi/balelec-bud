@@ -11,6 +11,8 @@ import ch.epfl.balelecbud.models.User;
 public interface Authenticator {
     String CURRENT_USER = "Authenticator.CURRENT_USER";
 
+    CompletableFuture<String> signInAnonymously();
+
     CompletableFuture<User> signIn(String email, String password);
 
     CompletableFuture<Void> createAccount(String name, String email, String password);
