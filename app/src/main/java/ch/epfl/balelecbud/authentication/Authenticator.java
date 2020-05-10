@@ -11,6 +11,8 @@ import ch.epfl.balelecbud.models.User;
 public interface Authenticator {
     String CURRENT_USER = "Authenticator.CURRENT_USER";
 
+    CompletableFuture<Void> deleteCurrentUser();
+
     CompletableFuture<String> signInAnonymously();
 
     CompletableFuture<User> signIn(String email, String password);
@@ -42,5 +44,4 @@ public interface Authenticator {
             editor.apply();
         }
     }
-
 }

@@ -48,4 +48,9 @@ public class SettingsSignOutTest {
         onView(withText(R.string.action_no_account)).perform(click());
         onView(withText(R.string.register)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void whenSignedOutICantDeleteUser() {
+        onView(withText(R.string.delete_account)).check(doesNotExist());
+    }
 }

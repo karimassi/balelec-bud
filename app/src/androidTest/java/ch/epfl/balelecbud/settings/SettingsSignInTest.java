@@ -13,11 +13,9 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.location.LocationClient;
 import ch.epfl.balelecbud.location.LocationUtil;
-import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -66,25 +64,29 @@ public class SettingsSignInTest {
     @Test
     public void signOutCreatesAnonymousUser() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        setAppAuthenticator(new Authenticator() {
+        setAppAuthenticator(new MockAuthenticator() {
             @Override
             public CompletableFuture<String> signInAnonymously() {
                 sync.call();
                 return null;
             }
+
             @Override
-            public CompletableFuture<User> signIn(String email, String password) { return null; }
-            @Override
-            public CompletableFuture<Void> createAccount(String name, String email, String password) { return null; }
-            @Override
-            public String getCurrentUid() { return "abc"; }
-            @Override
-            public void signOut() { sync.call(); }
-            @Override
-            public User getCurrentUser() { return alex; }
+            public void signOut() {
+                sync.call();
+            }
         });
         onView(withText(R.string.sign_out_text)).perform(click());
         sync.waitCall(2);
         sync.assertCalled(2);
+    }
+
+    @Test
+    public void whenSignedInCanDeleteUser() {
+        onView(withText(R.string.delete_account)).check(matches(isDisplayed())).perform(click());
+        onView(withText(R.string.delete_account)).check(matches(isDisplayed()));
+        onView(withText(R.string.delete_account_text)).check(matches(isDisplayed()));
+        onView(withText(R.string.cancel)).check(matches(isDisplayed()));
+        onView(withText(R.string.delete_account_yes)).check(matches(isDisplayed()));
     }
 }

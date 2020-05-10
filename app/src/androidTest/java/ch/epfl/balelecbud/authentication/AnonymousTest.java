@@ -17,7 +17,6 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.map.MapViewFragment;
-import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 
@@ -47,24 +46,12 @@ public class AnonymousTest {
             super.beforeActivityLaunched();
             sync = new TestAsyncUtils();
             setAppDatabase(mockDB);
-            setAppAuthenticator(new Authenticator() {
+            setAppAuthenticator(new MockAuthenticator() {
                 @Override
                 public CompletableFuture<String> signInAnonymously() {
                     sync.call();
                     return null;
                 }
-                @Override
-                public CompletableFuture<User> signIn(String email, String password) { return null; }
-                @Override
-                public CompletableFuture<Void> createAccount(String name, String email, String password) { return null; }
-                @Override
-                public String getCurrentUid() { return null; }
-                @Override
-                public User getCurrentUser() { return null; }
-                @Override
-                public void signOut() { }
-                @Override
-                public void setCurrentUser(User user) { }
             });
         }
     };
