@@ -20,4 +20,8 @@
         app:key="@string/sign_out_key"
         app:title="@string/sign_out_text"/>
 
+    <Preference
+        app:key="@string/delete_user_key"
+        app:title="@string/delete_account"/>
+
 </PreferenceScreen>
