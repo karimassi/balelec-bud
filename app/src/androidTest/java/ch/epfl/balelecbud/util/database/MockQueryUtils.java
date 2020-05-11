@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import ch.epfl.balelecbud.location.LocationUtil;
 import ch.epfl.balelecbud.models.Location;
 
 import static ch.epfl.balelecbud.location.LocationUtil.distanceToCenter;
