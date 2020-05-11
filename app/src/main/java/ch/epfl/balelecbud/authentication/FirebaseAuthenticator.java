@@ -23,6 +23,11 @@ public class FirebaseAuthenticator implements Authenticator {
     private FirebaseAuthenticator() { }
 
     @Override
+    public CompletableFuture<Void> deleteCurrentUser() {
+        return new TaskToCompletableFutureAdapter<>(mAuth.getCurrentUser().delete());
+    }
+
+    @Override
     public CompletableFuture<String> signInAnonymously() {
         return new TaskToCompletableFutureAdapter<>(mAuth.signInAnonymously()).thenApply(authResult -> getCurrentUid());
     }

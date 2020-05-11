@@ -104,6 +104,11 @@
     <string name="sign_out_text">Sign out</string>
     <string name="register">Register</string>
 
+    <string name="delete_account">Delete account</string>
+    <string name="delete_user_key">DELETE_USER_KEY</string>
+    <string name="delete_account_text">Are you sure you want to delete your account ? This action is irreversible</string>
+    <string name="delete_account_yes">Yes</string>
+
     <!--  CLOUD MESSAGING  -->
     <string name="message_channel_name">Notification Message Channel</string>
     <string name="fcm_key">key=AAAAIEByxFA:APA91bHhnxIzhsfli52m8kq9uP9VWvIB972DTJYz85_ndFCzeDEzEDdgiYVjrVo8yM9npWNH5VchrfNqWw--1-SXB35YS7HIX04_-_9FmiUdJAlYzrRnN2B9q__7t9hXWsIC_rkzgRiv</string>

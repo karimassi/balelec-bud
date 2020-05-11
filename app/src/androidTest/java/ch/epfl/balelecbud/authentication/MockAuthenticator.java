@@ -30,7 +30,14 @@ public class MockAuthenticator implements Authenticator {
     private User currentUser;
     private String currentUserID;
 
-    private MockAuthenticator() { }
+    protected MockAuthenticator() { }
+
+    @Override
+    public CompletableFuture<Void> deleteCurrentUser() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        future.complete(null);
+        return future;
+    }
 
     @Override
     public CompletableFuture<String> signInAnonymously() {

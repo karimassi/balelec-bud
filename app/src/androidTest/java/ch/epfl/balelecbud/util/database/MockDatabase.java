@@ -251,11 +251,13 @@ public class MockDatabase implements Database {
     @Override
     public void deleteDocumentWithID(String collectionName, String documentID) {
         switch (collectionName) {
+            case Database.TOKENS_PATH:
+                throw new UnsupportedOperationException();
             case Database.FRIENDSHIPS_PATH:
             case Database.FRIEND_REQUESTS_PATH:
             case Database.SENT_REQUESTS_PATH:
-            case Database.TOKENS_PATH:
-                throw new UnsupportedOperationException();
+                database.get(collectionName).remove(documentID);
+                break;
             default:
                 databasePOJO.get(collectionName).remove(documentID);
                 break;

@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceFragmentCompat;
 
+import java.util.function.Supplier;
+
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.location.LocationUtil;
 
@@ -21,6 +23,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private String LOCATION_INFO_KEY;
     private String SIGN_IN_KEY;
     private String SIGN_OUT_KEY;
+    private String DELETE_USER_KEY;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -33,16 +36,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         LOCATION_INFO_KEY = getString(R.string.location_info_key);
         SIGN_IN_KEY = getString(R.string.sign_in_key);
         SIGN_OUT_KEY = getString(R.string.sign_out_key);
+        DELETE_USER_KEY = getContext().getString(R.string.delete_user_key);
+
         setUpLocationPreferences();
         setUpLoginPreferences();
     }
 
     private void setUpLoginPreferences() {
-        findPreference(SIGN_IN_KEY).setOnPreferenceClickListener(preference -> {
-            DialogFragment dialog = LoginUserFragment.newInstance(this);
-            dialog.show(getParentFragmentManager(), LoginUserFragment.TAG);
-            return true;
-        });
+        linkPreferenceWithDialog(SIGN_IN_KEY, () -> LoginUserFragment.newInstance(this), LoginUserFragment.TAG);
         findPreference(SIGN_OUT_KEY).setOnPreferenceClickListener(preference -> {
             getAppAuthenticator().signOut();
             getAppAuthenticator().signInAnonymously();
@@ -53,7 +54,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             updateLoginStatus(false);
             return true;
         });
+        linkPreferenceWithDialog(DELETE_USER_KEY, () -> DeleteAccountDialog.newInstance(this), DeleteAccountDialog.TAG);
         updateLoginStatus(getAppAuthenticator().getCurrentUser() != null);
+    }
+
+    private void linkPreferenceWithDialog(String preferenceKey, Supplier<DialogFragment> dialogSupplier, String tag) {
+        findPreference(preferenceKey).setOnPreferenceClickListener(preference -> {
+            DialogFragment dialog = dialogSupplier.get();
+            dialog.show(getParentFragmentManager(), tag);
+            return true;
+        });
     }
 
     private void setUpLocationPreferences() {
@@ -78,6 +88,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     void updateLoginStatus(boolean loggedIn) {
         findPreference(SIGN_IN_KEY).setVisible(!loggedIn);
         findPreference(SIGN_OUT_KEY).setVisible(loggedIn);
+        findPreference(DELETE_USER_KEY).setVisible(loggedIn);
     }
 
     @Override
