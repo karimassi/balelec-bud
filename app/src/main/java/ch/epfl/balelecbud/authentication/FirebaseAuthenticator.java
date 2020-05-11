@@ -24,7 +24,7 @@ public class FirebaseAuthenticator implements Authenticator {
 
     @Override
     public CompletableFuture<Void> deleteCurrentUser() {
-        return null;
+        return new TaskToCompletableFutureAdapter<>(mAuth.getCurrentUser().delete());
     }
 
     @Override

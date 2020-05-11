@@ -21,6 +21,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private String LOCATION_INFO_KEY;
     private String SIGN_IN_KEY;
     private String SIGN_OUT_KEY;
+    private String DELETE_USER_KEY;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -33,6 +34,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         LOCATION_INFO_KEY = getString(R.string.location_info_key);
         SIGN_IN_KEY = getString(R.string.sign_in_key);
         SIGN_OUT_KEY = getString(R.string.sign_out_key);
+        DELETE_USER_KEY = getContext().getString(R.string.delete_user_key);
+
         setUpLocationPreferences();
         setUpLoginPreferences();
     }
@@ -51,6 +54,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 updateLocationPreferencesVisibility(false);
             }
             updateLoginStatus(false);
+            return true;
+        });
+        findPreference(DELETE_USER_KEY).setOnPreferenceClickListener(preference -> {
+            DialogFragment dialog = DeleteAccountDialog.newInstance(this);
+            dialog.show(getParentFragmentManager(), DeleteAccountDialog.TAG);
             return true;
         });
         updateLoginStatus(getAppAuthenticator().getCurrentUser() != null);
@@ -78,6 +86,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     void updateLoginStatus(boolean loggedIn) {
         findPreference(SIGN_IN_KEY).setVisible(!loggedIn);
         findPreference(SIGN_OUT_KEY).setVisible(loggedIn);
+        findPreference(DELETE_USER_KEY).setVisible(loggedIn);
     }
 
     @Override
