@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceFragmentCompat;
 
+import java.util.function.Supplier;
+
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.location.LocationUtil;
 
@@ -41,11 +43,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void setUpLoginPreferences() {
-        findPreference(SIGN_IN_KEY).setOnPreferenceClickListener(preference -> {
-            DialogFragment dialog = LoginUserFragment.newInstance(this);
-            dialog.show(getParentFragmentManager(), LoginUserFragment.TAG);
-            return true;
-        });
+        linkPreferenceWithDialog(SIGN_IN_KEY, () -> LoginUserFragment.newInstance(this), LoginUserFragment.TAG);
         findPreference(SIGN_OUT_KEY).setOnPreferenceClickListener(preference -> {
             getAppAuthenticator().signOut();
             getAppAuthenticator().signInAnonymously();
@@ -56,12 +54,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             updateLoginStatus(false);
             return true;
         });
-        findPreference(DELETE_USER_KEY).setOnPreferenceClickListener(preference -> {
-            DialogFragment dialog = DeleteAccountDialog.newInstance(this);
-            dialog.show(getParentFragmentManager(), DeleteAccountDialog.TAG);
+        linkPreferenceWithDialog(DELETE_USER_KEY, () -> DeleteAccountDialog.newInstance(this), DeleteAccountDialog.TAG);
+        updateLoginStatus(getAppAuthenticator().getCurrentUser() != null);
+    }
+
+    private void linkPreferenceWithDialog(String preferenceKey, Supplier<DialogFragment> dialogSupplier, String tag) {
+        findPreference(preferenceKey).setOnPreferenceClickListener(preference -> {
+            DialogFragment dialog = dialogSupplier.get();
+            dialog.show(getParentFragmentManager(), tag);
             return true;
         });
-        updateLoginStatus(getAppAuthenticator().getCurrentUser() != null);
     }
 
     private void setUpLocationPreferences() {

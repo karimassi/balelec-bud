@@ -113,35 +113,34 @@ public class DeleteAccountTest {
         sync.assertCalled(1);
     }
 
-    @Test
-    public void whenDeleteAccountDeleteLocation() throws ExecutionException, InterruptedException {
+    private <T> void deleteUserAndQuery(String collectionName, Class<T> clazz) throws ExecutionException, InterruptedException {
         onView(withText(R.string.delete_account)).perform(click());
         onView(withText(R.string.delete_account_yes)).perform(click());
-        MyQuery query = new MyQuery(Database.LOCATIONS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, alex.getUid()));
-        assertThat(mockDB.query(query, Location.class).get(), is(Collections.singletonList(null)));
+        MyQuery query = new MyQuery(collectionName, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, alex.getUid()));
+        if (clazz != null) {
+            assertThat(mockDB.query(query, clazz).get(), is(Collections.singletonList(null)));
+        } else {
+            assertThat(mockDB.query(query).get(), is(Collections.singletonList(null)));
+        }
+    }
+
+    @Test
+    public void whenDeleteAccountDeleteLocation() throws ExecutionException, InterruptedException {
+        deleteUserAndQuery(Database.LOCATIONS_PATH, Location.class);
     }
 
     @Test
     public void whenDeleteAccountDeleteFriends() throws ExecutionException, InterruptedException {
-        onView(withText(R.string.delete_account)).perform(click());
-        onView(withText(R.string.delete_account_yes)).perform(click());
-        MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, alex.getUid()));
-        assertThat(mockDB.query(query).get(), is(Collections.singletonList(null)));
+        deleteUserAndQuery(Database.FRIENDSHIPS_PATH, null);
     }
 
     @Test
     public void whenDeleteAccountDeleteFriendRequests() throws ExecutionException, InterruptedException {
-        onView(withText(R.string.delete_account)).perform(click());
-        onView(withText(R.string.delete_account_yes)).perform(click());
-        MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, alex.getUid()));
-        assertThat(mockDB.query(query).get(), is(Collections.singletonList(null)));
+        deleteUserAndQuery(Database.FRIEND_REQUESTS_PATH, null);
     }
 
     @Test
     public void whenDeleteAccountDeleteSentFriendRequests() throws ExecutionException, InterruptedException {
-        onView(withText(R.string.delete_account)).perform(click());
-        onView(withText(R.string.delete_account_yes)).perform(click());
-        MyQuery query = new MyQuery(Database.SENT_REQUESTS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, alex.getUid()));
-        assertThat(mockDB.query(query).get(), is(Collections.singletonList(null)));
+        deleteUserAndQuery(Database.SENT_REQUESTS_PATH, null);
     }
 }
