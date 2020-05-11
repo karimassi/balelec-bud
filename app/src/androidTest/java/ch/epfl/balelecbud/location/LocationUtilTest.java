@@ -13,7 +13,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.models.Location;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+
+import static org.hamcrest.Matchers.is;
 
 @RunWith(JUnit4.class)
 public class LocationUtilTest {
@@ -100,6 +103,13 @@ public class LocationUtilTest {
         sync.assertCalled(1);
         sync.assertNoFailedTests();
         Assert.assertFalse(LocationUtil.isLocationActive());
+    }
+
+    @Test
+    public void testDistanceToCenter() {
+        Location l1 = new Location(70, 8);
+        Location l2 = new Location(44, 2);
+        Assert.assertThat(LocationUtil.distanceToCenter(l1, l2), is(2910.594395722676));
     }
 
     @Test

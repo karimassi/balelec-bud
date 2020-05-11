@@ -40,10 +40,9 @@ public class MockDatabase implements Database {
     public static final User gaspard =
             new User("gaspard@epfl.ch", "gaspard", MockAuthenticator.provideUid());
     public static final PointOfInterest pointOfInterest1 = new PointOfInterest(
-            new Location(4, 20), "Bar IC", PointOfInterestType.BAR);
+            "Bar IC", PointOfInterestType.BAR, new Location(4, 20), 0.003);
     public static final PointOfInterest pointOfInterest2 = new PointOfInterest(
-            new Location(4, 22), "Bar EE", PointOfInterestType.BAR);
-
+            "Bar EE", PointOfInterestType.BAR, new Location(4, 22), 0.003);
 
     public static final String token1 = "TheBestTestToken";
     public static final String token2 = "TheNormalTestToken";
@@ -162,6 +161,9 @@ public class MockDatabase implements Database {
             }
             for (MyWhereClause clause : query.getWhereClauses()) {
                 queryResult = MockQueryUtils.filterList(queryResult, clause);
+            }
+            if(query.getGeoClause() != null) {
+                queryResult = MockQueryUtils.filterWithGeoClause(queryResult, query.getGeoClause());
             }
         }
         return CompletableFuture.completedFuture(queryResult);

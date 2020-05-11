@@ -7,6 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import ch.epfl.balelecbud.models.Location;
+
+import static ch.epfl.balelecbud.location.LocationUtil.distanceToCenter;
+
 public class MockQueryUtils {
 
     public static boolean queryContainsDocumentIdClause(MyQuery query) {
@@ -42,12 +46,26 @@ public class MockQueryUtils {
             return newList;
         }
         for (A elem : list) {
-            filterELem(clause.getOp(), newList, field, rightOperand, elem);
+            filterElem(clause.getOp(), newList, field, rightOperand, elem);
         }
         return newList;
     }
 
-    private static <A> void filterELem(MyWhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
+    public static <A> List<A> filterWithGeoClause(List<A> list, MyGeoClause clause) {
+        if(list.isEmpty()) {
+            return list;
+        }
+        List<A> result = new LinkedList<>();
+        Location centerLocation = new Location(clause.getCentreLatitude(), clause.getCentreLongitude());
+        for(A elem : list) {
+            if(distanceToCenter(centerLocation, (Location) elem) <= clause.getSearchRadius()) {
+                result.add(elem);
+            }
+        }
+        return result;
+    }
+
+    private static <A> void filterElem(MyWhereClause.Operator op, List<A> newList, Field field, Object rightOperand, A elem) {
         try {
             if (op == MyWhereClause.Operator.EQUAL) {
                 if (Objects.equals(field.get(elem), rightOperand)) {
@@ -94,6 +112,4 @@ public class MockQueryUtils {
                 return resultOfComparison == 0;
         }
     }
-
-
 }
