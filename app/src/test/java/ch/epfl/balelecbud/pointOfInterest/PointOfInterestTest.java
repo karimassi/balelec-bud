@@ -1,7 +1,5 @@
 package ch.epfl.balelecbud.pointOfInterest;
 
-import com.google.firebase.firestore.GeoPoint;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,8 +10,8 @@ import static org.hamcrest.core.Is.is;
 public class PointOfInterestTest {
 
     private final PointOfInterest p1 =
-            new PointOfInterest(new Location(24, 42),
-                    "credit suisse", PointOfInterestType.ATM);
+            new PointOfInterest("credit suisse", PointOfInterestType.ATM,
+                    new Location(24, 42), 0.003);
 
     @Test
     public void testEmptyConstructor() {
@@ -36,39 +34,45 @@ public class PointOfInterestTest {
     }
 
     @Test
+    public void testGetRadius() {
+        Assert.assertThat(p1.getRadius(), is(0.003));
+    }
+
+    @Test
     public void testEqualsTwoEqualPointOfInterest() {
-        PointOfInterest p2 = new PointOfInterest(new Location(24, 42),
-                "credit suisse", PointOfInterestType.ATM);
+        PointOfInterest p2 = new PointOfInterest("credit suisse", PointOfInterestType.ATM, new Location(24, 42),
+                0.003);
         Assert.assertEquals(p1, p2);
     }
 
     @Test
     public void testEqualsTwoNonEqualPointOfInterest() {
-        PointOfInterest p2 = new PointOfInterest( new Location(22, 42),
-                "credit suisse", PointOfInterestType.ATM);
+        PointOfInterest p2 = new PointOfInterest("credit suisse", PointOfInterestType.ATM, new Location(22, 42),
+                0.03);
         Assert.assertNotEquals(p1, p2);
     }
 
     @Test
     public void testEqualsDifferentPointOfInterest() {
-        PointOfInterest p2 = new PointOfInterest( new Location(24, 42),
-                "BCV", PointOfInterestType.ATM);
+        PointOfInterest p2 = new PointOfInterest("BCV", PointOfInterestType.ATM,
+                new Location(24, 42), 0.003);
         Assert.assertNotEquals(p1, p2);
 
-        p2 = new PointOfInterest( new Location(24, 42), "BCV",
-                PointOfInterestType.WC);
+        p2 = new PointOfInterest("BCV", PointOfInterestType.WC,
+                new Location(24, 42), 0.003);
         Assert.assertNotEquals(p1, p2);
 
-        p2 = new PointOfInterest( new Location(24, 42),
-                "credit suisse", PointOfInterestType.WC);
+        p2 = new PointOfInterest("credit suisse", PointOfInterestType.WC,
+                new Location(24, 42), 0.003);
+        Assert.assertNotEquals(p1, p2);
+
+        p2 = new PointOfInterest("credit suisse", PointOfInterestType.ATM,
+                new Location(24, 42), 0.3);
         Assert.assertNotEquals(p1, p2);
     }
-
 
     @Test
     public void testEqualsTwoDifferentObjects() {
         Assert.assertNotEquals(p1, new Object());
     }
-
-
 }

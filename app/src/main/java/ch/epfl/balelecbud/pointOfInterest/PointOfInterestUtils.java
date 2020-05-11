@@ -14,14 +14,13 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 public class PointOfInterestUtils {
 
-    private static final double SEARCH_RADIUS_IN_KM = 0.003;
-
     public static CompletableFuture<Integer> getAmountNearPointOfInterest(PointOfInterest poi) {
 
         double poiLongitude = poi.getLocation().getLongitude();
         double poiLatitude = poi.getLocation().getLatitude();
+        double poiRadius = poi.getRadius();
 
-        MyGeoClause geoClause = new MyGeoClause(poiLatitude, poiLongitude, SEARCH_RADIUS_IN_KM);
+        MyGeoClause geoClause = new MyGeoClause(poiLatitude, poiLongitude, poiRadius);
 
         return getAppDatabase().query(new MyQuery(Database.LOCATIONS_PATH, geoClause), Location.class).thenApply(List::size);
     }

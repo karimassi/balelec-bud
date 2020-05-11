@@ -30,9 +30,10 @@ import static org.hamcrest.Matchers.is;
 public class MapViewWithPOITest {
     private final MockDatabase mockDB = MockDatabase.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
+    private static final double SEARCH_RADIUS_IN_KM = 0.003;
 
-    private final PointOfInterest atm = new PointOfInterest(new Location(1, 2),
-            "credit suisse", PointOfInterestType.ATM);
+    private final PointOfInterest atm = new PointOfInterest("credit suisse", PointOfInterestType.ATM,
+            new Location(1, 2), SEARCH_RADIUS_IN_KM);
 
     @Before
     public void setup() {
@@ -66,6 +67,7 @@ public class MapViewWithPOITest {
         sync.assertEquals(poi.getName(), markerBuilder.getTitle());
         sync.assertEquals(poi.getLocation(), markerBuilder.getLocation());
         sync.assertEquals(MarkerType.getMarkerType(poi.getType()), MarkerType.ATM);
+        sync.assertEquals(poi.getRadius(), SEARCH_RADIUS_IN_KM);
     }
 
     @Test
