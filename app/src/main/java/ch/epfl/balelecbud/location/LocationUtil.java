@@ -18,10 +18,13 @@ import com.google.android.gms.location.LocationRequest;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.models.Location;
+import ch.epfl.balelecbud.util.database.MyGeoClause;
 
 public final class LocationUtil {
 
     private final static String TAG = LocationUtil.class.getSimpleName();
+    private final static double EARTH_RADIUS = 6371;
     private final static long FASTEST_UPDATE_INTERVAL = 30_000;
     public final static int LOCATION_PERMISSIONS_REQUEST_CODE = 34;
     private final static long UPDATE_INTERVAL = 60_000;
@@ -142,6 +145,29 @@ public final class LocationUtil {
         } else {
             removeLocationUpdates(ctx);
         }
+    }
+
+    /**
+     * Compute distance between two points in latitude and longitude.
+     *
+     * lat1, lon1 Start point lat2, lon2 End point
+     * @returns Distance in km
+     *
+     * Borrowed from https://stackoverflow.com/a/16794680
+     */
+    public static double distanceToCenter(Location centerLocation, Location location) {
+        double lat1 = centerLocation.getLatitude();
+        double lon1 = centerLocation.getLongitude();
+        double lat2 = location.getLatitude();
+        double lon2 = location.getLongitude();
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS * c;
     }
 
     private static PendingIntent getPendingIntent(Context context) {

@@ -101,10 +101,13 @@ public class PointOfInterestUtilsTest {
     }
 
     @Test
-    public void getAmountNearPOIReturnsExpectedAmount() throws ExecutionException, InterruptedException {
+    public void testGetAmountNearPointOfInterest() throws ExecutionException, InterruptedException {
         db.resetDocument(Database.LOCATIONS_PATH);
-        ArrayList<Location> locations = Lists.newArrayList(new Location(46.51812, 6.56900),
-                new Location(46.51814, 6.56911));
+        ArrayList<Location> locations = Lists.newArrayList(
+                new Location(46.51812, 6.56900),
+                new Location(46.51814, 6.56911),
+                new Location(60, 6.56900),
+                new Location(33, 3));
 
         int index = 0;
         for (Location loc : locations) {
@@ -113,12 +116,12 @@ public class PointOfInterestUtilsTest {
 
         BalelecbudApplication.setAppDatabase(db);
 
-        PointOfInterest p1 = new PointOfInterest("whatever", PointOfInterestType.STAGE,
-                new Location(46.51808,6.56906), 0.003);
+        PointOfInterest p = new PointOfInterest("whatever", PointOfInterestType.BAR,
+                new Location(46.51808,6.56906), 0.03);
 
-        int res1 = PointOfInterestUtils.getAmountNearPointOfInterest(p1).get();
+        int res = PointOfInterestUtils.getAmountNearPointOfInterest(p).get();
 
-        assertEquals(2, res1);
+        assertEquals(2, res);
     }
 
     @Test

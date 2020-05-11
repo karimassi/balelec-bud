@@ -162,6 +162,9 @@ public class MockDatabase implements Database {
             for (MyWhereClause clause : query.getWhereClauses()) {
                 queryResult = MockQueryUtils.filterList(queryResult, clause);
             }
+            if(query.getGeoClause() != null) {
+                queryResult = MockQueryUtils.filterWithGeoClause(queryResult, query.getGeoClause());
+            }
         }
         return CompletableFuture.completedFuture(queryResult);
     }
