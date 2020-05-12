@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.location.LocationResult;
 
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.Database;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
@@ -20,13 +19,13 @@ public class LocationService extends IntentService {
     private static final String TAG = LocationService.class.getSimpleName();
     public static final String ACTION_PROCESS_UPDATES = TAG + ".ACTION_PROCESS_UPDATES";
 
-    private User user;
+    private String userId;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        user = getAppAuthenticator().getCurrentUser();
-        if (user == null) {
+        userId = getAppAuthenticator().getCurrentUid();
+        if (userId == null) {
             LocationUtil.disableLocation();
         }
     }
@@ -46,11 +45,10 @@ public class LocationService extends IntentService {
     private void handleLocationFromIntent(@NonNull Intent intent) {
         LocationResult result = LocationResult.extractResult(intent);
         if (result != null && result.getLastLocation() != null) {
-            Log.d(TAG, "handleLocationFromIntent: userId = " + this.user.getUid());
+            Log.d(TAG, "handleLocationFromIntent: userId = " + userId);
             android.location.Location lastLocation = result.getLastLocation();
             getAppDatabase().storeDocumentWithID(
-                    Database.LOCATIONS_PATH,
-                    this.user.getUid(),
+                    Database.LOCATIONS_PATH, userId,
                     new Location(lastLocation.getLatitude(), lastLocation.getLongitude())
             );
         }

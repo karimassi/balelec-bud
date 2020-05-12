@@ -23,7 +23,6 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.authentication.Authenticator;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.Location;
-import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
@@ -50,7 +49,7 @@ public class LocationServiceTest {
     public void setUp() {
         mockDB.resetDatabase();
         ls = new LocationService();
-        mockAuth.setCurrentUser(new User("abc@epfl.ch", "abc", "10"));
+        mockAuth.signInAnonymously();
         ls.onCreate();
     }
 
@@ -66,13 +65,13 @@ public class LocationServiceTest {
 
     private void checkDoesNotChangeOnDBWithIntent(Intent intent) throws ExecutionException, InterruptedException {
         Location l = new Location(random.nextDouble(), random.nextDouble());
-        mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, mockAuth.getCurrentUser().getUid(), l);
+        mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, mockAuth.getCurrentUid(), l);
         ls.onHandleIntent(intent);
         checkStoredOnDB(l);
     }
 
     private void checkStoredOnDB(Location location) throws ExecutionException, InterruptedException {
-        MyQuery query = new MyQuery(Database.LOCATIONS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, mockAuth.getCurrentUser().getUid()));
+        MyQuery query = new MyQuery(Database.LOCATIONS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, mockAuth.getCurrentUid()));
         Assert.assertEquals(
                 location,
                 mockDB.query(query, Location.class).thenApply(locations -> locations.get(0)).get()

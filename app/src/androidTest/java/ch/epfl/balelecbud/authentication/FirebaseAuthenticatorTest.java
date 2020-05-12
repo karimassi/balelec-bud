@@ -1,46 +1,23 @@
 package ch.epfl.balelecbud.authentication;
 
-import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.BasicAuthenticationTest;
-import ch.epfl.balelecbud.LoginUserActivity;
 import ch.epfl.balelecbud.models.User;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 @RunWith(AndroidJUnit4.class)
-public class FirebaseAuthenticatorTest extends BasicAuthenticationTest {
-
-    @Rule
-    public final ActivityTestRule<LoginUserActivity> mActivityRule = new ActivityTestRule<LoginUserActivity>(LoginUserActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            Intents.init();
-        }
-
-        @Override
-        protected void afterActivityFinished() {
-            Intents.release();
-        }
-    };
-
+public class FirebaseAuthenticatorTest {
     private final Authenticator authenticator = FirebaseAuthenticator.getInstance();
-
-    @Before
-    public void setUp() throws Throwable{
-        logout();
-    }
 
     @Test
     public void signOutMakesUserNull() {
         authenticator.signOut();
-        Assert.assertNull(authenticator.getCurrentUser());
+        assertNull(authenticator.getCurrentUser());
     }
 
     @Test
@@ -48,7 +25,7 @@ public class FirebaseAuthenticatorTest extends BasicAuthenticationTest {
         authenticator.signOut();
         User user = new User("mail", "name", "token");
         authenticator.setCurrentUser(user);
-        Assert.assertEquals(user, authenticator.getCurrentUser());
+        assertEquals(user, authenticator.getCurrentUser());
     }
 
     @Test
@@ -58,6 +35,6 @@ public class FirebaseAuthenticatorTest extends BasicAuthenticationTest {
         authenticator.setCurrentUser(user);
         User other = new User("mail2", "name", "token");
         authenticator.setCurrentUser(other);
-        Assert.assertEquals(user, authenticator.getCurrentUser());
+        assertEquals(user, authenticator.getCurrentUser());
     }
 }
