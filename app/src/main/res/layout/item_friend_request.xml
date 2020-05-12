@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_friend_request"
-    android:orientation="horizontal"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/round_corner_background"
+    android:orientation="horizontal"
+    android:paddingLeft="5dp"
+    android:paddingTop="10dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/text_view_friend_request_item_name"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:textAlignment="center" />
 
     <View
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <Button
         android:id="@+id/button_request_item_accept_request"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="@string/accept_request"/>
+        android:layout_height="wrap_content"
+        android:text="@string/accept_request" />
 
     <Button
         android:id="@+id/button_request_item_delete_request"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="@string/reject_request"/>
+        android:layout_height="wrap_content"
+        android:text="@string/reject_request" />
 
 </LinearLayout>
