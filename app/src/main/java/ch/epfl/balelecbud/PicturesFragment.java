@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -64,7 +65,8 @@ public class PicturesFragment extends Fragment {
     public void onStart() {
         super.onStart();
         activity = getActivity();
-        cameraButton = getActivity().findViewById(R.id.takePicBtn);
+        cameraButton = activity.findViewById(R.id.takePicBtn);
+        imageView = activity.findViewById(R.id.picturesImageView);
         cameraButton.setOnClickListener(v -> askCameraPermissions());
     }
 
@@ -77,7 +79,13 @@ public class PicturesFragment extends Fragment {
     }
 
     private void askCameraPermissions() {
-        ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        }else{
+            dispatchTakePictureIntent();
+        }
+
     }
 
     @Override

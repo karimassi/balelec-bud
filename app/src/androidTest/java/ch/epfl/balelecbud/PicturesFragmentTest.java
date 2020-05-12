@@ -7,11 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.InstrumentationRegistry;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.uiautomator.By;
@@ -22,22 +24,24 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.getIntents;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class PicturesFragmentTest {
     private static UiDevice mDevice;
 
 
-    @Rule
-    public IntentsTestRule<FragmentActivity> intentsRule = new IntentsTestRule<>(PictureActivity.class);
 
     @Before
     public void setUp(){
@@ -47,6 +51,7 @@ public class PicturesFragmentTest {
 
     @Test
     public void cameraShouldOpenWithButtonPressed() {
+        Intents.init();
         // Create a bitmap we can use for our simulated camera image
         Bitmap icon = Bitmap.createBitmap(1,1, Bitmap.Config.ARGB_8888);
 
@@ -65,16 +70,23 @@ public class PicturesFragmentTest {
 
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         intended(toPackage("com.android.camera2"));
+        Intents.release();
     }
 
     @Test
-    public void cameraIsSavingImageToView() {
+    public void cameraIsSavingImageToView() throws InterruptedException {
+
+
+        Intents.init();
+
         Bitmap icon = Bitmap.createBitmap(1,1, Bitmap.Config.ARGB_8888);
         Intent resultData = new Intent();
         resultData.putExtra("data", icon);
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
         intending(toPackage("com.android.camera2")).respondWith(result);
         hasImage();
+        Intents.release();
+
 
     }
 
@@ -87,16 +99,22 @@ public class PicturesFragmentTest {
         }
     }
 
-    private boolean hasImage() {
-        ImageView view = intentsRule.getActivity().findViewById(R.id.picturesImageView);
-        Drawable drawable = view.getDrawable();
-        boolean hasImage = (drawable != null);
+    private void hasImage() throws InterruptedException {
+        TestAsyncUtils sync = new TestAsyncUtils();
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
+        FragmentScenario.launchInContainer(PicturesFragment.class).onFragment( fragment -> {
+            ImageView view = fragment.getActivity().findViewById(R.id.picturesImageView);
+            Drawable drawable = view.getDrawable();
+            boolean hasImage = (drawable != null);
+            if (hasImage && (drawable instanceof BitmapDrawable)) {
+                hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
+            }
+            sync.assertTrue(hasImage);
 
-        if (hasImage && (drawable instanceof BitmapDrawable)) {
-            hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
-        }
+        });
 
-        return hasImage;
     }
 
     @Test
