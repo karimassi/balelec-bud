@@ -6,7 +6,6 @@
     android:gravity="center_horizontal">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/itemSchedule"
         android:layout_weight="9.5"
         android:layout_width="0dp"
@@ -18,8 +17,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        >
+        android:paddingVertical="10dp">
 
         <ImageView
             android:id="@+id/ScheduleArtistImage"
