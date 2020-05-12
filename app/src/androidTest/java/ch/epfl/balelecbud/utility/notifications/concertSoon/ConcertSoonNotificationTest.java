@@ -22,10 +22,10 @@ import java.util.Calendar;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
-import ch.epfl.balelecbud.utility.location.LocationClient;
-import ch.epfl.balelecbud.utility.location.LocationUtils;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
+import ch.epfl.balelecbud.utility.location.LocationClient;
+import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertEquals;

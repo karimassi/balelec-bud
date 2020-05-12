@@ -15,11 +15,10 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.view.map.MapViewFragment;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
+import ch.epfl.balelecbud.view.map.MapViewFragment;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -28,7 +27,6 @@ import static ch.epfl.balelecbud.utility.database.Database.POINT_OF_INTEREST_PAT
 import static ch.epfl.balelecbud.utility.database.MockDatabase.alex;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.pointOfInterest1;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.pointOfInterest2;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class PointOfInterestToMapButtonTest {

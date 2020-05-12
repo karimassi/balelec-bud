@@ -17,9 +17,9 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
-import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.storage.MockStorage;
 
 import static androidx.test.espresso.Espresso.onView;

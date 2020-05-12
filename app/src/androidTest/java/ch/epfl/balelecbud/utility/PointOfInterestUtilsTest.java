@@ -18,7 +18,6 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.PointOfInterest;
 import ch.epfl.balelecbud.model.PointOfInterestType;
-import ch.epfl.balelecbud.utility.PointOfInterestUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;

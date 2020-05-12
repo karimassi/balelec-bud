@@ -7,9 +7,9 @@ import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.MyMap;
 import ch.epfl.balelecbud.model.MyMarker;
-import ch.epfl.balelecbud.model.Location;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 

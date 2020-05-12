@@ -13,9 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.utility.location.LocationClient;
-import ch.epfl.balelecbud.utility.location.LocationUtils;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.MarkerType;
 import ch.epfl.balelecbud.model.MyMap;
@@ -23,8 +20,11 @@ import ch.epfl.balelecbud.model.MyMarker;
 import ch.epfl.balelecbud.model.PointOfInterest;
 import ch.epfl.balelecbud.model.PointOfInterestType;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
+import ch.epfl.balelecbud.utility.location.LocationClient;
+import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static ch.epfl.balelecbud.utility.database.MockDatabase.celine;
 import static org.hamcrest.Matchers.is;

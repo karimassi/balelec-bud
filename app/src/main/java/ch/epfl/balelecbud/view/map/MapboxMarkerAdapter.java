@@ -3,8 +3,8 @@ package ch.epfl.balelecbud.view.map;
 
 import com.mapbox.mapboxsdk.annotations.Marker;
 
-import ch.epfl.balelecbud.model.MyMarker;
 import ch.epfl.balelecbud.model.Location;
+import ch.epfl.balelecbud.model.MyMarker;
 
 public class MapboxMarkerAdapter implements MyMarker {
 

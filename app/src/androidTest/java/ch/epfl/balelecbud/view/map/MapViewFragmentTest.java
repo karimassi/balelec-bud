@@ -17,14 +17,14 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.utility.location.LocationClient;
-import ch.epfl.balelecbud.utility.location.LocationUtils;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.MyMap;
 import ch.epfl.balelecbud.model.MyMarker;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
+import ch.epfl.balelecbud.utility.location.LocationClient;
+import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;

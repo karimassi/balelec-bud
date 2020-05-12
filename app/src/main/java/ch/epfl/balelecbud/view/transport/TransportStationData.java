@@ -2,9 +2,9 @@ package ch.epfl.balelecbud.view.transport;
 
 
 import ch.epfl.balelecbud.model.Location;
-import ch.epfl.balelecbud.utility.TransportUtils;
 import ch.epfl.balelecbud.model.TransportStation;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
+import ch.epfl.balelecbud.utility.TransportUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;

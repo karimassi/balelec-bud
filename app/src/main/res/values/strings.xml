@@ -80,7 +80,7 @@
 
     <string name="require_name">Name required!</string>
 
-    <string name="require_sign_in">You need to be sign in to use this feature</string>
+    <string name="require_sign_in">You need to be signed in to use this feature</string>
 
     <!--  RECEIVED REQUEST ITEM  -->
     <string name="cancel_request">Cancel</string>

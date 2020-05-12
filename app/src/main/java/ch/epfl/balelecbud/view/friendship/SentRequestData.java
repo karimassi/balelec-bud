@@ -2,9 +2,9 @@ package ch.epfl.balelecbud.view.friendship;
 
 import java.util.ArrayList;
 
-import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
+import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;

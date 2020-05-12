@@ -18,8 +18,8 @@ import java.util.Map;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
-import ch.epfl.balelecbud.utility.notifications.NotificationInterface;
 import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.notifications.NotificationInterface;
 
 public class NotificationScheduler implements NotificationInterface<Slot> {
 

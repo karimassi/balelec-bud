@@ -1,8 +1,8 @@
 package ch.epfl.balelecbud.utility.database;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.utility.database.query.MyQuery;

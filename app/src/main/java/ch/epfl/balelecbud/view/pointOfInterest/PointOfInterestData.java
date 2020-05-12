@@ -11,10 +11,10 @@ import java.util.List;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.PointOfInterest;
 import ch.epfl.balelecbud.utility.PointOfInterestUtils;
-import ch.epfl.balelecbud.view.map.MapViewFragment;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
+import ch.epfl.balelecbud.view.map.MapViewFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 

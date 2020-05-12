@@ -20,16 +20,16 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.FriendshipUtils;
-import ch.epfl.balelecbud.utility.location.LocationUtils;
+import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.MarkerType;
 import ch.epfl.balelecbud.model.MyMap;
 import ch.epfl.balelecbud.model.MyMarker;
-import ch.epfl.balelecbud.model.Location;
-import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.model.PointOfInterest;
+import ch.epfl.balelecbud.model.User;
+import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
+import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;

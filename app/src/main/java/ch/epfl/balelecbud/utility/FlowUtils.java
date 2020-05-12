@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
-import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
 
 public final class FlowUtils {
     private static final String TAG = "ch.epfl.balelecbud.util.notifications.concertFlow";

@@ -17,9 +17,9 @@ import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
+import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
-import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;

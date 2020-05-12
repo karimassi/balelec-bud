@@ -14,12 +14,12 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.function.Consumer;
 
+import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.notifications.NotificationInterface;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.objects.ConcertOfInterestDAO;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.utility.notifications.concertSoon.NotificationScheduler;
-import ch.epfl.balelecbud.model.Slot;
-import ch.epfl.balelecbud.utility.FlowUtils;
 
 public class ConcertFlow extends IntentService {
     private static final String TAG = ConcertFlow.class.getSimpleName();

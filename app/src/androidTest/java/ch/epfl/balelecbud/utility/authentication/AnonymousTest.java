@@ -16,9 +16,9 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
-import ch.epfl.balelecbud.view.map.MapViewFragment;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
+import ch.epfl.balelecbud.view.map.MapViewFragment;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;

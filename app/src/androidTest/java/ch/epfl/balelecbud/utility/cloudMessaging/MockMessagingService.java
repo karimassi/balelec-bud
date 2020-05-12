@@ -2,9 +2,12 @@ package ch.epfl.balelecbud.utility.cloudMessaging;
 
 import android.content.Context;
 import android.util.Log;
+
 import com.google.firebase.messaging.RemoteMessage;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 

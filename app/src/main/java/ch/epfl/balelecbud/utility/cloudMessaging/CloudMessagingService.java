@@ -13,8 +13,8 @@ import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.notifications.NotificationMessage;
 import ch.epfl.balelecbud.utility.http.HttpPostRequest;
+import ch.epfl.balelecbud.utility.notifications.NotificationMessage;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 

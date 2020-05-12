@@ -9,18 +9,18 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.cloudMessaging.Message;
 import ch.epfl.balelecbud.model.User;
+import ch.epfl.balelecbud.utility.cloudMessaging.Message;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.utility.database.Database.FRIENDSHIPS_PATH;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
 public class FriendshipUtils {
 

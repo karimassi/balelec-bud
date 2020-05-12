@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.model.Location;
-import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.model.TransportStation;
+import ch.epfl.balelecbud.model.User;
 
 @RunWith(AndroidJUnit4.class)
 public class ParcelableTest {

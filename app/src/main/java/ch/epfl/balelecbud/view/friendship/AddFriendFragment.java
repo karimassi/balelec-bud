@@ -14,8 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.model.User;
+import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 
 public class AddFriendFragment extends DialogFragment {

@@ -20,9 +20,9 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.utility.authentication.Authenticator;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;

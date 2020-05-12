@@ -16,17 +16,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
-import ch.epfl.balelecbud.utility.FriendshipUtils;
-import ch.epfl.balelecbud.utility.location.LocationClient;
-import ch.epfl.balelecbud.utility.location.LocationUtils;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.FriendshipUtils;
+import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
+import ch.epfl.balelecbud.utility.location.LocationClient;
+import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

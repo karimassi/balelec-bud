@@ -16,12 +16,12 @@ import org.junit.runner.RunWith;
 import java.util.List;
 import java.util.function.Consumer;
 
-import ch.epfl.balelecbud.utility.notifications.concertFlow.objects.ConcertOfInterestDatabase;
-import ch.epfl.balelecbud.utility.notifications.NotificationInterface;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.FlowUtils;
+import ch.epfl.balelecbud.utility.database.MockDatabase;
+import ch.epfl.balelecbud.utility.notifications.NotificationInterface;
+import ch.epfl.balelecbud.utility.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.slot1;

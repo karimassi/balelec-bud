@@ -16,8 +16,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.cloudMessaging.TokenUtils;
 import ch.epfl.balelecbud.utility.StringUtils;
+import ch.epfl.balelecbud.utility.cloudMessaging.TokenUtils;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.utility.StringUtils.isEmailValid;

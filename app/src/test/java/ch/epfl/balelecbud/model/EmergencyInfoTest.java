@@ -4,9 +4,6 @@ package ch.epfl.balelecbud.model;
 import org.junit.Assert;
 import org.junit.Test;
 
-
-import static org.hamcrest.core.Is.is;
-
 public class EmergencyInfoTest {
 
     @Test

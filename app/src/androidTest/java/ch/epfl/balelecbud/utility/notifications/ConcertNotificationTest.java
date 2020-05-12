@@ -28,14 +28,14 @@ import java.util.Calendar;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.location.LocationClient;
 import ch.epfl.balelecbud.utility.location.LocationUtils;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.view.schedule.SlotData;
-import ch.epfl.balelecbud.model.Slot;
-import ch.epfl.balelecbud.utility.database.Database;
-import ch.epfl.balelecbud.utility.database.MockDatabase;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;

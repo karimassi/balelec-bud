@@ -13,8 +13,8 @@ import org.junit.runner.RunWith;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Location;
-import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.model.TransportStation;
+import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.utility.http.MockHttpClient;
 import ch.epfl.balelecbud.view.transport.TransportFragment;
 

@@ -7,10 +7,6 @@ import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.model.Location;
-import ch.epfl.balelecbud.model.MarkerType;
-import ch.epfl.balelecbud.model.MyMarker;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

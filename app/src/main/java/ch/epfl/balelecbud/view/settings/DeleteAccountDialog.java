@@ -9,8 +9,8 @@ import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
-import ch.epfl.balelecbud.utility.location.LocationUtils;
 import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;

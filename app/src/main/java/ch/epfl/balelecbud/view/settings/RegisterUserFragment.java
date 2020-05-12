@@ -16,9 +16,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.cloudMessaging.TokenUtils;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.StringUtils;
+import ch.epfl.balelecbud.utility.cloudMessaging.TokenUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;

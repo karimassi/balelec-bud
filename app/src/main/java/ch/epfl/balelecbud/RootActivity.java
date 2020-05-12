@@ -17,20 +17,20 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-import ch.epfl.balelecbud.view.friendship.SocialFragment;
-import ch.epfl.balelecbud.view.map.MapViewFragment;
-import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
-import ch.epfl.balelecbud.view.pointOfInterest.PointOfInterestFragment;
 import ch.epfl.balelecbud.model.Slot;
-import ch.epfl.balelecbud.view.settings.SettingsFragment;
 import ch.epfl.balelecbud.utility.FlowUtils;
+import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.view.WelcomeFragment;
 import ch.epfl.balelecbud.view.emergency.EmergencyFragment;
 import ch.epfl.balelecbud.view.emergency.EmergencyInfoFragment;
 import ch.epfl.balelecbud.view.emergency.EmergencyNumbersFragment;
 import ch.epfl.balelecbud.view.festivalInformation.FestivalInformationFragment;
+import ch.epfl.balelecbud.view.friendship.SocialFragment;
+import ch.epfl.balelecbud.view.map.MapViewFragment;
+import ch.epfl.balelecbud.view.pointOfInterest.PointOfInterestFragment;
 import ch.epfl.balelecbud.view.schedule.ScheduleFragment;
+import ch.epfl.balelecbud.view.settings.SettingsFragment;
 import ch.epfl.balelecbud.view.transport.TransportFragment;
-import ch.epfl.balelecbud.view.WelcomeFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
