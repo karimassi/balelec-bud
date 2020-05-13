@@ -41,7 +41,7 @@ public class MapboxMapAdapter implements MyMap {
             mapboxMap.getLocationComponent().activateLocationComponent(LocationComponentActivationOptions.builder(getAppContext(), style).build());
             mapboxMap.getLocationComponent().setLocationComponentEnabled(appLocationEnabled);
         });
-        mapboxMap.setCameraPosition(new CameraPosition.Builder().target(defaultLocation.toLatLng()).build());
+        mapboxMap.setCameraPosition(new CameraPosition.Builder().target(defaultLocation.toLatLng()).zoom(zoom).build());
     }
 
 }

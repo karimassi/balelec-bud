@@ -43,6 +43,7 @@ public class MapViewFragment extends Fragment {
     private List<PointOfInterest> waitingPOI = new LinkedList<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
     private Location defaultLocation;
+    private double defaultZoom;
 
     @VisibleForTesting
     public static void setMockCallback(com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback) {
@@ -73,7 +74,13 @@ public class MapViewFragment extends Fragment {
 
         Bundle arguments = getArguments();
         Location location = arguments != null ? arguments.getParcelable("location") : null;
-        defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
+        if (location == null) {
+            defaultLocation = Location.DEFAULT_LOCATION;
+            defaultZoom = MyMap.DEFAULT_ZOOM;
+        } else {
+            defaultLocation = location;
+            defaultZoom = MyMap.POI_ZOOM;
+        }
 
         requestFriendsLocations();
         displayPointsOfInterests();
@@ -133,7 +140,7 @@ public class MapViewFragment extends Fragment {
     @VisibleForTesting
     private void onMapReady(MyMap map) {
         myMap = map;
-        myMap.initialiseMap(LocationUtils.isLocationActive(), this.defaultLocation, MyMap.DEFAULT_ZOOM);
+        myMap.initialiseMap(LocationUtils.isLocationActive(), this.defaultLocation, this.defaultZoom);
         displayWaitingFriends();
         displayWaitingPOI();
     }
