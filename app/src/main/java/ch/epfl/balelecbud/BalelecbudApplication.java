@@ -11,6 +11,8 @@ import ch.epfl.balelecbud.utility.cache.Cache;
 import ch.epfl.balelecbud.utility.cache.FilesystemCache;
 import ch.epfl.balelecbud.utility.cloudMessaging.CloudMessagingService;
 import ch.epfl.balelecbud.utility.cloudMessaging.MessagingService;
+import ch.epfl.balelecbud.utility.connectivity.AndroidConnectivityChecker;
+import ch.epfl.balelecbud.utility.connectivity.ConnectivityChecker;
 import ch.epfl.balelecbud.utility.database.CachedDatabase;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.FirestoreDatabase;
@@ -32,6 +34,7 @@ public class BalelecbudApplication extends Application {
     private static Authenticator appAuthenticator;
     private static HttpClient httpClient;
     private static MessagingService appMessagingService;
+    private static ConnectivityChecker connectivityChecker;
 
     public static Context getAppContext() {
         return appContext;
@@ -65,6 +68,7 @@ public class BalelecbudApplication extends Application {
         return appStorage;
     }
 
+    public static ConnectivityChecker getConnectivityChecker() { return connectivityChecker; }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -83,6 +87,8 @@ public class BalelecbudApplication extends Application {
             httpClient = VolleyHttpClient.getInstance();
         if (appMessagingService == null)
             appMessagingService = CloudMessagingService.getInstance();
+        if (connectivityChecker == null)
+            connectivityChecker = AndroidConnectivityChecker.getInstance();
         NotificationScheduler.getInstance().createNotificationChannel(appContext);
         NotificationMessage.getInstance().createNotificationChannel(appContext);
     }
@@ -122,4 +128,8 @@ public class BalelecbudApplication extends Application {
         appStorage = storage;
     }
 
+    @VisibleForTesting
+    public static void setConnectivityChecker(ConnectivityChecker connectivityChecker) {
+        BalelecbudApplication.connectivityChecker = connectivityChecker;
+    }
 }

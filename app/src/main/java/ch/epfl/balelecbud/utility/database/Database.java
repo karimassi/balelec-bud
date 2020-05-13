@@ -9,7 +9,7 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
 public interface Database {
 
-    enum Source {REMOTE, CACHE};
+    enum Source {REMOTE_ONLY, CACHE_FIRST, CACHE_ONLY};
 
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";

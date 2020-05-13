@@ -5,9 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.utility.database.Database;
 
 public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
@@ -21,11 +23,12 @@ public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder
         this.data = data;
         this.itemId = itemId;
         data.setAdapter(this);
-        data.reload(Database.Source.CACHE);
+        checkConnectivityAndReload(Database.Source.CACHE_FIRST);
     }
 
+    @VisibleForTesting //could trigger it with UI, but conceptually cleaner
     public void reloadData(){
-        data.reload(Database.Source.REMOTE);
+        checkConnectivityAndReload(Database.Source.REMOTE_ONLY);
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout refreshLayout) {
@@ -51,6 +54,14 @@ public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    private void checkConnectivityAndReload(Database.Source preferredSource){
+        if(BalelecbudApplication.getConnectivityChecker().isConnectionAvailable()){
+            data.reload(preferredSource);
+        }else{
+            data.reload(Database.Source.CACHE_ONLY);
+        }
     }
 
 }

@@ -30,8 +30,8 @@ import static ch.epfl.balelecbud.utility.database.Database.FESTIVAL_INFORMATION_
 import static ch.epfl.balelecbud.utility.database.Database.FRIENDSHIPS_PATH;
 import static ch.epfl.balelecbud.utility.database.Database.FRIEND_REQUESTS_PATH;
 import static ch.epfl.balelecbud.utility.database.Database.LOCATIONS_PATH;
-import static ch.epfl.balelecbud.utility.database.Database.Source.CACHE;
-import static ch.epfl.balelecbud.utility.database.Database.Source.REMOTE;
+import static ch.epfl.balelecbud.utility.database.Database.Source.CACHE_FIRST;
+import static ch.epfl.balelecbud.utility.database.Database.Source.REMOTE_ONLY;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.assertQueryMapResults;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.assertQueryResults;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.karim;
@@ -71,22 +71,22 @@ public class CachedDatabaseTest {
 
     @Test
     public void getDocumentsForceRemote() throws Throwable {
-        MyQuery query = new MyQuery(FESTIVAL_INFORMATION_PATH, Collections.emptyList(), REMOTE);
+        MyQuery query = new MyQuery(FESTIVAL_INFORMATION_PATH, Collections.emptyList(), REMOTE_ONLY);
         assertResults(Collections.singletonList(freshInfo),
                 appDatabase.query(query, FestivalInformation.class));
 
-        query = new MyQuery(FRIENDSHIPS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, karim.getUid()), REMOTE);
+        query = new MyQuery(FRIENDSHIPS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, karim.getUid()), REMOTE_ONLY);
         assertMapResults(Collections.singletonList(freshFriend),
                 appDatabase.query(query));
     }
 
     @Test
     public void getDocumentForceCache() throws Throwable {
-        MyQuery query = new MyQuery(FESTIVAL_INFORMATION_PATH, Collections.emptyList(), CACHE);
+        MyQuery query = new MyQuery(FESTIVAL_INFORMATION_PATH, Collections.emptyList(), CACHE_FIRST);
         assertResults(Collections.singletonList(staleInfo),
                 appDatabase.query(query, FestivalInformation.class));
 
-        query = new MyQuery(FRIENDSHIPS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, karim.getUid()), CACHE);
+        query = new MyQuery(FRIENDSHIPS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, karim.getUid()), CACHE_FIRST);
         assertMapResults(Collections.singletonList(staleFriend),
                 appDatabase.query(query));
     }

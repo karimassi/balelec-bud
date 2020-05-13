@@ -44,7 +44,7 @@ public class CachedDatabase implements Database {
     @Override
     public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
         CompletableFuture<List<T>> result = CompletableFuture.completedFuture(new ArrayList<>());
-        if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
+        if (query.getSource().equals(Source.CACHE_FIRST) && cache.contains(query)) {
             try {
                 result = cache.get(query, tClass);
             } catch (IOException e) {
@@ -72,7 +72,7 @@ public class CachedDatabase implements Database {
     @Override
     public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
         CompletableFuture<List<Map<String, Object>>> result = CompletableFuture.completedFuture(new ArrayList<>());
-        if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
+        if (query.getSource().equals(Source.CACHE_FIRST) && cache.contains(query)) {
             try {
                 result = cache.get(query);
             } catch (IOException e) {

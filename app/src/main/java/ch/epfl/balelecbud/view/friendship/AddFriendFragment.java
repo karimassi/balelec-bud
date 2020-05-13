@@ -35,7 +35,7 @@ public class AddFriendFragment extends DialogFragment {
         builder.setView(view)
                 .setPositiveButton(R.string.add_friend_request, (dialog, id) -> {
                     if (validateEmail()) {
-                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), Database.Source.REMOTE)
+                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), Database.Source.REMOTE_ONLY)
                                 .whenComplete((user, throwable) -> FriendshipUtils.addFriend(user));
                         Toast.makeText(
                                 getContext(),
