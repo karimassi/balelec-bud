@@ -64,7 +64,7 @@ public class EmergencyNumbersFragment extends Fragment {
 
         MyQuery query = new MyQuery(Database. EMERGENCY_NUMBER_PATH, new LinkedList<>());
         BalelecbudApplication.getAppDatabase().query(query, EmergencyNumber.class).whenComplete((res, err) -> {
-            for (EmergencyNumber number : res) {
+            for (EmergencyNumber number : res.getList()) {
                 repertoryMap.put(number.getName(), number.getNumber());
                 Log.d("numer", number.getName());
             }

@@ -29,16 +29,18 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
     }
 
     //TODO change to not have rv flicker at some point
+    //TODO cached ?
     @Override
-    public CompletableFuture<Void> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
         clearAll();
         lastRecordedAffluence.clear();
         MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>(), preferredSource);
         return getAppDatabase().query(query, PointOfInterest.class)
-                .thenCompose(PointOfInterestUtils::computeAffluence)
-                .thenAccept(this::postResults);
+                .thenCompose(fetchedData -> PointOfInterestUtils.computeAffluence(fetchedData.getList()))
+                .thenApply(results -> {
+                    this.postResults(results); return null;
+                });
     }
-
     @Override
     public void bind(int index, PointOfInterestHolder viewHolder) {
         PointOfInterest poi = data.get(index);

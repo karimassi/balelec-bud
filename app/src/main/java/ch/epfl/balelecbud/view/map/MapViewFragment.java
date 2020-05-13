@@ -206,7 +206,7 @@ public class MapViewFragment extends Fragment {
     private void displayPointsOfInterests() {
         getAppDatabase().query(new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>()),
                 PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
-            for (PointOfInterest poi : pointOfInterests) {
+            for (PointOfInterest poi : pointOfInterests.getList()) {
                 if (myMap == null) {
                     waitingPOI.add(poi);
                 } else {

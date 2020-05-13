@@ -13,10 +13,10 @@ import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 public class FestivalInformationData extends RecyclerViewData<FestivalInformation, FestivalInformationHolder> {
 
     @Override
-    public CompletableFuture<Void> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.FESTIVAL_INFORMATION_PATH, new LinkedList<>(), preferredSource);
         return BalelecbudApplication.getAppDatabase().query(query, FestivalInformation.class)
-            .thenAccept(new CompletableFutureUtils.MergeConsumer<>(this));
+            .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
 
     @Override

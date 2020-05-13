@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/activity_poi_linear_layout"
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".view.pointOfInterest.PointOfInterestFragment"
-android:gravity="center"
-android:background="@color/blek_blue"
-xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_poi_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blek_blue"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".view.pointOfInterest.PointOfInterestFragment">
+
+    <include layout="@layout/freshness_info" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9.5">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/swipe_refresh_layout_point_of_interest"
-            xmlns:android="http://schemas.android.com/apk/res/android">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
             <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"

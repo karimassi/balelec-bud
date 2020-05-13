@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
 @RunWith(AndroidJUnit4.class)
@@ -26,7 +25,7 @@ public class RefreshableRecyclerViewAdapterTest {
         mockConnectivityChecker.setAvailable(false);
         MockRecyclerViewData mockRecyclerViewData = new MockRecyclerViewData();
         RefreshableRecyclerViewAdapter<Integer, MockViewHolder> dut =
-                new RefreshableRecyclerViewAdapter<>(null, mockRecyclerViewData, 0);
+                new RefreshableRecyclerViewAdapter<>(null, freshnessView, mockRecyclerViewData, 0);
         mockRecyclerViewData.reset();
         dut.reloadData();
         mockRecyclerViewData.checkCounts(0,1,0);
@@ -37,7 +36,7 @@ public class RefreshableRecyclerViewAdapterTest {
         mockConnectivityChecker.setAvailable(true);
         MockRecyclerViewData mockRecyclerViewData = new MockRecyclerViewData();
         RefreshableRecyclerViewAdapter<Integer, MockViewHolder> dut =
-                new RefreshableRecyclerViewAdapter<>(null, mockRecyclerViewData, 0);
+                new RefreshableRecyclerViewAdapter<>(null, freshnessView, mockRecyclerViewData, 0);
         mockRecyclerViewData.reset();
         dut.reloadData();
         mockRecyclerViewData.checkCounts(0,0,1);
@@ -48,7 +47,7 @@ public class RefreshableRecyclerViewAdapterTest {
         mockConnectivityChecker.setAvailable(false);
         MockRecyclerViewData mockRecyclerViewData = new MockRecyclerViewData();
         RefreshableRecyclerViewAdapter<Integer, MockViewHolder> dut =
-                new RefreshableRecyclerViewAdapter<>(null, mockRecyclerViewData, 0);
+                new RefreshableRecyclerViewAdapter<>(null, freshnessView, mockRecyclerViewData, 0);
         mockRecyclerViewData.checkCounts(0,1,0);
     }
 
@@ -57,7 +56,7 @@ public class RefreshableRecyclerViewAdapterTest {
         mockConnectivityChecker.setAvailable(true);
         MockRecyclerViewData mockRecyclerViewData = new MockRecyclerViewData();
         RefreshableRecyclerViewAdapter<Integer, MockViewHolder> dut =
-                new RefreshableRecyclerViewAdapter<>(null, mockRecyclerViewData, 0);
+                new RefreshableRecyclerViewAdapter<>(null, freshnessView, mockRecyclerViewData, 0);
         mockRecyclerViewData.checkCounts(1,0,0);
     }
 

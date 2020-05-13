@@ -18,7 +18,7 @@ public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
         this.rvAdapter = adapter;
     }
 
-    public abstract CompletableFuture<Void> reload(Database.Source preferredSource);
+    public abstract CompletableFuture<Long> reload(Database.Source preferredSource);
 
     public abstract void bind(int index, B viewHolder);
 

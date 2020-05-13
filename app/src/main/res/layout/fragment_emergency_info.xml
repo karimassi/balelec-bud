@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/emergency_info_constraint_layout"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_emergency_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blek_blue">
+    android:background="@color/blek_blue"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:weightSum="10">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout_emergency_info"
+    <include layout="@layout/freshness_info" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/emergency_info_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="9.5"
+        android:background="@color/blek_blue">
 
-        <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/emergencyInfoRecyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout_emergency_info"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/poi_margin"
-            android:layout_marginRight="@dimen/poi_margin"
-            app:layoutManager="LinearLayoutManager"
-            tools:context=".EmergencyInformationActivity"
-            tools:listitem="@layout/item_emergencyinfo" />
+            android:layout_height="match_parent">
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/emergencyInfoRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/poi_margin"
+                android:layout_marginRight="@dimen/poi_margin"
+                app:layoutManager="LinearLayoutManager"
+                tools:context=".EmergencyInformationActivity"
+                tools:listitem="@layout/item_emergencyinfo" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

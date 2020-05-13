@@ -1,43 +1,69 @@
 package ch.epfl.balelecbud.utility.recyclerViews;
 
+import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.database.Database;
 
 public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
 
+    private static final String TAG = "RefRecViewAdpt";
     private final ViewHolderFactory<B> factory;
+    private final View freshnessView;
     private final RecyclerViewData<A, B> data;
     private final int itemId;
 
-    public RefreshableRecyclerViewAdapter(ViewHolderFactory<B> factory, RecyclerViewData<A, B> data, int itemId) {
+    public RefreshableRecyclerViewAdapter(ViewHolderFactory<B> factory, View freshnessView, RecyclerViewData<A, B> data, int itemId) {
         this.factory = factory;
+        this.freshnessView = freshnessView;
         this.data = data;
         this.itemId = itemId;
         data.setAdapter(this);
-        checkConnectivityAndReload(Database.Source.CACHE_FIRST);
+        checkConnectivityAndReload(Database.Source.CACHE_FIRST).thenAccept(this::handleFreshness);
     }
 
     @VisibleForTesting //could trigger it with UI in the tests, but conceptually cleaner
-    public CompletableFuture<Void> reloadData(){
+    public CompletableFuture<Long> reloadData() {
         return checkConnectivityAndReload(Database.Source.REMOTE_ONLY);
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout refreshLayout) {
         refreshLayout.setOnRefreshListener(() -> {
             refreshLayout.setRefreshing(true);
-            reloadData().thenRun(() -> refreshLayout.setRefreshing(false));
+            reloadData()
+                    .thenAccept(this::handleFreshness)
+                    .thenRun(() -> refreshLayout.setRefreshing(false));
         });
+    }
+
+    private void handleFreshness(Long freshness) {
+        Log.v(TAG, "handling freshness : " + freshness);
+        if (freshness == null) {
+            freshnessView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0.f));
+        } else {
+            freshnessView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0.5f));
+            Date date = new Date(freshness);
+            SimpleDateFormat df2 = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
+            String result = "Cached on " + df2.format(date);
+            TextView textView = freshnessView.findViewById(R.id.freshness_info_text_view);
+            textView.setText(result);
+        }
     }
 
     @NonNull
@@ -58,7 +84,7 @@ public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder
         return data.size();
     }
 
-    private CompletableFuture<Void> checkConnectivityAndReload(Database.Source preferredSource){
+    private CompletableFuture<Long> checkConnectivityAndReload(Database.Source preferredSource) {
         return BalelecbudApplication.getConnectivityChecker().isConnectionAvailable() ?
                 data.reload(preferredSource) :
                 data.reload(Database.Source.CACHE_ONLY);

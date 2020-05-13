@@ -44,10 +44,10 @@ public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
     }
 
     @Override
-    public CompletableFuture<Void> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.CONCERT_SLOTS_PATH, new LinkedList<>(), preferredSource);
         return getAppDatabase().query(query, Slot.class)
-                .thenAccept(new CompletableFutureUtils.MergeConsumer<>(this));
+                .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
 
     @Override

@@ -30,12 +30,13 @@ public class EmergencyInfoFragment extends Fragment {
     public void onStart() {
         super.onStart();
         RecyclerView recyclerView = getActivity().findViewById(R.id.emergencyInfoRecyclerView);
+        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
         RecyclerViewData<EmergencyInfo, EmergencyInfoHolder> data = new EmergencyInfoData();
         RefreshableRecyclerViewAdapter<EmergencyInfo, EmergencyInfoHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(EmergencyInfoHolder::new, data, R.layout.item_emergencyinfo);
+                new RefreshableRecyclerViewAdapter<>(EmergencyInfoHolder::new, freshnessView, data, R.layout.item_emergencyinfo);
         recyclerView.setAdapter(adapter);
         SwipeRefreshLayout refreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_emergency_info);
         adapter.setOnRefreshListener(refreshLayout);
