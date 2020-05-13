@@ -102,7 +102,7 @@ public class TestAsyncUtils {
             hasFailed = true;
             Log.wtf(TAG, "assertThat: match failed" +
                     "\n\texpected = " + matcher.toString() +
-                    "\n\tactual = " + actual.toString());
+                    "\n\tactual = " + actual.toString(), new AssertionFailedError());
         }
     }
 }

@@ -43,8 +43,7 @@ public class MapViewWithPOITest {
         MockDatabase.getInstance().resetDatabase();
         BalelecbudApplication.setAppDatabase(mockDB);
         BalelecbudApplication.setAppAuthenticator(mockAuth);
-        MapViewFragment.setMockCallback(mapboxMap -> {
-        });
+        MapViewFragment.setMockCallback(mapboxMap -> { });
         LocationUtils.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -87,7 +86,8 @@ public class MapViewWithPOITest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
+                sync.assertThat(zoom, is(MyMap.DEFAULT_ZOOM));
                 sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }

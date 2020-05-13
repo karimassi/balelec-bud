@@ -55,7 +55,7 @@ public class MapViewFragmentTest {
     }
 
     @Test
-    public void testMapViewIsNotNull() throws Throwable{
+    public void testMapViewIsNotNull() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
         FragmentScenario.launchInContainer(MapViewFragment.class).onFragment(fragment -> {
             Activity mActivity = fragment.getActivity();
@@ -78,7 +78,7 @@ public class MapViewFragmentTest {
     public void whenLocationIsOffLocationOnMapIsDisabled() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
 
-        MapViewFragment.setMockMap(assertMapLocation(sync, false));
+        MapViewFragment.setMockMap(assertMapLocation(sync, false, MyMap.DEFAULT_ZOOM));
         FragmentScenario.launchInContainer(MapViewFragment.class);
 
         sync.waitCall(1);
@@ -87,11 +87,11 @@ public class MapViewFragmentTest {
     }
 
     @Test
-    public void whenLocationIsOnLocationOnMapIsDisabled() throws Throwable {
+    public void whenLocationIsOnLocationOnMapIsEnabled() throws Throwable {
         LocationUtils.enableLocation();
         TestAsyncUtils sync = new TestAsyncUtils();
 
-        MapViewFragment.setMockMap(assertMapLocation(sync, true));
+        MapViewFragment.setMockMap(assertMapLocation(sync, true, MyMap.DEFAULT_ZOOM));
         FragmentScenario.launchInContainer(MapViewFragment.class);
 
         sync.waitCall(1);
@@ -101,7 +101,7 @@ public class MapViewFragmentTest {
     }
 
     @NonNull
-    private MyMap assertMapLocation(TestAsyncUtils sync, boolean expectedLocation) {
+    private MyMap assertMapLocation(TestAsyncUtils sync, boolean expectedLocation, double expectedZoom) {
         return new MyMap() {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
@@ -110,8 +110,9 @@ public class MapViewFragmentTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.assertEquals(expectedLocation, locationEnabled);
+                sync.assertEquals(expectedZoom, zoom);
                 sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }
@@ -130,7 +131,7 @@ public class MapViewFragmentTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.call();
             }
         };
@@ -144,11 +145,12 @@ public class MapViewFragmentTest {
     }
 
     @Test
-    public void testOpenMapWithPOILocationInBundle() throws Throwable{
+    public void testOpenMapWithPOILocationInBundle() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
         MyMap mockMap = new MyMap() {
             @Override
-            public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean appLocationEnabled, Location defaultLocation, double zoom) {
+                sync.assertThat(zoom, is(MyMap.POI_ZOOM));
                 sync.assertThat(defaultLocation, is(pointOfInterest1.getLocation()));
                 sync.call();
             }

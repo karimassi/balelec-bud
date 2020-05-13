@@ -68,7 +68,7 @@ public class MapViewFragmentWithFriendTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.call();
             }
         };
@@ -98,7 +98,7 @@ public class MapViewFragmentWithFriendTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.call();
             }
         };
@@ -146,7 +146,7 @@ public class MapViewFragmentWithFriendTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.call();
             }
         };
