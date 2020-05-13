@@ -76,10 +76,10 @@ public class MapViewFragment extends Fragment {
         Location location = arguments != null ? arguments.getParcelable("location") : null;
         if (location == null) {
             defaultLocation = Location.DEFAULT_LOCATION;
-            defaultZoom = MyMap.DEFAULT_ZOOM;
+            defaultZoom = getResources().getInteger(R.integer.default_zoom);
         } else {
             defaultLocation = location;
-            defaultZoom = MyMap.POI_ZOOM;
+            defaultZoom = getResources().getInteger(R.integer.poi_zoom);
         }
 
         requestFriendsLocations();
