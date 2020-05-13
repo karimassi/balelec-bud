@@ -4,19 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import androidx.fragment.app.Fragment;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
 
 public class GalleryFragment extends Fragment {
-    GridView simpleList;
-    ArrayList<Integer> images = new ArrayList<>(Arrays.asList(R.drawable.gallery1, R.drawable.gallery2, R.drawable.gallery3, R.drawable.gallery4, R.drawable.gallery5,
-            R.drawable.gallery6, R.drawable.gallery7, R.drawable.gallery8, R.drawable.gallery9));
+
     public final static String TAG = GalleryFragment.class.getSimpleName();
 
     public static GalleryFragment newInstance() {
@@ -25,14 +23,23 @@ public class GalleryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
         return inflater.inflate(R.layout.fragment_gallery, container, false);
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        simpleList = (GridView) getActivity().findViewById(R.id.gallery_grid_view);
-        GalleryAdapter adapter = new GalleryAdapter(getActivity(), R.layout.item_gallery, images);
-        simpleList.setAdapter(adapter);
+        RecyclerView rvGallery = getView().findViewById(R.id.galleryRecyclerView);
+
+        PictureData data = new PictureData();
+        RefreshableRecyclerViewAdapter<Picture, PictureHolder> adapter = new RefreshableRecyclerViewAdapter<>(
+                PictureHolder::new, data, R.layout.item_gallery);
+
+        rvGallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        rvGallery.setAdapter(adapter);
+
+        SwipeRefreshLayout refreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_gallery);
+        adapter.setOnRefreshListener(refreshLayout);
     }
 }

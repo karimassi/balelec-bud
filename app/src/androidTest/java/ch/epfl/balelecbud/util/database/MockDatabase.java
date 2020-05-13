@@ -23,6 +23,7 @@ import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterest;
 import ch.epfl.balelecbud.pointOfInterest.PointOfInterestType;
 import ch.epfl.balelecbud.schedule.models.Slot;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 @SuppressWarnings("ALL")
 public class MockDatabase implements Database {
@@ -64,6 +65,7 @@ public class MockDatabase implements Database {
     }
 
     public void resetDatabase() {
+        friendsLocationListener.clear();
         initDatabasePOJO();
         initDatabase();
         fillDB();
@@ -112,9 +114,9 @@ public class MockDatabase implements Database {
             Date date = c.getTime();
             timestamps.add(i, new Timestamp(date));
         }
-        slot1 = new Slot(0, "Mr Oizo", "Grande scène", timestamps.get(0), timestamps.get(1));
-        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", timestamps.get(2), timestamps.get(3));
-        slot3 = new Slot(2, "Upset", "Scène Sat'", timestamps.get(4), timestamps.get(5));
+        slot1 = new Slot(0, "Mr Oizo", "Grande scène", "path1", timestamps.get(0), timestamps.get(1));
+        slot2 = new Slot(1, "Walking Furret", "Les Azimutes", "path2", timestamps.get(2), timestamps.get(3));
+        slot3 = new Slot(2, "Upset", "Scène Sat'", "path3", timestamps.get(4), timestamps.get(5));
     }
 
     public static MockDatabase getInstance() {
@@ -147,7 +149,7 @@ public class MockDatabase implements Database {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
+    public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
         List<T> queryResult = new LinkedList<>();
         Map<String, Object> collection = databasePOJO.get(query.getCollectionName());
         if (MockQueryUtils.queryContainsDocumentIdClause(query)) {
@@ -286,6 +288,38 @@ public class MockDatabase implements Database {
 
     private void logContents() {
         Log.d(TAG, databasePOJO.toString() + "\n" + database.toString() + "\n" + friendsLocationListener.toString());
+    }
+
+    public static <T> void assertQueryResults(TestAsyncUtils sync,
+                                              List<T> expected, CompletableFuture<List<T>> actual) throws Throwable {
+        actual.whenComplete((list, throwable) -> {
+            if (throwable == null) {
+                sync.assertEquals(expected, list);
+                sync.call();
+            } else {
+                sync.fail();
+            }
+        });
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
+    }
+
+    public static void assertQueryMapResults(TestAsyncUtils sync, List<Map<String, Object>> expected,
+                                  CompletableFuture<List<Map<String, Object>>> actual) throws Throwable{
+        actual.whenComplete((list, throwable) -> {
+            if (throwable == null) {
+                Log.d("TEST", "assertResults: " + expected.toString());
+                Log.d("TEST", "assertResults: " + list.toString());
+                sync.assertEquals(expected, list);
+                sync.call();
+            } else {
+                sync.fail();
+            }
+        });
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
 }

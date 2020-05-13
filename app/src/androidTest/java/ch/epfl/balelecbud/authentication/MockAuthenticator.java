@@ -28,14 +28,21 @@ public class MockAuthenticator implements Authenticator {
     private static int uid = 0;
 
     private User currentUser;
+    private String currentUserID;
 
     private MockAuthenticator() { }
+
+    @Override
+    public CompletableFuture<String> signInAnonymously() {
+        currentUserID = provideUid();
+        return CompletableFuture.completedFuture(currentUserID);
+    }
 
     @Override
     public CompletableFuture<User> signIn(final String email, final String password) {
         if (users.containsKey(email) && Objects.equals(users.get(email), password)) {
             MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, "0"));
-            return MockDatabase.getInstance().queryWithType(query, User.class).thenApply(users -> users.get(0));
+            return MockDatabase.getInstance().query(query, User.class).thenApply(users -> users.get(0));
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed login");
         }
@@ -45,7 +52,7 @@ public class MockAuthenticator implements Authenticator {
     public CompletableFuture<Void> createAccount(final String name, final String email, final String password) {
         if (!users.containsKey(email)) {
             users.put(email, password);
-            User u = new User(email, name, provideUid());
+            User u = new User(email, name, currentUserID);
             return MockDatabase.getInstance().storeDocumentWithID(Database.USERS_PATH, u.getUid(), u);
         } else {
             return CompletableFutureUtils.getExceptionalFuture("Failed registration");
@@ -64,7 +71,7 @@ public class MockAuthenticator implements Authenticator {
 
     @Override
     public String getCurrentUid() {
-        return String.valueOf(uid-1);
+        return currentUserID;
     }
 
     public static String provideUid() {
@@ -74,6 +81,7 @@ public class MockAuthenticator implements Authenticator {
     @Override
     public void setCurrentUser(User user) {
         if(currentUser == null) {
+            currentUserID = user.getUid();
             currentUser = user;
         }
     }

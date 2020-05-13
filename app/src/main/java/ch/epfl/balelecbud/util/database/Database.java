@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 
 public interface Database {
 
+    enum Source {REMOTE, CACHE};
+
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
     String EMERGENCY_INFO_PATH = "emergencyInfo";
@@ -26,7 +28,7 @@ public interface Database {
 
     <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);
 
-    <T> CompletableFuture<List<T>> queryWithType(MyQuery query, final Class<T> tClass);
+    <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
 
     CompletableFuture<List<Map<String, Object>>> query(MyQuery query);
 

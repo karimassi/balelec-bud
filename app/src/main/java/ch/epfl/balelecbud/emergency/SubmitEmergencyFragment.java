@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.emergency;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +18,6 @@ import androidx.fragment.app.DialogFragment;
 import com.google.firebase.Timestamp;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.friendship.AddFriendFragment;
-import ch.epfl.balelecbud.friendship.FriendshipUtils;
-import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.models.emergency.Emergency;
 import ch.epfl.balelecbud.models.emergency.EmergencyType;
 import ch.epfl.balelecbud.util.database.Database;
@@ -58,7 +54,7 @@ public class SubmitEmergencyFragment extends DialogFragment {
             String emergencyMessage = mEmergencyMessage.getText().toString();
             EmergencyType emergencyType = EmergencyType.valueOf(mEmergencyCategory.getSelectedItem().toString().toUpperCase());
             if(!emergencyMessage.isEmpty()){
-                String currentUserUid = getAppAuthenticator().getCurrentUser().getUid();
+                String currentUserUid = getAppAuthenticator().getCurrentUid();
                 Timestamp currentTimestamp = Timestamp.now();
                 Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
                 getAppDatabase().storeDocument(Database.EMERGENCIES_PATH, mEmergency);

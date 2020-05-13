@@ -74,7 +74,7 @@ public class ConcertNotificationTest {
                     BalelecbudApplication.setAppDatabase(mock);
                 }
             };
-    private final Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3",
+    private final Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", "path1",
             Timestamp.now(), Timestamp.now());
     private ConcertOfInterestDatabase db;
     private UiDevice device;
@@ -121,7 +121,7 @@ public class ConcertNotificationTest {
         // schedule the notification to go off in 45 minutes,
         // which leaves plenty of time for the test to finish and cancel it
         cal.add(Calendar.MINUTE, 60);
-        Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
+        Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3", "path1",
                 new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
         checkSwitchAfter(() -> {
             openInfoActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
@@ -141,7 +141,7 @@ public class ConcertNotificationTest {
         // which leaves plenty of time to cancel it
         cal.add(Calendar.SECOND, 5);
         cal.add(Calendar.MINUTE, 15);
-        Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3",
+        Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3", "path1",
                 new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
 
         mock.storeDocument(Database.CONCERT_SLOTS_PATH, s1);

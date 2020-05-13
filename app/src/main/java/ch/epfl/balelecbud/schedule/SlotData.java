@@ -2,12 +2,17 @@ package ch.epfl.balelecbud.schedule;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.VisibleForTesting;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.schedule.models.Slot;
@@ -18,6 +23,7 @@ import ch.epfl.balelecbud.util.intents.FlowUtil;
 import ch.epfl.balelecbud.util.views.RecyclerViewData;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 
 public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
 
@@ -38,9 +44,9 @@ public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
     }
 
     @Override
-    public void reload() {
-        MyQuery query = new MyQuery(Database.CONCERT_SLOTS_PATH, new LinkedList<>());
-        getAppDatabase().queryWithType(query, Slot.class)
+    public void reload(Database.Source preferredSource) {
+        MyQuery query = new MyQuery(Database.CONCERT_SLOTS_PATH, new LinkedList<>(), preferredSource);
+        getAppDatabase().query(query, Slot.class)
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
     }
 
@@ -50,6 +56,13 @@ public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
         viewHolder.timeSlotView.setText(slot.getTimeSlot());
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
+
+        CompletableFuture<File> imageDownload = getAppStorage().getFile("artists_images/" + slot.getImageFileName());
+        imageDownload.whenComplete((file, t) -> {
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+            viewHolder.artistImageView.setImageBitmap(bitmap);
+            viewHolder.artistImageView.setVisibility(View.VISIBLE);
+        });
 
         viewHolder.subscribeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {

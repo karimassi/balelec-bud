@@ -2,7 +2,9 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,8 +27,6 @@ import ch.epfl.balelecbud.settings.SettingsFragment;
 import ch.epfl.balelecbud.util.intents.FlowUtil;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.location.LocationUtil.disableLocation;
-import static ch.epfl.balelecbud.location.LocationUtil.isLocationActive;
 
 public class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,6 +43,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         this.configureDrawerLayout();
         this.configureNavigationView();
 
+        setUpUser();
+
         ArrayList<Slot> slots = FlowUtil.unpackCallback(getIntent());
         if (slots != null) {
             ScheduleFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
@@ -51,6 +53,13 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             }
         } else {
             this.showFirstFragment();
+        }
+    }
+
+    private void setUpUser() {
+        if (getAppAuthenticator().getCurrentUser() == null || getAppAuthenticator().getCurrentUid() == null) {
+            Log.d(TAG, "setUpUser: creating anonymous user");
+            getAppAuthenticator().signInAnonymously();
         }
     }
 
@@ -94,9 +103,6 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_gallery:
                 this.showGalleryFragment();
                 break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
             default:
                 break;
         }
@@ -137,8 +143,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showSocialFragment() {
-        Fragment fragmentSocial = SocialFragment.newInstance();
-        this.startTransactionFragment(fragmentSocial, "SOCIAL");
+        if (getAppAuthenticator().getCurrentUser() == null) {
+            Toast.makeText(this, R.string.require_sign_in, Toast.LENGTH_LONG).show();
+        } else {
+            Fragment fragmentSocial = SocialFragment.newInstance();
+            this.startTransactionFragment(fragmentSocial, "SOCIAL");
+        }
     }
 
     private void showEmergencyFragment() {
@@ -207,14 +217,5 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
         }
-    }
-
-    protected void signOut() {
-        getAppAuthenticator().signOut();
-        if (isLocationActive())
-            disableLocation();
-        Intent intent = new Intent(this, LoginUserActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

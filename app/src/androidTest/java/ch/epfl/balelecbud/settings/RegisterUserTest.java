@@ -1,17 +1,12 @@
-package ch.epfl.balelecbud;
+package ch.epfl.balelecbud.settings;
 
-import android.Manifest;
-import android.util.Log;
 import android.view.View;
 
-import androidx.test.espresso.intent.Intents;
+import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,9 +16,12 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.models.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.util.CompletableFutureUtils;
 import ch.epfl.balelecbud.util.database.Database;
 import ch.epfl.balelecbud.util.database.MockDatabase;
 import ch.epfl.balelecbud.util.database.MyQuery;
@@ -34,17 +32,17 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.balelecbud.util.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.util.database.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class RegisterUserActivityTest extends BasicAuthenticationTest {
+public class RegisterUserTest {
 
     private final Matcher<View> nameRequiredError = hasErrorText("Name required!");
     private final Matcher<View> emailRequiredError = hasErrorText("Email required!");
@@ -58,33 +56,17 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     private final Matcher<View> pwdNoError = not(anyOf(pwdRequiredError, pwdTooShortError, pwdsDoNotMatchError));
     private final Matcher<View> pwdRepeatNoError = not(anyOf(pwdRepeatRequiredError, pwdsDoNotMatchError));
 
-    @Rule
-    public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-            Manifest.permission.ACCESS_FINE_LOCATION
-    );
-
-    @Rule
-    public final ActivityTestRule<RegisterUserActivity> mActivityRule =
-            new ActivityTestRule<RegisterUserActivity>(RegisterUserActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    MockAuthenticator.getInstance().signOut();
-                    Intents.init();
-                }
-
-                @Override
-                protected void afterActivityFinished() {
-                    Intents.release();
-                }
-            };
-
-    private MockDatabase mockDB = MockDatabase.getInstance();
+    private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
+    private final MockDatabase mockDB = MockDatabase.getInstance();
 
     @Before
-    public void setUp() throws Throwable {
-        BalelecbudApplication.setAppDatabase(mockDB);
-        BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
-        logout();
+    public void setUp() {
+        BalelecbudApplication.setAppAuthenticator(mockAuth);
+        BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
+        mockAuth.signOut();
+        FragmentScenario.launchInContainer(SettingsFragment.class, null, R.style.Theme_AppCompat, null);
+        onView(withText(R.string.not_sign_in)).perform(click());
+        onView(withText(R.string.action_no_account)).perform(click());
     }
 
     @Test
@@ -123,26 +105,26 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
     @Test
     public void testCantRegisterInvalidEmailShortPassword() {
         // invalid email invalid password
-        enterValuesAndClick("name", "invalidemail", "124", "124");
-        checkErrors(nameNoError, emailInvalidError, pwdTooShortError, pwdRepeatNoError);
+        enterValuesAndClick("name", "invalidemail", "124", "");
+        checkErrors(nameNoError, emailInvalidError, pwdTooShortError, pwdRepeatRequiredError);
     }
 
     @Test
     public void testRegisterExistingAccount() {
         enterValuesAndClick("name", "karim@epfl.ch", "123456", "123456");
-        intended(hasComponent(RegisterUserActivity.class.getName()));
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testGoToLogin() {
-        onView(withId(R.id.buttonRegisterToLogin)).perform(click());
-        intended(hasComponent(LoginUserActivity.class.getName()));
+        onView(withText(R.string.action_existing_account)).perform(click());
+        onView(withText(R.string.sign_in)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testCanRegister() {
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
-        intended(hasComponent(RootActivity.class.getName()));
+        onView(withText(R.string.sign_out_text)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -152,7 +134,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         enterValuesAndClick("name", email, "123123", "123123");
 
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, MockAuthenticator.getInstance().getCurrentUid()));
-        mockDB.queryWithType(query, User.class).whenComplete((users, throwable) -> {
+        mockDB.query(query, User.class).whenComplete((users, throwable) -> {
             if (throwable == null) {
                 sync.assertEquals(email, users.get(0).getEmail());
                 sync.assertEquals("name", users.get(0).getDisplayName());
@@ -171,41 +153,25 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         BalelecbudApplication.setAppDatabase(new Database() {
             @Override
             public void unregisterDocumentListener(String collectionName, String documentID) { }
-
             @Override
             public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) { }
-
             @Override
-            public <T> CompletableFuture<List<T>> queryWithType(MyQuery query, Class<T> tClass) {
-                return null;
-            }
-
+            public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) { return null; }
             @Override
-            public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
-                return null;
-            }
-
+            public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) { return null; }
             @Override
-            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) {
-            }
-
+            public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) { }
             @Override
-            public <T> void storeDocument(String collectionName, T document) {
-            }
-
+            public <T> void storeDocument(String collectionName, T document) { }
             @Override
             public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
-                return CompletableFuture.completedFuture(null).thenApply(o -> {
-                    throw new RuntimeException("Failed to store document");
-                });
+                return CompletableFutureUtils.getExceptionalFuture("Failed to store document");
             }
-
             @Override
-            public void deleteDocumentWithID(String collectionName, String documentID) {
-            }
+            public void deleteDocumentWithID(String collectionName, String documentID) { }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
-        intended(hasComponent(RegisterUserActivity.class.getName()));
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
     private void checkErrors(Matcher<View> nameMatcher,
@@ -223,7 +189,7 @@ public class RegisterUserActivityTest extends BasicAuthenticationTest {
         onView(withId(R.id.editTextEmailRegister)).perform(typeText(email)).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextPasswordRegister)).perform(typeText(pwd)).perform(closeSoftKeyboard());
         onView(withId(R.id.editTextRepeatPasswordRegister)).perform(typeText(pwd2)).perform(closeSoftKeyboard());
-        onView(withId(R.id.buttonRegister)).perform(click());
+        onView(withText(R.string.action_register)).perform(click());
     }
 
     private String randomInt() {

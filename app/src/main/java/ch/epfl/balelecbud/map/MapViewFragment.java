@@ -71,6 +71,7 @@ public class MapViewFragment extends Fragment {
         Bundle arguments = getArguments();
         Location location = arguments != null ? arguments.getParcelable("location") : null;
         defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
+
         requestFriendsLocations();
         displayPointsOfInterests();
 
@@ -161,15 +162,17 @@ public class MapViewFragment extends Fragment {
     }
 
     private void requestFriendsLocations() {
-        Log.d(TAG, "requestFriendsLocations: requesting friendsUids");
-        CompletableFuture<List<String>> friendsUids = FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser());
-        friendsUids.thenAccept(friendsIds -> Log.d(TAG, "requestFriendsLocations: friendsIds = [" + friendsIds.toString() + "]"));
-        friendsUids.thenAccept(this::listenFriendsLocationById);
+        if (getAppAuthenticator().getCurrentUser() != null) {
+            Log.d(TAG, "requestFriendsLocations: requesting friendsUids");
+            CompletableFuture<List<String>> friendsUids = FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser());
+            friendsUids.thenAccept(friendsIds -> Log.d(TAG, "requestFriendsLocations: friendsIds = [" + friendsIds.toString() + "]"));
+            friendsUids.thenAccept(this::listenFriendsLocationById);
+        }
     }
 
     private void listenFriendsLocationById(List<String> friendIds) {
         for (String friendId : friendIds) {
-            CompletableFuture<User> friend = FriendshipUtils.getUserFromUid(friendId);
+            CompletableFuture<User> friend = FriendshipUtils.getUserFromUid(friendId, Database.Source.REMOTE);
             friend.thenAccept(user -> Log.d(TAG, "listenFriendsLocationById: get user = [" + user.toString() + "]"));
             friend.thenAccept(this::listenFriendLocation);
         }
@@ -198,7 +201,7 @@ public class MapViewFragment extends Fragment {
     }
 
     private void displayPointsOfInterests() {
-        getAppDatabase().queryWithType(new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>()),
+        getAppDatabase().query(new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>()),
                 PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
             for (PointOfInterest poi : pointOfInterests) {
                 if (myMap == null) {

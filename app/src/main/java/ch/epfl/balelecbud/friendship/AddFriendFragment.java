@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.ScheduleFragment;
 import ch.epfl.balelecbud.models.User;
+import ch.epfl.balelecbud.util.database.Database;
 
 public class AddFriendFragment extends DialogFragment {
 
@@ -34,7 +35,7 @@ public class AddFriendFragment extends DialogFragment {
         builder.setView(view)
                 .setPositiveButton(R.string.add_friend_request, (dialog, id) -> {
                     if (validateEmail()) {
-                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString())
+                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), Database.Source.REMOTE)
                                 .whenComplete((user, throwable) -> FriendshipUtils.addFriend(user));
                         Toast.makeText(
                                 getContext(),
@@ -43,8 +44,7 @@ public class AddFriendFragment extends DialogFragment {
                     }
 
                 })
-                .setNegativeButton(R.string.add_friend_cancel,
-                        (dialog, id) -> AddFriendFragment.this.getDialog().cancel());
+                .setNegativeButton(R.string.cancel, (dialog, id) ->dialog.cancel());
         return builder.create();
     }
 

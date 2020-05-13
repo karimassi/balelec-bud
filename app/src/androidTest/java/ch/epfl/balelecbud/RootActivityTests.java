@@ -20,10 +20,23 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 public class RootActivityTests {
-    private static UiDevice device = UiDevice.getInstance(getInstrumentation());
+    private final UiDevice device = UiDevice.getInstance(getInstrumentation());
 
     @Rule
     public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<>(RootActivity.class);
+
+    private void openDrawer() {
+        device.pressBack();
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
+        device.waitForIdle();
+        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
+    }
+
+    private void clickItem(int itemId, int viewToDisplayId) {
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
+        device.waitForIdle();
+        onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
+    }
 
     @Test
     public void testBackPress() {
@@ -33,29 +46,6 @@ public class RootActivityTests {
         onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT)));
         device.pressBack();
         device.waitForIdle();
-    }
-
-    private static void openDrawer() {
-        device.pressBack();
-        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
-        device.waitForIdle();
-        onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-    }
-
-    private static void clickItem(int itemId, int viewToDisplayId) {
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(itemId));
-        device.waitForIdle();
-        onView(withId(viewToDisplayId)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void canSignOutFromDrawer() {
-        openDrawer();
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.sign_out_button));
-        onView(withId(R.id.editTextEmailLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.editTextPasswordLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
-        onView(withId(R.id.buttonLoginToRegister)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -84,28 +74,31 @@ public class RootActivityTests {
 
     @Test
     public void canOpenEmergencyActivityFromDrawer() {
-        MapViewFragment.setMockCallback(googleMap -> {});
+        MapViewFragment.setMockCallback(googleMap -> { });
         openDrawer();
         clickItem(R.id.activity_main_drawer_emergency, R.id.fragment_emergency_linear_layout);
     }
 
     @Test
     public void canOpenEmergencyInfoActivityFromDrawer() {
-        MapViewFragment.setMockCallback(googleMap -> {});
+        MapViewFragment.setMockCallback(googleMap -> {
+        });
         openDrawer();
         clickItem(R.id.activity_main_drawer_emergency_info, R.id.emergency_info_constraint_layout);
     }
 
     @Test
     public void canOpenEmergencyNumbersActivityFromDrawer() {
-        MapViewFragment.setMockCallback(googleMap -> {});
+        MapViewFragment.setMockCallback(googleMap -> {
+        });
         openDrawer();
         clickItem(R.id.activity_main_drawer_emergency_numbers, R.id.emergency_number_layout);
     }
 
     @Test
     public void canOpenSettingsActivityFromDrawer() {
-        MapViewFragment.setMockCallback(googleMap -> {});
+        MapViewFragment.setMockCallback(googleMap -> {
+        });
         openDrawer();
         onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_settings));
     }
