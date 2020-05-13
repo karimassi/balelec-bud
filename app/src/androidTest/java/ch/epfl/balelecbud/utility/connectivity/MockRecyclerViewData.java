@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
@@ -17,7 +18,7 @@ public class MockRecyclerViewData extends RecyclerViewData<Integer, MockViewHold
     private int remoteOnlyCount = 0;
 
     @Override
-    public void reload(Database.Source preferredSource) {
+    public CompletableFuture<Void> reload(Database.Source preferredSource) {
         switch (preferredSource){
             case CACHE_ONLY:
                 cacheOnlyCount++;
@@ -28,6 +29,7 @@ public class MockRecyclerViewData extends RecyclerViewData<Integer, MockViewHold
             case REMOTE_ONLY:
                 remoteOnlyCount++;
         }
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

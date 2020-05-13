@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.utility.database.Database;
 
@@ -17,7 +18,7 @@ public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
         this.rvAdapter = adapter;
     }
 
-    public abstract void reload(Database.Source preferredSource);
+    public abstract CompletableFuture<Void> reload(Database.Source preferredSource);
 
     public abstract void bind(int index, B viewHolder);
 

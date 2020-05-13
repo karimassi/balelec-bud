@@ -1,6 +1,8 @@
 package ch.epfl.balelecbud.view.transport;
 
 
+import java.util.concurrent.CompletableFuture;
+
 import ch.epfl.balelecbud.model.TransportDeparture;
 import ch.epfl.balelecbud.model.TransportStation;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
@@ -17,9 +19,9 @@ public class TransportDepartureData extends RecyclerViewData<TransportDeparture,
     }
 
     @Override
-    public void reload(Database.Source preferredSource) {
-        TransportUtils.getNextDepartures(station)
-                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
+    public CompletableFuture<Void> reload(Database.Source preferredSource) {
+        return TransportUtils.getNextDepartures(station)
+                .thenAccept(new CompletableFutureUtils.MergeConsumer<>(this));
     }
 
     @Override

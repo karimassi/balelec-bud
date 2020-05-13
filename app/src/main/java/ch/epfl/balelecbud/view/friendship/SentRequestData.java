@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud.view.friendship;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
@@ -24,13 +25,13 @@ public class SentRequestData extends RecyclerViewData<User, SentRequestViewHolde
     }
 
     @Override
-    public void reload(Database.Source preferredSource) {
+    public CompletableFuture<Void> reload(Database.Source preferredSource) {
         MyQuery myQuery = new MyQuery(Database.SENT_REQUESTS_PATH,
                 new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()), preferredSource);
-        getAppDatabase().query(myQuery)
+        return getAppDatabase().query(myQuery)
                 .thenApply(maps -> new ArrayList<>(maps.get(0).keySet()))
                 .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(uids, preferredSource)))
-                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
+                .thenAccept(new CompletableFutureUtils.MergeConsumer<>(this));
     }
 
     @Override

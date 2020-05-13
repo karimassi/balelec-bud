@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.PointOfInterest;
@@ -29,11 +30,11 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
 
     //TODO change to not have rv flicker at some point
     @Override
-    public void reload(Database.Source preferredSource) {
+    public CompletableFuture<Void> reload(Database.Source preferredSource) {
         clearAll();
         lastRecordedAffluence.clear();
         MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>(), preferredSource);
-        getAppDatabase().query(query, PointOfInterest.class)
+        return getAppDatabase().query(query, PointOfInterest.class)
                 .thenCompose(PointOfInterestUtils::computeAffluence)
                 .thenAccept(this::postResults);
     }

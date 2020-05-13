@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
@@ -34,16 +35,16 @@ public final class CompletableFutureUtils {
         });
     }
 
-    public static class MergeBiConsumer<A> implements BiConsumer<List<A>, Throwable> {
+    public static class MergeConsumer<A> implements Consumer<List<A>> {
 
         private final RecyclerViewData<A, ?> recyclerViewData;
 
-        public MergeBiConsumer(RecyclerViewData<A, ?> recyclerViewData) {
+        public MergeConsumer(RecyclerViewData<A, ?> recyclerViewData) {
             this.recyclerViewData = recyclerViewData;
         }
 
         @Override
-        public void accept(List<A> downloadedList, Throwable throwable) {
+        public void accept(List<A> downloadedList) {
             List<A> initialList = recyclerViewData.getData();
             for(int i = 0; i < initialList.size(); ++i) {
                 if (!downloadedList.contains(initialList.get(i))) {
