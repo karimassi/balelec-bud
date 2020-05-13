@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.MarkerType;
 import ch.epfl.balelecbud.model.MyMap;
@@ -26,6 +27,7 @@ import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.location.LocationClient;
 import ch.epfl.balelecbud.utility.location.LocationUtils;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.celine;
 import static org.hamcrest.Matchers.is;
 
@@ -87,14 +89,14 @@ public class MapViewWithPOITest {
 
             @Override
             public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
-                sync.assertThat(zoom, is(MyMap.DEFAULT_ZOOM));
+                sync.assertThat(zoom, is((double) getApplicationContext().getResources().getInteger(R.integer.default_zoom)));
                 sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }
         };
 
-        MapViewFragment.setMockMap(mockMap);
-        FragmentScenario.launchInContainer(MapViewFragment.class);
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        scenario.onFragment(fragment -> fragment.onMapReady(mockMap));
 
         sync.waitCall(2);
         sync.assertCalled(2);
