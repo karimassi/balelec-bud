@@ -119,13 +119,13 @@ public class CachedDatabaseTest {
 
     }
 
-    private <T> void assertResults(List<T> expected, CompletableFuture<List<T>> actual) throws Throwable{
+    private <T> void assertResults(List<T> expected, CompletableFuture<FetchedData<T>> actual) throws Throwable{
         TestAsyncUtils sync = new TestAsyncUtils();
         assertQueryResults(sync, expected, actual);
     }
 
     private void assertMapResults(List<Map<String, Object>> expected,
-                                  CompletableFuture<List<Map<String, Object>>> actual) throws Throwable{
+                                  CompletableFuture<FetchedData<Map<String, Object>>> actual) throws Throwable{
         TestAsyncUtils sync = new TestAsyncUtils();
         assertQueryMapResults(sync, expected, actual);
     }

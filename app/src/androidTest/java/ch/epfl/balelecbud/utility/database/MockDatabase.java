@@ -302,10 +302,10 @@ public class MockDatabase implements Database {
     }
 
     public static <T> void assertQueryResults(TestAsyncUtils sync,
-                                              List<T> expected, CompletableFuture<List<T>> actual) throws Throwable {
-        actual.whenComplete((list, throwable) -> {
+                                              List<T> expected, CompletableFuture<FetchedData<T>> actual) throws Throwable {
+        actual.whenComplete((fetchedData, throwable) -> {
             if (throwable == null) {
-                sync.assertEquals(expected, list);
+                sync.assertEquals(expected, fetchedData.getList());
                 sync.call();
             } else {
                 sync.fail();
@@ -317,12 +317,12 @@ public class MockDatabase implements Database {
     }
 
     public static void assertQueryMapResults(TestAsyncUtils sync, List<Map<String, Object>> expected,
-                                  CompletableFuture<List<Map<String, Object>>> actual) throws Throwable{
-        actual.whenComplete((list, throwable) -> {
+                                  CompletableFuture<FetchedData<Map<String, Object>>> actual) throws Throwable{
+        actual.whenComplete((fetchedData, throwable) -> {
             if (throwable == null) {
                 Log.d("TEST", "assertResults: " + expected.toString());
-                Log.d("TEST", "assertResults: " + list.toString());
-                sync.assertEquals(expected, list);
+                Log.d("TEST", "assertResults: " + fetchedData.getList().toString());
+                sync.assertEquals(expected, fetchedData.getList());
                 sync.call();
             } else {
                 sync.fail();

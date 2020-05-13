@@ -18,7 +18,7 @@ public class MockRecyclerViewData extends RecyclerViewData<Integer, MockViewHold
     private int remoteOnlyCount = 0;
 
     @Override
-    public CompletableFuture<Void> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
         switch (preferredSource){
             case CACHE_ONLY:
                 cacheOnlyCount++;

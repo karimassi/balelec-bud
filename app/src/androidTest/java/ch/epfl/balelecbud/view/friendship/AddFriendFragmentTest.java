@@ -107,7 +107,7 @@ public class AddFriendFragmentTest {
         onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
         TestAsyncUtils sync = new TestAsyncUtils();
         MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, otherUser.getUid()));
-        mockDb.query(query).thenApply(maps -> maps.get(0))
+        mockDb.query(query).thenApply(maps -> maps.getList().get(0))
                 .whenComplete((stringObjectMap, throwable) -> {
                     if (stringObjectMap != null) {
                         sync.assertTrue(stringObjectMap.containsKey(currentUser.getUid()));
