@@ -34,7 +34,7 @@ public class MapboxMapAdapter implements MyMap {
     }
 
     @Override
-    public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
+    public void initialiseMap(boolean appLocationEnabled, Location defaultLocation, double zoom) {
         mapboxMap.setLatLngBoundsForCameraTarget(RESTRICTED_BOUNDS_AREA);
         mapboxMap.setMinZoomPreference(14);
         mapboxMap.setStyle(Style.LIGHT, style -> {

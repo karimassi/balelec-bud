@@ -130,9 +130,10 @@ public class MapViewFragment extends Fragment {
         }
     }
 
-    public void onMapReady(MyMap map) {
+    @VisibleForTesting
+    private void onMapReady(MyMap map) {
         myMap = map;
-        myMap.initialiseMap(LocationUtils.isLocationActive(), this.defaultLocation);
+        myMap.initialiseMap(LocationUtils.isLocationActive(), this.defaultLocation, MyMap.DEFAULT_ZOOM);
         displayWaitingFriends();
         displayWaitingPOI();
     }
