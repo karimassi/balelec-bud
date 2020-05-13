@@ -42,18 +42,7 @@ public class EmergencyFragmentTest {
         mockAuth.setCurrentUser(karim);
         BalelecbudApplication.setAppDatabase(mockDB);
         BalelecbudApplication.setAppAuthenticator(mockAuth);
-        FragmentScenario.launchInContainer(EmergencyFragment.class, null, R.style.Theme_AppCompat, null);
-    }
-
-    @Test
-    public void testSubmitEmergencyButtonIsDisplayedWhenButtonClicked() {
-        onView(withId(R.id.buttonAskForHelp)).perform(click());
-        onView(withId(R.id.buttonEmergencySubmit)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void buttonIsDisplayed() {
-        onView(withId(R.id.buttonAskForHelp)).check(matches(isDisplayed()));
+        FragmentScenario.launch(SubmitEmergencyFragment.class, null, R.style.Theme_AppCompat, null);
     }
 
     @Test
@@ -77,10 +66,9 @@ public class EmergencyFragmentTest {
 
 
     private void submitEmergency(String category, String message) {
-        onView(withId(R.id.buttonAskForHelp)).perform(click());
-        onView(withId(R.id.spinnerEmergencyCategories)).perform(click());
+        onView(withId(R.id.spinner_emergency_categories)).perform(click());
         onView(withText(category)).inRoot(isPlatformPopup()).perform(click());
-        onView(withId(R.id.textEmergencyMessage)).perform(typeText(message)).perform(closeSoftKeyboard());
-        onView(withId(R.id.buttonEmergencySubmit)).perform(click());
+        onView(withId(R.id.edit_text_emergency_message)).perform(typeText(message)).perform(closeSoftKeyboard());
+        onView(withText(R.string.submit_emergency)).perform(click());
     }
 }

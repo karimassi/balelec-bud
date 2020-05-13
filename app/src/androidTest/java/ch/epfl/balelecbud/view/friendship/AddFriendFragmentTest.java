@@ -81,7 +81,7 @@ public class AddFriendFragmentTest {
         onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(mail))
                 .perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
+        onView(withId(R.id.edit_text_email_add_friend)).check(doesNotExist());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class AddFriendFragmentTest {
         onView(withId(R.id.edit_text_email_add_friend))
                 .perform(typeText(otherUser.getEmail())).perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(doesNotExist());
+        onView(withId(R.id.edit_text_email_add_friend)).check(doesNotExist());
         TestAsyncUtils sync = new TestAsyncUtils();
         MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, otherUser.getUid()));
         mockDb.query(query).thenApply(maps -> maps.get(0))

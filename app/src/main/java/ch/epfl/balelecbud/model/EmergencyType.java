@@ -4,17 +4,18 @@ package ch.epfl.balelecbud.model;
 import androidx.annotation.NonNull;
 
 public enum EmergencyType {
-    THEFT {
-        @NonNull
-        @Override
-        public String toString() {
-            return "Theft";
-        }
-    }, FAINTNESS {
-        @NonNull
-        @Override
-        public String toString() {
-            return "Faintness";
-        }
-    };
+    THEFT("Theft"), FAINT("Feeling faint"), FIRE("Fire"), FIGHT("Fight");
+
+    private String type;
+
+    EmergencyType(String type) {
+        this.type = type;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return type;
+    }
 }
+
