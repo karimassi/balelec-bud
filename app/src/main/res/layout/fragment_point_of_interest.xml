@@ -4,7 +4,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".pointOfInterest.PointOfInterestFragment"
+tools:context=".view.pointOfInterest.PointOfInterestFragment"
 android:gravity="center"
 android:background="@color/blek_blue"
 xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -27,7 +27,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:layout_marginLeft="@dimen/poi_margin"
                 android:layout_marginRight="@dimen/poi_margin"
                 app:layoutManager="LinearLayoutManager"
-                tools:context=".pointOfInterest.PointOfInterestFragment"
+                tools:context=".view.pointOfInterest.PointOfInterestFragment"
                 tools:listitem="@layout/item_point_of_interest" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WelcomeFragment"
+    tools:context=".view.WelcomeFragment"
     android:gravity="center"
     android:background="@drawable/blek_main_root"
     android:orientation="vertical" >

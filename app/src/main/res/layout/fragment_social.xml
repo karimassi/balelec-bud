@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".friendship.SocialFragment"
+    tools:context=".view.friendship.SocialFragment"
     android:gravity="center"
     android:background="@color/blek_blue"
     xmlns:app="http://schemas.android.com/apk/res-auto">

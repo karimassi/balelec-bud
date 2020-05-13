@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.util.views.RefreshableRecyclerViewAdapter;
+import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
 public class GalleryFragment extends Fragment {
 

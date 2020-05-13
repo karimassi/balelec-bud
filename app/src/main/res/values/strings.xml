@@ -80,7 +80,7 @@
 
     <string name="require_name">Name required!</string>
 
-    <string name="require_sign_in">You need to be sign in to use this feature</string>
+    <string name="require_sign_in">You need to be signed in to use this feature</string>
 
     <!--  RECEIVED REQUEST ITEM  -->
     <string name="cancel_request">Cancel</string>
@@ -103,6 +103,11 @@
     <string name="sign_out_key">SIGN_OUT</string>
     <string name="sign_out_text">Sign out</string>
     <string name="register">Register</string>
+
+    <string name="delete_account">Delete account</string>
+    <string name="delete_user_key">DELETE_USER_KEY</string>
+    <string name="delete_account_text">Are you sure you want to delete your account ? This action is irreversible</string>
+    <string name="delete_account_yes">Yes</string>
 
     <!--  CLOUD MESSAGING  -->
     <string name="message_channel_name">Notification Message Channel</string>

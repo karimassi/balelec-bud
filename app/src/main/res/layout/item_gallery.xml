@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/grid_view_items"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/galleryImageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:padding="5dp"
-        android:scaleType="fitXY"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-</RelativeLayout>
+<ImageView android:id="@+id/galleryImageView"
+    android:layout_width="150dp"
+    android:padding="5dp"
+    android:scaleType="fitXY"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:visibility="visible"
+    android:layout_height="150dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

@@ -25,14 +25,14 @@
         </activity>
 
         <service
-            android:name=".location.LocationService"
+            android:name=".utility.location.LocationService"
             android:exported="false" />
         <service
-            android:name=".notifications.concertFlow.ConcertFlow"
+            android:name=".utility.notifications.concertFlow.ConcertFlow"
             android:exported="false" />
 
         <service
-            android:name=".cloudMessaging.CloudMessagingService"
+            android:name=".utility.cloudMessaging.CloudMessagingService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
@@ -40,10 +40,10 @@
         </service>
 
         <receiver
-            android:name=".notifications.concertSoon.NotificationProvider"
+            android:name=".utility.notifications.concertSoon.NotificationProvider"
             android:exported="true">
             <intent-filter>
-                <action android:name="ch.epfl.balelecbud.notifications.concertSoon.ACTION"/>
+                <action android:name="ch.epfl.balelecbud.utility.notifications.concertSoon.ACTION"/>
             </intent-filter>
         </receiver>
 
