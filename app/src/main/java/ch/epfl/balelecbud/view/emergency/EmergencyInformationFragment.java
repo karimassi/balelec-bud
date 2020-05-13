@@ -48,7 +48,7 @@ public class EmergencyInformationFragment extends Fragment implements OnRecycler
         recyclerViewNumbers.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewNumbers.setHasFixedSize(true);
 
-        RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> numbersData = new EmergencyNumbersData(this);
+        RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> numbersData = new EmergencyInformationData(true, this);
         RefreshableRecyclerViewAdapter<EmergencyInformation, EmergencyInformationHolder> numbersAdapter =
                 new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, numbersData, R.layout.item_emergency_info);
         recyclerViewNumbers.setAdapter(numbersAdapter);
@@ -58,7 +58,7 @@ public class EmergencyInformationFragment extends Fragment implements OnRecycler
         recyclerViewInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewInfo.setHasFixedSize(true);
 
-        RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> data = new EmergencyInformationData();
+        RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> data = new EmergencyInformationData(false, null);
         RefreshableRecyclerViewAdapter<EmergencyInformation, EmergencyInformationHolder> adapter =
                 new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, data, R.layout.item_emergency_info);
         recyclerViewInfo.setAdapter(adapter);

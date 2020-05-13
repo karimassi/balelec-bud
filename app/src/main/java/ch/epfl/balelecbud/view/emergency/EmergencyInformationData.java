@@ -12,12 +12,20 @@ import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 public class EmergencyInformationData extends RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> {
 
+    private boolean needNumbers;
+    private OnRecyclerViewInteractionListener<EmergencyInformation> interactionListener;
+
+    public EmergencyInformationData(boolean needNumbers, OnRecyclerViewInteractionListener<EmergencyInformation> interactionListener) {
+        this.needNumbers = needNumbers;
+        this.interactionListener = interactionListener;
+    }
+
     @Override
     public void reload(Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.EMERGENCY_INFO_PATH, new LinkedList<>(), preferredSource);
         BalelecbudApplication.getAppDatabase().query(query, EmergencyInformation.class)
                 .thenApply(emergencyInfos -> {
-                    emergencyInfos.removeIf(emergencyInformation -> emergencyInformation.isEmergencyNumber());
+                    emergencyInfos.removeIf(emergencyInformation -> needNumbers != emergencyInformation.isEmergencyNumber());
                     return emergencyInfos;
                 })
                 .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
@@ -27,6 +35,9 @@ public class EmergencyInformationData extends RecyclerViewData<EmergencyInformat
     public void bind(int index, EmergencyInformationHolder viewHolder) {
         viewHolder.emergencyInfoNameTextView.setText(data.get(index).getName());
         viewHolder.emergencyInfoInstructionTextView.setText(data.get(index).getInstruction());
+        if (needNumbers && interactionListener != null) {
+            viewHolder.itemView.setOnClickListener(v -> interactionListener.onItemSelected(data.get(index)));
+        }
     }
 }
 

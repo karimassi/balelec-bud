@@ -25,7 +25,6 @@ import ch.epfl.balelecbud.model.EmergencyInformation;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
-import ch.epfl.balelecbud.view.friendship.SocialFragment;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -35,7 +34,6 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
