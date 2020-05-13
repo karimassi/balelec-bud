@@ -25,6 +25,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
@@ -81,7 +83,7 @@ public class AddFriendFragmentTest {
         onView(withId(R.id.edit_text_email_add_friend)).perform(typeText(mail))
                 .perform(closeSoftKeyboard());
         onView(withText(R.string.add_friend_request)).perform(click());
-        onView(withId(R.id.edit_text_email_add_friend)).check(doesNotExist());
+        onView(withText(R.string.add_friend_title)).check(matches(isDisplayed()));
     }
 
     @Test
