@@ -27,6 +27,7 @@ import ch.epfl.balelecbud.view.emergency.EmergencyNumbersFragment;
 import ch.epfl.balelecbud.view.festivalInformation.FestivalInformationFragment;
 import ch.epfl.balelecbud.view.friendship.SocialFragment;
 import ch.epfl.balelecbud.view.map.MapViewFragment;
+import ch.epfl.balelecbud.view.playlist.PlaylistFragment;
 import ch.epfl.balelecbud.view.pointOfInterest.PointOfInterestFragment;
 import ch.epfl.balelecbud.view.schedule.ScheduleFragment;
 import ch.epfl.balelecbud.view.settings.SettingsFragment;
@@ -94,8 +95,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_social:
                 this.showSocialFragment();
                 break;
-            case R.id.activity_main_drawer_emergency:
-                this.showEmergencyFragment();
+            case R.id.activity_main_drawer_playlist:
+                this.showPlaylistFragment();
                 break;
             case R.id.activity_main_drawer_emergency_info:
                 this.showEmergencyInfoFragment();
@@ -154,9 +155,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void showEmergencyFragment() {
-        Fragment fragmentEmergency = EmergencyFragment.newInstance();
-        this.startTransactionFragment(fragmentEmergency, "EMERGENCY");
+    private void showPlaylistFragment() {
+        Fragment fragmentPlaylist = PlaylistFragment.newInstance();
+        this.startTransactionFragment(fragmentPlaylist, "PLAYLIST");
     }
 
     private void showEmergencyInfoFragment() {

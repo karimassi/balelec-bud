@@ -76,7 +76,7 @@ public class RootActivityTests {
     public void canOpenEmergencyActivityFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> { });
         openDrawer();
-        clickItem(R.id.activity_main_drawer_emergency, R.id.fragment_emergency_linear_layout);
+        clickItem(R.id.activity_main_drawer_playlist, R.id.fragment_emergency_linear_layout);
     }
 
     @Test

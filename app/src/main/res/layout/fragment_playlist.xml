@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/fragment_playlist_linear_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.playlist.PlaylistFragment"
+    android:gravity="center"
+    android:background="@color/blek_blue"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/spotify_button"
+        android:layout_width="@dimen/spotify_button_width"
+        android:layout_height="@dimen/spotify_button_height"
+        android:background="@drawable/spotify_logo_white" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/fragment_playlist_container"
+            android:parentActivityName="ch.epfl.balelecbud.RootActivity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -35,9 +35,9 @@
             android:icon="@mipmap/social"
             android:title="Social" />
         <item
-            android:id="@+id/activity_main_drawer_emergency"
-            android:icon="@mipmap/info"
-            android:title="Emergency" />
+            android:id="@+id/activity_main_drawer_playlist"
+            android:icon="@drawable/ic_play_arrow_24dp"
+            android:title="@string/playlist_navigation_title" />
         <item
             android:id="@+id/activity_main_drawer_emergency_info"
             android:icon="@mipmap/info"
