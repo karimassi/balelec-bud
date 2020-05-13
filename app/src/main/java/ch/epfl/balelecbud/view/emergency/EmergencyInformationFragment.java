@@ -58,7 +58,7 @@ public class EmergencyInformationFragment extends Fragment implements OnRecycler
         recyclerViewInfo.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewInfo.setHasFixedSize(true);
 
-        RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> data = new EmergencyInformationData(this);
+        RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> data = new EmergencyInformationData();
         RefreshableRecyclerViewAdapter<EmergencyInformation, EmergencyInformationHolder> adapter =
                 new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, data, R.layout.item_emergency_info);
         recyclerViewInfo.setAdapter(adapter);
@@ -74,23 +74,20 @@ public class EmergencyInformationFragment extends Fragment implements OnRecycler
 
     @Override
     public void onItemSelected(EmergencyInformation item) {
-        if (item.isEmergencyNumber()) {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + item.getInstruction()));
+        String[] permissions = {Manifest.permission.CALL_PHONE};
 
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + item.getInstruction()));
-            String[] permissions = {Manifest.permission.CALL_PHONE};
-
-            if (ActivityCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                callPermissionGranted = false;
-                ActivityCompat.requestPermissions(getActivity(),
-                        permissions,
-                        PERMISSION_TO_CALL_CODE);
-                if (callPermissionGranted) {
-                    startActivity(intent);
-                }
-            } else {
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            callPermissionGranted = false;
+            ActivityCompat.requestPermissions(getActivity(),
+                    permissions,
+                    PERMISSION_TO_CALL_CODE);
+            if (callPermissionGranted) {
                 startActivity(intent);
             }
+        } else {
+            startActivity(intent);
         }
     }
 

@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud.view.emergency;
 
+import android.Manifest;
 import android.app.Instrumentation;
 import android.content.Intent;
 
@@ -9,10 +10,12 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -45,6 +48,9 @@ public class EmergencyInformationFragmentTest {
     private final EmergencyInformation info1 = new EmergencyInformation("Too much alcohol","Seek assistance", false);
     private final EmergencyInformation number1 = new EmergencyInformation("Police", "117", true);
     private final MockDatabase mock = MockDatabase.getInstance();
+
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.CALL_PHONE);
 
     @Before
     public void setup() {

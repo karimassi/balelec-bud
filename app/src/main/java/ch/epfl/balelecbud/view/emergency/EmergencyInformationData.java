@@ -12,13 +12,6 @@ import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 public class EmergencyInformationData extends RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> {
 
-    private OnRecyclerViewInteractionListener<EmergencyInformation> interactionListener;
-
-
-    public EmergencyInformationData(OnRecyclerViewInteractionListener<EmergencyInformation> interactionListener) {
-        this.interactionListener = interactionListener;
-    }
-
     @Override
     public void reload(Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.EMERGENCY_INFO_PATH, new LinkedList<>(), preferredSource);
@@ -34,9 +27,6 @@ public class EmergencyInformationData extends RecyclerViewData<EmergencyInformat
     public void bind(int index, EmergencyInformationHolder viewHolder) {
         viewHolder.emergencyInfoNameTextView.setText(data.get(index).getName());
         viewHolder.emergencyInfoInstructionTextView.setText(data.get(index).getInstruction());
-        viewHolder.itemView.setOnClickListener(v -> {
-            interactionListener.onItemSelected(data.get(index));
-        });
     }
 }
 
