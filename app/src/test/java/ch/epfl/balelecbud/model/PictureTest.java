@@ -4,8 +4,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.epfl.balelecbud.gallery.Picture;
-
 public class PictureTest {
     static private Picture picture1;
     static private Picture picture2;

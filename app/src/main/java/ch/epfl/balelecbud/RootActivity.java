@@ -17,7 +17,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-import ch.epfl.balelecbud.gallery.GalleryFragment;
+import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;

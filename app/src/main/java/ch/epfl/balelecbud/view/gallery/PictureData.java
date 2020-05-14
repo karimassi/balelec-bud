@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.gallery;
+package ch.epfl.balelecbud.view.gallery;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +9,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.model.Picture;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 

@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.gallery;
+package ch.epfl.balelecbud.model;
 
 public class Picture {
 

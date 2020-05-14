@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud.gallery;
+package ch.epfl.balelecbud.view.gallery;
 
 import android.view.View;
 import android.widget.ImageView;

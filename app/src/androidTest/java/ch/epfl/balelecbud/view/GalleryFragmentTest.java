@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud;
+package ch.epfl.balelecbud.view;
 
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -8,7 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.balelecbud.gallery.GalleryFragment;
+import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 import ch.epfl.balelecbud.utility.storage.MockStorage;
 
 import static androidx.test.espresso.Espresso.onView;
