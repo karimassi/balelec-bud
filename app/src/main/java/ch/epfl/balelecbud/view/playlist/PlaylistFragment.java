@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,7 +42,7 @@ public class PlaylistFragment extends Fragment implements OnRecyclerViewInteract
     @Override
     public void onStart() {
         super.onStart();
-        RecyclerView recyclerView = getView().findViewById(R.id.playlist_recycler_view);
+        RecyclerView recyclerView = getView().findViewById(R.id.recycler_view_playlist);
         TrackData data = new TrackData(getActivity(), this);
         RefreshableRecyclerViewAdapter<Track, TrackHolder> adapter = new RefreshableRecyclerViewAdapter<>(
                 TrackHolder::new, data, R.layout.item_track);
@@ -100,13 +101,13 @@ public class PlaylistFragment extends Fragment implements OnRecyclerViewInteract
                 });
     }
 
-    private void playTrack(String track) {
+    private void playTrack(String trackUri) {
         if(!isSpotifyConnected()) {
             spotifyConnect();
         }
         else {
-            Log.d(TAG, "Playing track : " + track);
-            spotifyAppRemote.getPlayerApi().play(track);
+            spotifyAppRemote.getPlayerApi().play(trackUri);
+            Log.d(TAG, "Playing track : " + trackUri);
         }
     }
 
