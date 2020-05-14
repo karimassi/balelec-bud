@@ -27,12 +27,12 @@ public class TrackTest {
 
     @Test
     public void getUriTest() {
-        assertEquals("uri", track.getSpotifyURI());
+        assertEquals("uri", track.getUri());
     }
 
     @Test
     public void getRankTest() {
-        assertEquals(1, track.getPlaylistRank());
+        assertEquals(1, track.getRank());
     }
 
     @Test
@@ -53,12 +53,7 @@ public class TrackTest {
         assertEquals(track, other);
         assertEquals(track.hashCode(), other.hashCode());
 
-
         assertNotEquals(track, new Object());
         assertNotEquals(track, null);
-
     }
-
-
-
 }

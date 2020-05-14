@@ -1,19 +1,14 @@
 package ch.epfl.balelecbud.view.playlist;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.VisibleForTesting;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 import ch.epfl.balelecbud.model.Track;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
@@ -27,15 +22,11 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 
 public class TrackData extends RecyclerViewData<Track, TrackHolder> {
 
-    private static Consumer<Intent> intentLauncher;
     private OnRecyclerViewInteractionListener<Track> interactionListener;
 
-    public TrackData(Activity activity, OnRecyclerViewInteractionListener<Track> interactionListener) {
+    TrackData(OnRecyclerViewInteractionListener<Track> interactionListener) {
         super();
         this.interactionListener = interactionListener;
-        if (intentLauncher == null) {
-            intentLauncher = activity::startService;
-        }
     }
 
     @Override
@@ -54,7 +45,7 @@ public class TrackData extends RecyclerViewData<Track, TrackHolder> {
     public void bind(int index, TrackHolder viewHolder) {
         viewHolder.title.setText(data.get(index).getTitle());
         viewHolder.artist.setText(data.get(index).getArtist());
-        Log.d("TrackData", "tracks_images/" + data.get(index).getUri() + ".jpeg");
+
         CompletableFuture<File> imageDownload = getAppStorage()
                 .getFile("tracks_images/" + data.get(index).getUri() + ".jpeg");
         imageDownload.whenComplete((file, t) -> {
@@ -66,10 +57,5 @@ public class TrackData extends RecyclerViewData<Track, TrackHolder> {
         if(interactionListener != null) {
             viewHolder.itemView.setOnClickListener(v -> interactionListener.onItemSelected(data.get(index)));
         }
-    }
-
-    @VisibleForTesting
-    public static void setIntentLauncher(Consumer<Intent> launcher) {
-        intentLauncher = launcher;
     }
 }

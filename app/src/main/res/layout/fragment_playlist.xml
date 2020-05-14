@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/proxima_nova_bold"
         android:textColor="@android:color/white"
-        android:textSize="15sp"
+        android:textSize="@dimen/fragment_playlist_message_size"
         android:text="@string/spotify_message"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
