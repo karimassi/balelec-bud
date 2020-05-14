@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
+import static android.app.Instrumentation.*;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -44,6 +45,8 @@ import static junit.framework.TestCase.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class PicturesFragmentTest {
     private static UiDevice mDevice;
+    private static final int CAMERA_REQUEST_CODE = 102;
+
 
 
 
@@ -62,7 +65,7 @@ public class PicturesFragmentTest {
         // Build a result to return from the Camera app
         Intent resultData = new Intent();
         resultData.putExtra("data", icon);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+        ActivityResult result = new ActivityResult(Activity.RESULT_OK, resultData);
 
         // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
         // with the ActivityResult we just created
@@ -80,30 +83,35 @@ public class PicturesFragmentTest {
     @Test
     public void cameraIsSavingImageToView() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
+
         Intents.init();
-        FragmentScenario.launchInContainer(PicturesFragment.class).onFragment( fragment -> {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("IMG_DATA", BitmapFactory.decodeResource(fragment.getActivity().getResources(), R.mipmap.ic_launcher));
-            // Create the Intent that will include the bundle.
-            Intent resultImg = new Intent();
-            resultImg.putExtras(bundle);
 
-            // Create the ActivityResult with the Intent.
-            Instrumentation.ActivityResult result =  new Instrumentation.ActivityResult(Activity.RESULT_OK, resultImg);
-            intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(result);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("IMG_DATA", Bitmap.createBitmap(100, 100, Bitmap.Config.ALPHA_8));
+        Intent resultImg = new Intent();
+        resultImg.putExtras(bundle);
+        ActivityResult result = new ActivityResult(Activity.RESULT_OK, resultImg);
 
+        onView(withId(R.id.takePicBtn)).perform(click());
+        allowPermissionsIfNeeded();
+
+        intending(toPackage("com.android.camera2")).respondWith(result);
+
+        FragmentScenario.launchInContainer(PicturesFragment.class).onFragment(fragment -> {
             ImageView view = fragment.getActivity().findViewById(R.id.picturesImageView);
             Drawable drawable = view.getDrawable();
             boolean hasImage = (drawable != null);
             if (hasImage && (drawable instanceof BitmapDrawable)) {
                 hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
             }
+            sync.call();
             sync.assertTrue(hasImage);
-
         });
+
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
+
         Intents.release();
     }
 

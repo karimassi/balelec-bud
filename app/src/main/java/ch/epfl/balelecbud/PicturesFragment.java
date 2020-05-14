@@ -47,20 +47,6 @@ public class PicturesFragment extends Fragment {
 
 
 
-//    public void onCreateView(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.fragment_pictures);
-//        configureToolBar(R.id.pictures_activity_toolbar);
-//        configureDrawerLayout(R.id.pictures_activity_drawer_layout);
-//        configureNavigationView(R.id.pictures_activity_nav_view);
-//
-//        cameraButton = findViewById(R.id.takePicBtn);
-//        imageView = findViewById(R.id.picturesImageView);
-//
-//        cameraButton.setOnClickListener(v -> askCameraPermissions());
-//
-//    }
-
     @Override
     public void onStart() {
         super.onStart();
