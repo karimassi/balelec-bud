@@ -56,7 +56,7 @@ public class TokenUtilsTest {
         mockDB.query(query)
                 .whenComplete((t, throwable) -> {
                     if (throwable == null) {
-                        String returned = new ArrayList<>(t.get(0).keySet()).get(0);
+                        String returned = new ArrayList<>(t.getList().get(0).keySet()).get(0);
                         sync.assertThat(returned, is(token));
                     } else {
                         sync.fail(throwable);
@@ -79,7 +79,7 @@ public class TokenUtilsTest {
         mockDB.query(query)
                 .whenComplete((t, throwable) -> {
                     if (throwable == null) {
-                        String returned = new ArrayList<>(t.get(0).keySet()).get(0);
+                        String returned = new ArrayList<>(t.getList().get(0).keySet()).get(0);
                         sync.assertTrue(returned != null);
                         sync.assertThat(returned, is(token));
                     } else {

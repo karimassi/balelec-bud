@@ -2,6 +2,8 @@
     <string name="app_name">BalelecBud</string>
     <string name="title_activity_authentication">Sign in</string>
 
+    <string name="cache_info">Cached on\u0020</string>
+
     <string name="mapbox_access_token">pk.eyJ1Ijoia2FyaW1hc3NpIiwiYSI6ImNrOTEzd2FqMzA3Z3EzbmxoYWdvb3Z4ZWIifQ.0S1QH5SG3ZXXC1ofSSbadQ</string>
 
     <string name="title_activity_map">MapActivity</string>

@@ -1,11 +1,14 @@
 package ch.epfl.balelecbud.view.transport;
 
 
+import java.util.concurrent.CompletableFuture;
+
 import ch.epfl.balelecbud.model.TransportDeparture;
 import ch.epfl.balelecbud.model.TransportStation;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
 import ch.epfl.balelecbud.utility.TransportUtils;
 import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 public class TransportDepartureData extends RecyclerViewData<TransportDeparture, TransportDepartureHolder> {
@@ -17,9 +20,11 @@ public class TransportDepartureData extends RecyclerViewData<TransportDeparture,
     }
 
     @Override
-    public void reload(Database.Source preferredSource) {
-        TransportUtils.getNextDepartures(station)
-                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
+        return TransportUtils.getNextDepartures(station)
+                //wrap in FetchedData with freshness set to null
+                .thenApply(FetchedData::new)
+                .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
 
     @Override

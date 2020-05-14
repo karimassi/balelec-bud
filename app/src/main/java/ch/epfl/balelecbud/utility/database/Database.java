@@ -9,7 +9,7 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
 public interface Database {
 
-    enum Source {REMOTE, CACHE};
+    enum Source {REMOTE_ONLY, CACHE_FIRST, CACHE_ONLY};
 
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
@@ -29,9 +29,9 @@ public interface Database {
 
     <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type);
 
-    <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
+    <T> CompletableFuture<FetchedData<T>> query(MyQuery query, final Class<T> tClass);
 
-    CompletableFuture<List<Map<String, Object>>> query(MyQuery query);
+    CompletableFuture<FetchedData<Map<String, Object>>> query(MyQuery query);
 
     void updateDocument(String collectionName, String documentID, Map<String,Object> updates);
 

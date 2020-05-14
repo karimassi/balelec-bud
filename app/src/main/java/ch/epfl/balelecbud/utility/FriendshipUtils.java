@@ -24,6 +24,8 @@ import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.E
 
 public class FriendshipUtils {
 
+    //TODO Consider displaying freshness for the social tab
+
     public static void addFriend(User friend) {
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(getAppAuthenticator().getCurrentUser().getUid(), true);
@@ -86,17 +88,17 @@ public class FriendshipUtils {
 
     public static CompletableFuture<User> getUserFromUid(String uid, Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, uid), preferredSource);
-        return getAppDatabase().query(query, User.class).thenApply(users -> users.get(0));
+        return getAppDatabase().query(query, User.class).thenApply(users -> users.getList().get(0));
     }
 
     public static CompletableFuture<User> getUserFromEmail(String email, Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause("email", EQUAL, email), preferredSource);
         return getAppDatabase()
-                .query(query, User.class).thenApply(users -> users.get(0));
+                .query(query, User.class).thenApply(users -> users.getList().get(0));
     }
 
     public static CompletableFuture<List<String>> getFriendsUids(User user) {
         MyQuery query = new MyQuery(FRIENDSHIPS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, user.getUid()));
-        return getAppDatabase().query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet()));
+        return getAppDatabase().query(query).thenApply(fetchedData -> new ArrayList<>(fetchedData.getList().get(0).keySet()));
     }
 }
