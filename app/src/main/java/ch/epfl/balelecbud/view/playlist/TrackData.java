@@ -54,8 +54,6 @@ public class TrackData extends RecyclerViewData<Track, TrackHolder> {
             viewHolder.image.setVisibility(View.VISIBLE);
         });
 
-        if(interactionListener != null) {
-            viewHolder.itemView.setOnClickListener(v -> interactionListener.onItemSelected(data.get(index)));
-        }
+        viewHolder.itemView.setOnClickListener(v -> interactionListener.onItemSelected(data.get(index)));
     }
 }

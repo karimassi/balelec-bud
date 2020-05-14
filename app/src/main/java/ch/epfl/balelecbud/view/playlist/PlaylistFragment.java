@@ -103,8 +103,7 @@ public class PlaylistFragment extends Fragment implements OnRecyclerViewInteract
     private void playTrack(String trackUri) {
         if(!isSpotifyConnected()) {
             spotifyConnect();
-        }
-        else {
+        } else {
             spotifyAppRemote.getPlayerApi().play(trackUri);
             Log.d(TAG, "Playing track with uri: " + trackUri);
         }

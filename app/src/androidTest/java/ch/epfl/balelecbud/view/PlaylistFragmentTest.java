@@ -59,7 +59,7 @@ public class PlaylistFragmentTest {
     }
 
     @Test
-    public void testClickOnItemConnectsSpotify() {
+    public void testOnConnectFailureSpotify() {
         onView(withId(R.id.swipe_refresh_layout_playlist)).perform(swipeDown());
         onView(new RecyclerViewMatcher(R.id.recycler_view_playlist).atPosition(0)).perform(click());
         assertFalse(PlaylistFragment.newInstance().isSpotifyConnected());
