@@ -29,11 +29,11 @@ public class MapboxMapAdapterTest {
 
     @Test(expected = NullPointerException.class)
     public void initialiseMapWithLocationWithNullMapThrowsNPE() {
-        new MapboxMapAdapter(null).initialiseMap(true, new Location());
+        new MapboxMapAdapter(null).initialiseMap(true, new Location(), 0);
     }
 
     @Test(expected = NullPointerException.class)
     public void initialiseMapWithoutLocationWithNullMapThrowsNPE() {
-        new MapboxMapAdapter(null).initialiseMap(false, new Location());
+        new MapboxMapAdapter(null).initialiseMap(false, new Location(), 0);
     }
 }

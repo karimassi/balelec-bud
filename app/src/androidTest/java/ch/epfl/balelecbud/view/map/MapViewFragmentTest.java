@@ -26,6 +26,7 @@ import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.location.LocationClient;
 import ch.epfl.balelecbud.utility.location.LocationUtils;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -52,10 +53,11 @@ public class MapViewFragmentTest {
         BalelecbudApplication.setAppAuthenticator(MockAuthenticator.getInstance());
         MockAuthenticator.getInstance().setCurrentUser(camille);
         BalelecbudApplication.setAppDatabase(MockDatabase.getInstance());
+        MapViewFragment.setMockCallback(mapboxMap -> { });
     }
 
     @Test
-    public void testMapViewIsNotNull() throws Throwable{
+    public void testMapViewIsNotNull() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
         FragmentScenario.launchInContainer(MapViewFragment.class).onFragment(fragment -> {
             Activity mActivity = fragment.getActivity();
@@ -78,8 +80,10 @@ public class MapViewFragmentTest {
     public void whenLocationIsOffLocationOnMapIsDisabled() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
 
-        MapViewFragment.setMockMap(assertMapLocation(sync, false));
-        FragmentScenario.launchInContainer(MapViewFragment.class);
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+
+        scenario.onFragment(fragment -> fragment.onMapReady(assertMapLocation(sync, false,
+                getApplicationContext().getResources().getInteger(R.integer.default_zoom))));
 
         sync.waitCall(1);
         sync.assertCalled(1);
@@ -87,12 +91,13 @@ public class MapViewFragmentTest {
     }
 
     @Test
-    public void whenLocationIsOnLocationOnMapIsDisabled() throws Throwable {
+    public void whenLocationIsOnLocationOnMapIsEnabled() throws Throwable {
         LocationUtils.enableLocation();
         TestAsyncUtils sync = new TestAsyncUtils();
 
-        MapViewFragment.setMockMap(assertMapLocation(sync, true));
-        FragmentScenario.launchInContainer(MapViewFragment.class);
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        scenario.onFragment(fragment -> fragment.onMapReady(assertMapLocation(sync, true,
+                getApplicationContext().getResources().getInteger(R.integer.default_zoom))));
 
         sync.waitCall(1);
         sync.assertCalled(1);
@@ -101,7 +106,7 @@ public class MapViewFragmentTest {
     }
 
     @NonNull
-    private MyMap assertMapLocation(TestAsyncUtils sync, boolean expectedLocation) {
+    private MyMap assertMapLocation(TestAsyncUtils sync, boolean expectedLocation, double expectedZoom) {
         return new MyMap() {
             @Override
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
@@ -110,8 +115,9 @@ public class MapViewFragmentTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.assertEquals(expectedLocation, locationEnabled);
+                sync.assertEquals(expectedZoom, zoom);
                 sync.assertThat(defaultLocation, is(Location.DEFAULT_LOCATION));
                 sync.call();
             }
@@ -130,13 +136,13 @@ public class MapViewFragmentTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.call();
             }
         };
 
-        MapViewFragment.setMockMap(mockMap);
-        FragmentScenario.launchInContainer(MapViewFragment.class);
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        scenario.onFragment(fragment -> fragment.onMapReady(mockMap));
 
         sync.waitCall(1);
         sync.assertNoFailedTests();
@@ -144,11 +150,12 @@ public class MapViewFragmentTest {
     }
 
     @Test
-    public void testOpenMapWithPOILocationInBundle() throws Throwable{
+    public void testOpenMapWithPOILocationInBundle() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
         MyMap mockMap = new MyMap() {
             @Override
-            public void initialiseMap(boolean appLocationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean appLocationEnabled, Location defaultLocation, double zoom) {
+                sync.assertThat(zoom, is((double) getApplicationContext().getResources().getInteger(R.integer.poi_zoom)));
                 sync.assertThat(defaultLocation, is(pointOfInterest1.getLocation()));
                 sync.call();
             }
@@ -158,17 +165,15 @@ public class MapViewFragmentTest {
                 return null;
             }
         };
-        MapViewFragment.setMockMap(mockMap);
         Bundle bundle = new Bundle();
         bundle.putParcelable("location", pointOfInterest1.getLocation());
-        FragmentScenario.launchInContainer(MapViewFragment.class, bundle);
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class, bundle);
+        scenario.onFragment(fragment -> fragment.onMapReady(mockMap));
 
         sync.waitCall(1);
         sync.assertNoFailedTests();
         sync.assertCalled(1);
     }
-
-
 
     @Test
     public void testOnLowMemory() {

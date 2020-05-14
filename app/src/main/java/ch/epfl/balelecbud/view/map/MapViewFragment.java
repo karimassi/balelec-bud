@@ -38,20 +38,16 @@ public class MapViewFragment extends Fragment {
     public final static String TAG = MapViewFragment.class.getSimpleName();
     private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
     private MapView mapView;
-    private static MyMap myMap;
+    private MyMap myMap;
     private Map<User, MyMarker> friendsMarkers = new HashMap<>();
     private List<PointOfInterest> waitingPOI = new LinkedList<>();
     private Map<User, Location> waitingFriendsLocation = new HashMap<>();
     private Location defaultLocation;
+    private double defaultZoom;
 
     @VisibleForTesting
     public static void setMockCallback(com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback) {
         MapViewFragment.mockCallback = mockCallback;
-    }
-
-    @VisibleForTesting
-    public static void setMockMap(MyMap map) {
-        myMap = map;
     }
 
     public static MapViewFragment newInstance() {
@@ -73,14 +69,16 @@ public class MapViewFragment extends Fragment {
 
         Bundle arguments = getArguments();
         Location location = arguments != null ? arguments.getParcelable("location") : null;
-        defaultLocation = location == null ? Location.DEFAULT_LOCATION : location;
+        if (location == null) {
+            defaultLocation = Location.DEFAULT_LOCATION;
+            defaultZoom = getResources().getInteger(R.integer.default_zoom);
+        } else {
+            defaultLocation = location;
+            defaultZoom = getResources().getInteger(R.integer.poi_zoom);
+        }
 
         requestFriendsLocations();
         displayPointsOfInterests();
-
-        if (myMap != null) {
-            onMapReady(myMap);
-        }
 
         return inflatedView;
     }
@@ -130,9 +128,10 @@ public class MapViewFragment extends Fragment {
         }
     }
 
-    public void onMapReady(MyMap map) {
+    @VisibleForTesting
+    void onMapReady(MyMap map) {
         myMap = map;
-        myMap.initialiseMap(LocationUtils.isLocationActive(), this.defaultLocation);
+        myMap.initialiseMap(LocationUtils.isLocationActive(), this.defaultLocation, this.defaultZoom);
         displayWaitingFriends();
         displayWaitingPOI();
     }
@@ -144,7 +143,7 @@ public class MapViewFragment extends Fragment {
                         .unregisterDocumentListener(Database.LOCATIONS_PATH, id)));
     }
 
-    public void displayWaitingPOI() {
+    private void displayWaitingPOI() {
         for (PointOfInterest poi : waitingPOI) {
             myMap.addMarker(new MyMarker.Builder()
                     .location(poi.getLocation())
@@ -154,7 +153,7 @@ public class MapViewFragment extends Fragment {
         waitingPOI.clear();
     }
 
-    public void displayWaitingFriends() {
+    private void displayWaitingFriends() {
         for (User friend : waitingFriendsLocation.keySet()) {
             friendsMarkers.put(friend, myMap.addMarker(new MyMarker.Builder()
                     .location(waitingFriendsLocation.get(friend))
