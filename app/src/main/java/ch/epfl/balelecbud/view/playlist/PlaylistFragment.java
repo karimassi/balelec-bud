@@ -42,9 +42,10 @@ public class PlaylistFragment extends Fragment implements OnRecyclerViewInteract
     public void onStart() {
         super.onStart();
         RecyclerView recyclerView = getView().findViewById(R.id.recycler_view_playlist);
+        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
         TrackData data = new TrackData(this);
         RefreshableRecyclerViewAdapter<Track, TrackHolder> adapter = new RefreshableRecyclerViewAdapter<>(
-                TrackHolder::new, data, R.layout.item_track);
+                TrackHolder::new, freshnessView, data, R.layout.item_track);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);

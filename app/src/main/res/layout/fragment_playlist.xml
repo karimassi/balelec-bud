@@ -8,21 +8,26 @@
     android:gravity="center"
     android:background="@color/blek_blue"
     android:orientation="vertical"
+    android:weightSum="10"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include layout="@layout/freshness_info" />
 
     <TextView
         android:id="@+id/spotify_message"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:fontFamily="@font/proxima_nova_bold"
         android:textColor="@android:color/white"
         android:textSize="@dimen/fragment_playlist_message_size"
+        android:layout_weight="0.5"
         android:text="@string/spotify_message"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="9">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_playlist"

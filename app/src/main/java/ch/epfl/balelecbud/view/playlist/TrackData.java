@@ -30,15 +30,15 @@ public class TrackData extends RecyclerViewData<Track, TrackHolder> {
     }
 
     @Override
-    public void reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.PLAYLIST_PATH, new LinkedList<>(), preferredSource);
-        getAppDatabase().query(query, Track.class)
+        return getAppDatabase().query(query, Track.class)
                 .thenApply(playlistTracks -> {
-                    Collections.sort(playlistTracks, (track1, track2) ->
+                    Collections.sort(playlistTracks.getList(), (track1, track2) ->
                             Integer.compare(track1.getRank(), track2.getRank()));
                     return playlistTracks;
                 })
-              .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
+              .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
 
     @Override
