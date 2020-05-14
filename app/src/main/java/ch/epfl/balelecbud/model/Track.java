@@ -2,6 +2,8 @@ package ch.epfl.balelecbud.model;
 
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+
 public class Track {
 
     private String title;
@@ -36,7 +38,7 @@ public class Track {
         return rank;
     }
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return (o instanceof Track) &&
                 Objects.equals(getTitle(), ((Track) o).getTitle()) &&
                 Objects.equals(getArtist(), ((Track) o).getArtist()) &&

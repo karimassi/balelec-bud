@@ -54,9 +54,18 @@ public class PlaylistFragment extends Fragment implements OnRecyclerViewInteract
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        spotifyConnect();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
-        if(isSpotifyConnected()) SpotifyAppRemote.disconnect(spotifyAppRemote);
+        if(isSpotifyConnected()) {
+            SpotifyAppRemote.disconnect(spotifyAppRemote);
+            Log.d(TAG, "Disconnecting the Spotify App Remote");
+        }
     }
 
     @Override

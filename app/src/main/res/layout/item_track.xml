@@ -30,7 +30,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
 
             <TextView
                 android:id="@+id/track_title"
@@ -38,6 +39,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova"
                 android:textColor="@android:color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="20sp" />
 
             <TextView
@@ -47,6 +50,8 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/proxima_nova"
                 android:textColor="@android:color/white"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="17sp" />
         </LinearLayout>
     </LinearLayout>
