@@ -2,6 +2,8 @@
     <string name="app_name">BalelecBud</string>
     <string name="title_activity_authentication">Sign in</string>
 
+    <string name="cache_info">Cached on\u0020</string>
+
     <string name="mapbox_access_token">pk.eyJ1Ijoia2FyaW1hc3NpIiwiYSI6ImNrOTEzd2FqMzA3Z3EzbmxoYWdvb3Z4ZWIifQ.0S1QH5SG3ZXXC1ofSSbadQ</string>
 
     <string name="title_activity_map">MapActivity</string>
@@ -64,7 +66,7 @@
     <string name="cancel">Cancel</string>
     <string name="add_friend_email_hint">Enter your friend\'s email</string>
     <string name="add_own_as_friend">You can\'t add yourself as a friend :-)</string>
-    <string name="add_friend_request_sent">Friend request sent to \</string>
+    <string name="add_friend_request_sent">Friend request sent to \u0020</string>
 
     <!--  FRIEND ITEM  -->
     <string name="remove_friend">Unfriend</string>

@@ -180,7 +180,12 @@ public class MockDatabase implements Database {
         if (MockQueryUtils.queryContainsDocumentIdClause(query)) {
             Object result = collection.get(MockQueryUtils.getRightOperandFromDocumentIdClause(query));
             queryResult.add((Map<String, Object>) result);
-            return CompletableFuture.completedFuture(new FetchedData<>(queryResult, freshnessToReturn));
+
+            Long freshness = query.getSource() == Source.CACHE_FIRST || query.getSource() == Source.CACHE_ONLY ?
+                    freshnessToReturn :
+                    null;
+
+            return CompletableFuture.completedFuture(new FetchedData<>(queryResult, freshness));
         } else {
             throw new UnsupportedOperationException("This type of query is not supported yet.");
         }

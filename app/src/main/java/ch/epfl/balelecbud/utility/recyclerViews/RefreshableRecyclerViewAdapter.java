@@ -19,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.utility.DateFormatter;
 import ch.epfl.balelecbud.utility.database.Database;
 
 public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
@@ -58,9 +59,7 @@ public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder
             freshnessView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0.f));
         } else {
             freshnessView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0.5f));
-            Date date = new Date(freshness);
-            SimpleDateFormat df2 = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
-            String result = "Cached on " + df2.format(date);
+            String result = BalelecbudApplication.getAppContext().getString(R.string.cache_info) + DateFormatter.format(freshness);
             TextView textView = freshnessView.findViewById(R.id.freshness_info_text_view);
             textView.setText(result);
         }
