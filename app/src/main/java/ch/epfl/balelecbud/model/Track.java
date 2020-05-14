@@ -35,7 +35,6 @@ public class Track {
     public int getRank() {
         return rank;
     }
-
     @Override
     public boolean equals(Object o) {
         return (o instanceof Track) &&
