@@ -45,6 +45,7 @@ public class MapViewFragmentWithFriendTest {
         FriendshipUtils.acceptRequest(karim);
         FriendshipUtils.acceptRequest(alex);
         mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, karim.getUid(), karimLocation);
+        MapViewFragment.setMockCallback(mapboxMap -> { });
     }
 
     @After
@@ -68,13 +69,13 @@ public class MapViewFragmentWithFriendTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.call();
             }
         };
 
-        MapViewFragment.setMockMap(mockMap);
-        FragmentScenario.launchInContainer(MapViewFragment.class);
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        scenario.onFragment(fragment -> fragment.onMapReady(mockMap));
 
         sync.waitCall(2);
         sync.assertCalled(2);
@@ -98,13 +99,13 @@ public class MapViewFragmentWithFriendTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.call();
             }
         };
 
-        MapViewFragment.setMockMap(mockMap);
-        FragmentScenario.launchInContainer(MapViewFragment.class);
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        scenario.onFragment(fragment -> fragment.onMapReady(mockMap));
 
         sync.waitCall(2);
         mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, karim.getUid(), newKarimLocation);
@@ -117,8 +118,8 @@ public class MapViewFragmentWithFriendTest {
     public void whenAFriendHaveNoLocationNothingIsShownOnTheMap() throws Throwable {
         TestAsyncUtils sync = new TestAsyncUtils();
 
-        MapViewFragment.setMockMap(assertKarimThenAlexLocation(sync));
-        FragmentScenario.launchInContainer(MapViewFragment.class);
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        scenario.onFragment(fragment -> fragment.onMapReady(assertKarimThenAlexLocation(sync)));
 
         sync.waitCall(2);
         mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, alex.getUid(), alexLocation);
@@ -146,7 +147,7 @@ public class MapViewFragmentWithFriendTest {
             }
 
             @Override
-            public void initialiseMap(boolean locationEnabled, Location defaultLocation) {
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
                 sync.call();
             }
         };

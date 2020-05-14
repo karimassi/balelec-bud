@@ -7,9 +7,8 @@ import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
 import org.junit.Assert;
 
-import java.util.Objects;
-
 import static androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static org.hamcrest.Matchers.is;
 
 public class TestAsyncUtils {
     private static final String TAG = TestAsyncUtils.class.getSimpleName();
@@ -52,13 +51,7 @@ public class TestAsyncUtils {
     }
 
     public void assertEquals(Object expected, Object actual) {
-        if (!Objects.equals(expected, actual)) {
-            hasFailed = true;
-            Log.wtf(TAG, "assertEquals: test failed" +
-                            "\n\texpected = " + expected.toString() +
-                            "\n\tactual = " + actual.toString(),
-                    new AssertionFailedError());
-        }
+        assertThat(actual, is(expected));
     }
 
     public void assertNotNull(Object o) {
@@ -102,7 +95,7 @@ public class TestAsyncUtils {
             hasFailed = true;
             Log.wtf(TAG, "assertThat: match failed" +
                     "\n\texpected = " + matcher.toString() +
-                    "\n\tactual = " + actual.toString());
+                    "\n\tactual = " + actual.toString(), new AssertionFailedError());
         }
     }
 }
