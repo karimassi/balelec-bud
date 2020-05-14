@@ -5,21 +5,30 @@ import android.content.Context;
 
 import androidx.annotation.VisibleForTesting;
 
-import ch.epfl.balelecbud.authentication.Authenticator;
-import ch.epfl.balelecbud.authentication.FirebaseAuthenticator;
-import ch.epfl.balelecbud.cloudMessaging.CloudMessagingService;
-import ch.epfl.balelecbud.cloudMessaging.MessagingService;
-import ch.epfl.balelecbud.notifications.NotificationMessage;
-import ch.epfl.balelecbud.notifications.concertSoon.NotificationScheduler;
-import ch.epfl.balelecbud.util.database.Database;
-import ch.epfl.balelecbud.util.database.FirestoreDatabase;
-import ch.epfl.balelecbud.util.http.HttpClient;
-import ch.epfl.balelecbud.util.http.VolleyHttpClient;
+import ch.epfl.balelecbud.utility.authentication.Authenticator;
+import ch.epfl.balelecbud.utility.authentication.FirebaseAuthenticator;
+import ch.epfl.balelecbud.utility.cache.Cache;
+import ch.epfl.balelecbud.utility.cache.FilesystemCache;
+import ch.epfl.balelecbud.utility.cloudMessaging.CloudMessagingService;
+import ch.epfl.balelecbud.utility.cloudMessaging.MessagingService;
+import ch.epfl.balelecbud.utility.database.CachedDatabase;
+import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.database.FirestoreDatabase;
+import ch.epfl.balelecbud.utility.http.HttpClient;
+import ch.epfl.balelecbud.utility.http.VolleyHttpClient;
+import ch.epfl.balelecbud.utility.notifications.NotificationMessage;
+import ch.epfl.balelecbud.utility.notifications.concertSoon.NotificationScheduler;
+import ch.epfl.balelecbud.utility.storage.CachedStorage;
+import ch.epfl.balelecbud.utility.storage.FirebaseStorage;
+import ch.epfl.balelecbud.utility.storage.Storage;
 
 public class BalelecbudApplication extends Application {
 
     private static Context appContext;
+    private static Storage appStorage;
     private static Database appDatabase;
+    private static Cache appCache;
+    private static Database remoteDatabase;
     private static Authenticator appAuthenticator;
     private static HttpClient httpClient;
     private static MessagingService appMessagingService;
@@ -40,18 +49,36 @@ public class BalelecbudApplication extends Application {
         return httpClient;
     }
 
+    public static Database getRemoteDatabase() {
+        return remoteDatabase;
+    }
+
+    public static Cache getAppCache() {
+        return appCache;
+    }
+
     public static MessagingService getMessagingService() {
         return appMessagingService;
+    }
+
+    public static Storage getAppStorage() {
+        return appStorage;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         appContext = getApplicationContext();
+        if (remoteDatabase == null)
+            remoteDatabase = FirestoreDatabase.getInstance();
+        if (appCache == null)
+            appCache = FilesystemCache.getInstance();
         if (appDatabase == null)
-            appDatabase = FirestoreDatabase.getInstance();
+            appDatabase = CachedDatabase.getInstance();
         if (appAuthenticator == null)
             appAuthenticator = FirebaseAuthenticator.getInstance();
+        if (appStorage == null)
+            appStorage = new CachedStorage(FirebaseStorage.getInstance(), new ch.epfl.balelecbud.utility.storage.FilesystemCache());
         if (httpClient == null)
             httpClient = VolleyHttpClient.getInstance();
         if (appMessagingService == null)
@@ -71,6 +98,11 @@ public class BalelecbudApplication extends Application {
     }
 
     @VisibleForTesting
+    public static void setRemoteDatabase(Database database) {
+        remoteDatabase = database;
+    }
+
+    @VisibleForTesting
     public static void setAppAuthenticator(Authenticator authenticator) {
         appAuthenticator = authenticator;
     }
@@ -84,4 +116,10 @@ public class BalelecbudApplication extends Application {
     public static void setAppMessagingService(MessagingService messagingService) {
         appMessagingService = messagingService;
     }
+
+    @VisibleForTesting
+    public static void setAppStorage(Storage storage) {
+        appStorage = storage;
+    }
+
 }

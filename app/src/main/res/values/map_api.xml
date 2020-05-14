@@ -6,11 +6,13 @@
 
     <string name="camera_target_lat">46.518802</string>
     <string name="camera_target_lng">6.567550</string>
-    <string name="camera_zoom">15</string>
 
     <bool name="ui_rotate_gestures">true</bool>
     <bool name="ui_scroll_gestures">true</bool>
     <bool name="ui_tilt_gestures">true</bool>
     <bool name="ui_zoom_controls">true</bool>
     <bool name="ui_zoom_gestures">true</bool>
+
+    <integer name="default_zoom">15</integer>
+    <integer name="poi_zoom">18</integer>
 </resources>

@@ -7,10 +7,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.balelecbud.view.WelcomeFragment;
+
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.TestCase.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 public class WelcomeFragmentTest {
@@ -21,7 +25,18 @@ public class WelcomeFragmentTest {
     }
 
     @Test
-    public void backGroundIsDisplayed() {
+    public void backgroundIsDisplayed() {
         onView(withId(R.id.activity_home_linear_layout)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void spotifyButtonIsDisplayed() {
+        onView(withId(R.id.spotify_button)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testClickSpotifyButton() {
+        onView(withId(R.id.spotify_button)).perform(click());
+        assertNull(WelcomeFragment.newInstance().getSpotifyAppRemote());
     }
 }

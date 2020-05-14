@@ -2,7 +2,9 @@ package ch.epfl.balelecbud;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,17 +17,20 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-import ch.epfl.balelecbud.friendship.SocialFragment;
-import ch.epfl.balelecbud.map.MapViewFragment;
-import ch.epfl.balelecbud.notifications.concertFlow.ConcertFlow;
-import ch.epfl.balelecbud.pointOfInterest.PointOfInterestFragment;
-import ch.epfl.balelecbud.schedule.models.Slot;
-import ch.epfl.balelecbud.settings.SettingsFragment;
-import ch.epfl.balelecbud.util.intents.FlowUtil;
+import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.FlowUtils;
+import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.view.WelcomeFragment;
+import ch.epfl.balelecbud.view.emergency.EmergencyInformationFragment;
+import ch.epfl.balelecbud.view.festivalInformation.FestivalInformationFragment;
+import ch.epfl.balelecbud.view.friendship.SocialFragment;
+import ch.epfl.balelecbud.view.map.MapViewFragment;
+import ch.epfl.balelecbud.view.pointOfInterest.PointOfInterestFragment;
+import ch.epfl.balelecbud.view.schedule.ScheduleFragment;
+import ch.epfl.balelecbud.view.settings.SettingsFragment;
+import ch.epfl.balelecbud.view.transport.TransportFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.location.LocationUtil.disableLocation;
-import static ch.epfl.balelecbud.location.LocationUtil.isLocationActive;
 
 public class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -42,7 +47,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         this.configureDrawerLayout();
         this.configureNavigationView();
 
-        ArrayList<Slot> slots = FlowUtil.unpackCallback(getIntent());
+        setUpUser();
+
+        ArrayList<Slot> slots = FlowUtils.unpackCallback(getIntent());
         if (slots != null) {
             ScheduleFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
             if (!fragmentSchedule.isVisible()) {
@@ -50,6 +57,13 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             }
         } else {
             this.showFirstFragment();
+        }
+    }
+
+    private void setUpUser() {
+        if (getAppAuthenticator().getCurrentUser() == null || getAppAuthenticator().getCurrentUid() == null) {
+            Log.d(TAG, "setUpUser: creating anonymous user");
+            getAppAuthenticator().signInAnonymously();
         }
     }
 
@@ -78,20 +92,11 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_social:
                 this.showSocialFragment();
                 break;
-            case R.id.activity_main_drawer_emergency:
-                this.showEmergencyFragment();
-                break;
             case R.id.activity_main_drawer_emergency_info:
                 this.showEmergencyInfoFragment();
                 break;
-            case R.id.activity_main_drawer_emergency_numbers:
-                this.showEmergencyNumbersFragment();
-                break;
             case R.id.activity_main_drawer_settings:
                 this.showSettingsFragment();
-                break;
-            case R.id.sign_out_button:
-                signOut();
                 break;
             default:
                 break;
@@ -112,8 +117,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
 
     private void showScheduleFragment() {
         Intent intent = new Intent(this, ConcertFlow.class);
-        intent.setAction(FlowUtil.GET_ALL_CONCERT);
-        intent.putExtra(FlowUtil.CALLBACK_INTENT, new Intent(this, RootActivity.class));
+        intent.setAction(FlowUtils.GET_ALL_CONCERT);
+        intent.putExtra(FlowUtils.CALLBACK_INTENT, new Intent(this, RootActivity.class));
         startService(intent);
     }
 
@@ -133,23 +138,17 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showSocialFragment() {
-        Fragment fragmentSocial = SocialFragment.newInstance();
-        this.startTransactionFragment(fragmentSocial, "SOCIAL");
-    }
-
-    private void showEmergencyFragment() {
-        Fragment fragmentEmergency = EmergencyFragment.newInstance();
-        this.startTransactionFragment(fragmentEmergency, "EMERGENCY");
+        if (getAppAuthenticator().getCurrentUser() == null) {
+            Toast.makeText(this, R.string.require_sign_in, Toast.LENGTH_LONG).show();
+        } else {
+            Fragment fragmentSocial = SocialFragment.newInstance();
+            this.startTransactionFragment(fragmentSocial, "SOCIAL");
+        }
     }
 
     private void showEmergencyInfoFragment() {
-        Fragment fragmentEmergencyInfo = EmergencyInfoFragment.newInstance();
+        Fragment fragmentEmergencyInfo = EmergencyInformationFragment.newInstance();
         this.startTransactionFragment(fragmentEmergencyInfo, "EMERGENCY_INFO");
-    }
-
-    private void showEmergencyNumbersFragment() {
-        Fragment fragmentEmergencyNumbers = EmergencyNumbersFragment.newInstance();
-        this.startTransactionFragment(fragmentEmergencyNumbers, "EMERGENCY_NUMBERS");
     }
 
     private void showSettingsFragment() {
@@ -198,14 +197,5 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
         }
-    }
-
-    protected void signOut() {
-        getAppAuthenticator().signOut();
-        if (isLocationActive())
-            disableLocation();
-        Intent intent = new Intent(this, LoginUserActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

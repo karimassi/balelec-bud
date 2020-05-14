@@ -21,19 +21,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".RootActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EmergencyInfoFragment" />
-        <activity android:name=".EmergencyNumbersFragment" />
-        <activity android:name=".LoginUserActivity" />
-        <activity android:name=".RegisterUserActivity" />
         <activity android:name=".PicturesFragment"/>
-        <activity android:name=".RootActivity" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -46,14 +42,14 @@
         </provider>
 
         <service
-            android:name=".location.LocationService"
+            android:name=".utility.location.LocationService"
             android:exported="false" />
         <service
-            android:name=".notifications.concertFlow.ConcertFlow"
+            android:name=".utility.notifications.concertFlow.ConcertFlow"
             android:exported="false" />
 
         <service
-            android:name=".cloudMessaging.CloudMessagingService"
+            android:name=".utility.cloudMessaging.CloudMessagingService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
@@ -61,10 +57,10 @@
         </service>
 
         <receiver
-            android:name=".notifications.concertSoon.NotificationProvider"
+            android:name=".utility.notifications.concertSoon.NotificationProvider"
             android:exported="true">
             <intent-filter>
-                <action android:name="ch.epfl.balelecbud.notifications.concertSoon.ACTION"/>
+                <action android:name="ch.epfl.balelecbud.utility.notifications.concertSoon.ACTION"/>
             </intent-filter>
         </receiver>
 
