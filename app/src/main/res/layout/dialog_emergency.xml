@@ -1,66 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="183dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="117dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="112dp"
-        android:layout_marginBottom="100dp"
-        android:text="@string/declare_an_emergency"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerEmergencyCategories"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <Spinner
+        android:id="@+id/spinner_emergency_categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown" />
 
     <EditText
-        android:id="@+id/textEmergencyMessage"
-        android:layout_width="244dp"
-        android:layout_height="88dp"
-        android:layout_marginStart="85dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="85dp"
-        android:layout_marginBottom="33dp"
-        android:ems="10"
-        android:hint="enter more information"
-        android:inputType="textPersonName"
-        android:singleLine="false"
-        android:textAlignment="textStart"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonEmergencySubmit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerEmergencyCategories" />
-
-    <Spinner
-        android:id="@+id/spinnerEmergencyCategories"
-        android:layout_width="246dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="84dp"
-        android:layout_marginEnd="81dp"
-        android:layout_marginBottom="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/textEmergencyMessage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <Button
-        android:id="@+id/buttonEmergencySubmit"
-        android:layout_width="wrap_content"
+        android:id="@+id/edit_text_emergency_message"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:layout_marginBottom="383dp"
-        android:text="Submit emergency"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textEmergencyMessage" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textAlignment="gravity"
+        android:hint="@string/describe_emergency"
+        android:textSize="18sp"
+        android:inputType="text"
+        android:importantForAutofill="no" />
+
+</LinearLayout>
