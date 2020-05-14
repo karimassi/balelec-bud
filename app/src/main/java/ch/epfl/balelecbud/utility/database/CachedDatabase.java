@@ -44,7 +44,7 @@ public class CachedDatabase implements Database {
     @Override
     public <T> CompletableFuture<FetchedData<T>> query(MyQuery query, Class<T> tClass) {
         CompletableFuture<FetchedData<T>> result = new CompletableFuture<>();
-        if (query.getSource().equals(Source.CACHE_FIRST) && cache.contains(query)) {
+        if (query.getSource().equals(Source.CACHE_ONLY) || (query.getSource().equals(Source.CACHE_FIRST) && cache.contains(query))) {
             try {
                 result = cache.get(query, tClass);
             } catch (IOException e) {
