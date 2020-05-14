@@ -29,15 +29,4 @@ public class PlaylistFragmentTest {
     public void linearLayoutIsDisplayed() {
         onView(withId(R.id.fragment_playlist_linear_layout)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void spotifyButtonIsDisplayed() {
-        onView(withId(R.id.spotify_button)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testClickSpotifyButton() {
-        onView(withId(R.id.spotify_button)).perform(click());
-        assertFalse(PlaylistFragment.newInstance().isSpotifyConnected());
-    }
 }

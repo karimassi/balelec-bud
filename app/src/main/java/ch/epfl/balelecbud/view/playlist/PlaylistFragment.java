@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
@@ -15,8 +18,11 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.model.Track;
+import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
+import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class PlaylistFragment extends Fragment {
+public class PlaylistFragment extends Fragment implements OnRecyclerViewInteractionListener<Track> {
 
     private static final String TAG = PlaylistFragment.class.getSimpleName();
     private SpotifyAppRemote spotifyAppRemote;
@@ -35,10 +41,16 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        getView().findViewById(R.id.spotify_button).setOnClickListener(v -> {
-            if(!isSpotifyConnected()) spotifyConnect();
-            else play();
-        });
+        RecyclerView recyclerView = getView().findViewById(R.id.playlist_recycler_view);
+        TrackData data = new TrackData(getActivity(), this);
+        RefreshableRecyclerViewAdapter<Track, TrackHolder> adapter = new RefreshableRecyclerViewAdapter<>(
+                TrackHolder::new, data, R.layout.item_track);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+
+        SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_playlist);
+        adapter.setOnRefreshListener(swipeRefreshLayout);
     }
 
     @Override
@@ -46,6 +58,13 @@ public class PlaylistFragment extends Fragment {
         super.onStop();
         if(isSpotifyConnected()) SpotifyAppRemote.disconnect(spotifyAppRemote);
     }
+
+    @Override
+    public void onItemSelected(Track item) {
+        String spotifyURI = "spotify:track:" + item.getUri();
+        playTrack(spotifyURI);
+    }
+
 
     private void spotifyConnect() {
         Log.d(TAG, "Trying to connect Spotify");
@@ -72,10 +91,13 @@ public class PlaylistFragment extends Fragment {
                 });
     }
 
-    private void play() {
-        if (isSpotifyConnected()) {
-            spotifyAppRemote.getPlayerApi().play(getContext().getString(R.string.spotify_balelec_playlist));
-            Toast.makeText(BalelecbudApplication.getAppContext(), getContext().getString(R.string.playing_spotify_message), Toast.LENGTH_LONG).show();
+    private void playTrack(String track) {
+        if(!isSpotifyConnected()) {
+            spotifyConnect();
+        }
+        else {
+            Log.d(TAG, "Playing track : " + track);
+            spotifyAppRemote.getPlayerApi().play(track);
         }
     }
 

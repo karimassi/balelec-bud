@@ -23,6 +23,7 @@ public interface Database {
     String SENT_REQUESTS_PATH = "sentRequests";
     String EMERGENCY_NUMBER_PATH = "emergencyNumbers";
     String EMERGENCIES_PATH = "emergencies";
+    String PLAYLIST_PATH = "playlist";
 
     String DOCUMENT_ID_OPERAND = "documentId";
 
