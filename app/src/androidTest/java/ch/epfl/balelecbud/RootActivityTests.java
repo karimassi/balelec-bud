@@ -73,6 +73,12 @@ public class RootActivityTests {
     }
 
     @Test
+    public void canOpenPlaylistActivityFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_playlist, R.id.recycler_view_playlist);
+    }
+
+    @Test
     public void canOpenEmergencyInfoActivityFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {
         });
