@@ -15,7 +15,9 @@
         android:layout_height="0dp"
         android:layout_weight="9.5"
         android:background="@color/blek_blue"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_emergency_info"
@@ -33,15 +35,15 @@
                     android:orientation="vertical"
                     android:weightSum="10">
 
-                    <include layout="@layout/freshness_info"/>
+                    <include layout="@layout/freshness_info" />
 
                     <TextView
                         android:id="@+id/emergency_info_numbers_title"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_weight="0.5"
                         android:text="@string/emergency_numbers_title"
-                        android:textSize="18sp"
-                        android:layout_weight="0.5"/>
+                        android:textSize="18sp" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_emergency_numbers"
@@ -49,18 +51,18 @@
                         android:layout_height="0dp"
                         android:layout_marginLeft="@dimen/poi_margin"
                         android:layout_marginRight="@dimen/poi_margin"
+                        android:layout_weight="4.5"
                         app:layoutManager="LinearLayoutManager"
                         tools:context=".EmergencyInformationActivity"
-                        tools:listitem="@layout/item_emergency_info"
-                        android:layout_weight="4.5"/>
+                        tools:listitem="@layout/item_emergency_info" />
 
                     <TextView
                         android:id="@+id/emergency_info_title"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
+                        android:layout_weight="0.5"
                         android:text="@string/emergency_information_title"
-                        android:textSize="18sp"
-                        android:layout_weight="0.5"/>
+                        android:textSize="18sp" />
 
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -69,10 +71,10 @@
                         android:layout_height="0dp"
                         android:layout_marginLeft="@dimen/poi_margin"
                         android:layout_marginRight="@dimen/poi_margin"
+                        android:layout_weight="4.5"
                         app:layoutManager="LinearLayoutManager"
                         tools:context=".EmergencyInformationActivity"
-                        tools:listitem="@layout/item_emergency_info"
-                        android:layout_weight="4.5"/>
+                        tools:listitem="@layout/item_emergency_info" />
 
                 </LinearLayout>
             </ScrollView>
