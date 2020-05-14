@@ -28,7 +28,7 @@ public class SentRequestFragment extends Fragment {
 
         Context context = view.getContext();
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view_sent_request);
-        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
+        View freshnessView = view.findViewById(R.id.freshness_info_layout);
 
         SentRequestData data = new SentRequestData((User) getArguments().get("user"));
         final RefreshableRecyclerViewAdapter<User, SentRequestViewHolder> adapter =

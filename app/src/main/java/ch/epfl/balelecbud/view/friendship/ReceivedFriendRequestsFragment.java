@@ -26,7 +26,7 @@ public class ReceivedFriendRequestsFragment extends Fragment {
 
         Context context = view.getContext();
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friend_requests);
-        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
+        View freshnessView = view.findViewById(R.id.freshness_info_layout);
 
         ReceivedFriendRequestData data = new ReceivedFriendRequestData((User) getArguments().get("user"));
         final RefreshableRecyclerViewAdapter<User, ReceivedRequestViewHolder> adapter =
