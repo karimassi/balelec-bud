@@ -21,9 +21,7 @@ import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.view.WelcomeFragment;
-import ch.epfl.balelecbud.view.emergency.EmergencyFragment;
-import ch.epfl.balelecbud.view.emergency.EmergencyInfoFragment;
-import ch.epfl.balelecbud.view.emergency.EmergencyNumbersFragment;
+import ch.epfl.balelecbud.view.emergency.EmergencyInformationFragment;
 import ch.epfl.balelecbud.view.festivalInformation.FestivalInformationFragment;
 import ch.epfl.balelecbud.view.friendship.SocialFragment;
 import ch.epfl.balelecbud.view.map.MapViewFragment;
@@ -101,9 +99,6 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_emergency_info:
                 this.showEmergencyInfoFragment();
                 break;
-            case R.id.activity_main_drawer_emergency_numbers:
-                this.showEmergencyNumbersFragment();
-                break;
             case R.id.activity_main_drawer_settings:
                 this.showSettingsFragment();
                 break;
@@ -161,13 +156,8 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showEmergencyInfoFragment() {
-        Fragment fragmentEmergencyInfo = EmergencyInfoFragment.newInstance();
+        Fragment fragmentEmergencyInfo = EmergencyInformationFragment.newInstance();
         this.startTransactionFragment(fragmentEmergencyInfo, "EMERGENCY_INFO");
-    }
-
-    private void showEmergencyNumbersFragment() {
-        Fragment fragmentEmergencyNumbers = EmergencyNumbersFragment.newInstance();
-        this.startTransactionFragment(fragmentEmergencyNumbers, "EMERGENCY_NUMBERS");
     }
 
     private void showSettingsFragment() {

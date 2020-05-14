@@ -9,47 +9,44 @@
         <item
             android:id="@+id/activity_main_drawer_home"
             android:icon="@mipmap/info"
-            android:title="Home" />
+            android:title="@string/drawer_home" />
         <item
             android:id="@+id/activity_main_drawer_info"
             android:icon="@mipmap/info"
-            android:title="Information" />
+            android:title="@string/drawer_festival_information" />
         <item
             android:id="@+id/activity_main_drawer_schedule"
             android:icon="@mipmap/schedule"
-            android:title="Schedule" />
+            android:title="@string/drawer_schedule" />
         <item
             android:id="@+id/activity_main_drawer_poi"
             android:icon="@mipmap/point_of_interest"
-            android:title="Points of Interest" />
+            android:title="@string/drawer_poi" />
         <item
             android:id="@+id/activity_main_drawer_map"
             android:icon="@mipmap/map"
-            android:title="Map" />
+            android:title="@string/drawer_map" />
         <item
             android:id="@+id/activity_main_drawer_transport"
             android:icon="@mipmap/bus"
-            android:title="Transport" />
+            android:title="@string/drawer_transport" />
         <item
             android:id="@+id/activity_main_drawer_social"
             android:icon="@mipmap/social"
-            android:title="Social" />
+            android:title="@string/drawer_social" />
         <item
             android:id="@+id/activity_main_drawer_playlist"
             android:icon="@drawable/ic_play_arrow_24dp"
             android:title="@string/playlist_navigation_title" />
+
         <item
             android:id="@+id/activity_main_drawer_emergency_info"
             android:icon="@mipmap/info"
-            android:title="Emergency Informations" />
-        <item
-            android:id="@+id/activity_main_drawer_emergency_numbers"
-            android:icon="@mipmap/info"
-            android:title="Emergency Numbers" />
+            android:title="@string/drawer_emergency" />
         <item
             android:id="@+id/activity_main_drawer_settings"
             android:icon="@drawable/settings"
-            android:title="Settings" />
+            android:title="@string/drawer_settings" />
     </group>
 
 </menu>

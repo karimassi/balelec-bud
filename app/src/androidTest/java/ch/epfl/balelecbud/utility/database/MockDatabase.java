@@ -78,7 +78,6 @@ public class MockDatabase implements Database {
         databasePOJO.put(Database.CONCERT_SLOTS_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.EMERGENCIES_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.EMERGENCY_INFO_PATH, new LinkedHashMap<>());
-        databasePOJO.put(Database.EMERGENCY_NUMBER_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.FESTIVAL_INFORMATION_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.LOCATIONS_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.POINT_OF_INTEREST_PATH, new LinkedHashMap<>());

@@ -73,26 +73,11 @@ public class RootActivityTests {
     }
 
     @Test
-    public void canOpenEmergencyActivityFromDrawer() {
-        MapViewFragment.setMockCallback(googleMap -> { });
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_playlist, R.id.fragment_emergency_linear_layout);
-    }
-
-    @Test
     public void canOpenEmergencyInfoActivityFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {
         });
         openDrawer();
         clickItem(R.id.activity_main_drawer_emergency_info, R.id.emergency_info_constraint_layout);
-    }
-
-    @Test
-    public void canOpenEmergencyNumbersActivityFromDrawer() {
-        MapViewFragment.setMockCallback(googleMap -> {
-        });
-        openDrawer();
-        clickItem(R.id.activity_main_drawer_emergency_numbers, R.id.emergency_number_layout);
     }
 
     @Test

@@ -14,6 +14,7 @@ public interface Database {
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
     String EMERGENCY_INFO_PATH = "emergencyInfo";
+    String EMERGENCIES_PATH = "emergencies";
     String CONCERT_SLOTS_PATH = "concertSlots";
     String USERS_PATH = "users";
     String TOKENS_PATH = "tokens";
@@ -21,8 +22,6 @@ public interface Database {
     String FRIENDSHIPS_PATH = "friendships";
     String FRIEND_REQUESTS_PATH = "friendRequests";
     String SENT_REQUESTS_PATH = "sentRequests";
-    String EMERGENCY_NUMBER_PATH = "emergencyNumbers";
-    String EMERGENCIES_PATH = "emergencies";
     String PLAYLIST_PATH = "playlist";
 
     String DOCUMENT_ID_OPERAND = "documentId";
