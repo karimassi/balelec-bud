@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.balelecbud.R;
 
-public class EmergencyInfoHolder extends RecyclerView.ViewHolder {
+public class EmergencyInformationHolder extends RecyclerView.ViewHolder {
 
     public final TextView emergencyInfoNameTextView;
     public final TextView emergencyInfoInstructionTextView;
 
-    public EmergencyInfoHolder(View view) {
+    public EmergencyInformationHolder(View view) {
         super(view);
         emergencyInfoNameTextView = view.findViewById(R.id.emergencyInfoName);
         emergencyInfoInstructionTextView = view.findViewById(R.id.emergencyInfoInstruction);

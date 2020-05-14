@@ -1,12 +1,14 @@
 package ch.epfl.balelecbud.view.emergency;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import com.google.firebase.Timestamp;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Emergency;
 import ch.epfl.balelecbud.model.EmergencyType;
+import ch.epfl.balelecbud.utility.StringUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
@@ -28,42 +31,57 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 public class SubmitEmergencyFragment extends DialogFragment {
 
     private static final String TAG = SubmitEmergencyFragment.class.getSimpleName();
+    private EditText messageField;
+    private Spinner categorySpinner;
+    private TextWatcher watcher = StringUtils.getTextWatcher(() ->
+            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(validateEntry()));
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View mView = inflater.inflate(R.layout.dialog_emergency, null);
+        View view = inflater.inflate(R.layout.dialog_emergency, null);
         Log.d(TAG, "onCreateDialog: view inflated");
-        builder.setView(mView);
-        AlertDialog dialog = builder.create();
 
-        final EditText mEmergencyMessage = mView.findViewById(R.id.textEmergencyMessage);
-        final Spinner mEmergencyCategory = mView.findViewById(R.id.spinnerEmergencyCategories);
-        Button mEmergencySubmit = mView.findViewById(R.id.buttonEmergencySubmit);
-        mEmergencyCategory.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, EmergencyType.values()));
-        submitEmergency(dialog, mEmergencyMessage, mEmergencyCategory, mEmergencySubmit);
+        messageField = view.findViewById(R.id.edit_text_emergency_message);
+        messageField.addTextChangedListener(watcher);
 
-        return dialog;
+        categorySpinner = view.findViewById(R.id.spinner_emergency_categories);
+        categorySpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, EmergencyType.values()));
+
+        builder.setView(view)
+                .setTitle(R.string.emergency_ask_for_help)
+                .setPositiveButton(R.string.submit_emergency, (dialog, id) -> {
+                    if (validateEntry()) {
+                        submitEmergency();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
+
+        view.post(() -> {
+            AlertDialog dialog = ((AlertDialog) getDialog());
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+        });
+
+        return builder.create();
     }
 
+    private boolean validateEntry() {
+        String emergencyMessage = messageField.getText().toString();
+        if (TextUtils.isEmpty(emergencyMessage)) {
+            messageField.setError(getString(R.string.emergency_fill_message));
+            return false;
+        }
+        return true;
+    }
 
-    private void submitEmergency(AlertDialog dialog, EditText mEmergencyMessage, Spinner mEmergencyCategory, Button mEmergencySubmit) {
-        mEmergencySubmit.setOnClickListener(v1 -> {
-            String emergencyMessage = mEmergencyMessage.getText().toString();
-            EmergencyType emergencyType = EmergencyType.valueOf(mEmergencyCategory.getSelectedItem().toString().toUpperCase());
-            if(!emergencyMessage.isEmpty()){
-                String currentUserUid = getAppAuthenticator().getCurrentUid();
-                Timestamp currentTimestamp = Timestamp.now();
-                Emergency mEmergency = new Emergency(emergencyType, emergencyMessage,currentUserUid,currentTimestamp);
-                getAppDatabase().storeDocument(Database.EMERGENCIES_PATH, mEmergency);
-                Toast.makeText(getActivity(), R.string.emergency_sent_message, Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }else{
-                Toast.makeText(getActivity(), R.string.emergency_not_sent_message, Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void submitEmergency() {
+        String emergencyMessage = messageField.getText().toString();
+        EmergencyType emergencyType = EmergencyType.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
+        Emergency emergency = new Emergency(emergencyType, emergencyMessage, getAppAuthenticator().getCurrentUid(), Timestamp.now());
+        getAppDatabase().storeDocument(Database.EMERGENCIES_PATH, emergency);
+        Toast.makeText(getActivity(), R.string.emergency_sent_message, Toast.LENGTH_SHORT).show();
     }
 
     public static SubmitEmergencyFragment newInstance() {

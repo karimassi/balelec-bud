@@ -235,6 +235,6 @@ public class SocialFragmentTest {
     @Test
     public void floatingActionButtonCreatesFragment() {
         onView(withId(R.id.fab_add_friends)).perform(click());
-        onView(withId(R.id.text_view_add_friend)).check(matches(isDisplayed()));
+        onView(withId(R.id.edit_text_email_add_friend)).check(matches(isDisplayed()));
     }
 }
