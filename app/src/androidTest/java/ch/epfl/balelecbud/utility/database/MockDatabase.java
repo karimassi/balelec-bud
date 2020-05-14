@@ -82,6 +82,7 @@ public class MockDatabase implements Database {
         databasePOJO.put(Database.FESTIVAL_INFORMATION_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.LOCATIONS_PATH, new LinkedHashMap<>());
         databasePOJO.put(Database.POINT_OF_INTEREST_PATH, new LinkedHashMap<>());
+        databasePOJO.put(Database.PLAYLIST_PATH, new LinkedHashMap<>());
     }
 
     private void initDatabase() {
@@ -336,6 +337,4 @@ public class MockDatabase implements Database {
         sync.assertCalled(1);
         sync.assertNoFailedTests();
     }
-
-
 }

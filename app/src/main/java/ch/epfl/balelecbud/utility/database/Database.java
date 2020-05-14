@@ -22,6 +22,7 @@ public interface Database {
     String FRIENDSHIPS_PATH = "friendships";
     String FRIEND_REQUESTS_PATH = "friendRequests";
     String SENT_REQUESTS_PATH = "sentRequests";
+    String PLAYLIST_PATH = "playlist";
 
     String DOCUMENT_ID_OPERAND = "documentId";
 
