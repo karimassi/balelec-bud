@@ -39,7 +39,7 @@ public class FirebaseAuthenticator implements Authenticator {
                         .query(new MyQuery(Database.USERS_PATH,
                                 new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, getCurrentUid())),
                                 User.class)
-                        .thenApply(users -> users.get(0)));
+                        .thenApply(users -> users.getList().get(0)));
     }
 
     @Override

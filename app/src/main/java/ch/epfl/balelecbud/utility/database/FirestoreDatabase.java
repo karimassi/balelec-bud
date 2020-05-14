@@ -80,13 +80,13 @@ public class FirestoreDatabase implements Database {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass) {
+    public <T> CompletableFuture<FetchedData<T>> query(MyQuery query, final Class<T> tClass) {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
-        return future.thenApply(value -> value.toObjects(tClass));
+        return future.thenApply(value -> new FetchedData<>(value.toObjects(tClass), null));
     }
 
-    public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
+    public CompletableFuture<FetchedData<Map<String, Object>>> query(MyQuery query) {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
         return future.thenApply( value -> {
@@ -94,7 +94,7 @@ public class FirestoreDatabase implements Database {
             for (QueryDocumentSnapshot documentSnapshot: value) {
                 result.add(documentSnapshot.getData());
             }
-            return result;
+            return new FetchedData<>(result, null);
         });
     }
 

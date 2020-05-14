@@ -17,6 +17,7 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.DateFormatter;
 import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
@@ -44,6 +45,7 @@ public class ScheduleFragmentTest  {
     @Before
     public void setup() {
         mockDatabase.resetDatabase();
+        mockDatabase.setFreshnessToReturn(0L);
         mockStorage.setAccessCount(0);
         BalelecbudApplication.setAppDatabase(mockDatabase);
         BalelecbudApplication.setAppStorage(mockStorage);
@@ -77,6 +79,8 @@ public class ScheduleFragmentTest  {
     @Test
     public void testItemModification() {
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(0)));
+        String expectedText = "Cached on " + DateFormatter.format(0L);
+        onView(withId(R.id.freshness_info_text_view)).check(matches(withText(expectedText)));
 
         mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot1);
 
@@ -87,7 +91,6 @@ public class ScheduleFragmentTest  {
         mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
 
         refreshRecyclerView();
-
 
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
     }

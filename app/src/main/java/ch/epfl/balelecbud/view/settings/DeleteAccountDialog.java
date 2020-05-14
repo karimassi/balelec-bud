@@ -45,7 +45,7 @@ public class DeleteAccountDialog extends DialogFragment {
         getAppDatabase().deleteDocumentWithID(Database.LOCATIONS_PATH, uid);
         FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser()).whenComplete(
                 (strings, throwable) ->
-                        FriendshipUtils.getUsersFromUids(strings, Database.Source.CACHE)
+                        FriendshipUtils.getUsersFromUids(strings, Database.Source.CACHE_FIRST)
                                 .forEach(userCompletableFuture -> userCompletableFuture.whenComplete(
                                         (user, throwable1) -> FriendshipUtils.removeFriend(user))));
         getAppDatabase().deleteDocumentWithID(Database.SENT_REQUESTS_PATH, uid);

@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud.view.emergency;
 
 import java.util.LinkedList;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.model.EmergencyInformation;
@@ -21,14 +22,14 @@ public class EmergencyInformationData extends RecyclerViewData<EmergencyInformat
     }
 
     @Override
-    public void reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.EMERGENCY_INFO_PATH, new LinkedList<>(), preferredSource);
-        BalelecbudApplication.getAppDatabase().query(query, EmergencyInformation.class)
+        return BalelecbudApplication.getAppDatabase().query(query, EmergencyInformation.class)
                 .thenApply(emergencyInfos -> {
-                    emergencyInfos.removeIf(emergencyInformation -> needNumbers != emergencyInformation.isEmergencyNumber());
+                    emergencyInfos.getList().removeIf(emergencyInformation -> needNumbers != emergencyInformation.isEmergencyNumber());
                     return emergencyInfos;
                 })
-                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
+                .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
 
     @Override

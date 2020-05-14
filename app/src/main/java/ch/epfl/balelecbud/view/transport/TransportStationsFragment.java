@@ -33,10 +33,11 @@ public class TransportStationsFragment extends Fragment {
         Context context = view.getContext();
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_transport_stations);
+        View freshnessView = view.findViewById(R.id.freshness_info_layout);
 
         TransportStationData data = new TransportStationData(getArguments().getParcelable(LOCATION_KEY), stationSelectedListener);
         final RefreshableRecyclerViewAdapter<TransportStation, TransportStationHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(TransportStationHolder::new, data, R.layout.item_transport_station);
+                new RefreshableRecyclerViewAdapter<>(TransportStationHolder::new, freshnessView, data, R.layout.item_transport_station);
         final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_transport_stations);
         adapter.setOnRefreshListener(refreshLayout);
 

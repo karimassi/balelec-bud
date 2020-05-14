@@ -60,6 +60,7 @@ public class MockDatabase implements Database {
 
     private Map<String, Map<String, Object>> databasePOJO;
     private Map<String, Map<String, Map<String, Boolean>>> database;
+    private Long freshnessToReturn = null;
 
     private MockDatabase() {
         resetDatabase();
@@ -150,7 +151,7 @@ public class MockDatabase implements Database {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
+    public <T> CompletableFuture<FetchedData<T>> query(MyQuery query, Class<T> tClass) {
         List<T> queryResult = new LinkedList<>();
         Map<String, Object> collection = databasePOJO.get(query.getCollectionName());
         if (MockQueryUtils.queryContainsDocumentIdClause(query)) {
@@ -168,18 +169,23 @@ public class MockDatabase implements Database {
                 queryResult = MockQueryUtils.filterWithGeoClause(queryResult, query.getGeoClause());
             }
         }
-        return CompletableFuture.completedFuture(queryResult);
+        return CompletableFuture.completedFuture(new FetchedData<>(queryResult, freshnessToReturn));
     }
 
 
     @Override
-    public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
+    public CompletableFuture<FetchedData<Map<String, Object>>> query(MyQuery query) {
         List<Map<String, Object>> queryResult = new LinkedList<>();
         Map<String, Map<String, Boolean>> collection = database.get(query.getCollectionName());
         if (MockQueryUtils.queryContainsDocumentIdClause(query)) {
             Object result = collection.get(MockQueryUtils.getRightOperandFromDocumentIdClause(query));
             queryResult.add((Map<String, Object>) result);
-            return CompletableFuture.completedFuture(queryResult);
+
+            Long freshness = query.getSource() == Source.CACHE_FIRST || query.getSource() == Source.CACHE_ONLY ?
+                    freshnessToReturn :
+                    null;
+
+            return CompletableFuture.completedFuture(new FetchedData<>(queryResult, freshness));
         } else {
             throw new UnsupportedOperationException("This type of query is not supported yet.");
         }
@@ -288,6 +294,10 @@ public class MockDatabase implements Database {
         return this.friendsLocationListener.size();
     }
 
+    public void setFreshnessToReturn(Long freshnessToReturn) {
+        this.freshnessToReturn = freshnessToReturn;
+    }
+
     public String generateRandomID() {
         return UUID.randomUUID().toString();
     }
@@ -297,10 +307,10 @@ public class MockDatabase implements Database {
     }
 
     public static <T> void assertQueryResults(TestAsyncUtils sync,
-                                              List<T> expected, CompletableFuture<List<T>> actual) throws Throwable {
-        actual.whenComplete((list, throwable) -> {
+                                              List<T> expected, CompletableFuture<FetchedData<T>> actual) throws Throwable {
+        actual.whenComplete((fetchedData, throwable) -> {
             if (throwable == null) {
-                sync.assertEquals(expected, list);
+                sync.assertEquals(expected, fetchedData.getList());
                 sync.call();
             } else {
                 sync.fail();
@@ -312,12 +322,12 @@ public class MockDatabase implements Database {
     }
 
     public static void assertQueryMapResults(TestAsyncUtils sync, List<Map<String, Object>> expected,
-                                  CompletableFuture<List<Map<String, Object>>> actual) throws Throwable{
-        actual.whenComplete((list, throwable) -> {
+                                  CompletableFuture<FetchedData<Map<String, Object>>> actual) throws Throwable{
+        actual.whenComplete((fetchedData, throwable) -> {
             if (throwable == null) {
                 Log.d("TEST", "assertResults: " + expected.toString());
-                Log.d("TEST", "assertResults: " + list.toString());
-                sync.assertEquals(expected, list);
+                Log.d("TEST", "assertResults: " + fetchedData.getList().toString());
+                sync.assertEquals(expected, fetchedData.getList());
                 sync.call();
             } else {
                 sync.fail();

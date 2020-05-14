@@ -86,7 +86,7 @@ public class FriendshipUtilsTest {
 
         MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH,
                 new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
-        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), result);
+        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.getList().get(0).keySet())), result);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class FriendshipUtilsTest {
 
         MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH,
                 new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
-        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), result);
+        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.getList().get(0).keySet())), result);
     }
 
     @Test
@@ -112,6 +112,6 @@ public class FriendshipUtilsTest {
 
         MyQuery query = new MyQuery(Database.FRIENDSHIPS_PATH,
                 new MyWhereClause(Database.DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, recipient.getUid()));
-        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.get(0).keySet())), new ArrayList<>());
+        checkResult(db.query(query).thenApply(maps -> new ArrayList<>(maps.getList().get(0).keySet())), new ArrayList<>());
     }
 }
