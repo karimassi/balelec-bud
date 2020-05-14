@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -32,6 +35,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.getIntents;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -75,19 +79,32 @@ public class PicturesFragmentTest {
 
     @Test
     public void cameraIsSavingImageToView() throws InterruptedException {
-
-
+        TestAsyncUtils sync = new TestAsyncUtils();
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
         Intents.init();
+        FragmentScenario.launchInContainer(PicturesFragment.class).onFragment( fragment -> {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("IMG_DATA", BitmapFactory.decodeResource(fragment.getActivity().getResources(), R.mipmap.ic_launcher));
+            // Create the Intent that will include the bundle.
+            Intent resultImg = new Intent();
+            resultImg.putExtras(bundle);
 
-        Bitmap icon = Bitmap.createBitmap(1,1, Bitmap.Config.ARGB_8888);
-        Intent resultData = new Intent();
-        resultData.putExtra("data", icon);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
-        intending(toPackage("com.android.camera2")).respondWith(result);
-        hasImage();
+            // Create the ActivityResult with the Intent.
+            Instrumentation.ActivityResult result =  new Instrumentation.ActivityResult(Activity.RESULT_OK, resultImg);
+            intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(result);
+
+            ImageView view = fragment.getActivity().findViewById(R.id.picturesImageView);
+            Drawable drawable = view.getDrawable();
+            boolean hasImage = (drawable != null);
+            if (hasImage && (drawable instanceof BitmapDrawable)) {
+                hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
+            }
+            sync.assertTrue(hasImage);
+
+        });
         Intents.release();
-
-
     }
 
 
@@ -99,23 +116,6 @@ public class PicturesFragmentTest {
         }
     }
 
-    private void hasImage() throws InterruptedException {
-        TestAsyncUtils sync = new TestAsyncUtils();
-        sync.waitCall(1);
-        sync.assertCalled(1);
-        sync.assertNoFailedTests();
-        FragmentScenario.launchInContainer(PicturesFragment.class).onFragment( fragment -> {
-            ImageView view = fragment.getActivity().findViewById(R.id.picturesImageView);
-            Drawable drawable = view.getDrawable();
-            boolean hasImage = (drawable != null);
-            if (hasImage && (drawable instanceof BitmapDrawable)) {
-                hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
-            }
-            sync.assertTrue(hasImage);
-
-        });
-
-    }
 
     @Test
     public void buttonIsDisplayed() {
