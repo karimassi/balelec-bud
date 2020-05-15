@@ -2,6 +2,9 @@ package ch.epfl.balelecbud.model;
 
 import ch.epfl.balelecbud.R;
 
+/**
+ * Enum modeling the different marker type
+ */
 public enum MarkerType {
 
     FRIEND("Friend", R.drawable.friend_icon),
@@ -30,6 +33,12 @@ public enum MarkerType {
         return drawableId;
     }
 
+    /**
+     * Convert a {@code PointOfInterestType} into its corresponding {@code MarkerType}
+     *
+     * @param pointOfInterestType the {@code PointOfInterestType} to convert
+     * @return                    the converted {@code MarkerType}
+     */
     public static MarkerType getMarkerType(PointOfInterestType pointOfInterestType) {
         switch (pointOfInterestType) {
             case BAR:
