@@ -28,6 +28,10 @@ import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.E
  * Utility class used to send and extract messages
  */
 public final class Message {
+    public enum Type {
+        FRIEND_REQUEST,
+        ACCEPT_REQUEST
+    }
 
     private static final String TAG = Message.class.getSimpleName();
 
@@ -45,25 +49,27 @@ public final class Message {
     /**
      * Send a friendship message via the messaging server
      *
-     * @param user   the user that send the message
+     * @param user   the user that sends the message
      * @param toSend the user ID of the recipient
      * @param type   the type of the message
      */
-    public static void sendFriendshipMessage(User user, String toSend, String type) {
+    public static void sendFriendshipMessage(User user, String toSend, Type type) {
         Log.d(TAG, "Sending friendship message, type: " + type);
         MyQuery query = new MyQuery(Database.TOKENS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, user.getUid()));
         BalelecbudApplication.getAppDatabase()
                 .query(query)
                 .whenCompleteAsync((t, throwable) -> {
                     if (throwable == null && t.size() > 0) {
-                        if (getAppContext().getString(R.string.type_friend_request).equals(type)) {
-                            new Message(getAppContext().getString(R.string.friend_request_title),
-                                    user.getDisplayName() + getAppContext().getString(R.string.friend_request_body),
-                                    getAppContext().getString(R.string.message_type_social)).sendMessage(toSend);
-                        } else if (getAppContext().getString(R.string.type_accept_request).equals(type)) {
-                            new Message(getAppContext().getString(R.string.accept_request_title),
-                                    user.getDisplayName() + getAppContext().getString(R.string.accept_request_body),
-                                    getAppContext().getString(R.string.message_type_social)).sendMessage(toSend);
+                        switch (type) {
+                            case FRIEND_REQUEST:
+                                new Message(getAppContext().getString(R.string.friend_request_title),
+                                        user.getDisplayName() + getAppContext().getString(R.string.friend_request_body),
+                                        getAppContext().getString(R.string.message_type_social)).sendMessage(toSend);
+                                break;
+                            case ACCEPT_REQUEST:
+                                new Message(getAppContext().getString(R.string.accept_request_title),
+                                        user.getDisplayName() + getAppContext().getString(R.string.accept_request_body),
+                                        getAppContext().getString(R.string.message_type_social)).sendMessage(toSend);
                         }
                     } else {
                         Log.d(TAG, "Didn't find token for this user, stopped sending the message", throwable);

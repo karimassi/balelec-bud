@@ -84,7 +84,7 @@ public class MessageTest {
 
     @Test
     public void sendFriendRequestMessageTest() {
-        sendFriendshipMessageTest(getAppContext().getString(R.string.type_friend_request),
+        sendFriendshipMessageTest(Message.Type.FRIEND_REQUEST,
                 getAppContext().getString(R.string.friend_request_title),
                 getAppContext().getString(R.string.friend_request_body));
     }
@@ -92,13 +92,13 @@ public class MessageTest {
     @Test
     public void sendFriendRequestMessageWithoutToken() {
         Message.sendFriendshipMessage(MockDatabase.axel, user.getUid(),
-                getAppContext().getString(R.string.type_friend_request));
+                Message.Type.FRIEND_REQUEST);
         assertNull(device.findObject(By.text(getAppContext().getString(R.string.friend_request_title))));
     }
 
     @Test
     public void sendAcceptRequestMessageTest() {
-        sendFriendshipMessageTest(getAppContext().getString(R.string.type_accept_request),
+        sendFriendshipMessageTest(Message.Type.ACCEPT_REQUEST,
                 getAppContext().getString(R.string.accept_request_title),
                 getAppContext().getString(R.string.accept_request_body));
     }
@@ -106,7 +106,7 @@ public class MessageTest {
     @Test
     public void sendAcceptRequestMessageWithoutToken() {
         Message.sendFriendshipMessage(MockDatabase.axel, user.getUid(),
-                getAppContext().getString(R.string.type_accept_request));
+                Message.Type.ACCEPT_REQUEST);
         assertNull(device.findObject(By.text(getAppContext().getString(R.string.accept_request_title))));
     }
 
@@ -152,7 +152,7 @@ public class MessageTest {
         assertTrue(result.isEmpty());
     }
 
-    private void sendFriendshipMessageTest(String type, String title, String body) {
+    private void sendFriendshipMessageTest(Message.Type type, String title, String body) {
         Message.sendFriendshipMessage(friend, user.getUid(), type);
         NotificationMessageTest.verifyNotification(device, title,
                 friend.getDisplayName() + body);

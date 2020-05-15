@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.cloudMessaging.Message;
 import ch.epfl.balelecbud.utility.database.Database;
@@ -16,7 +15,6 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.utility.database.Database.FRIENDSHIPS_PATH;
@@ -34,7 +32,7 @@ public class FriendshipUtils {
         getAppDatabase().storeDocumentWithID(Database.SENT_REQUESTS_PATH, getAppAuthenticator().getCurrentUser().getUid(), toStore);
 
         Message.sendFriendshipMessage(getAppAuthenticator().getCurrentUser(), friend.getUid(),
-                getAppContext().getString(R.string.type_friend_request));
+                Message.Type.FRIEND_REQUEST);
     }
 
     public static void removeFriend(User friend) {
@@ -61,7 +59,7 @@ public class FriendshipUtils {
         deleteRequest(sender, getAppAuthenticator().getCurrentUser());
 
         Message.sendFriendshipMessage(getAppAuthenticator().getCurrentUser(), sender.getUid(),
-                getAppContext().getString(R.string.type_accept_request));
+                Message.Type.ACCEPT_REQUEST);
     }
 
     public static void deleteRequest(User sender, User receiver) {
