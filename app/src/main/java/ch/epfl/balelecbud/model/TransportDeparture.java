@@ -5,13 +5,24 @@ import java.util.Objects;
 
 import ch.epfl.balelecbud.utility.StringUtils;
 
-public class TransportDeparture {
+/**
+ * Class modeling a public transport departure
+ */
+public final class TransportDeparture {
 
     private String category;
     private String line;
     private String destination;
     private Date time;
 
+    /**
+     * Constructor for a transport departure
+     *
+     * @param category    the category of the transport
+     * @param line        the line of the transport
+     * @param destination the destination of the transport
+     * @param time        the leaving time of the transport
+     */
     public TransportDeparture(String category, String line, String destination, Date time) {
         this.category = category;
         this.line = line;
