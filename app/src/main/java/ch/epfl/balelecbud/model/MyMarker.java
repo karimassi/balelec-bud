@@ -98,6 +98,7 @@ public interface MyMarker {
          * Transform this builder into a {@code MapboxMarkerOption}
          *
          * @return this converted builder
+         * @throws NullPointerException if the location of the marker has not been set
          */
         public MarkerOptions toMapboxMarkerOptions() {
             MarkerOptions result = new MarkerOptions();

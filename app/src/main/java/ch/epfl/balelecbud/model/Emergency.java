@@ -53,10 +53,10 @@ public final class Emergency {
     @Override
     public boolean equals(Object o) {
         return (o instanceof Emergency)
-                && ((Emergency) o).getCategory().equals(category)
-                && ((Emergency) o).getMessage().equals(message)
-                && ((Emergency) o).getUserID().equals(userID)
-                && ((Emergency) o).getTimestamp().equals(timestamp);
+                && ((Emergency) o).category == category
+                && Objects.equals(((Emergency) o).message, message)
+                && Objects.equals(((Emergency) o).userID, userID)
+                && Objects.equals(((Emergency) o).timestamp, timestamp);
     }
 
     @Override

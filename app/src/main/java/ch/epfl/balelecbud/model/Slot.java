@@ -10,6 +10,8 @@ import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 
+import java.util.Objects;
+
 import ch.epfl.balelecbud.utility.StringUtils;
 
 @Entity
@@ -85,11 +87,11 @@ public class Slot implements Parcelable {
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof Slot)
                 && ((Slot) obj).id == id
-                && ((Slot) obj).getArtistName().equals(artistName)
-                && ((Slot) obj).getStartTime().equals(startTime)
-                && ((Slot) obj).getEndTime().equals(endTime)
-                && ((Slot) obj).getSceneName().equals(sceneName)
-                && ((Slot) obj).getImageFileName().equals(imageFileName);
+                && Objects.equals(((Slot) obj).artistName, artistName)
+                && Objects.equals(((Slot) obj).startTime, startTime)
+                && Objects.equals(((Slot) obj).endTime, endTime)
+                && Objects.equals(((Slot) obj).sceneName, sceneName)
+                && Objects.equals(((Slot) obj).imageFileName, imageFileName);
     }
 
     @Override

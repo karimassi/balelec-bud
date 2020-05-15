@@ -2,6 +2,8 @@ package ch.epfl.balelecbud.model;
 
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
 /**
  * Class modeling general festival information
  */
@@ -37,7 +39,7 @@ public final class FestivalInformation {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof FestivalInformation)
-                && ((FestivalInformation) obj).getInformation().equals(information)
-                && ((FestivalInformation) obj).getTitle().equals(title);
+                && Objects.equals(((FestivalInformation) obj).information, information)
+                && Objects.equals(((FestivalInformation) obj).title, title);
     }
 }

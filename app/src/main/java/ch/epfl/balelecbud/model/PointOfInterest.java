@@ -38,10 +38,10 @@ public class PointOfInterest {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof PointOfInterest)
-                && ((PointOfInterest) obj).getName().equals(name)
-                && ((PointOfInterest) obj).getType().equals(type)
-                && ((PointOfInterest) obj).getLocation().equals(location)
-                && ((PointOfInterest) obj).getRadius() == (radius);
+                && Objects.equals(((PointOfInterest) obj).name, name)
+                && Objects.equals(((PointOfInterest) obj).type, type)
+                && Objects.equals(((PointOfInterest) obj).location, location)
+                && ((PointOfInterest) obj).radius == radius;
     }
 
     @Override

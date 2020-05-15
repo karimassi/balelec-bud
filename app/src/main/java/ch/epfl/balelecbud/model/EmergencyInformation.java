@@ -2,6 +2,8 @@ package ch.epfl.balelecbud.model;
 
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
 /**
  * Class modeling an emergency information
  */
@@ -45,8 +47,8 @@ public final class EmergencyInformation {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof EmergencyInformation)
-                && emergencyNumber == ((EmergencyInformation) obj).emergencyNumber
-                && ((EmergencyInformation) obj).getInstruction().equals(instruction)
-                && ((EmergencyInformation) obj).getName().equals(getName());
+                && ((EmergencyInformation) obj).emergencyNumber == emergencyNumber
+                && Objects.equals(((EmergencyInformation) obj).instruction, instruction)
+                && Objects.equals(((EmergencyInformation) obj).name, name);
     }
 }
