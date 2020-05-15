@@ -22,7 +22,10 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
-public class FilesystemCache implements Cache {
+/**
+ * A file system adapter cache
+ */
+public final class FilesystemCache implements Cache {
 
     private Gson gson;
     private Context context;
