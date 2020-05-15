@@ -6,7 +6,22 @@ import android.os.Parcelable;
 
 import java.util.Objects;
 
-public class User implements Parcelable {
+/**
+ * Class modeling a user
+ */
+public final class User implements Parcelable {
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
     private static final String EMAIL = "User.EMAIL";
     private static final String DISPLAY_NAME = "User.DISPLAY_NAME";
     private static final String UID = "User.UID";
@@ -15,8 +30,19 @@ public class User implements Parcelable {
     private String displayName;
     private String uid;
 
-    public User() { }
+    /**
+     * Empty constructor used by FireStore
+     */
+    public User() {
+    }
 
+    /**
+     * Constructor for a user
+     *
+     * @param email       the email address of the user
+     * @param displayName the name of the user
+     * @param uid         the ID of the user
+     */
     public User(String email, String displayName, String uid) {
         this.email = email;
         this.displayName = displayName;
@@ -29,28 +55,10 @@ public class User implements Parcelable {
         uid = in.readString();
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
     public static boolean isAUserStored(SharedPreferences preferences) {
         return preferences.contains(EMAIL) &&
                 preferences.contains(DISPLAY_NAME) &&
                 preferences.contains(UID);
-    }
-
-    public void storeUser(SharedPreferences.Editor editor) {
-        editor.putString(EMAIL, email);
-        editor.putString(DISPLAY_NAME, displayName);
-        editor.putString(UID, uid);
     }
 
     public static User restoreUser(SharedPreferences preferences) {
@@ -65,30 +73,36 @@ public class User implements Parcelable {
         }
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void storeUser(SharedPreferences.Editor editor) {
+        editor.putString(EMAIL, email);
+        editor.putString(DISPLAY_NAME, displayName);
+        editor.putString(UID, uid);
+    }
+
     @Override
     public boolean equals(Object o) {
         return (o instanceof User)
-                && Objects.equals(((User) o).getEmail(), email)
-                && Objects.equals(((User) o).getDisplayName(), displayName)
-                && Objects.equals(((User) o).getUid(), uid);
+                && Objects.equals(((User) o).email, email)
+                && Objects.equals(((User) o).displayName, displayName)
+                && Objects.equals(((User) o).uid, uid);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getEmail(), getDisplayName(), getUid());
     }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     @Override
     public int describeContents() {
