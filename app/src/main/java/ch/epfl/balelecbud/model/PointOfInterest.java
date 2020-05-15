@@ -4,14 +4,29 @@ import androidx.annotation.Nullable;
 
 import java.util.Objects;
 
-public class PointOfInterest {
+/**
+ * Class modeling the points of interest of the festival
+ */
+public final class PointOfInterest {
+
     private String name;
     private PointOfInterestType type;
     private Location location;
     private double radius;
 
+    /**
+     * Empty constructor used by FireStore
+     */
     public PointOfInterest() {}
 
+    /**
+     * Constructor for the points of interest
+     *
+     * @param name     the name of the poi
+     * @param type     the type of the poi
+     * @param location the location of the poi
+     * @param radius   the radius used to count the number of person at this poi
+     */
     public PointOfInterest(String name, PointOfInterestType type, Location location, double radius) {
         this.location = location;
         this.name = name;

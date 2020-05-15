@@ -6,7 +6,10 @@ import androidx.annotation.NonNull;
  * Enum modeling the emergency categories
  */
 public enum EmergencyCategory {
-    THEFT("Theft"), FAINT("Feeling faint"), FIRE("Fire"), FIGHT("Fight");
+    THEFT("Theft"),
+    FAINT("Feeling faint"),
+    FIRE("Fire"),
+    FIGHT("Fight");
 
     private String type;
 
