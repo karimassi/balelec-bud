@@ -4,31 +4,51 @@ import com.google.firebase.Timestamp;
 
 import java.util.Objects;
 
-public class Emergency {
+/**
+ * Class modeling an emergency posted by a user
+ */
+public final class Emergency {
 
-    private EmergencyType category;
+    private EmergencyCategory category;
     private String message;
     private String userID;
     private Timestamp timestamp;
 
+    /**
+     * Empty constructor used by FireStore
+     */
+    public Emergency() { }
 
-
-    public Emergency(){
-
-    }
-
-    public Emergency(EmergencyType category,  String message, String userID, Timestamp timestamp){
+    /**
+     * Constructor for emergencies
+     *
+     * @param category  the category of the emergency
+     * @param message   the message linked with the emergency
+     * @param userID    the ID of the user writing the emergency
+     * @param timestamp the timestamp of the emergency
+     */
+    public Emergency(EmergencyCategory category, String message, String userID, Timestamp timestamp) {
         this.category = category;
-        this.message=message;
-        this.userID=userID;
-        this.timestamp=timestamp;
+        this.message = message;
+        this.userID = userID;
+        this.timestamp = timestamp;
     }
 
-    public EmergencyType getCategory(){return category;}
-    public String getMessage(){return message;}
-    public String getUserID(){return userID;}
-    public Timestamp getTimestamp(){return timestamp;}
+    public EmergencyCategory getCategory() {
+        return category;
+    }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
 
     @Override
     public boolean equals(Object o) {

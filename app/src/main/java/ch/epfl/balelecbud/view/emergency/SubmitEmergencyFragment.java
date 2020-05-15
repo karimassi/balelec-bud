@@ -21,7 +21,7 @@ import com.google.firebase.Timestamp;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Emergency;
-import ch.epfl.balelecbud.model.EmergencyType;
+import ch.epfl.balelecbud.model.EmergencyCategory;
 import ch.epfl.balelecbud.utility.StringUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 
@@ -48,7 +48,7 @@ public class SubmitEmergencyFragment extends DialogFragment {
         messageField.addTextChangedListener(watcher);
 
         categorySpinner = view.findViewById(R.id.spinner_emergency_categories);
-        categorySpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, EmergencyType.values()));
+        categorySpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, EmergencyCategory.values()));
 
         builder.setView(view)
                 .setTitle(R.string.emergency_ask_for_help)
@@ -78,8 +78,8 @@ public class SubmitEmergencyFragment extends DialogFragment {
 
     private void submitEmergency() {
         String emergencyMessage = messageField.getText().toString();
-        EmergencyType emergencyType = EmergencyType.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
-        Emergency emergency = new Emergency(emergencyType, emergencyMessage, getAppAuthenticator().getCurrentUid(), Timestamp.now());
+        EmergencyCategory emergencyCategory = EmergencyCategory.valueOf(categorySpinner.getSelectedItem().toString().toUpperCase());
+        Emergency emergency = new Emergency(emergencyCategory, emergencyMessage, getAppAuthenticator().getCurrentUid(), Timestamp.now());
         getAppDatabase().storeDocument(Database.EMERGENCIES_PATH, emergency);
         Toast.makeText(getActivity(), R.string.emergency_sent_message, Toast.LENGTH_SHORT).show();
     }
