@@ -2,15 +2,25 @@ package ch.epfl.balelecbud.model;
 
 import androidx.annotation.Nullable;
 
-public class FestivalInformation {
+/**
+ * Class modeling general festival information
+ */
+public final class FestivalInformation {
 
     private String title;
     private String information;
 
-    public FestivalInformation() {
+    /**
+     * Empty constructor used by FireStore
+     */
+    public FestivalInformation() { }
 
-    }
-
+    /**
+     * Constructor for the festival information
+     *
+     * @param title       the title of the festival information
+     * @param information the content of the festival information
+     */
     public FestivalInformation(String title, String information) {
         this.title = title;
         this.information = information;
