@@ -140,7 +140,7 @@ public class MessageTest {
         message.put(getAppContext().getString(R.string.data_key_body), body);
         message.put(getAppContext().getString(R.string.data_key_type), getAppContext().getString(R.string.message_type_general));
         RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message).build();
-        Map<String, String> result = Message.extractMessage(rm);
+        Map<String, String> result = Message.extractFromMessage(rm);
         assertThat(result, is(message));
     }
 
@@ -148,7 +148,7 @@ public class MessageTest {
     public void extractEmptyMessageTest() {
         Map<String, String> message = new HashMap<>();
         RemoteMessage rm = new RemoteMessage.Builder("ID").setData(message).build();
-        Map<String, String> result = Message.extractMessage(rm);
+        Map<String, String> result = Message.extractFromMessage(rm);
         assertTrue(result.isEmpty());
     }
 
