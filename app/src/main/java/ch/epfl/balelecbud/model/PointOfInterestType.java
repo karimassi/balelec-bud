@@ -1,6 +1,6 @@
 package ch.epfl.balelecbud.model;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 /**
  * Enum modeling the different type of point of interest of the festival
@@ -19,7 +19,7 @@ public enum PointOfInterestType {
         this.type = type;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public String toString() {
         return type;
