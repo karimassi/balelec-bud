@@ -9,7 +9,7 @@ import com.google.gson.JsonParser;
 
 import java.util.concurrent.CompletableFuture;
 
-class HttpGetRequest extends CompletableFuture<JsonElement> {
+final class HttpGetRequest extends CompletableFuture<JsonElement> {
 
     private static final String TAG = HttpGetRequest.class.getSimpleName();
 

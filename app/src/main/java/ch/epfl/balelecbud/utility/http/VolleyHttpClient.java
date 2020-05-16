@@ -11,13 +11,14 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.BalelecbudApplication;
 
 /**
- * A Volley adapter HTTP client
+ * A Volley adapter
  */
 public final class VolleyHttpClient implements HttpClient {
 
     private static final HttpClient instance = new VolleyHttpClient();
 
     private RequestQueue queue;
+    private String key;
 
     public static HttpClient getInstance() {
         return instance;
@@ -25,6 +26,11 @@ public final class VolleyHttpClient implements HttpClient {
 
     private VolleyHttpClient() {
         queue = Volley.newRequestQueue(BalelecbudApplication.getAppContext());
+    }
+
+    @Override
+    public void setAuthorizationKey(String authorizationKey) {
+        key = authorizationKey;
     }
 
     @Override
@@ -36,7 +42,7 @@ public final class VolleyHttpClient implements HttpClient {
 
     @Override
     public CompletableFuture<JsonElement> post(String url, JSONObject r) {
-        HttpPostRequest request = new HttpPostRequest(url, r);
+        HttpPostRequest request = new HttpPostRequest(url, r, key);
         queue.add(request.getPostRequest());
         return request;
     }

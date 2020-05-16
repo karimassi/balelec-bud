@@ -27,4 +27,12 @@ public interface HttpClient {
      * @return        a {@code CompletableFuture} that will complete with the result of the request
      */
     CompletableFuture<JsonElement> post(String url, JSONObject request);
+
+    /**
+     * Set the authorization key of the HTTP client
+     *
+     * @param authorizationKey an authorization key
+     */
+     void setAuthorizationKey(String authorizationKey);
+
 }

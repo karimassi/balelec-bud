@@ -13,7 +13,6 @@ import java.util.Map;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.http.HttpPostRequest;
 import ch.epfl.balelecbud.utility.notifications.NotificationMessage;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
@@ -49,7 +48,7 @@ public final class CloudMessagingService extends FirebaseMessagingService implem
     @Override
     public void sendMessage(JSONObject send) {
         Log.d(TAG, "Sending the message to the server");
-        HttpPostRequest.setAuthorizationKey(getAppContext().getString(R.string.fcm_key));
+        BalelecbudApplication.getHttpClient().setAuthorizationKey(getAppContext().getString(R.string.fcm_key));
         BalelecbudApplication.getHttpClient().post(getAppContext().getString(R.string.fcm_base_url), send);
     }
 
