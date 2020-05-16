@@ -21,7 +21,10 @@ import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.notifications.NotificationInterface;
 
-public class NotificationScheduler implements NotificationInterface<Slot> {
+/**
+ * Notification scheduler for concerts
+ */
+public final class NotificationScheduler implements NotificationInterface<Slot> {
 
     private static final String TAG = "ConcertSoon.Scheduler";
     private static final String CHANNEL_ID = "CONCERT_SOON_CHANNEL_ID";

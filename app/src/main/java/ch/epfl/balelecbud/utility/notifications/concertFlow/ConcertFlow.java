@@ -21,7 +21,10 @@ import ch.epfl.balelecbud.utility.notifications.concertFlow.objects.ConcertOfInt
 import ch.epfl.balelecbud.utility.notifications.concertFlow.objects.ConcertOfInterestDatabase;
 import ch.epfl.balelecbud.utility.notifications.concertSoon.NotificationScheduler;
 
-public class ConcertFlow extends IntentService {
+/**
+ * Service handling the flow of the subscribed concerts
+ */
+public final class ConcertFlow extends IntentService {
     private static final String TAG = ConcertFlow.class.getSimpleName();
     private static NotificationInterface scheduler;
     private static ConcertOfInterestDatabase mockDb = null;
