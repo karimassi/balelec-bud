@@ -10,11 +10,18 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 
-public class VolleyHttpClient implements HttpClient {
+/**
+ * A Volley adapter HTTP client
+ */
+public final class VolleyHttpClient implements HttpClient {
 
     private static final HttpClient instance = new VolleyHttpClient();
 
-    RequestQueue queue;
+    private RequestQueue queue;
+
+    public static HttpClient getInstance() {
+        return instance;
+    }
 
     private VolleyHttpClient() {
         queue = Volley.newRequestQueue(BalelecbudApplication.getAppContext());
@@ -32,9 +39,5 @@ public class VolleyHttpClient implements HttpClient {
         HttpPostRequest request = new HttpPostRequest(url, r);
         queue.add(request.getPostRequest());
         return request;
-    }
-
-    public static HttpClient getInstance() {
-        return instance;
     }
 }

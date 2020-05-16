@@ -9,13 +9,13 @@ import com.google.gson.JsonParser;
 
 import java.util.concurrent.CompletableFuture;
 
-public class HttpGetRequest extends CompletableFuture<JsonElement> {
+class HttpGetRequest extends CompletableFuture<JsonElement> {
 
     private static final String TAG = HttpGetRequest.class.getSimpleName();
 
     private JsonObjectRequest getRequest;
 
-    public HttpGetRequest(String url) {
+    HttpGetRequest(String url) {
         getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     complete(JsonParser.parseString(response.toString()));
@@ -27,9 +27,7 @@ public class HttpGetRequest extends CompletableFuture<JsonElement> {
         );
     }
 
-    public JsonObjectRequest getGetRequest() {
+    JsonObjectRequest getGetRequest() {
         return getRequest;
     }
-
-
 }

@@ -20,7 +20,7 @@ public class HttpPostRequest extends CompletableFuture<JsonElement> {
 
     private JsonObjectRequest postRequest;
 
-    public HttpPostRequest(String url, JSONObject request) {
+    HttpPostRequest(String url, JSONObject request) {
         Log.d(TAG, "In http post request");
         postRequest = new JsonObjectRequest(Request.Method.POST, url, request,
                 response -> complete(JsonParser.parseString(response.toString())),
@@ -43,7 +43,7 @@ public class HttpPostRequest extends CompletableFuture<JsonElement> {
         key = authorizationKey;
     }
 
-    public JsonObjectRequest getPostRequest() {
+    JsonObjectRequest getPostRequest() {
         return postRequest;
     }
 }
