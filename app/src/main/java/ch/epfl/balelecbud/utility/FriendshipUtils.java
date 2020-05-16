@@ -20,9 +20,12 @@ import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.utility.database.Database.FRIENDSHIPS_PATH;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 
-public class FriendshipUtils {
+/**
+ * Collection of methods used to manage friendships
+ */
+public final class FriendshipUtils {
 
-    public static void addFriend(User friend) {
+    public static void requestFriend(User friend) {
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(getAppAuthenticator().getCurrentUser().getUid(), true);
         getAppDatabase().storeDocumentWithID(Database.FRIEND_REQUESTS_PATH, friend.getUid(), toStore);

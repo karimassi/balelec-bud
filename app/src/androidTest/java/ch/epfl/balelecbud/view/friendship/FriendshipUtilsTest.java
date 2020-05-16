@@ -47,7 +47,7 @@ public class FriendshipUtilsTest {
     }
 
     private void addFriend(final User friend) throws Throwable {
-        runOnUIThreadAndWait(() -> FriendshipUtils.addFriend(friend));
+        runOnUIThreadAndWait(() -> FriendshipUtils.requestFriend(friend));
     }
 
     private void acceptRequest(final User sender) throws Throwable {

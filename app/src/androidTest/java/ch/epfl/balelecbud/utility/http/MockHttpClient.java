@@ -12,13 +12,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.utility.CompletableFutureUtils;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 
 public class MockHttpClient implements HttpClient {
 
     private static final HttpClient instance = new MockHttpClient();
 
-    JsonElement responseStations;
+    private JsonElement responseStations;
 
     private MockHttpClient() {
         responseStations = new JsonObject();
@@ -35,13 +35,16 @@ public class MockHttpClient implements HttpClient {
         } catch (MalformedURLException e) {
             Log.d(this.getClass().getSimpleName(), "Could not parse URL");
         }
-        return CompletableFutureUtils.getExceptionalFuture("Received an invalid URL");
+        return TestAsyncUtils.getExceptionalFuture("Received an invalid URL");
     }
 
     @Override
     public CompletableFuture<JsonElement> post(String url, JSONObject request) {
         return CompletableFuture.completedFuture(new JsonObject());
     }
+
+    @Override
+    public void setAuthorizationKey(String authorizationKey) { }
 
     public static HttpClient getInstance() {
         return instance;

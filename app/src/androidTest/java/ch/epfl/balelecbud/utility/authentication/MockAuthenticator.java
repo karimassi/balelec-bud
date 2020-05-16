@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.model.User;
-import ch.epfl.balelecbud.utility.CompletableFutureUtils;
+import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
@@ -51,7 +51,7 @@ public class MockAuthenticator implements Authenticator {
             MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, "0"));
             return MockDatabase.getInstance().query(query, User.class).thenApply(users -> users.get(0));
         } else {
-            return CompletableFutureUtils.getExceptionalFuture("Failed login");
+            return TestAsyncUtils.getExceptionalFuture("Failed login");
         }
     }
 
@@ -62,7 +62,7 @@ public class MockAuthenticator implements Authenticator {
             User u = new User(email, name, currentUserID);
             return MockDatabase.getInstance().storeDocumentWithID(Database.USERS_PATH, u.getUid(), u);
         } else {
-            return CompletableFutureUtils.getExceptionalFuture("Failed registration");
+            return TestAsyncUtils.getExceptionalFuture("Failed registration");
         }
     }
 

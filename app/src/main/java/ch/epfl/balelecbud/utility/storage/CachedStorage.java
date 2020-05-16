@@ -9,7 +9,6 @@ import java.util.concurrent.CompletableFuture;
  * returns a file but if we want to implement a caching strategy (like LRU for example) then having
  * this infrastructure already in place will be really useful
  */
-
 public class CachedStorage implements Storage {
 
     private static final String TAG = CachedStorage.class.getSimpleName();

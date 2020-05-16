@@ -20,7 +20,6 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.utility.CompletableFutureUtils;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
@@ -165,7 +164,7 @@ public class RegisterUserTest {
             public <T> void storeDocument(String collectionName, T document) { }
             @Override
             public <T> CompletableFuture<Void> storeDocumentWithID(String collectionName, String documentID, T document) {
-                return CompletableFutureUtils.getExceptionalFuture("Failed to store document");
+                return TestAsyncUtils.getExceptionalFuture("Failed to store document");
             }
             @Override
             public void deleteDocumentWithID(String collectionName, String documentID) { }
