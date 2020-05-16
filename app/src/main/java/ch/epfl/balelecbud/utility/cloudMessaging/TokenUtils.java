@@ -16,7 +16,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 /**
  * Utility class used to manage messaging token
  */
-public class TokenUtils {
+public final class TokenUtils {
 
     private static final String TAG = TokenUtils.class.getSimpleName();
 

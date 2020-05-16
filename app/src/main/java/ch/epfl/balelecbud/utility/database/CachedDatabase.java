@@ -15,7 +15,10 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppCache;
 import static ch.epfl.balelecbud.BalelecbudApplication.getRemoteDatabase;
 
-public class CachedDatabase implements Database {
+/**
+ * Decorator class for a cached database
+ */
+public final class CachedDatabase implements Database {
 
     private static final String TAG = CachedDatabase.class.getSimpleName();
 

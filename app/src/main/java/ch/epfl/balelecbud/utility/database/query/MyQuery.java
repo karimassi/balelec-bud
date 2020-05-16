@@ -7,7 +7,10 @@ import java.util.List;
 
 import ch.epfl.balelecbud.utility.database.Database;
 
-public class  MyQuery {
+/**
+ * Class modeling normal claus
+ */
+public final class MyQuery {
 
     private final String collectionName;
     private final List<MyWhereClause> whereClauses;
@@ -78,5 +81,4 @@ public class  MyQuery {
     public Database.Source getSource() {
         return source;
     }
-
 }

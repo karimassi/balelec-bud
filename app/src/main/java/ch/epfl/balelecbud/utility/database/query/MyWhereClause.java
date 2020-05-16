@@ -36,7 +36,4 @@ public class MyWhereClause implements MyClause {
         GREATER_EQUAL,
         EQUAL
     }
-
-
-
 }

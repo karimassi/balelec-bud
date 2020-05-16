@@ -1,7 +1,7 @@
 package ch.epfl.balelecbud.model;
 
 /**
- * Interface for the map
+ * Interface modeling a map
  */
 public interface MyMap {
 

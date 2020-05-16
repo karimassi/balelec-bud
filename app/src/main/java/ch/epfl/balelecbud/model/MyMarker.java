@@ -13,7 +13,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Interface for a marker on the map
+ * Interface modeling marker on the map
  */
 public interface MyMarker {
 
