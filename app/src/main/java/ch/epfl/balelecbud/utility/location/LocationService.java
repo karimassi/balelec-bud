@@ -15,7 +15,10 @@ import ch.epfl.balelecbud.utility.database.Database;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class LocationService extends IntentService {
+/**
+ * A service process location updates
+ */
+public final class LocationService extends IntentService {
     private static final String TAG = LocationService.class.getSimpleName();
     public static final String ACTION_PROCESS_UPDATES = TAG + ".ACTION_PROCESS_UPDATES";
 
@@ -29,7 +32,6 @@ public class LocationService extends IntentService {
             LocationUtils.disableLocation();
         }
     }
-
 
     public LocationService() {
         super(TAG);

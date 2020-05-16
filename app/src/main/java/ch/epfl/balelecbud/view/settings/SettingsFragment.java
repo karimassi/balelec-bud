@@ -68,7 +68,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private void setUpLocationPreferences() {
         findPreference(LOCATION_ENABLE_KEY).setOnPreferenceChangeListener((preference, new_value) -> {
-            LocationUtils.updateLocation((boolean) new_value);
+            if ((boolean) new_value) {
+                LocationUtils.enableLocation();
+            } else {
+                LocationUtils.disableLocation();
+            }
             return true;
         });
         findPreference(LOCATION_INFO_KEY).setOnPreferenceClickListener(preference -> {
