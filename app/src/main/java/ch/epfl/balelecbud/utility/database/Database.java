@@ -12,7 +12,7 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
  */
 public interface Database {
 
-    enum Source {REMOTE, CACHE}
+    enum Source {REMOTE_ONLY, CACHE_FIRST, CACHE_ONLY};
 
     String FESTIVAL_INFORMATION_PATH = "festivalInfo";
     String POINT_OF_INTEREST_PATH = "pointsOfInterest";
@@ -25,6 +25,7 @@ public interface Database {
     String FRIENDSHIPS_PATH = "friendships";
     String FRIEND_REQUESTS_PATH = "friendRequests";
     String SENT_REQUESTS_PATH = "sentRequests";
+    String PLAYLIST_PATH = "playlist";
 
     String DOCUMENT_ID_OPERAND = "documentId";
 
@@ -54,7 +55,7 @@ public interface Database {
      * @param tClass the class of the objects to query
      * @return       a {@code CompletableFuture} that will complete with the result of the query
      */
-    <T> CompletableFuture<List<T>> query(MyQuery query, final Class<T> tClass);
+    <T> CompletableFuture<FetchedData<T>> query(MyQuery query, final Class<T> tClass);
 
     /**
      * Query the database
@@ -62,7 +63,7 @@ public interface Database {
      * @param query a query
      * @return      a {@code CompletableFuture} that will complete with the result of the query
      */
-    CompletableFuture<List<Map<String, Object>>> query(MyQuery query);
+    CompletableFuture<FetchedData<Map<String, Object>>> query(MyQuery query);
 
     /**
      * Update a document of the database

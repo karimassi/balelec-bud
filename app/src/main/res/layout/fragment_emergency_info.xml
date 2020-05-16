@@ -5,13 +5,19 @@
     android:id="@+id/emergency_info_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blek_blue">
+    android:background="@color/blek_blue"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:weightSum="10">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="0dp"
+        android:layout_weight="9.5"
+        android:background="@color/blek_blue"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_emergency_info"
@@ -26,21 +32,26 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical"
+                    android:weightSum="10">
+
+                    <include layout="@layout/freshness_info" />
 
                     <TextView
                         android:id="@+id/emergency_info_numbers_title"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:text="@string/emergency_numbers_title" />
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:text="@string/emergency_numbers_title"
+                        android:textSize="18sp" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_emergency_numbers"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_marginLeft="@dimen/poi_margin"
                         android:layout_marginRight="@dimen/poi_margin"
+                        android:layout_weight="4.5"
                         app:layoutManager="LinearLayoutManager"
                         tools:context=".EmergencyInformationActivity"
                         tools:listitem="@layout/item_emergency_info" />
@@ -48,16 +59,19 @@
                     <TextView
                         android:id="@+id/emergency_info_title"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:text="@string/emergency_information_title" />
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:text="@string/emergency_information_title"
+                        android:textSize="18sp" />
+
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_emergency_info"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_marginLeft="@dimen/poi_margin"
                         android:layout_marginRight="@dimen/poi_margin"
+                        android:layout_weight="4.5"
                         app:layoutManager="LinearLayoutManager"
                         tools:context=".EmergencyInformationActivity"
                         tools:listitem="@layout/item_emergency_info" />
@@ -66,20 +80,19 @@
             </ScrollView>
 
 
-
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_declare_emergency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="end|bottom"
             android:clickable="true"
             android:focusable="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="end|bottom"
             app:maxImageSize="56dp"
-            app:srcCompat="@mipmap/help"/>
+            app:srcCompat="@mipmap/help" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

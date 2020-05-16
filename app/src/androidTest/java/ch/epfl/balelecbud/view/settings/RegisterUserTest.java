@@ -22,6 +22,7 @@ import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
@@ -135,8 +136,8 @@ public class RegisterUserTest {
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, MockAuthenticator.getInstance().getCurrentUid()));
         mockDB.query(query, User.class).whenComplete((users, throwable) -> {
             if (throwable == null) {
-                sync.assertEquals(email, users.get(0).getEmail());
-                sync.assertEquals("name", users.get(0).getDisplayName());
+                sync.assertEquals(email, users.getList().get(0).getEmail());
+                sync.assertEquals("name", users.getList().get(0).getDisplayName());
                 sync.call();
             } else {
                 sync.fail();
@@ -155,9 +156,9 @@ public class RegisterUserTest {
             @Override
             public <T> void listenDocument(String collectionName, String documentID, Consumer<T> consumer, Class<T> type) { }
             @Override
-            public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) { return null; }
+            public <T> CompletableFuture<FetchedData<T>> query(MyQuery query, Class<T> tClass) { return null; }
             @Override
-            public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) { return null; }
+            public CompletableFuture<FetchedData<Map<String, Object>>> query(MyQuery query) { return null; }
             @Override
             public void updateDocument(String collectionName, String documentID, Map<String, Object> updates) { }
             @Override

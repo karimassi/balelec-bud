@@ -19,6 +19,7 @@ import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.PointOfInterest;
 import ch.epfl.balelecbud.model.PointOfInterestType;
 import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
@@ -47,8 +48,8 @@ public class PointOfInterestUtilsTest {
     private List<Location> getResList(List<MyWhereClause> clauses)
             throws InterruptedException, ExecutionException {
         MyQuery query = new MyQuery(Database.LOCATIONS_PATH, clauses);
-        CompletableFuture<List<Location>> result = db.query(query, Location.class);
-        return result.get();
+        CompletableFuture<FetchedData<Location>> result = db.query(query, Location.class);
+        return result.get().getList();
     }
 
     private void checkFilter(List<MyWhereClause> clauses, Location... expected)

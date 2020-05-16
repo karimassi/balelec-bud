@@ -118,9 +118,9 @@ public class DeleteAccountTest {
         onView(withText(R.string.delete_account_yes)).perform(click());
         MyQuery query = new MyQuery(collectionName, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, alex.getUid()));
         if (clazz != null) {
-            assertThat(mockDB.query(query, clazz).get(), is(Collections.singletonList(null)));
+            assertThat(mockDB.query(query, clazz).get().getList(), is(Collections.singletonList(null)));
         } else {
-            assertThat(mockDB.query(query).get(), is(Collections.singletonList(null)));
+            assertThat(mockDB.query(query).get().getList(), is(Collections.singletonList(null)));
         }
     }
 

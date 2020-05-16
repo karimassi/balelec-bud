@@ -2,6 +2,8 @@
     <string name="app_name">BalelecBud</string>
     <string name="title_activity_authentication">Sign in</string>
 
+    <string name="cache_info">Cached on\u0020</string>
+
     <string name="mapbox_access_token">pk.eyJ1Ijoia2FyaW1hc3NpIiwiYSI6ImNrOTEzd2FqMzA3Z3EzbmxoYWdvb3Z4ZWIifQ.0S1QH5SG3ZXXC1ofSSbadQ</string>
 
     <string name="title_activity_map">MapActivity</string>
@@ -148,13 +150,14 @@
     <string name="accept_request_title">You have a new friend!</string>
     <string name="accept_request_body">\ accepted your friend request</string>
 
-    <!--  SPOTIFY  -->
+    <!--  SPOTIFY PLAYLIST -->
     <string name="spotify_client_id">7a2fb16c68b44c5b9fc7397f6d25f714</string>
     <string name="spotify_redirect_uri">ch.epfl.balelecbud://callback</string>
-    <string name="spotify_balelec_playlist">spotify:playlist:48yI8Gqy44311pEJggXyp3</string>
     <string name="download_spotify_message">Download Spotify free and log-in to listen to the Balelec playlist</string>
     <string name="login_spotify_message">Go to Spotify and log-in to listen to the Balelec playlist</string>
-    <string name="playing_spotify_message">Playing the Balelec playlist on Spotify</string>
+    <string name="spotify_message">Listen to the Balelec Playlist on Spotify</string>
+    <string name="playlist_navigation_title">Playlist</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="msg_token_fmt" />

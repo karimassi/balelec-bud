@@ -59,7 +59,7 @@ public final class Message {
         BalelecbudApplication.getAppDatabase()
                 .query(query)
                 .whenCompleteAsync((t, throwable) -> {
-                    if (throwable == null && t.size() > 0) {
+                    if (throwable == null && t.getList().size() > 0) {
                         switch (type) {
                             case FRIEND_REQUEST:
                                 new Message(getAppContext().getString(R.string.friend_request_title),
@@ -117,7 +117,7 @@ public final class Message {
                 .query(query)
                 .whenCompleteAsync((t, throwable) -> {
                     if (t != null) {
-                        String token = new ArrayList<>(t.get(0).keySet()).get(0);
+                        String token = new ArrayList<>(t.getList().get(0).keySet()).get(0);
                         Log.d(TAG, "In send message, token: " + token);
 
                         JSONObject send = new JSONObject();

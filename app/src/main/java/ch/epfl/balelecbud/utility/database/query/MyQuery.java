@@ -22,11 +22,11 @@ public final class MyQuery {
     }
 
     public MyQuery(String collectionName, MyWhereClause whereClause) {
-        this(collectionName, whereClause, Database.Source.REMOTE);
+        this(collectionName, whereClause, Database.Source.REMOTE_ONLY);
     }
 
     public MyQuery(String collectionName, MyGeoClause geoClause) {
-        this(collectionName, Collections.emptyList(), geoClause, Database.Source.REMOTE);
+        this(collectionName, Collections.emptyList(), geoClause, Database.Source.REMOTE_ONLY);
     }
 
     public MyQuery(String collectionName, MyGeoClause geoClause, Database.Source source) {
@@ -34,7 +34,7 @@ public final class MyQuery {
     }
 
     public MyQuery(String collectionName, List<MyWhereClause> whereClauses) {
-        this(collectionName, whereClauses, null, Database.Source.REMOTE);
+        this(collectionName, whereClauses, null, Database.Source.REMOTE_ONLY);
     }
 
     public MyQuery(String collectionName, List<MyWhereClause> whereClauses, Database.Source source) {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
 /**
@@ -27,7 +28,7 @@ public interface Cache {
      * @return       a {@code CompletableFuture} that will complete with the result of the query
      * @throws IOException if an error occurred
      */
-    <T> CompletableFuture<List<T>> get(MyQuery query, final Class<T> tClass) throws IOException;
+    <T> CompletableFuture<FetchedData<T>> get(MyQuery query, final Class<T> tClass) throws IOException;
 
     /**
      * Query the cache
@@ -36,7 +37,7 @@ public interface Cache {
      * @return      a {@code CompletableFuture} that will complete with the result of the query
      * @throws IOException if an error occurred
      */
-    CompletableFuture<List<Map<String, Object>>> get(MyQuery query) throws IOException;
+    CompletableFuture<FetchedData<Map<String, Object>>> get(MyQuery query) throws IOException;
 
     /**
      * Add an object to the cache

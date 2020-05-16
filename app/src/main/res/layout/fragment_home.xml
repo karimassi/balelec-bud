@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/activity_home_linear_layout"
+<LinearLayout android:id="@+id/activity_home_linear_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,13 +7,4 @@
     tools:context=".view.WelcomeFragment"
     android:gravity="center"
     android:background="@drawable/blek_main_root"
-    android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/spotify_button"
-        android:layout_width="@dimen/spotify_button_width"
-        android:layout_height="@dimen/spotify_button_height"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/spotify_button_margin_top"
-        android:background="@drawable/spotify_logo_white" />
-</LinearLayout>
+    android:orientation="vertical" />

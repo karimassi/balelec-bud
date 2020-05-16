@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
+import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 /**
@@ -36,17 +39,18 @@ public final class CompletableFutureUtils {
         });
     }
 
-    public static class MergeBiConsumer<A> implements BiConsumer<List<A>, Throwable> {
+    public static class MergeConsumer<A> implements Consumer<FetchedData<A>> {
 
         private final RecyclerViewData<A, ?> recyclerViewData;
 
-        public MergeBiConsumer(RecyclerViewData<A, ?> recyclerViewData) {
+        public MergeConsumer(RecyclerViewData<A, ?> recyclerViewData) {
             this.recyclerViewData = recyclerViewData;
         }
 
         @Override
-        public void accept(List<A> downloadedList, Throwable throwable) {
+        public void accept(FetchedData<A> downloadedData) {
             List<A> initialList = recyclerViewData.getData();
+            List<A> downloadedList = downloadedData.getList();
             for(int i = 0; i < initialList.size(); ++i) {
                 if (!downloadedList.contains(initialList.get(i))) {
                     recyclerViewData.remove(i);
@@ -58,6 +62,33 @@ public final class CompletableFutureUtils {
                     recyclerViewData.add(recyclerViewData.size(), downloadedElem);
                 }
             }
+        }
+    }
+
+    public static class MergeFunction<T> implements Function<FetchedData<T>, Long> {
+
+        private final RecyclerViewData<T, ?> recyclerViewData;
+
+        public MergeFunction(RecyclerViewData<T, ?> recyclerViewData) {
+            this.recyclerViewData = recyclerViewData;
+        }
+
+        @Override
+        public Long apply(FetchedData<T> fetchedData) {
+            List<T> initialList = recyclerViewData.getData();
+            List<T> downloadedList = fetchedData.getList();
+            for(int i = 0; i < initialList.size(); ++i) {
+                if (!downloadedList.contains(initialList.get(i))) {
+                    recyclerViewData.remove(i);
+                }
+            }
+            for(int i = 0; i < downloadedList.size(); ++i) {
+                T downloadedElem = downloadedList.get(i);
+                if(!initialList.contains(downloadedElem)){
+                    recyclerViewData.add(recyclerViewData.size(), downloadedElem);
+                }
+            }
+            return fetchedData.getFreshness();
         }
     }
 }

@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:fontFamily="@font/oldsansblack"
+        android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white"
         android:textSize="30dp" />
 
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:fontFamily="@font/oldsansblack"
+        android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

@@ -174,7 +174,7 @@ public class MapViewFragment extends Fragment {
 
     private void listenFriendsLocationById(List<String> friendIds) {
         for (String friendId : friendIds) {
-            CompletableFuture<User> friend = FriendshipUtils.getUserFromUid(friendId, Database.Source.REMOTE);
+            CompletableFuture<User> friend = FriendshipUtils.getUserFromUid(friendId, Database.Source.REMOTE_ONLY);
             friend.thenAccept(user -> Log.d(TAG, "listenFriendsLocationById: get user = [" + user.toString() + "]"));
             friend.thenAccept(this::listenFriendLocation);
         }
@@ -205,7 +205,7 @@ public class MapViewFragment extends Fragment {
     private void displayPointsOfInterests() {
         getAppDatabase().query(new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>()),
                 PointOfInterest.class).whenComplete((pointOfInterests, throwable) -> {
-            for (PointOfInterest poi : pointOfInterests) {
+            for (PointOfInterest poi : pointOfInterests.getList()) {
                 if (myMap == null) {
                     waitingPOI.add(poi);
                 } else {

@@ -166,7 +166,7 @@ public class RegisterUserFragment extends DialogFragment {
                                 throwable.getCause().getLocalizedMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        getAppAuthenticator().setCurrentUser(users.get(0));
+                        getAppAuthenticator().setCurrentUser(users.getList().get(0));
                         settingsFragment.updateLoginStatus(true);
                         TokenUtils.storeToken();
                     }

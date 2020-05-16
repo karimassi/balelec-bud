@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
 /**
@@ -70,30 +71,48 @@ public final class FilesystemCache implements Cache {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> get(MyQuery query, Class<T> tClass) throws IOException {
+    public <T> CompletableFuture<FetchedData<T>> get(MyQuery query, Class<T> tClass) throws IOException {
         List<T> items = new ArrayList<>();
+        long oldestTimestamp = Long.MAX_VALUE;
         for (File file : getMatchingFiles(query)) {
+
+            long lastModified = file.lastModified();
+            if (lastModified < oldestTimestamp) {
+                oldestTimestamp = lastModified;
+            }
+
             FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader(fis);
             items.add(gson.fromJson(isr, tClass));
             isr.close();
             fis.close();
         }
-        return CompletableFuture.completedFuture(items);
+        return CompletableFuture.completedFuture(
+                new FetchedData<>(items, oldestTimestamp == Long.MAX_VALUE ? null : oldestTimestamp));
     }
 
     @Override
-    public CompletableFuture<List<Map<String, Object>>> get(MyQuery query) throws IOException {
+    public CompletableFuture<FetchedData<Map<String, Object>>> get(MyQuery query) throws IOException {
         List<Map<String, Object>> items = new ArrayList<>();
+        long oldestTimestamp = Long.MAX_VALUE;
+
         for (File file : getMatchingFiles(query)) {
+
+            long lastModified = file.lastModified();
+            if (lastModified < oldestTimestamp) {
+                oldestTimestamp = lastModified;
+            }
+
             FileInputStream fis = new FileInputStream(file);
             InputStreamReader isr = new InputStreamReader(fis);
-            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Type type = new TypeToken<Map<String, Object>>() {
+            }.getType();
             items.add(gson.fromJson(isr, type));
             isr.close();
             fis.close();
         }
-        return CompletableFuture.completedFuture(items);
+        return CompletableFuture.completedFuture(
+                new FetchedData<>(items, oldestTimestamp == Long.MAX_VALUE ? null : oldestTimestamp));
     }
 
     @Override
@@ -102,7 +121,7 @@ public final class FilesystemCache implements Cache {
         cacheFile.mkdir();
         File toStore = new File(cacheFile, id);
         FileOutputStream fos = new FileOutputStream(toStore);
-        OutputStreamWriter osw =new OutputStreamWriter(fos);
+        OutputStreamWriter osw = new OutputStreamWriter(fos);
         gson.toJson(document, osw);
         osw.close();
         fos.close();
@@ -112,7 +131,7 @@ public final class FilesystemCache implements Cache {
     public void flush(String collectionName) {
         File cacheFile = new File(context.getCacheDir(), collectionName);
         File[] entries = cacheFile.listFiles();
-        if(entries != null){
+        if (entries != null) {
             for (File file : cacheFile.listFiles()) {
                 file.delete();
             }
@@ -122,7 +141,7 @@ public final class FilesystemCache implements Cache {
 
     @Override
     public void flush() {
-        for (File file: context.getCacheDir().listFiles()) {
+        for (File file : context.getCacheDir().listFiles()) {
             flush(file.getName());
         }
     }
