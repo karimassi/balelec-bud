@@ -1,6 +1,9 @@
 package ch.epfl.balelecbud.utility.database.query;
 
-public class MyWhereClause implements MyClause {
+/**
+ * Class implementing a query clause
+ */
+public final class MyWhereClause implements MyClause {
 
     private final Operator op;
     private final Object rightOperand;

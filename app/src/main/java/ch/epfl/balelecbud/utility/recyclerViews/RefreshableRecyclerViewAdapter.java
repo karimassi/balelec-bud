@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.utility.recyclerViews;
 
-import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,6 @@ import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
@@ -22,7 +19,12 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.DateFormatter;
 import ch.epfl.balelecbud.utility.database.Database;
 
-public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
+/**
+ * Generic adapter for refreshable recycler view
+ * @param <A> the type of the data displayed in the recycler view
+ * @param <B> the type of the
+ */
+public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
 
     private static final String TAG = "RefRecViewAdpt";
     private final ViewHolderFactory<B> factory;
@@ -88,5 +90,4 @@ public class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder
                 data.reload(preferredSource) :
                 data.reload(Database.Source.CACHE_ONLY);
     }
-
 }

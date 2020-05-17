@@ -5,7 +5,7 @@ import com.google.firebase.firestore.Query;
 /**
  * A utility class used to convert queries into Firestore queries
  */
-public class FirestoreQueryConverter {
+public final class FirestoreQueryConverter {
 
     /**
      * Convert the given query into a Firestore query
