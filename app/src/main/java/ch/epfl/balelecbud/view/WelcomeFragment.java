@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import ch.epfl.balelecbud.R;
 
-public class WelcomeFragment extends Fragment {
+public final class WelcomeFragment extends Fragment {
 
     private static final String TAG = WelcomeFragment.class.getSimpleName();
 

@@ -12,12 +12,12 @@ import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
-public class TransportStationData extends RecyclerViewData<TransportStation, TransportStationHolder> {
+public final class TransportStationData extends RecyclerViewData<TransportStation, TransportStationHolder> {
 
     private Location userLocation;
     private OnRecyclerViewInteractionListener<TransportStation> interactionListener;
 
-    public TransportStationData(Location userLocation, OnRecyclerViewInteractionListener<TransportStation> interactionListener) {
+    TransportStationData(Location userLocation, OnRecyclerViewInteractionListener<TransportStation> interactionListener) {
         this.userLocation = userLocation;
         this.interactionListener = interactionListener;
     }

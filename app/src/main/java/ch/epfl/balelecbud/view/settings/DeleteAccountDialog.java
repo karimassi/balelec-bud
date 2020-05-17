@@ -15,7 +15,7 @@ import ch.epfl.balelecbud.utility.location.LocationUtils;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class DeleteAccountDialog extends DialogFragment {
+public final class DeleteAccountDialog extends DialogFragment {
     public static final String TAG = DeleteAccountDialog.class.getSimpleName();
     private final SettingsFragment settingsFragment;
 

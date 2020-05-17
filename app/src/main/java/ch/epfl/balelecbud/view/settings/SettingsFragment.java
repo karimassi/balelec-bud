@@ -17,7 +17,7 @@ import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public final class SettingsFragment extends PreferenceFragmentCompat {
     public static String TAG = SettingsFragment.class.getSimpleName();
     private String LOCATION_ENABLE_KEY;
     private String LOCATION_INFO_KEY;

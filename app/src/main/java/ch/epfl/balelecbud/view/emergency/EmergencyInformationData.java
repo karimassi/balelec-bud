@@ -11,12 +11,15 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
-public class EmergencyInformationData extends RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> {
+/**
+ *
+ */
+public final class EmergencyInformationData extends RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> {
 
     private boolean needNumbers;
     private OnRecyclerViewInteractionListener<EmergencyInformation> interactionListener;
 
-    public EmergencyInformationData(boolean needNumbers, OnRecyclerViewInteractionListener<EmergencyInformation> interactionListener) {
+    EmergencyInformationData(boolean needNumbers, OnRecyclerViewInteractionListener<EmergencyInformation> interactionListener) {
         this.needNumbers = needNumbers;
         this.interactionListener = interactionListener;
     }

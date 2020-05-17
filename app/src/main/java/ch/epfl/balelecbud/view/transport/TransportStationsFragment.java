@@ -19,11 +19,18 @@ import ch.epfl.balelecbud.model.TransportStation;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class TransportStationsFragment extends Fragment {
+public final class TransportStationsFragment extends Fragment {
 
     private OnRecyclerViewInteractionListener<TransportStation> stationSelectedListener;
     private static final String LOCATION_KEY = "location";
 
+    public static TransportStationsFragment newInstance(Location userLocation) {
+        Bundle args = new Bundle();
+        args.putParcelable(LOCATION_KEY, userLocation);
+        TransportStationsFragment fragment = new TransportStationsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -47,20 +54,7 @@ public class TransportStationsFragment extends Fragment {
         return view;
     }
 
-    public void setInteractionListener(OnRecyclerViewInteractionListener<TransportStation> stationSelectedListener) {
+    void setInteractionListener(OnRecyclerViewInteractionListener<TransportStation> stationSelectedListener) {
         this.stationSelectedListener = stationSelectedListener;
     }
-
-    public static TransportStationsFragment newInstance(Location userLocation) {
-        Bundle args = new Bundle();
-        args.putParcelable(LOCATION_KEY, userLocation);
-        TransportStationsFragment fragment = new TransportStationsFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-
-
-
 }

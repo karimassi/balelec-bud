@@ -25,7 +25,7 @@ import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 
-public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
+public final class SlotData extends RecyclerViewData<Slot, SlotHolder> {
 
     private static final String TAG = SlotData.class.getSimpleName();
 
@@ -34,7 +34,7 @@ public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
 
     private static Consumer<Intent> intentLauncher;
 
-    public SlotData(Activity mainActivity, List<Slot> subscribedConcertAtLaunch) {
+    SlotData(Activity mainActivity, List<Slot> subscribedConcertAtLaunch) {
         super();
         this.mainActivity = mainActivity;
         this.subscribedConcertAtLaunch = subscribedConcertAtLaunch;

@@ -24,10 +24,10 @@ import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListene
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class EmergencyInformationFragment extends Fragment implements OnRecyclerViewInteractionListener<EmergencyInformation> {
+public final class EmergencyInformationFragment extends Fragment implements OnRecyclerViewInteractionListener<EmergencyInformation> {
 
     private boolean callPermissionGranted;
-    public static final int PERMISSION_TO_CALL_CODE = 991;
+    private static final int PERMISSION_TO_CALL_CODE = 991;
 
 
     public static EmergencyInformationFragment newInstance() {

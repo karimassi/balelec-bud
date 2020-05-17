@@ -10,7 +10,7 @@ import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
-public class FestivalInformationData extends RecyclerViewData<FestivalInformation, FestivalInformationHolder> {
+public final class FestivalInformationData extends RecyclerViewData<FestivalInformation, FestivalInformationHolder> {
 
     @Override
     public CompletableFuture<Long> reload(Database.Source preferredSource) {

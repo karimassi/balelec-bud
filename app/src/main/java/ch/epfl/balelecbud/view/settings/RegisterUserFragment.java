@@ -28,7 +28,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.StringUtils.isEmailValid;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 
-public class RegisterUserFragment extends DialogFragment {
+public final class RegisterUserFragment extends DialogFragment {
     public static final String TAG = RegisterUserFragment.class.getSimpleName();
     private final SettingsFragment settingsFragment;
     private EditText nameField;

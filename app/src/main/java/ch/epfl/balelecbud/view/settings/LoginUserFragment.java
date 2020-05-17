@@ -22,7 +22,7 @@ import ch.epfl.balelecbud.utility.cloudMessaging.TokenUtils;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.utility.StringUtils.isEmailValid;
 
-public class LoginUserFragment extends DialogFragment {
+public final class LoginUserFragment extends DialogFragment {
     public static final String TAG = LoginUserFragment.class.getSimpleName();
     private final SettingsFragment settingsFragment;
     private EditText emailField;

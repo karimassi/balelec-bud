@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.balelecbud.R;
 
-public class SlotHolder extends RecyclerView.ViewHolder {
+final class SlotHolder extends RecyclerView.ViewHolder {
     final TextView timeSlotView;
     final TextView artistNameView;
     final TextView sceneNameView;
     final ImageView artistImageView;
     final Switch subscribeSwitch;
 
-    public SlotHolder(View itemView) {
+    SlotHolder(View itemView) {
         super(itemView);
 
         timeSlotView = itemView.findViewById(R.id.ScheduleTimeSlot);

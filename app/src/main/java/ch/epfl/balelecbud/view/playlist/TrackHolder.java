@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.balelecbud.R;
 
-class TrackHolder extends RecyclerView.ViewHolder {
+final class TrackHolder extends RecyclerView.ViewHolder {
     final TextView title;
     final TextView artist;
     final ImageView image;

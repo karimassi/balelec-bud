@@ -28,7 +28,7 @@ import ch.epfl.balelecbud.utility.database.Database;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class SubmitEmergencyFragment extends DialogFragment {
+public final class SubmitEmergencyFragment extends DialogFragment {
 
     private static final String TAG = SubmitEmergencyFragment.class.getSimpleName();
     private EditText messageField;

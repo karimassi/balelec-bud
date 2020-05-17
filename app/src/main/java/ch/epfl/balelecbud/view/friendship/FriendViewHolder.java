@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.balelecbud.R;
 
-public class FriendViewHolder extends RecyclerView.ViewHolder {
+final class FriendViewHolder extends RecyclerView.ViewHolder {
 
-    public final TextView friendName;
-    public final Button deleteButton;
+    final TextView friendName;
+    final Button deleteButton;
 
-    public FriendViewHolder(@NonNull View itemView) {
+    FriendViewHolder(@NonNull View itemView) {
         super(itemView);
         friendName = itemView.findViewById(R.id.text_view_friend_item_name);
         deleteButton = itemView.findViewById(R.id.buttonDeleteFriendItem);

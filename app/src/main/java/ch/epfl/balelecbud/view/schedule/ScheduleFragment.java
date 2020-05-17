@@ -17,7 +17,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class ScheduleFragment extends Fragment {
+public final class ScheduleFragment extends Fragment {
     
     private static final String TAG = ScheduleFragment.class.getSimpleName();
 

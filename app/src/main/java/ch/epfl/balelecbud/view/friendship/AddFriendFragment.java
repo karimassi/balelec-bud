@@ -21,7 +21,7 @@ import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.StringUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 
-public class AddFriendFragment extends DialogFragment {
+public final class AddFriendFragment extends DialogFragment {
 
     private EditText editTextAddFriend;
     private static final String TAG = AddFriendFragment.class.getSimpleName();

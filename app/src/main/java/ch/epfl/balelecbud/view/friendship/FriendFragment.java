@@ -17,7 +17,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class FriendFragment extends Fragment {
+public final class FriendFragment extends Fragment {
 
     @Nullable
     @Override

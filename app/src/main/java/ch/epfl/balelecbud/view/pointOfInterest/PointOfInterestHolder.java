@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.balelecbud.R;
 
-public class PointOfInterestHolder extends RecyclerView.ViewHolder {
+final class PointOfInterestHolder extends RecyclerView.ViewHolder {
 
-    public final TextView nameTextView;
-    public final TextView typeTextView;
-    public final TextView amountNearPoiTextView;
-    public final Button goToMapButton;
+    final TextView nameTextView;
+    final TextView typeTextView;
+    final TextView amountNearPoiTextView;
+    final Button goToMapButton;
 
-    public PointOfInterestHolder(View view) {
+    PointOfInterestHolder(View view) {
         super(view);
         nameTextView = view.findViewById(R.id.text_view_poi_name);
         typeTextView = view.findViewById(R.id.text_view_poi_type);
