@@ -3,7 +3,7 @@ package ch.epfl.balelecbud.model;
 import ch.epfl.balelecbud.R;
 
 /**
- * Enum modeling the different marker type
+ * Enum modeling the different marker types
  */
 public enum MarkerType {
 

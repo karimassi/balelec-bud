@@ -16,7 +16,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 /**
- * A service process location updates
+ * A service that process location updated
  */
 public final class LocationService extends IntentService {
     private static final String TAG = LocationService.class.getSimpleName();

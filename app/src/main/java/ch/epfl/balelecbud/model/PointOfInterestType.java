@@ -3,7 +3,7 @@ package ch.epfl.balelecbud.model;
 import androidx.annotation.NonNull;
 
 /**
- * Enum modeling the different type of point of interest of the festival
+ * Enum modeling the different types of points of interest of the festival
  */
 public enum PointOfInterestType {
     BAR("Bar"),

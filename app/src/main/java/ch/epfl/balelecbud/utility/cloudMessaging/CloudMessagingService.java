@@ -18,7 +18,7 @@ import ch.epfl.balelecbud.utility.notifications.NotificationMessage;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
 /**
- * Implementation of {@code MessaginService} with Firebase Cloud Messaging
+ * Implementation of {@code MessagingService} with Firebase Cloud Messaging
  */
 public final class CloudMessagingService extends FirebaseMessagingService implements MessagingService {
 

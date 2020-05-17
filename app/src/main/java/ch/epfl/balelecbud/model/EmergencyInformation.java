@@ -19,7 +19,7 @@ public final class EmergencyInformation {
     public EmergencyInformation() { }
 
     /**
-     * Constructor for emergencies information
+     * Constructor for emergency information
      *
      * @param name            the name of the emergency service
      * @param instruction     the instruction or the phone number for the emergency

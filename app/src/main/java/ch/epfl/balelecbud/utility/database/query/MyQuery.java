@@ -8,7 +8,7 @@ import java.util.List;
 import ch.epfl.balelecbud.utility.database.Database;
 
 /**
- * Class modeling normal claus
+ * Class modeling normal clause
  */
 public final class MyQuery {
 

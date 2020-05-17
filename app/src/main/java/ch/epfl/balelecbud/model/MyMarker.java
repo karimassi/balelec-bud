@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 public interface MyMarker {
 
     /**
-     * Change the marker current location
+     * Change the marker's current location
      *
      * @param location the new location of the marker
      */
