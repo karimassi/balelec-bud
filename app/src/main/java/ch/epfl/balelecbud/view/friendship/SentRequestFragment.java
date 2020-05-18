@@ -15,7 +15,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class SentRequestFragment extends Fragment {
+public final class SentRequestFragment extends Fragment {
 
     public SentRequestFragment() {
         // Required empty public constructor

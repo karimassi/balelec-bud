@@ -7,7 +7,7 @@ import java.util.Locale;
 /**
  * Simple static util class to centralize all date formatting
  */
-public class DateFormatter {
+public final class DateFormatter {
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss", Locale.ENGLISH);
 

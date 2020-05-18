@@ -34,7 +34,7 @@ import ch.epfl.balelecbud.utility.location.LocationUtils;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class MapViewFragment extends Fragment {
+public final class MapViewFragment extends Fragment {
     public final static String TAG = MapViewFragment.class.getSimpleName();
     private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
     private MapView mapView;

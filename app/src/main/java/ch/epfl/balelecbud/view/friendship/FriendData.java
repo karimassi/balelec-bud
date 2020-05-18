@@ -17,11 +17,11 @@ import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.utility.database.Database.FRIENDSHIPS_PATH;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 
-public class FriendData extends RecyclerViewData<User, FriendViewHolder> {
+public final class FriendData extends RecyclerViewData<User, FriendViewHolder> {
 
     private final User currentUser;
 
-    public FriendData(User user) {
+    FriendData(User user) {
         super();
         currentUser = user;
     }

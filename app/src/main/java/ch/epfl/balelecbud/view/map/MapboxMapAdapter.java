@@ -13,7 +13,7 @@ import ch.epfl.balelecbud.model.MyMarker;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
-public class MapboxMapAdapter implements MyMap {
+public final class MapboxMapAdapter implements MyMap {
 
     private static final LatLng BOUND_CORNER_NW = new LatLng(46.52243, 6.56255);
     private static final LatLng BOUND_CORNER_SE = new LatLng(46.51726, 6.57286);
@@ -24,7 +24,7 @@ public class MapboxMapAdapter implements MyMap {
 
     private MapboxMap mapboxMap;
 
-    public MapboxMapAdapter(MapboxMap mapboxMap) {
+    MapboxMapAdapter(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
     }
 
@@ -43,5 +43,4 @@ public class MapboxMapAdapter implements MyMap {
         });
         mapboxMap.setCameraPosition(new CameraPosition.Builder().target(defaultLocation.toLatLng()).zoom(zoom).build());
     }
-
 }

@@ -1,6 +1,5 @@
 package ch.epfl.balelecbud.utility;
 
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -12,14 +11,17 @@ import java.util.function.Function;
 import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
+/**
+ * Collection of useful methods to work with {@code CompletableFuture}
+ */
 public final class CompletableFutureUtils {
 
-    public static <T> CompletableFuture<T> getExceptionalFuture(final String message) {
-        return CompletableFuture.completedFuture(null).thenApply(o -> {
-            throw new RuntimeException(message);
-        });
-    }
-
+    /**
+     * From a list of {@code CompletableFuture} creates a new one that will complete when all completed
+     *
+     * @param listOfFuture a list of {@code CompletableFuture}
+     * @return             the new {@code CompletableFuture}
+     */
     public static <T> CompletableFuture<List<T>> unify(final List<CompletableFuture<T>> listOfFuture){
         return CompletableFuture.allOf(listOfFuture.toArray(new CompletableFuture[0])).thenApply(aVoid -> {
             List<T> itemList = new LinkedList<>();

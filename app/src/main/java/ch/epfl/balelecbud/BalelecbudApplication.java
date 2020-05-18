@@ -24,7 +24,10 @@ import ch.epfl.balelecbud.utility.storage.CachedStorage;
 import ch.epfl.balelecbud.utility.storage.FirebaseStorage;
 import ch.epfl.balelecbud.utility.storage.Storage;
 
-public class BalelecbudApplication extends Application {
+/**
+ * Central Balelecbud application
+ */
+public final class BalelecbudApplication extends Application {
 
     private static Context appContext;
     private static Storage appStorage;

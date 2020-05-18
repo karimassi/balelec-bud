@@ -21,7 +21,10 @@ import ch.epfl.balelecbud.utility.TaskToCompletableFutureAdapter;
 import ch.epfl.balelecbud.utility.database.query.FirestoreQueryConverter;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
-public class FirestoreDatabase implements Database {
+/**
+ * A Firestore adapter database
+ */
+public final class FirestoreDatabase implements Database {
     private static final String TAG = FirestoreDatabase.class.getSimpleName();
     private static final FirestoreDatabase instance = new FirestoreDatabase();
     private final Map<String, ListenerRegistration> registrations = new HashMap<>();
@@ -31,7 +34,6 @@ public class FirestoreDatabase implements Database {
     }
 
     private FirestoreDatabase() {}
-
 
     @Override
     public void unregisterDocumentListener(String collectionName, String documentID) {
@@ -46,7 +48,7 @@ public class FirestoreDatabase implements Database {
         ListenerRegistration lr = getDocumentReference(collectionName + "/" + documentID)
                 .addSnapshotListener((documentSnapshot, e) -> {
                     Log.d(TAG, "eventListener called on: collectionName = [" + collectionName + "], documentID = [" + documentID + "]" +
-                            ", with document = [" + documentSnapshot + "], e = [" + e + "]" );
+                            ", with document = [" + documentSnapshot + "], e = [" + e + "]");
                     if (documentSnapshot == null) {
                         Log.w(TAG, "listenDocument: failed to add a SnapshotListener on file : " + documentID +
                                 " in collection : " + collectionName, e);
@@ -89,9 +91,9 @@ public class FirestoreDatabase implements Database {
     public CompletableFuture<FetchedData<Map<String, Object>>> query(MyQuery query) {
         CompletableFuture<QuerySnapshot> future =
                 new TaskToCompletableFutureAdapter<>(FirestoreQueryConverter.convert(query).get());
-        return future.thenApply( value -> {
+        return future.thenApply(value -> {
             List<Map<String, Object>> result = new ArrayList<>();
-            for (QueryDocumentSnapshot documentSnapshot: value) {
+            for (QueryDocumentSnapshot documentSnapshot : value) {
                 result.add(documentSnapshot.getData());
             }
             return new FetchedData<>(result, null);
@@ -105,5 +107,4 @@ public class FirestoreDatabase implements Database {
     private DocumentReference getDocumentReference(String documentPath) {
         return FirebaseFirestore.getInstance().document(documentPath);
     }
-
 }

@@ -21,7 +21,7 @@ import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.StringUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 
-public class AddFriendFragment extends DialogFragment {
+public final class AddFriendFragment extends DialogFragment {
 
     private EditText editTextAddFriend;
     private static final String TAG = AddFriendFragment.class.getSimpleName();
@@ -43,7 +43,7 @@ public class AddFriendFragment extends DialogFragment {
                 .setPositiveButton(R.string.add_friend_request, (dialog, id) -> {
                     if (validateEmail()) {
                         FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), Database.Source.REMOTE_ONLY)
-                                .whenComplete((user, throwable) -> FriendshipUtils.addFriend(user));
+                                .whenComplete((user, throwable) -> FriendshipUtils.requestFriend(user));
                         Toast.makeText(
                                 getContext(),
                                 getString(R.string.add_friend_request_sent) + editTextAddFriend.getText(),

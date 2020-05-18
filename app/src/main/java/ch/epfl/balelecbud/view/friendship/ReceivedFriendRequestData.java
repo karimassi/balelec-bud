@@ -16,11 +16,11 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 
-public class ReceivedFriendRequestData extends RecyclerViewData<User, ReceivedRequestViewHolder> {
+public final class ReceivedFriendRequestData extends RecyclerViewData<User, ReceivedRequestViewHolder> {
 
     private final User currentUser;
 
-    public ReceivedFriendRequestData(User user) {
+    ReceivedFriendRequestData(User user) {
         super();
         currentUser = user;
     }
@@ -48,6 +48,4 @@ public class ReceivedFriendRequestData extends RecyclerViewData<User, ReceivedRe
             remove(index);
         });
     }
-
-
 }

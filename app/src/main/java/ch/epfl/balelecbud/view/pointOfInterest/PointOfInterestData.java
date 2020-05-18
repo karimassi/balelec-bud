@@ -19,12 +19,12 @@ import ch.epfl.balelecbud.view.map.MapViewFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class PointOfInterestData extends RecyclerViewData<PointOfInterest, PointOfInterestHolder> {
+public final class PointOfInterestData extends RecyclerViewData<PointOfInterest, PointOfInterestHolder> {
 
     private final List<Integer> lastRecordedAffluence = new LinkedList<>();
     private final FragmentActivity activity;
 
-    public PointOfInterestData(FragmentActivity activity) {
+    PointOfInterestData(FragmentActivity activity) {
         this.activity = activity;
     }
 
@@ -65,5 +65,4 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
             add(index, tuple.getPoi());
         }
     }
-
 }

@@ -2,7 +2,6 @@ package ch.epfl.balelecbud.view.playlist;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 
 import java.io.File;
@@ -20,7 +19,7 @@ import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 
-public class TrackData extends RecyclerViewData<Track, TrackHolder> {
+public final class TrackData extends RecyclerViewData<Track, TrackHolder> {
 
     private OnRecyclerViewInteractionListener<Track> interactionListener;
 

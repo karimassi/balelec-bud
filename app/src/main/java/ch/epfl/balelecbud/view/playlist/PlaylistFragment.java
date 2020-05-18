@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,7 @@ import ch.epfl.balelecbud.model.Track;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class PlaylistFragment extends Fragment implements OnRecyclerViewInteractionListener<Track> {
+public final class PlaylistFragment extends Fragment implements OnRecyclerViewInteractionListener<Track> {
 
     private static final String TAG = PlaylistFragment.class.getSimpleName();
     private SpotifyAppRemote spotifyAppRemote;
@@ -110,6 +111,7 @@ public class PlaylistFragment extends Fragment implements OnRecyclerViewInteract
         }
     }
 
+    @VisibleForTesting
     public boolean isSpotifyConnected() {
         return spotifyAppRemote != null;
     }

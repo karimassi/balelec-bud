@@ -19,7 +19,7 @@ import ch.epfl.balelecbud.model.TransportDeparture;
 import ch.epfl.balelecbud.model.TransportStation;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class TransportDeparturesFragment extends Fragment {
+public final class TransportDeparturesFragment extends Fragment {
 
     private static final String STATION_KEY = "station";
 
@@ -57,5 +57,4 @@ public class TransportDeparturesFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 }

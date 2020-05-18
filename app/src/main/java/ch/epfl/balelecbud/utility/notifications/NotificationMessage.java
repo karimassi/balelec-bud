@@ -20,15 +20,16 @@ import ch.epfl.balelecbud.view.friendship.SocialFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 
-public class NotificationMessage implements NotificationInterface<Map<String, String>> {
+/**
+ * Notification scheduler for Firebase Cloud Messaging
+ */
+public final class NotificationMessage implements NotificationInterface<Map<String, String>> {
 
     private static final String CHANNEL_ID = "MESSAGE_CHANNEL_ID";
 
     private static NotificationMessage singleInstance;
 
-    private NotificationMessage() {
-
-    }
+    private NotificationMessage() { }
 
     public static NotificationMessage getInstance() {
         if(singleInstance == null) {

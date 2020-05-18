@@ -8,7 +8,7 @@ import java.util.function.Function;
  * ADT to represent a list of object of type T and a freshness information
  * @param <T>
  */
-public class FetchedData <T> {
+public final class FetchedData <T> {
 
     //We do not make the list unmodifiable for the sake of performance
     private final List<T> list;

@@ -59,12 +59,12 @@ public class DeleteAccountTest {
         mockDB.resetDatabase();
         mockAuth.signOut();
         mockAuth.setCurrentUser(axel);
-        FriendshipUtils.addFriend(alex);
+        FriendshipUtils.requestFriend(alex);
         mockAuth.signOut();
         mockAuth.setCurrentUser(alex);
         mockDB.storeDocumentWithID(Database.LOCATIONS_PATH, alex.getUid(), new Location(12, 42));
         FriendshipUtils.acceptRequest(karim);
-        FriendshipUtils.addFriend(celine);
+        FriendshipUtils.requestFriend(celine);
         LocationUtils.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) { }

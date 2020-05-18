@@ -12,7 +12,10 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class PointOfInterestUtils {
+/**
+ * Collection of methods used to get the amount of users near points of interest
+ */
+public final class PointOfInterestUtils {
 
     public static CompletableFuture<Integer> getAmountNearPointOfInterest(PointOfInterest poi) {
 

@@ -11,11 +11,11 @@ import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
-public class TransportDepartureData extends RecyclerViewData<TransportDeparture, TransportDepartureHolder> {
+public final class TransportDepartureData extends RecyclerViewData<TransportDeparture, TransportDepartureHolder> {
 
     private TransportStation station;
 
-    public TransportDepartureData(TransportStation station) {
+    TransportDepartureData(TransportStation station) {
         this.station = station;
     }
 

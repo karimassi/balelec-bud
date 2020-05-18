@@ -16,11 +16,11 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.FriendshipUtils.getUsersFromUids;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 
-public class SentRequestData extends RecyclerViewData<User, SentRequestViewHolder> {
+public final class SentRequestData extends RecyclerViewData<User, SentRequestViewHolder> {
 
     private final User currentUser;
 
-    public SentRequestData(User currentUser) {
+    SentRequestData(User currentUser) {
         super();
         this.currentUser = currentUser;
     }

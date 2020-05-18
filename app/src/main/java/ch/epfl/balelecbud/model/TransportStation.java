@@ -5,13 +5,36 @@ import android.os.Parcelable;
 
 import java.util.Objects;
 
-public class TransportStation implements Parcelable {
+/**
+ * Class modeling a public transport station
+ */
+public final class TransportStation implements Parcelable {
+
+    public static final Creator<TransportStation> CREATOR = new Creator<TransportStation>() {
+        @Override
+        public TransportStation createFromParcel(Parcel in) {
+            return new TransportStation(in);
+        }
+
+        @Override
+        public TransportStation[] newArray(int size) {
+            return new TransportStation[size];
+        }
+    };
 
     private Location location;
     private String stationId;
     private String stationName;
     private double distanceToUser;
 
+    /**
+     * Constructor for a transport station
+     *
+     * @param location       the location of the station
+     * @param stationId      the id of the station
+     * @param stationName    the name of the station
+     * @param distanceToUser the distance from the user to the station
+     */
     public TransportStation(Location location, String stationId, String stationName, double distanceToUser) {
         this.location = location;
         this.stationId = stationId;
@@ -58,24 +81,10 @@ public class TransportStation implements Parcelable {
         return Objects.hash(getLocation(), getStationId(), getStationName(), getDistanceToUser());
     }
 
-
-    public static final Creator<TransportStation> CREATOR = new Creator<TransportStation>() {
-        @Override
-        public TransportStation createFromParcel(Parcel in) {
-            return new TransportStation(in);
-        }
-
-        @Override
-        public TransportStation[] newArray(int size) {
-            return new TransportStation[size];
-        }
-    };
-
     @Override
     public int describeContents() {
         return 0;
     }
-
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

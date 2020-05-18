@@ -1,14 +1,19 @@
 package ch.epfl.balelecbud.model;
 
-
 import androidx.annotation.NonNull;
 
-public enum EmergencyType {
-    THEFT("Theft"), FAINT("Feeling faint"), FIRE("Fire"), FIGHT("Fight");
+/**
+ * Enum modeling the emergency categories
+ */
+public enum EmergencyCategory {
+    THEFT("Theft"),
+    FAINT("Feeling faint"),
+    FIRE("Fire"),
+    FIGHT("Fight");
 
     private String type;
 
-    EmergencyType(String type) {
+    EmergencyCategory(String type) {
         this.type = type;
     }
 

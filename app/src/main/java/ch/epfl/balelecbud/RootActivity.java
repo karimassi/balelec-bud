@@ -33,7 +33,10 @@ import ch.epfl.balelecbud.view.transport.TransportFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+/**
+ * Root activity used to display all the different fragments
+ */
+public final class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = RootActivity.class.getSimpleName();
     private Toolbar toolbar;
@@ -181,19 +184,19 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    protected void configureToolBar() {
+    private void configureToolBar() {
         this.toolbar = findViewById(R.id.root_activity_toolbar);
         setSupportActionBar(toolbar);
     }
 
-    protected void configureDrawerLayout() {
+    private void configureDrawerLayout() {
         this.drawerLayout = findViewById(R.id.root_activity_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
-    protected void configureNavigationView() {
+    private void configureNavigationView() {
         this.navigationView = findViewById(R.id.root_activity_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }

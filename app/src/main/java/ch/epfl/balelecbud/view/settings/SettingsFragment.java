@@ -17,7 +17,7 @@ import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public final class SettingsFragment extends PreferenceFragmentCompat {
     public static String TAG = SettingsFragment.class.getSimpleName();
     private String LOCATION_ENABLE_KEY;
     private String LOCATION_INFO_KEY;
@@ -68,7 +68,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private void setUpLocationPreferences() {
         findPreference(LOCATION_ENABLE_KEY).setOnPreferenceChangeListener((preference, new_value) -> {
-            LocationUtils.updateLocation((boolean) new_value);
+            if ((boolean) new_value) {
+                LocationUtils.enableLocation();
+            } else {
+                LocationUtils.disableLocation();
+            }
             return true;
         });
         findPreference(LOCATION_INFO_KEY).setOnPreferenceClickListener(preference -> {

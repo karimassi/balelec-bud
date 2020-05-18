@@ -15,7 +15,7 @@ import ch.epfl.balelecbud.model.FestivalInformation;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class FestivalInformationFragment extends Fragment {
+public final class FestivalInformationFragment extends Fragment {
 
     public static FestivalInformationFragment newInstance() {
         return new FestivalInformationFragment();
