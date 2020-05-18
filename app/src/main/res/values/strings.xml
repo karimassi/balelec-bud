@@ -22,8 +22,6 @@
 
     <string name="welcome">Welcome!</string>
     <string name="invalid_username">Not a valid username</string>
-    <string name="login_failed">Login failed…</string>
-    <string name="registration_failed">Registration failed…</string>
 
     <string name="require_email">Email required!</string>
     <string name="invalid_email">Enter a valid email!</string>
@@ -112,6 +110,9 @@
     <string name="sign_out_key">SIGN_OUT</string>
     <string name="sign_out_text">Sign out</string>
     <string name="register">Register</string>
+    <string name="connecting">Connecting …</string>
+    <string name="sign_in_failed">Sign in failed ! Check your email and password</string>
+    <string name="register_failed">Register failed ! This email is already used</string>
 
     <string name="delete_account">Delete account</string>
     <string name="delete_user_key">DELETE_USER_KEY</string>
