@@ -1,6 +1,6 @@
 package ch.epfl.balelecbud.model;
 
-public class Picture {
+public final class Picture {
 
     private String imageFileName;
 

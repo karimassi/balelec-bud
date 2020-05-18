@@ -15,12 +15,8 @@ import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 
-public class PictureData extends RecyclerViewData<Picture, PictureHolder> {
+public final class PictureData extends RecyclerViewData<Picture, PictureHolder> {
     private static final String TAG = PictureData.class.getSimpleName();
-
-    public PictureData() {
-        super();
-    }
 
     @Override
     public void reload(Database.Source preferredSource) {

@@ -14,7 +14,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Picture;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class GalleryFragment extends Fragment {
+public final class GalleryFragment extends Fragment {
 
     public final static String TAG = GalleryFragment.class.getSimpleName();
 
