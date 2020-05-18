@@ -87,13 +87,15 @@ public final class RegisterUserFragment extends DialogFragment {
         if (!validateEntry())
             return;
 
+        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.CONNECTING);
         getAppAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
             Log.d(TAG, "whenComplete() called with: aVoid = [" + aVoid + "], throwable = [" + throwable + "]");
             if (throwable != null) {
                 Toast.makeText(
                         getContext(),
-                        throwable.getLocalizedMessage(),
-                        Toast.LENGTH_SHORT).show();
+                        getString(R.string.register_failed),
+                        Toast.LENGTH_LONG).show();
+                settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
             } else {
                 onAuthComplete();
             }
@@ -163,11 +165,12 @@ public final class RegisterUserFragment extends DialogFragment {
                     Log.d(TAG, "onAuthComplete() called with users = [ " + users + " ], throwable = [ " + throwable + " ]");
                     if (throwable != null) {
                         Toast.makeText(getContext(),
-                                throwable.getCause().getLocalizedMessage(),
+                                getString(R.string.register_failed),
                                 Toast.LENGTH_SHORT).show();
+                        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
                     } else {
                         getAppAuthenticator().setCurrentUser(users.getList().get(0));
-                        settingsFragment.updateLoginStatus(true);
+                        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_IN);
                         TokenUtils.storeToken();
                     }
                 });

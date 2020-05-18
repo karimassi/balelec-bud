@@ -110,6 +110,7 @@
     <string name="sign_out_key">SIGN_OUT</string>
     <string name="sign_out_text">Sign out</string>
     <string name="register">Register</string>
+    <string name="connection_key">CONNECTING</string>
     <string name="connecting">Connecting …</string>
     <string name="sign_in_failed">Sign in failed ! Check your email and password</string>
     <string name="register_failed">Register failed ! This email is already used</string>

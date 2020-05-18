@@ -24,4 +24,8 @@
         app:key="@string/delete_user_key"
         app:title="@string/delete_account"/>
 
+    <Preference
+        app:key="@string/connection_key"
+        app:title="@string/connecting"/>
+
 </PreferenceScreen>

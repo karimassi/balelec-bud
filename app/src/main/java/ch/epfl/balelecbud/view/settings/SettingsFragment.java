@@ -18,12 +18,18 @@ import ch.epfl.balelecbud.utility.location.LocationUtils;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
 public final class SettingsFragment extends PreferenceFragmentCompat {
+    enum ConnectionStatus {
+        SIGNED_OUT,
+        SIGNED_IN,
+        CONNECTING
+    }
     public static String TAG = SettingsFragment.class.getSimpleName();
     private String LOCATION_ENABLE_KEY;
     private String LOCATION_INFO_KEY;
     private String SIGN_IN_KEY;
     private String SIGN_OUT_KEY;
     private String DELETE_USER_KEY;
+    private String CONNECTING_KEY;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -36,7 +42,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         LOCATION_INFO_KEY = getString(R.string.location_info_key);
         SIGN_IN_KEY = getString(R.string.sign_in_key);
         SIGN_OUT_KEY = getString(R.string.sign_out_key);
-        DELETE_USER_KEY = getContext().getString(R.string.delete_user_key);
+        DELETE_USER_KEY = getString(R.string.delete_user_key);
+        CONNECTING_KEY = getString(R.string.connection_key);
 
         setUpLocationPreferences();
         setUpLoginPreferences();
@@ -51,11 +58,12 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
                 LocationUtils.disableLocation();
                 updateLocationPreferencesVisibility(false);
             }
-            updateLoginStatus(false);
+            updateLoginStatus(ConnectionStatus.SIGNED_OUT);
             return true;
         });
         linkPreferenceWithDialog(DELETE_USER_KEY, () -> DeleteAccountDialog.newInstance(this), DeleteAccountDialog.TAG);
-        updateLoginStatus(getAppAuthenticator().getCurrentUser() != null);
+
+        updateLoginStatus(getAppAuthenticator().getCurrentUser() != null ? ConnectionStatus.SIGNED_IN : ConnectionStatus.SIGNED_OUT);
     }
 
     private void linkPreferenceWithDialog(String preferenceKey, Supplier<DialogFragment> dialogSupplier, String tag) {
@@ -89,10 +97,26 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         findPreference(LOCATION_INFO_KEY).setVisible(!permissionGranted);
     }
 
-    void updateLoginStatus(boolean loggedIn) {
-        findPreference(SIGN_IN_KEY).setVisible(!loggedIn);
-        findPreference(SIGN_OUT_KEY).setVisible(loggedIn);
-        findPreference(DELETE_USER_KEY).setVisible(loggedIn);
+    void updateLoginStatus(ConnectionStatus status) {
+        switch (status) {
+            case SIGNED_IN:
+                findPreference(SIGN_IN_KEY).setVisible(false);
+                findPreference(CONNECTING_KEY).setVisible(false);
+                findPreference(SIGN_OUT_KEY).setVisible(true);
+                findPreference(DELETE_USER_KEY).setVisible(true);
+                break;
+            case SIGNED_OUT:
+                findPreference(SIGN_IN_KEY).setVisible(true);
+                findPreference(CONNECTING_KEY).setVisible(false);
+                findPreference(SIGN_OUT_KEY).setVisible(false);
+                findPreference(DELETE_USER_KEY).setVisible(false);
+                break;
+            case CONNECTING:
+                findPreference(SIGN_IN_KEY).setVisible(false);
+                findPreference(CONNECTING_KEY).setVisible(true);
+                findPreference(SIGN_OUT_KEY).setVisible(false);
+                findPreference(DELETE_USER_KEY).setVisible(false);
+        }
     }
 
     @Override
