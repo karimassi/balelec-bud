@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -19,6 +18,7 @@ import java.util.function.Consumer;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
+import ch.epfl.balelecbud.testUtils.CustomMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.Database;
@@ -36,10 +36,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
+import static ch.epfl.balelecbud.utility.database.MockDatabase.alex;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUserTest {
@@ -171,6 +174,44 @@ public class RegisterUserTest {
             public void deleteDocumentWithID(String collectionName, String documentID) { }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
+        onView(withText(R.string.register_failed))
+                .inRoot(CustomMatcher.isToast())
+                .check(matches(isDisplayed()));
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testConnectingIsDisplayedWhenWaiting() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        setAppAuthenticator(new MockAuthenticator() {
+            @Override
+            public String getCurrentUid() {
+                return alex.getUid();
+            }
+
+            @Override
+            public CompletableFuture<Void> createAccount(String name, String email, String password) {
+                return future;
+            }
+        });
+        enterValuesAndClick("Alex", "alex@epfl.ch", "123456", "123456");
+        onView(withText(R.string.connecting)).check(matches(isDisplayed()));
+        assertTrue(future.complete(null));
+        onView(withText(R.string.sign_out_text)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testMessagesIsDisplayedWhenLoginFailed() {
+        setAppAuthenticator(new MockAuthenticator() {
+            @Override
+            public CompletableFuture<Void> createAccount(java.lang.String name, java.lang.String email, java.lang.String password) {
+                return TestAsyncUtils.getExceptionalFuture("Failed to create account");
+            }
+        });
+        enterValuesAndClick("Alex", "alex@epfl.ch", "123456", "123456");
+        onView(withText(R.string.register_failed))
+                .inRoot(CustomMatcher.isToast())
+                .check(matches(isDisplayed()));
         onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
