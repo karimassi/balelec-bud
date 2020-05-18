@@ -22,7 +22,7 @@ import ch.epfl.balelecbud.utility.database.Database;
 /**
  * Generic adapter for refreshable recycler view
  * @param <A> the type of the data displayed in the recycler view
- * @param <B> the type of the
+ * @param <B> the type of the view holder for the displayed data
  */
 public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<B> {
 
