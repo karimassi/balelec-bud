@@ -12,7 +12,7 @@ import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListene
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 /**
- *
+ * Implementation of RecyclerViewData to display emergency informations
  */
 public final class EmergencyInformationData extends RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> {
 
@@ -44,4 +44,3 @@ public final class EmergencyInformationData extends RecyclerViewData<EmergencyIn
         }
     }
 }
-
