@@ -19,9 +19,21 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
 public final class SettingsFragment extends PreferenceFragmentCompat {
     enum ConnectionStatus {
-        SIGNED_OUT,
+        SIGNED_OUT(),
         SIGNED_IN,
-        CONNECTING
+        CONNECTING;
+
+        boolean isSignedIn() {
+            return this == SIGNED_IN;
+        }
+
+        boolean isSignedOut() {
+            return this == SIGNED_OUT;
+        }
+
+        boolean isConnecting() {
+            return this == CONNECTING;
+        }
     }
     public static String TAG = SettingsFragment.class.getSimpleName();
     private String LOCATION_ENABLE_KEY;
@@ -98,25 +110,10 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     void updateLoginStatus(ConnectionStatus status) {
-        switch (status) {
-            case SIGNED_IN:
-                findPreference(SIGN_IN_KEY).setVisible(false);
-                findPreference(CONNECTING_KEY).setVisible(false);
-                findPreference(SIGN_OUT_KEY).setVisible(true);
-                findPreference(DELETE_USER_KEY).setVisible(true);
-                break;
-            case SIGNED_OUT:
-                findPreference(SIGN_IN_KEY).setVisible(true);
-                findPreference(CONNECTING_KEY).setVisible(false);
-                findPreference(SIGN_OUT_KEY).setVisible(false);
-                findPreference(DELETE_USER_KEY).setVisible(false);
-                break;
-            case CONNECTING:
-                findPreference(SIGN_IN_KEY).setVisible(false);
-                findPreference(CONNECTING_KEY).setVisible(true);
-                findPreference(SIGN_OUT_KEY).setVisible(false);
-                findPreference(DELETE_USER_KEY).setVisible(false);
-        }
+        findPreference(SIGN_IN_KEY).setVisible(status.isSignedOut());
+        findPreference(CONNECTING_KEY).setVisible(status.isConnecting());
+        findPreference(SIGN_OUT_KEY).setVisible(status.isSignedIn());
+        findPreference(SIGN_OUT_KEY).setVisible(status.isSignedIn());
     }
 
     @Override
