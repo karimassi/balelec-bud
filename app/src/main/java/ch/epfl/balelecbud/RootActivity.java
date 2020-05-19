@@ -98,6 +98,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_settings:
                 this.showSettingsFragment();
                 break;
+            case R.id.activity_main_drawer_pictures:
+                this.showPicturesFragment();
+                break;
             default:
                 break;
         }
@@ -154,6 +157,12 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private void showSettingsFragment() {
         Fragment fragmentSettings = SettingsFragment.newInstance();
         this.startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
+    }
+
+    private void showPicturesFragment() {
+        Fragment fragmentPictures = PicturesFragment.newInstance();
+        Log.d(TAG, "HERE");
+        this.startTransactionFragment(fragmentPictures, "PICTURES");
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {

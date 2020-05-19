@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,24 +33,17 @@ public class PicturesFragment extends Fragment {
         return (new PicturesFragment());
     }
 
-
-    private ImageView imageView;
-    private Button cameraButton;
     private String currentPhotoPath;
-    private FragmentActivity activity;
-
 
     private static final int CAMERA_PERM_CODE = 101;
     private static final int CAMERA_REQUEST_CODE = 102;
 
 
-
     @Override
     public void onStart() {
         super.onStart();
-        activity = getActivity();
-        cameraButton = activity.findViewById(R.id.takePicBtn);
-        imageView = activity.findViewById(R.id.picturesImageView);
+        FragmentActivity activity = getActivity();
+        Button cameraButton = activity.findViewById(R.id.takePicBtn);
         cameraButton.setOnClickListener(v -> askCameraPermissions());
     }
 
@@ -91,12 +82,7 @@ public class PicturesFragment extends Fragment {
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
-                imageView.setImageURI(Uri.fromFile(f));
                 Log.d("tag", "Absolute Url of Image is " + Uri.fromFile(f));
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                getActivity().sendBroadcast(mediaScanIntent);
             }
         }
 
@@ -105,7 +91,7 @@ public class PicturesFragment extends Fragment {
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = getActivity().getFilesDir();
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -132,6 +118,10 @@ public class PicturesFragment extends Fragment {
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
             }
         }
+    }
+
+    public String getCurrentPhotoPath() {
+        return currentPhotoPath;
     }
 
 
