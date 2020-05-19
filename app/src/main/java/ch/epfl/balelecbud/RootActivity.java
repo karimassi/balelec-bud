@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.view.PicturesFragment;
 import ch.epfl.balelecbud.view.WelcomeFragment;
 import ch.epfl.balelecbud.view.emergency.EmergencyInformationFragment;
 import ch.epfl.balelecbud.view.festivalInformation.FestivalInformationFragment;
@@ -105,6 +106,9 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
             case R.id.activity_main_drawer_settings:
                 this.showSettingsFragment();
                 break;
+            case R.id.activity_main_drawer_pictures:
+                this.showPicturesFragment();
+                break;
             default:
                 break;
         }
@@ -166,6 +170,11 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     private void showSettingsFragment() {
         Fragment fragmentSettings = SettingsFragment.newInstance();
         this.startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
+    }
+
+    private void showPicturesFragment() {
+        Fragment fragmentPictures = PicturesFragment.newInstance();
+        this.startTransactionFragment(fragmentPictures, "PICTURES");
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {
