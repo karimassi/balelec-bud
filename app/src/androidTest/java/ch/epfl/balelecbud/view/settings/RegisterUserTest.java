@@ -38,7 +38,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
-import static ch.epfl.balelecbud.utility.database.MockDatabase.alex;
+import static ch.epfl.balelecbud.utility.database.Database.USERS_PATH;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
@@ -183,18 +183,20 @@ public class RegisterUserTest {
     @Test
     public void testConnectingIsDisplayedWhenWaiting() {
         CompletableFuture<Void> future = new CompletableFuture<>();
+        User newUser = new User("abc@epfl.ch", "abc", MockAuthenticator.provideUid());
         setAppAuthenticator(new MockAuthenticator() {
             @Override
             public String getCurrentUid() {
-                return alex.getUid();
+                return newUser.getUid();
             }
 
             @Override
             public CompletableFuture<Void> createAccount(String name, String email, String password) {
+                mockDB.storeDocumentWithID(USERS_PATH, newUser.getUid(), newUser);
                 return future;
             }
         });
-        enterValuesAndClick("Alex", "alex@epfl.ch", "123456", "123456");
+        enterValuesAndClick("abc", "abc@epfl.ch", "123456", "123456");
         onView(withText(R.string.connecting)).check(matches(isDisplayed()));
         assertTrue(future.complete(null));
         onView(withText(R.string.sign_out_text)).check(matches(isDisplayed()));
