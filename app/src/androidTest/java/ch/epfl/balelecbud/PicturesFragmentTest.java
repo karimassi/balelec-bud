@@ -43,8 +43,6 @@ public class PicturesFragmentTest {
     @Rule
     public GrantPermissionRule permissionRuleCamera = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
-    @Rule
-    public GrantPermissionRule permissionRuleLocation = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Before
     public void setUp(){
