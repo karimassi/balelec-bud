@@ -3,6 +3,8 @@ package ch.epfl.balelecbud.view.settings;
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.google.common.collect.Lists;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,7 +25,6 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -31,6 +32,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.clickAndCheckDisplay;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.karim;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
@@ -136,9 +138,8 @@ public class LoginUserTest {
 
     @Test
     public void whenCancelLoginStaySignedOut() {
-        onView(withText(R.string.cancel)).perform(click());
-        onView(withText(R.string.sign_in)).check(doesNotExist());
-        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
+        clickAndCheckDisplay(Lists.newArrayList(R.string.cancel),
+                Lists.newArrayList(R.string.not_sign_in), Lists.newArrayList(R.string.sign_in));
     }
 
     private void enterAndClick(String email, String pwd) {

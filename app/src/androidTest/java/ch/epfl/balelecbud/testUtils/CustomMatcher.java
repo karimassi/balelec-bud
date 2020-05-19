@@ -13,11 +13,27 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import ch.epfl.balelecbud.R;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 public class CustomMatcher {
+    public static void clickAndCheckDisplay(List<Integer> idsToClick,
+                                            List<Integer> idsToCheckDisplayed,
+                                            List<Integer> idsToCheckNotDisplayed) {
+        idsToClick.forEach(id -> onView(withText(id)).perform(click()));
+        idsToCheckDisplayed.forEach(id -> onView(withText(id)).check(matches(isDisplayed())));
+        idsToCheckNotDisplayed.forEach(id -> onView(withText(id)).check(doesNotExist()));
+    }
+
     public static Matcher<View> nthChildOf(final Matcher<View> parentMatcher, final int childPosition) {
         return new TypeSafeMatcher<View>() {
             @Override
@@ -36,6 +52,7 @@ public class CustomMatcher {
             }
         };
     }
+
     @NotNull
     public static Matcher<View> getItemInSchedule(int itemPosition, int infoPosition) {
         return nthChildOf(
