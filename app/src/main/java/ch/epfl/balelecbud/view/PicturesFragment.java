@@ -1,4 +1,4 @@
-package ch.epfl.balelecbud;
+package ch.epfl.balelecbud.view;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import ch.epfl.balelecbud.R;
 
 public class PicturesFragment extends Fragment {
 

@@ -1,19 +1,16 @@
-package ch.epfl.balelecbud;
+package ch.epfl.balelecbud.view;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,7 +19,9 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.view.PicturesFragment;
 
 import static android.app.Instrumentation.ActivityResult;
 import static androidx.test.espresso.Espresso.onView;
@@ -36,7 +35,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 public class PicturesFragmentTest {
-    private static UiDevice mDevice;
 
     private FragmentScenario<PicturesFragment> scenario;
 
@@ -46,7 +44,6 @@ public class PicturesFragmentTest {
 
     @Before
     public void setUp(){
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         scenario = FragmentScenario.launchInContainer(PicturesFragment.class);
     }
 
@@ -66,7 +63,7 @@ public class PicturesFragmentTest {
         intending(toPackage("com.android.camera2")).respondWith(result);
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
-        onView(withId(R.id.takePicBtn)).perform(click());
+        onView(ViewMatchers.withId(R.id.takePicBtn)).perform(click());
 
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         intended(toPackage("com.android.camera2"));
