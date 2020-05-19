@@ -69,7 +69,6 @@ public class PicturesFragmentTest {
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.takePicBtn)).perform(click());
-        allowPermissionsIfNeeded();
 
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         intended(toPackage("com.android.camera2"));
@@ -89,7 +88,6 @@ public class PicturesFragmentTest {
         ActivityResult result = new ActivityResult(Activity.RESULT_OK, resultImg);
         intending(toPackage("com.android.camera2")).respondWith(result);
         onView(withId(R.id.takePicBtn)).perform(click());
-        allowPermissionsIfNeeded();
         intended(toPackage("com.android.camera2"));
 
         scenario.onFragment(fragment -> {
@@ -108,15 +106,6 @@ public class PicturesFragmentTest {
         sync.assertCalled(1);
         sync.assertNoFailedTests();
         Intents.release();
-    }
-
-
-    private static void allowPermissionsIfNeeded() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (mDevice.hasObject(By.text("ALLOW"))){
-                mDevice.findObject(By.text("ALLOW")).click();
-            }
-        }
     }
 
 
