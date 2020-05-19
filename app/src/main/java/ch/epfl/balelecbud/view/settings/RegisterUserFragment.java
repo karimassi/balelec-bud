@@ -84,9 +84,6 @@ public final class RegisterUserFragment extends DialogFragment {
     }
 
     private void register(String name, String email, String password) {
-        if (!validateEntry())
-            return;
-
         settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.CONNECTING);
         getAppAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
             Log.d(TAG, "whenComplete() called with: aVoid = [" + aVoid + "], throwable = [" + throwable + "]");

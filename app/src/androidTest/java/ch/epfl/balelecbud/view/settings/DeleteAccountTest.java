@@ -44,6 +44,7 @@ import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.E
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
@@ -76,9 +77,22 @@ public class DeleteAccountTest {
     }
 
     @Test
-    public void whenDeleteAccountSignOut() {
+    public void whenLocationIsOffItStaysOffOnUserDeletion() {
+        LocationUtils.disableLocation();
+        performDeleteUser();
+        assertFalse(LocationUtils.isLocationActive());
+    }
+
+    @Test
+    public void stayConnectedWhenCancelDeletion() {
         onView(withText(R.string.delete_account)).perform(click());
-        onView(withText(R.string.delete_account_yes)).perform(click());
+        onView(withText(R.string.cancel)).perform(click());
+        assertNotNull(mockAuth.getCurrentUser());
+    }
+
+    @Test
+    public void whenDeleteAccountSignOut() {
+        performDeleteUser();
         onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
         assertNull(mockAuth.getCurrentUser());
         assertNotEquals(alex.getUid(), mockAuth.getCurrentUid());
@@ -107,15 +121,13 @@ public class DeleteAccountTest {
                 return future;
             }
         });
-        onView(withText(R.string.delete_account)).perform(click());
-        onView(withText(R.string.delete_account_yes)).perform(click());
+        performDeleteUser();
         sync.waitCall(1);
         sync.assertCalled(1);
     }
 
     private <T> void deleteUserAndQuery(String collectionName, Class<T> clazz) throws ExecutionException, InterruptedException {
-        onView(withText(R.string.delete_account)).perform(click());
-        onView(withText(R.string.delete_account_yes)).perform(click());
+        performDeleteUser();
         MyQuery query = new MyQuery(collectionName, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, alex.getUid()));
         if (clazz != null) {
             assertThat(mockDB.query(query, clazz).get().getList(), is(Collections.singletonList(null)));
@@ -142,5 +154,10 @@ public class DeleteAccountTest {
     @Test
     public void whenDeleteAccountDeleteSentFriendRequests() throws ExecutionException, InterruptedException {
         deleteUserAndQuery(Database.SENT_REQUESTS_PATH, null);
+    }
+
+    private void performDeleteUser() {
+        onView(withText(R.string.delete_account)).perform(click());
+        onView(withText(R.string.delete_account_yes)).perform(click());
     }
 }

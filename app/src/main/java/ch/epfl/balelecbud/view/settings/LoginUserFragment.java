@@ -68,9 +68,6 @@ public final class LoginUserFragment extends DialogFragment {
     }
 
     private void login(final String email, String password) {
-        if (!validateEntry()) {
-            return;
-        }
         settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.CONNECTING);
         getAppAuthenticator().signIn(email, password).whenComplete((user, throwable) -> {
             if (user != null) {

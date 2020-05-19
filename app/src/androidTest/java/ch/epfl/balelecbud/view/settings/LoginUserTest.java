@@ -23,6 +23,7 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -131,6 +132,13 @@ public class LoginUserTest {
         onView(withText(R.string.sign_in_failed))
                 .inRoot(CustomMatcher.isToast())
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void whenCancelLoginStaySignedOut() {
+        onView(withText(R.string.cancel)).perform(click());
+        onView(withText(R.string.sign_in)).check(doesNotExist());
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
     private void enterAndClick(String email, String pwd) {

@@ -31,6 +31,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -152,7 +153,7 @@ public class RegisterUserTest {
     }
 
     @Test
-    public void testCanRegisterFailDB() {
+    public void testCanRegisterFailStoreUserInDB() {
         BalelecbudApplication.setAppDatabase(new Database() {
             @Override
             public void unregisterDocumentListener(String collectionName, String documentID) { }
@@ -172,6 +173,21 @@ public class RegisterUserTest {
             }
             @Override
             public void deleteDocumentWithID(String collectionName, String documentID) { }
+        });
+        enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
+        onView(withText(R.string.register_failed))
+                .inRoot(CustomMatcher.isToast())
+                .check(matches(isDisplayed()));
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testCanRegisterFailRetrievingUserFromDB() {
+        BalelecbudApplication.setAppDatabase(new MockDatabase() {
+            @Override
+            public <T> CompletableFuture<FetchedData<T>> query(MyQuery query, Class<T> tClass) {
+                return TestAsyncUtils.getExceptionalFuture("Failed to retrieve user from database");
+            }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
         onView(withText(R.string.register_failed))
@@ -214,6 +230,13 @@ public class RegisterUserTest {
         onView(withText(R.string.register_failed))
                 .inRoot(CustomMatcher.isToast())
                 .check(matches(isDisplayed()));
+        onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void whenCancelRegistrationStaySignedOut() {
+        onView(withText(R.string.cancel)).perform(click());
+        onView(withText(R.string.register)).check(doesNotExist());
         onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
