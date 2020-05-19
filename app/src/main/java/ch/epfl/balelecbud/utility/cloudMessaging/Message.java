@@ -59,7 +59,7 @@ public final class Message {
         BalelecbudApplication.getAppDatabase()
                 .query(query)
                 .whenCompleteAsync((t, throwable) -> {
-                    if (throwable == null && t.getList().size() > 0) {
+                    if (throwable == null && new ArrayList<>(t.getList().get(0).keySet()).get(0) != null) {
                         switch (type) {
                             case FRIEND_REQUEST:
                                 new Message(getAppContext().getString(R.string.friend_request_title),
@@ -130,7 +130,7 @@ public final class Message {
                             send.put("data", message).put("to", token);
                             BalelecbudApplication.getMessagingService().sendMessage(send);
                         } catch (JSONException e) {
-                            Log.d(TAG, "Couldn't put data in JSONObj");
+                            Log.d(TAG, "Couldn't put data in JSONObj", e);
                         }
                     } else {
                         Log.d(TAG, "Didn't find token for this user, stopped sending the message", throwable);
