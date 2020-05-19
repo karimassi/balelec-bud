@@ -60,6 +60,6 @@ public final class DeleteAccountDialog extends DialogFragment {
             LocationUtils.disableLocation();
         getAppAuthenticator().signOut();
         getAppAuthenticator().signInAnonymously();
-        settingsFragment.updateLoginStatus(false);
+        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
     }
 }

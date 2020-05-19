@@ -68,10 +68,7 @@ public final class LoginUserFragment extends DialogFragment {
     }
 
     private void login(final String email, String password) {
-        if (!validateEntry()) {
-            return;
-        }
-
+        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.CONNECTING);
         getAppAuthenticator().signIn(email, password).whenComplete((user, throwable) -> {
             if (user != null) {
                 getAppAuthenticator().setCurrentUser(user);
@@ -79,8 +76,8 @@ public final class LoginUserFragment extends DialogFragment {
                 onAuthComplete();
             } else {
                 Log.w(TAG, "login: fail", throwable);
-                Toast.makeText(getContext(), throwable.getCause()
-                        .getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.sign_in_failed), Toast.LENGTH_LONG).show();
+                settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
             }
         });
     }
@@ -102,6 +99,6 @@ public final class LoginUserFragment extends DialogFragment {
 
     private void onAuthComplete() {
         TokenUtils.storeToken();
-        settingsFragment.updateLoginStatus(true);
+        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_IN);
     }
 }

@@ -12,6 +12,7 @@ import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 
@@ -60,7 +61,7 @@ public class MockAuthenticator implements Authenticator {
         if (!users.containsKey(email)) {
             users.put(email, password);
             User u = new User(email, name, currentUserID);
-            return MockDatabase.getInstance().storeDocumentWithID(Database.USERS_PATH, u.getUid(), u);
+            return getAppDatabase().storeDocumentWithID(Database.USERS_PATH, u.getUid(), u);
         } else {
             return TestAsyncUtils.getExceptionalFuture("Failed registration");
         }

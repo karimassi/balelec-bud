@@ -2,6 +2,8 @@ package ch.epfl.balelecbud.view.settings;
 
 import androidx.fragment.app.testing.FragmentScenario;
 
+import com.google.common.collect.Lists;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +17,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.clickAndCheckDisplay;
 
 public class SettingsSignOutTest {
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
@@ -44,9 +47,9 @@ public class SettingsSignOutTest {
 
     @Test
     public void whenSignedOutICanRegister() {
-        onView(withText(R.string.click_to_sign_in)).perform(click());
-        onView(withText(R.string.action_no_account)).perform(click());
-        onView(withText(R.string.register)).check(matches(isDisplayed()));
+        clickAndCheckDisplay(
+                Lists.newArrayList(R.string.click_to_sign_in, R.string.action_no_account),
+                Lists.newArrayList(R.string.register), Lists.newArrayList());
     }
 
     @Test
