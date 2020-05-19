@@ -113,7 +113,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         findPreference(SIGN_IN_KEY).setVisible(status.isSignedOut());
         findPreference(CONNECTING_KEY).setVisible(status.isConnecting());
         findPreference(SIGN_OUT_KEY).setVisible(status.isSignedIn());
-        findPreference(SIGN_OUT_KEY).setVisible(status.isSignedIn());
+        findPreference(DELETE_USER_KEY).setVisible(status.isSignedIn());
     }
 
     @Override
