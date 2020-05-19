@@ -70,7 +70,7 @@ public class PicturesFragmentTest {
     }
 
     @Test
-    public void cameraIsSavingImageToSorage() throws InterruptedException {
+    public void cameraIsSavingImageToStorage() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
 
         Intents.init();
@@ -82,9 +82,8 @@ public class PicturesFragmentTest {
         ActivityResult result = new ActivityResult(Activity.RESULT_OK, resultImg);
         intending(toPackage("com.android.camera2")).respondWith(result);
         onView(withId(R.id.takePicBtn)).perform(click());
-        intended(toPackage("com.android.camera2"));
         allowPermissionsIfNeeded();
-        Intents.release();
+        intended(toPackage("com.android.camera2"));
 
         scenario.onFragment(fragment -> {
             File file = fragment.getActivity().getFilesDir();
@@ -101,6 +100,7 @@ public class PicturesFragmentTest {
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
+        Intents.release();
     }
 
 
