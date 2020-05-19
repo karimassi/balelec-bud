@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,10 +11,12 @@ import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,7 +40,11 @@ public class PicturesFragmentTest {
 
     private FragmentScenario<PicturesFragment> scenario;
 
+    @Rule
+    public GrantPermissionRule permissionRuleCamera = GrantPermissionRule.grant(Manifest.permission.CAMERA);
 
+    @Rule
+    public GrantPermissionRule permissionRuleLocation = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION);
 
     @Before
     public void setUp(){
