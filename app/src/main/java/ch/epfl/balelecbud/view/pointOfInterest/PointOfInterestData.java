@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.PointOfInterest;
@@ -18,26 +19,28 @@ import ch.epfl.balelecbud.view.map.MapViewFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class PointOfInterestData extends RecyclerViewData<PointOfInterest, PointOfInterestHolder> {
+public final class PointOfInterestData extends RecyclerViewData<PointOfInterest, PointOfInterestHolder> {
 
     private final List<Integer> lastRecordedAffluence = new LinkedList<>();
     private final FragmentActivity activity;
 
-    public PointOfInterestData(FragmentActivity activity) {
+    PointOfInterestData(FragmentActivity activity) {
         this.activity = activity;
     }
 
     //TODO change to not have rv flicker at some point
+    //TODO cached ?
     @Override
-    public void reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
         clearAll();
         lastRecordedAffluence.clear();
         MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>(), preferredSource);
-        getAppDatabase().query(query, PointOfInterest.class)
-                .thenCompose(PointOfInterestUtils::computeAffluence)
-                .thenAccept(this::postResults);
+        return getAppDatabase().query(query, PointOfInterest.class)
+                .thenCompose(fetchedData -> PointOfInterestUtils.computeAffluence(fetchedData.getList()))
+                .thenApply(results -> {
+                    this.postResults(results); return null;
+                });
     }
-
     @Override
     public void bind(int index, PointOfInterestHolder viewHolder) {
         PointOfInterest poi = data.get(index);
@@ -62,5 +65,4 @@ public class PointOfInterestData extends RecyclerViewData<PointOfInterest, Point
             add(index, tuple.getPoi());
         }
     }
-
 }

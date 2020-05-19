@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.balelecbud.R;
 
-public class SentRequestViewHolder extends RecyclerView.ViewHolder {
+final class SentRequestViewHolder extends RecyclerView.ViewHolder {
 
-    public final TextView friendName;
-    public final Button cancelButton;
+    final TextView friendName;
+    final Button cancelButton;
 
-    public SentRequestViewHolder(@NonNull View itemView) {
+    SentRequestViewHolder(@NonNull View itemView) {
         super(itemView);
         friendName = itemView.findViewById(R.id.text_view_sent_request_item_name);
         cancelButton = itemView.findViewById(R.id.button_sent_request_item_cancel);

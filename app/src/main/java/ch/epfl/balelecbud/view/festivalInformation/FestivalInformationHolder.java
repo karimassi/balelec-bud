@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ch.epfl.balelecbud.R;
 
-public class FestivalInformationHolder extends RecyclerView.ViewHolder {
+final class FestivalInformationHolder extends RecyclerView.ViewHolder {
 
-    public final TextView informationTitleTextView;
-    public final TextView informationContentTextView;
+    final TextView informationTitleTextView;
+    final TextView informationContentTextView;
 
-    public FestivalInformationHolder(View view) {
+    FestivalInformationHolder(View view) {
         super(view);
         informationTitleTextView = view.findViewById(R.id.festivalInfoTitle);
         informationContentTextView = view.findViewById(R.id.festivalInfoContent);

@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
 
+/**
+ * Utility class used to pack and unpack intents to communicate with the concert flow service
+ */
 public final class FlowUtils {
     private static final String TAG = "ch.epfl.balelecbud.util.notifications.concertFlow";
     public static final String CANCEL_CONCERT = TAG + ".CANCEL_CONCERT";

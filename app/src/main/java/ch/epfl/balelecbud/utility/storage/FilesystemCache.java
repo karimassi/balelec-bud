@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 
-public class FilesystemCache implements Cache {
+public final class FilesystemCache implements Cache {
 
     private static final String TAG = FilesystemCache.class.getSimpleName();
     private File cacheDir;

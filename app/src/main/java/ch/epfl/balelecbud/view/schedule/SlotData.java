@@ -25,7 +25,7 @@ import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 
-public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
+public final class SlotData extends RecyclerViewData<Slot, SlotHolder> {
 
     private static final String TAG = SlotData.class.getSimpleName();
 
@@ -34,7 +34,7 @@ public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
 
     private static Consumer<Intent> intentLauncher;
 
-    public SlotData(Activity mainActivity, List<Slot> subscribedConcertAtLaunch) {
+    SlotData(Activity mainActivity, List<Slot> subscribedConcertAtLaunch) {
         super();
         this.mainActivity = mainActivity;
         this.subscribedConcertAtLaunch = subscribedConcertAtLaunch;
@@ -44,10 +44,10 @@ public class SlotData extends RecyclerViewData<Slot, SlotHolder> {
     }
 
     @Override
-    public void reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(Database.Source preferredSource) {
         MyQuery query = new MyQuery(Database.CONCERT_SLOTS_PATH, new LinkedList<>(), preferredSource);
-        getAppDatabase().query(query, Slot.class)
-                .whenComplete(new CompletableFutureUtils.MergeBiConsumer<>(this));
+        return getAppDatabase().query(query, Slot.class)
+                .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
 
     @Override

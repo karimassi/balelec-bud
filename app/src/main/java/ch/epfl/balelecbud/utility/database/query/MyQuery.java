@@ -7,7 +7,10 @@ import java.util.List;
 
 import ch.epfl.balelecbud.utility.database.Database;
 
-public class  MyQuery {
+/**
+ * Class modeling normal clause
+ */
+public final class MyQuery {
 
     private final String collectionName;
     private final List<MyWhereClause> whereClauses;
@@ -19,11 +22,11 @@ public class  MyQuery {
     }
 
     public MyQuery(String collectionName, MyWhereClause whereClause) {
-        this(collectionName, whereClause, Database.Source.REMOTE);
+        this(collectionName, whereClause, Database.Source.REMOTE_ONLY);
     }
 
     public MyQuery(String collectionName, MyGeoClause geoClause) {
-        this(collectionName, Collections.emptyList(), geoClause, Database.Source.REMOTE);
+        this(collectionName, Collections.emptyList(), geoClause, Database.Source.REMOTE_ONLY);
     }
 
     public MyQuery(String collectionName, MyGeoClause geoClause, Database.Source source) {
@@ -31,7 +34,7 @@ public class  MyQuery {
     }
 
     public MyQuery(String collectionName, List<MyWhereClause> whereClauses) {
-        this(collectionName, whereClauses, null, Database.Source.REMOTE);
+        this(collectionName, whereClauses, null, Database.Source.REMOTE_ONLY);
     }
 
     public MyQuery(String collectionName, List<MyWhereClause> whereClauses, Database.Source source) {
@@ -78,5 +81,4 @@ public class  MyQuery {
     public Database.Source getSource() {
         return source;
     }
-
 }

@@ -13,14 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class HttpPostRequest extends CompletableFuture<JsonElement> {
+final class HttpPostRequest extends CompletableFuture<JsonElement> {
 
     private static final String TAG = HttpPostRequest.class.getSimpleName();
-    private static String key;
 
     private JsonObjectRequest postRequest;
 
-    public HttpPostRequest(String url, JSONObject request) {
+    HttpPostRequest(String url, JSONObject request, String key) {
         Log.d(TAG, "In http post request");
         postRequest = new JsonObjectRequest(Request.Method.POST, url, request,
                 response -> complete(JsonParser.parseString(response.toString())),
@@ -39,11 +38,7 @@ public class HttpPostRequest extends CompletableFuture<JsonElement> {
         };
     }
 
-    public static void setAuthorizationKey(String authorizationKey) {
-        key = authorizationKey;
-    }
-
-    public JsonObjectRequest getPostRequest() {
+    JsonObjectRequest getPostRequest() {
         return postRequest;
     }
 }

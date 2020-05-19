@@ -10,7 +10,10 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.Objects;
 
-public class Location implements Parcelable {
+/**
+ * Class modeling a Location
+ */
+public final class Location implements Parcelable {
 
     public static final Creator<Location> CREATOR = new Creator<Location>() {
         @Override
@@ -23,22 +26,30 @@ public class Location implements Parcelable {
             return new Location[size];
         }
     };
+
+    /**
+     * The default location at which the map opens
+     */
     public static final Location DEFAULT_LOCATION = new Location(46.518802, 6.567550);
     private Double longitude;
     private Double latitude;
     private Double geoFireLocation;
 
-    public Location() {
-    }
+    /**
+     * Empty constructor used by FireStore
+     */
+    public Location() { }
 
-    public Location(double latitude, double longitude, double geoFireLocation) {
+    /**
+     * Constructor for location
+     *
+     * @param latitude  the latitude
+     * @param longitude the longitude
+     */
+    public Location(double latitude, double longitude) {
         this.longitude = longitude;
         this.latitude = latitude;
-        this.geoFireLocation = geoFireLocation;
-    }
-
-    public Location(double latitude, double longitude) {
-        this(latitude, longitude, (latitude + 90) * 180 + longitude);
+        this.geoFireLocation = (latitude + 90) * 180 + longitude;
     }
 
     protected Location(Parcel in) {
@@ -59,6 +70,11 @@ public class Location implements Parcelable {
         return geoFireLocation;
     }
 
+    /**
+     * Convert the location into Mapbox's {@code LatLng}
+     *
+     * @return the converted location
+     */
     public LatLng toLatLng() {
         return new LatLng(latitude, longitude);
     }
@@ -95,5 +111,4 @@ public class Location implements Parcelable {
         dest.writeDouble(longitude);
         dest.writeDouble(geoFireLocation);
     }
-
 }

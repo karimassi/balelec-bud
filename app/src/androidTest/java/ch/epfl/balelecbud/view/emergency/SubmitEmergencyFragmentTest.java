@@ -55,7 +55,7 @@ public class SubmitEmergencyFragmentTest {
         submitEmergency("Theft", "I lost something");
         MyQuery query = new MyQuery(Database.EMERGENCIES_PATH, new ArrayList<>());
         TestAsyncUtils sync = new TestAsyncUtils();
-        mockDB.query(query, Emergency.class).thenApply(emergencies -> emergencies.get(0)).whenComplete((emergency, throwable) -> {
+        mockDB.query(query, Emergency.class).thenApply(emergencies -> emergencies.getList().get(0)).whenComplete((emergency, throwable) -> {
             if (throwable == null) {
                 sync.assertNotNull(emergency);
                 sync.assertEquals(emergency.getMessage(), "I lost something");

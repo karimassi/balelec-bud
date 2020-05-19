@@ -13,7 +13,10 @@ import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.TransportDeparture;
 import ch.epfl.balelecbud.model.TransportStation;
 
-public class TransportUtils {
+/**
+ * Collection of methods used to get information about public transports
+ */
+public final class TransportUtils {
 
     private static final String BASE_URL = "http://transport.opendata.ch/v1/";
     private static final String LOCATIONS_PATH = "locations";
@@ -31,8 +34,6 @@ public class TransportUtils {
     private static final String LINE_TERMINUS_KEY = "to";
     private static final String STOP_STATION_KEY = "stop";
     private static final String DEPARTURE_TIMESTAMP_KEY = "departureTimestamp";
-
-
 
     public static CompletableFuture<List<TransportStation>> getNearbyStations(Location currentLocation) {
         String parameter_x = "x=" + currentLocation.getLatitude();
@@ -57,7 +58,6 @@ public class TransportUtils {
                 });
     }
 
-
     public static CompletableFuture<List<TransportDeparture>> getNextDepartures(TransportStation station) {
         String parameter_id = "id=" + station.getStationId();
         String url = BASE_URL + STATIONBOARD_PATH + "?" + parameter_id + "&limit=20";
@@ -79,7 +79,5 @@ public class TransportUtils {
                     }
                     return departures;
                 });
-
     }
-
 }

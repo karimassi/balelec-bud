@@ -15,7 +15,7 @@ import ch.epfl.balelecbud.utility.location.LocationUtils;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class DeleteAccountDialog extends DialogFragment {
+public final class DeleteAccountDialog extends DialogFragment {
     public static final String TAG = DeleteAccountDialog.class.getSimpleName();
     private final SettingsFragment settingsFragment;
 
@@ -45,7 +45,7 @@ public class DeleteAccountDialog extends DialogFragment {
         getAppDatabase().deleteDocumentWithID(Database.LOCATIONS_PATH, uid);
         FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser()).whenComplete(
                 (strings, throwable) ->
-                        FriendshipUtils.getUsersFromUids(strings, Database.Source.CACHE)
+                        FriendshipUtils.getUsersFromUids(strings, Database.Source.CACHE_FIRST)
                                 .forEach(userCompletableFuture -> userCompletableFuture.whenComplete(
                                         (user, throwable1) -> FriendshipUtils.removeFriend(user))));
         getAppDatabase().deleteDocumentWithID(Database.SENT_REQUESTS_PATH, uid);

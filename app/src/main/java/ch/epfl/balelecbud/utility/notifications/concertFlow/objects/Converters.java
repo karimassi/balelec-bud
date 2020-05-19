@@ -4,8 +4,10 @@ import androidx.room.TypeConverter;
 
 import com.google.firebase.Timestamp;
 
-
-public class Converters {
+/**
+ * Class used by Room to store and retrieve {@code Timestamp}
+ */
+public final class Converters {
     @TypeConverter
     public static Timestamp fromString(String value) {
         if (value == null)

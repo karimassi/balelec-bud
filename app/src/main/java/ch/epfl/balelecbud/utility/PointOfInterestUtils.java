@@ -12,7 +12,10 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class PointOfInterestUtils {
+/**
+ * Collection of methods used to get the amount of users near points of interest
+ */
+public final class PointOfInterestUtils {
 
     public static CompletableFuture<Integer> getAmountNearPointOfInterest(PointOfInterest poi) {
 
@@ -22,7 +25,7 @@ public class PointOfInterestUtils {
 
         MyGeoClause geoClause = new MyGeoClause(poiLatitude, poiLongitude, poiRadius);
 
-        return getAppDatabase().query(new MyQuery(Database.LOCATIONS_PATH, geoClause), Location.class).thenApply(List::size);
+        return getAppDatabase().query(new MyQuery(Database.LOCATIONS_PATH, geoClause), Location.class).thenApply(locationFetchedData -> locationFetchedData.getList().size());
     }
 
     public static CompletableFuture<List<PointOfInterestUtils.PoiAffluenceTuple>> computeAffluence(List<PointOfInterest> pointOfInterests) {

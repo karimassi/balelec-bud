@@ -28,7 +28,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.StringUtils.isEmailValid;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 
-public class RegisterUserFragment extends DialogFragment {
+public final class RegisterUserFragment extends DialogFragment {
     public static final String TAG = RegisterUserFragment.class.getSimpleName();
     private final SettingsFragment settingsFragment;
     private EditText nameField;
@@ -166,7 +166,7 @@ public class RegisterUserFragment extends DialogFragment {
                                 throwable.getCause().getLocalizedMessage(),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        getAppAuthenticator().setCurrentUser(users.get(0));
+                        getAppAuthenticator().setCurrentUser(users.getList().get(0));
                         settingsFragment.updateLoginStatus(true);
                         TokenUtils.storeToken();
                     }
