@@ -62,7 +62,7 @@ public class MockDatabase implements Database {
     private Map<String, Map<String, Map<String, Boolean>>> database;
     private Long freshnessToReturn = null;
 
-    private MockDatabase() {
+    protected MockDatabase() {
         resetDatabase();
     }
 
