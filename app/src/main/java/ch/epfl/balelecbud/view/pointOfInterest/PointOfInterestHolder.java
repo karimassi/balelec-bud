@@ -1,7 +1,7 @@
 package ch.epfl.balelecbud.view.pointOfInterest;
 
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,7 +13,7 @@ final class PointOfInterestHolder extends RecyclerView.ViewHolder {
     final TextView nameTextView;
     final TextView typeTextView;
     final TextView amountNearPoiTextView;
-    final Button goToMapButton;
+    final ImageButton goToMapButton;
 
     PointOfInterestHolder(View view) {
         super(view);

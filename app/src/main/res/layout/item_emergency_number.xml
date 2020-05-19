@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_friend_request"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/rv_item_side_margin"
@@ -15,28 +16,23 @@
     android:paddingBottom="@dimen/rv_item_top_bottom_padding">
 
     <TextView
-        android:id="@+id/text_view_friend_request_item_name"
+        android:id="@+id/emergencyInfoName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.4"
-        android:gravity="bottom"
+        android:layout_weight="0.7"
+        android:textSize="@dimen/emergencies_title_size"
         android:fontFamily="@font/old_sans_black"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/friend_name_size" />
+        android:textColor="@android:color/white" />
 
-
-    <Button
-        android:id="@+id/button_request_item_accept_request"
+    <TextView
+        android:id="@+id/emergencyInfoInstruction"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.3"
-        android:text="@string/accept_request" />
-
-    <Button
-        android:id="@+id/button_request_item_delete_request"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.3"
-        android:text="@string/reject_request" />
+        android:textAlignment="viewEnd"
+        android:gravity="end"
+        android:fontFamily="@font/old_sans_black"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>
+

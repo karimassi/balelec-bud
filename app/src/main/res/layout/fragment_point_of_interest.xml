@@ -19,19 +19,17 @@
         android:layout_height="0dp"
         android:layout_weight="9.5">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_point_of_interest"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/pointOfInterestRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/poi_margin"
-                android:layout_marginRight="@dimen/poi_margin"
+                android:layout_marginLeft="@dimen/recycler_view_margin"
+                android:layout_marginRight="@dimen/recycler_view_margin"
                 app:layoutManager="LinearLayoutManager"
                 tools:context=".view.pointOfInterest.PointOfInterestFragment"
                 tools:listitem="@layout/item_point_of_interest" />

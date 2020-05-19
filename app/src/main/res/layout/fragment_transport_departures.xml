@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <TextView
         android:id="@+id/text_view_transport_departures_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/recycler_view_margin"
+        android:paddingRight="@dimen/recycler_view_margin"
+        android:textSize="@dimen/departure_title_size"
+        android:fontFamily="@font/old_sans_black"
+        android:textColor="@android:color/white"/>
 
     <include layout="@layout/freshness_info" />
 
@@ -24,9 +28,11 @@
             android:id="@+id/recycler_view_transport_departures"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:layoutManager="LinearLayoutManager"/>
+            android:layout_marginLeft="@dimen/recycler_view_margin"
+            android:layout_marginRight="@dimen/recycler_view_margin"
+            app:layoutManager="LinearLayoutManager"
+            tools:context=".view.transport.TransportDeparturesFragment"
+            tools:listitem="@layout/item_transport_departure" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

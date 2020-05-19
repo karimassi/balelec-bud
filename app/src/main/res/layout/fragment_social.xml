@@ -38,19 +38,22 @@
                 android:id="@+id/view_pager_social"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/view_pager_top_bottom_padding"
+                android:paddingBottom="@dimen/view_pager_top_bottom_padding">
 
             </androidx.viewpager2.widget.ViewPager2>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_add_friends"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="@dimen/floating_action_button_margin"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="end|bottom"
+                app:elevation="@dimen/floating_action_button_margin"
+                app:maxImageSize="56dp"
                 app:srcCompat="@android:drawable/ic_input_add" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

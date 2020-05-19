@@ -52,7 +52,7 @@ public final class EmergencyInformationFragment extends Fragment implements OnRe
 
         RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> numbersData = new EmergencyInformationData(true, this);
         RefreshableRecyclerViewAdapter<EmergencyInformation, EmergencyInformationHolder> numbersAdapter =
-                new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, freshnessView ,numbersData, R.layout.item_emergency_info);
+                new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, freshnessView ,numbersData, R.layout.item_emergency_number);
         recyclerViewNumbers.setAdapter(numbersAdapter);
         numbersAdapter.setOnRefreshListener(refreshLayout);
 

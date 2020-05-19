@@ -62,6 +62,9 @@
     <string name="drawer_emergency">Emergency</string>
     <string name="drawer_settings">Settings</string>
 
+    <!--  SCHEDULE  -->
+
+    <string name="schedule_image_description">Image for a concert</string>
 
     <!--  SOCIAL FEATURES  -->
 
