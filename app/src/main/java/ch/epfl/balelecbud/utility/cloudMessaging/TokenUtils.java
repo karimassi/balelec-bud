@@ -29,9 +29,9 @@ public final class TokenUtils {
         User user = getAppAuthenticator().getCurrentUser();
         if(user != null) {
             String uid = user.getUid();
-            Log.d(TAG, "Storing token in  database for user: " + uid);
-            Log.d(TAG, "Token: " + token);
             if(token != null && uid != null) {
+                Log.d(TAG, "Storing token in  database for user: " + uid);
+                Log.d(TAG, "Token: " + token);
                 Map<String, Boolean> toStore = new HashMap<>();
                 toStore.put(token, true);
                 getAppDatabase().storeDocumentWithID(Database.TOKENS_PATH, uid, toStore);

@@ -65,6 +65,10 @@ public final class TransportStation implements Parcelable {
         return distanceToUser;
     }
 
+    public String getFormattedDistanceToUser() {
+        return distanceToUser + " m." ;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
