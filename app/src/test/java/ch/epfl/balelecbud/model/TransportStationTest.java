@@ -29,7 +29,7 @@ public class TransportStationTest {
 
     @Test
     public void testGetFormattedDistance() {
-        Assert.assertEquals("10 m.", station.getFormattedDistanceToUser(), 0);
+        Assert.assertEquals("10.0 m.", station.getFormattedDistanceToUser());
     }
 
     @Test
