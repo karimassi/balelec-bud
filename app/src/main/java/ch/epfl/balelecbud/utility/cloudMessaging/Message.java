@@ -39,7 +39,6 @@ public final class Message {
     private String body;
     private String type;
 
-    @VisibleForTesting
     Message(String title, String body, String type) {
         this.title = title;
         this.body = body;
@@ -99,7 +98,6 @@ public final class Message {
         return new HashMap<>();
     }
 
-    @VisibleForTesting
     public static Map<String, String> createMessage(String title, String body, String type) {
         Map<String, String> message = new HashMap<>();
         message.put(getAppContext().getString(R.string.data_key_title), title);
@@ -108,7 +106,6 @@ public final class Message {
         return message;
     }
 
-    @VisibleForTesting
     void sendMessage(String uid) {
         Log.d(TAG, "In send message, uid: " + uid);
 
