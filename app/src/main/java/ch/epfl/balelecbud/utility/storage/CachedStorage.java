@@ -4,8 +4,11 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import ch.epfl.balelecbud.utility.InformationSource;
 
 /**
  * Uses the decorator pattern, may seem slightly redundant now since the inner Storage already
@@ -40,13 +43,19 @@ public final class CachedStorage implements Storage {
     }
 
     @Override
-    public CompletableFuture<List<String>> getAllFileNameIn(String collectionName) {
+    public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
         Log.d(TAG, "getAllFileNameIn " + collectionName);
-        FilesystemCache fs = new FilesystemCache();
-        if(fs.contains(collectionName)){
-            return null;
-        } else {
-            return inner.getAllFileNameIn(collectionName);
+        switch(source){
+            case REMOTE_ONLY:
+                return inner.getAllFileNameIn(collectionName, source);
+            case CACHE_FIRST:
+                //TODO
+            case CACHE_ONLY:
+                //TODO
+            default:
+                CompletableFuture<List<String>> res = new CompletableFuture<>();
+                res.complete(new LinkedList<>());
+                return res;
         }
     }
 

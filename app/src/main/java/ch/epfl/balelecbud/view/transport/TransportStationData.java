@@ -6,8 +6,8 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.TransportStation;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.TransportUtils;
-import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
@@ -23,7 +23,7 @@ public final class TransportStationData extends RecyclerViewData<TransportStatio
     }
 
     @Override
-    public CompletableFuture<Long> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(InformationSource preferredSource) {
         return TransportUtils.getNearbyStations(userLocation)
                 //wrap in FetchedData with freshness set to null
                 .thenApply(FetchedData::new)

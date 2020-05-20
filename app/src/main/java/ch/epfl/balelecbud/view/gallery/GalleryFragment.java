@@ -32,10 +32,12 @@ public final class GalleryFragment extends Fragment {
     public void onStart(){
         super.onStart();
         RecyclerView rvGallery = getView().findViewById(R.id.galleryRecyclerView);
+        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
+
 
         PictureData data = new PictureData();
         RefreshableRecyclerViewAdapter<Picture, PictureHolder> adapter = new RefreshableRecyclerViewAdapter<>(
-                PictureHolder::new, data, R.layout.item_gallery);
+                PictureHolder::new, freshnessView, data, R.layout.item_gallery);
 
         rvGallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         rvGallery.setAdapter(adapter);

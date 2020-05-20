@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.TaskToCompletableFutureAdapter;
 
 /**
@@ -41,7 +42,7 @@ public final class FirebaseStorage implements Storage {
     }
 
     @Override
-    public CompletableFuture<List<String>> getAllFileNameIn(String collectionName) {
+    public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
         StorageReference ref = firebaseStorage.getReference().child(collectionName);
         /**ArrayList<String> names = new ArrayList<String>();
         ref.listAll().addOnSuccessListener(listResult -> {

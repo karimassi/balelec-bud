@@ -27,6 +27,7 @@ import ch.epfl.balelecbud.model.MyMarker;
 import ch.epfl.balelecbud.model.PointOfInterest;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.location.LocationUtils;
@@ -174,7 +175,7 @@ public final class MapViewFragment extends Fragment {
 
     private void listenFriendsLocationById(List<String> friendIds) {
         for (String friendId : friendIds) {
-            CompletableFuture<User> friend = FriendshipUtils.getUserFromUid(friendId, Database.Source.REMOTE_ONLY);
+            CompletableFuture<User> friend = FriendshipUtils.getUserFromUid(friendId, InformationSource.REMOTE_ONLY);
             friend.thenAccept(user -> Log.d(TAG, "listenFriendsLocationById: get user = [" + user.toString() + "]"));
             friend.thenAccept(this::listenFriendLocation);
         }

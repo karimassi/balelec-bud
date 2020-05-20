@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
@@ -26,7 +27,7 @@ public final class SentRequestData extends RecyclerViewData<User, SentRequestVie
     }
 
     @Override
-    public CompletableFuture<Long> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(InformationSource preferredSource) {
         MyQuery myQuery = new MyQuery(Database.SENT_REQUESTS_PATH,
                 new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()), preferredSource);
         return getAppDatabase().query(myQuery)

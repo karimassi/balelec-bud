@@ -10,6 +10,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.utility.InformationSource;
 
 public class MockStorage implements Storage {
 
@@ -25,7 +26,7 @@ public class MockStorage implements Storage {
     }
 
     @Override
-    public CompletableFuture<List<String>> getAllFileNameIn(String collectionName) {
+    public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
         accessCount += 9;
         List<String> list = new ArrayList();
         for(int i = 1 ; i < 10 ; ++i){
