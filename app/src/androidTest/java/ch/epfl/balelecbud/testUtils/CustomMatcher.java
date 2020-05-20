@@ -24,6 +24,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 
 public class CustomMatcher {
     public static void clickAndCheckDisplay(List<Integer> idsToClick,
@@ -54,13 +55,11 @@ public class CustomMatcher {
     }
 
     @NotNull
-    public static Matcher<View> getItemInSchedule(int itemPosition, int infoPosition) {
+    public static Matcher<View> getItemInSchedule(int itemPosition, int subPosition, int infoPosition) {
         return nthChildOf(
                     nthChildOf(
-                            nthChildOf(
-                                nthChildOf(withId(R.id.scheduleRecyclerView), itemPosition),
-                                    0),
-                        1),
+                            nthChildOf(withId(R.id.scheduleRecyclerView), itemPosition),
+                        subPosition),
                     infoPosition);
     }
 

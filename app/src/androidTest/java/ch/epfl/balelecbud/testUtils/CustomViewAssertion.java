@@ -10,6 +10,8 @@ import org.junit.Assert;
 
 import java.util.function.Function;
 
+import ch.epfl.balelecbud.R;
+
 import static org.hamcrest.Matchers.is;
 
 public class CustomViewAssertion {

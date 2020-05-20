@@ -4,15 +4,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.concurrent.CompletableFuture;
@@ -65,6 +62,8 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
         if (freshness != null) {
             String result = BalelecbudApplication.getAppContext().getString(R.string.cache_info) + DateFormatter.format(freshness);
             Snackbar.make(freshnessView, result, LENGTH_SHORT).show();
+
+            Log.d(TAG, result);
         }
     }
 
