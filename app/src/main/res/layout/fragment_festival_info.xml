@@ -6,20 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blek_blue"
-    android:orientation="vertical"
     android:gravity="center"
-    android:weightSum="10"
+    android:orientation="vertical"
     tools:context=".view.festivalInformation.FestivalInformationFragment">
-
-    <include layout="@layout/freshness_info" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9.5">
+        android:layout_height="match_parent">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_festival_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -28,8 +24,8 @@
                 android:id="@+id/festivalInfoRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/poi_margin"
-                android:layout_marginRight="@dimen/poi_margin"
+                android:layout_marginLeft="@dimen/recycler_view_margin"
+                android:layout_marginRight="@dimen/recycler_view_margin"
                 app:layoutManager="LinearLayoutManager"
                 tools:context=".view.festivalInformation.FestivalInformationFragment"
                 tools:listitem="@layout/item_festival_info" />

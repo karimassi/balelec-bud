@@ -32,15 +32,14 @@ public final class PointOfInterestFragment extends Fragment {
         super.onStart();
 
         RecyclerView recyclerView = getView().findViewById(R.id.pointOfInterestRecyclerView);
-        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
+        SwipeRefreshLayout refreshLayout = getView().findViewById(R.id.swipe_refresh_layout_point_of_interest);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         RecyclerViewData<PointOfInterest, PointOfInterestHolder> data = new PointOfInterestData(getActivity());
         RefreshableRecyclerViewAdapter<PointOfInterest, PointOfInterestHolder> adapter = new RefreshableRecyclerViewAdapter<>(
-                PointOfInterestHolder::new, freshnessView, data, R.layout.item_point_of_interest);
+                PointOfInterestHolder::new, refreshLayout, data, R.layout.item_point_of_interest);
         recyclerView.setAdapter(adapter);
-        SwipeRefreshLayout refreshLayout = getView().findViewById(R.id.swipe_refresh_layout_point_of_interest);
         adapter.setOnRefreshListener(refreshLayout);
     }
 }

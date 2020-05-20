@@ -8,16 +8,12 @@
     android:background="@color/blek_blue"
     android:gravity="center"
     android:orientation="vertical"
-    android:weightSum="10"
     tools:context=".view.schedule.ScheduleFragment">
-
-    <include layout="@layout/freshness_info" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9.5">
+        android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_schedule"
@@ -26,14 +22,12 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/scheduleRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/recycler_view_margin"
+                android:layout_marginRight="@dimen/recycler_view_margin"
+                app:layoutManager="LinearLayoutManager"
+                tools:context=".view.schedule.ScheduleFragment"
                 tools:listitem="@layout/item_schedule" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

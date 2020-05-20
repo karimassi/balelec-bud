@@ -12,12 +12,14 @@ import ch.epfl.balelecbud.R;
 final class ReceivedRequestViewHolder extends RecyclerView.ViewHolder {
 
     final TextView friendName;
+    final TextView friendEmail;
     final Button acceptButton;
     final Button deleteButton;
 
     ReceivedRequestViewHolder(@NonNull View itemView) {
         super(itemView);
         friendName = itemView.findViewById(R.id.text_view_friend_request_item_name);
+        friendEmail = itemView.findViewById(R.id.text_view_friend_request_item_email);
         acceptButton = itemView.findViewById(R.id.button_request_item_accept_request);
         deleteButton = itemView.findViewById(R.id.button_request_item_delete_request);
     }
