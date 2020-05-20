@@ -15,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
-import ch.epfl.balelecbud.testUtils.CustomMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
@@ -131,9 +130,8 @@ public class LoginUserTest {
             }
         });
         enterAndClick("karim@epfl.ch", "123456");
-        onView(withText(R.string.sign_in_failed))
-                .inRoot(CustomMatcher.isToast())
-                .check(matches(isDisplayed()));
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.sign_in_failed)));
     }
 
     @Test
