@@ -33,7 +33,7 @@ public final class TransportStationData extends RecyclerViewData<TransportStatio
     @Override
     public void bind(int index, TransportStationHolder viewHolder) {
         viewHolder.nameView.setText(data.get(index).getStationName());
-        viewHolder.distanceView.setText(String.valueOf(data.get(index).getDistanceToUser()));
+        viewHolder.distanceView.setText(data.get(index).getFormattedDistanceToUser());
         viewHolder.itemView.setOnClickListener(v -> {
             interactionListener.onItemSelected(data.get(index));
         });

@@ -56,6 +56,7 @@ public final class NotificationMessage implements NotificationInterface<Map<Stri
                 .setSmallIcon(R.drawable.my_notification_icone)
                 .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(activity)
                 .build();
 
@@ -77,7 +78,7 @@ public final class NotificationMessage implements NotificationInterface<Map<Stri
     public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    context.getString(R.string.message_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
+                    context.getString(R.string.message_channel_name), NotificationManager.IMPORTANCE_HIGH);
 
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
