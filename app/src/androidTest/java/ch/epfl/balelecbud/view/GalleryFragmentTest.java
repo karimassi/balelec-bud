@@ -51,6 +51,9 @@ public class GalleryFragmentTest {
         onView(ViewMatchers.withId(R.id.gallery_constraint_layout)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void test
+
     private void refreshRecyclerView() {
         onView(withId(R.id.swipe_refresh_layout_gallery)).perform(swipeDown());
     }

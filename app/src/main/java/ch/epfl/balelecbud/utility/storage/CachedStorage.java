@@ -1,7 +1,10 @@
 package ch.epfl.balelecbud.utility.storage;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -34,6 +37,17 @@ public class CachedStorage implements Storage {
                             return innerFile;
                         }
                     });
+        }
+    }
+
+    @Override
+    public CompletableFuture<List<String>> getAllFileNameIn(String collectionName) {
+        Log.d(TAG, "getAllFileNameIn " + collectionName);
+        FilesystemCache fs = new FilesystemCache();
+        if(fs.contains(collectionName)){
+            return null;
+        } else {
+            return inner.getAllFileNameIn(collectionName);
         }
     }
 

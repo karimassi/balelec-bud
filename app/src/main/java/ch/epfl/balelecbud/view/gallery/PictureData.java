@@ -4,9 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 
-import com.google.firebase.storage.StorageReference;
-
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.model.Picture;
@@ -20,7 +19,21 @@ public final class PictureData extends RecyclerViewData<Picture, PictureHolder> 
 
     @Override
     public void reload(Database.Source preferredSource) {
-        StorageReference listRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReference().child("users_pictures");
+        super.clearAll();
+        /**CompletableFuture<List<String>> names = getAppStorage().getAllFileNameIn("users_pictures");
+        names.forEach(name -> {
+            Picture p = new Picture(name);
+            add(super.size(), p);
+        });**/
+        CompletableFuture<List<String>> list = getAppStorage().getAllFileNameIn("users_pictures");
+        list.whenComplete((file, t) ->
+            file.forEach(path -> {
+                Picture p = new Picture(path);
+                add(size(), p);
+            })
+        );
+
+        /**StorageReference listRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReference().child("users_pictures");
         listRef.listAll()
                 .addOnSuccessListener(listResult -> {
                     for (StorageReference item : listResult.getItems()) {
@@ -28,7 +41,7 @@ public final class PictureData extends RecyclerViewData<Picture, PictureHolder> 
                         if(super.size() != listResult.getItems().size())
                             super.add(super.size(), p);
                     }
-                });
+                });**/
     }
 
     @Override
