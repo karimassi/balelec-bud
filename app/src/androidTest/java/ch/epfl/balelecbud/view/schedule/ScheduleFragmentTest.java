@@ -91,7 +91,6 @@ public class ScheduleFragmentTest {
 
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-//        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, slot2);
 //
 //        refreshRecyclerView();
 //
