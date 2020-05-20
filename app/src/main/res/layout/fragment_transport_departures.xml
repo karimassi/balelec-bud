@@ -16,8 +16,6 @@
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white"/>
 
-    <include layout="@layout/freshness_info" />
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"

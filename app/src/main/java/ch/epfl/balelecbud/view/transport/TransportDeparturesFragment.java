@@ -30,8 +30,7 @@ public final class TransportDeparturesFragment extends Fragment {
 
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_transport_departures);
-        View freshnessView = view.findViewById(R.id.freshness_info_layout);
-
+        final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_transport_departures);
 
         TransportStation station = getArguments().getParcelable(STATION_KEY);
 
@@ -39,12 +38,11 @@ public final class TransportDeparturesFragment extends Fragment {
 
         TransportDepartureData data = new TransportDepartureData(station);
         final RefreshableRecyclerViewAdapter<TransportDeparture, TransportDepartureHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(TransportDepartureHolder::new, freshnessView, data, R.layout.item_transport_departure);
+                new RefreshableRecyclerViewAdapter<>(TransportDepartureHolder::new, refreshLayout, data, R.layout.item_transport_departure);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
 
-        final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_transport_departures);
         adapter.setOnRefreshListener(refreshLayout);
 
         return view;

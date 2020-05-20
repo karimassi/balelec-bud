@@ -5,16 +5,12 @@
 
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="10">
-
-    <include layout="@layout/freshness_info" />
+    android:layout_height="match_parent">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout_transport_stations"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9.5">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_transport_stations"

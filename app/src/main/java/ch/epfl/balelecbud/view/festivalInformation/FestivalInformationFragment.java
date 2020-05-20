@@ -30,16 +30,16 @@ public final class FestivalInformationFragment extends Fragment {
     @Override public void onStart() {
         super.onStart();
         RecyclerView recyclerView = getActivity().findViewById(R.id.festivalInfoRecyclerView);
-        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
+        SwipeRefreshLayout refreshLayout = getView().findViewById(R.id.swipe_refresh_layout_festival_info);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
         RecyclerViewData<FestivalInformation, FestivalInformationHolder> data = new FestivalInformationData();
         RefreshableRecyclerViewAdapter<FestivalInformation, FestivalInformationHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(FestivalInformationHolder::new, freshnessView, data, R.layout.item_festival_info);
+                new RefreshableRecyclerViewAdapter<>(FestivalInformationHolder::new, refreshLayout, data, R.layout.item_festival_info);
         recyclerView.setAdapter(adapter);
-        SwipeRefreshLayout refreshLayout = getView().findViewById(R.id.swipe_refresh_layout_festival_info);
+
         adapter.setOnRefreshListener(refreshLayout);
     }
 }

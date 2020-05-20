@@ -45,14 +45,13 @@ public final class EmergencyInformationFragment extends Fragment implements OnRe
         SwipeRefreshLayout refreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_emergency_info);
 
         RecyclerView recyclerViewNumbers = getActivity().findViewById(R.id.recycler_view_emergency_numbers);
-        View freshnessView = getActivity().findViewById(R.id.freshness_info_layout);
 
         recyclerViewNumbers.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewNumbers.setHasFixedSize(true);
 
         RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> numbersData = new EmergencyInformationData(true, this);
         RefreshableRecyclerViewAdapter<EmergencyInformation, EmergencyInformationHolder> numbersAdapter =
-                new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, freshnessView ,numbersData, R.layout.item_emergency_number);
+                new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, refreshLayout ,numbersData, R.layout.item_emergency_number);
         recyclerViewNumbers.setAdapter(numbersAdapter);
         numbersAdapter.setOnRefreshListener(refreshLayout);
 
@@ -62,7 +61,7 @@ public final class EmergencyInformationFragment extends Fragment implements OnRe
 
         RecyclerViewData<EmergencyInformation, EmergencyInformationHolder> data = new EmergencyInformationData(false, null);
         RefreshableRecyclerViewAdapter<EmergencyInformation, EmergencyInformationHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, freshnessView, data, R.layout.item_emergency_info);
+                new RefreshableRecyclerViewAdapter<>(EmergencyInformationHolder::new, refreshLayout, data, R.layout.item_emergency_info);
         recyclerViewInfo.setAdapter(adapter);
         adapter.setOnRefreshListener(refreshLayout);
 

@@ -5,20 +5,15 @@
     android:id="@+id/emergency_info_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/blek_blue"
     android:gravity="center"
-    android:orientation="vertical"
-    android:weightSum="10">
+    android:orientation="vertical">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9.5"
+        android:layout_height="match_parent"
         android:background="@color/blek_blue"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="vertical">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_emergency_info"
@@ -26,23 +21,20 @@
             android:layout_height="match_parent">
 
             <ScrollView
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:fillViewport="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:weightSum="10">
+                    android:orientation="vertical">
 
-                    <include layout="@layout/freshness_info" />
 
                     <TextView
                         android:id="@+id/emergency_info_numbers_title"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
                         android:text="@string/emergency_numbers_title"
                         android:textSize="@dimen/emergencies_title_size"
                         android:fontFamily="@font/old_sans_black"
@@ -51,10 +43,9 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_emergency_numbers"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/recycler_view_margin"
                         android:layout_marginRight="@dimen/recycler_view_margin"
-                        android:layout_weight="4.5"
                         app:layoutManager="LinearLayoutManager"
                         tools:context=".EmergencyInformationActivity"
                         tools:listitem="@layout/item_emergency_info" />
@@ -62,8 +53,7 @@
                     <TextView
                         android:id="@+id/emergency_info_title"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
                         android:text="@string/emergency_information_title"
                         android:textSize="@dimen/emergencies_title_size"
                         android:fontFamily="@font/old_sans_black"
@@ -73,10 +63,9 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_emergency_info"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/recycler_view_margin"
                         android:layout_marginRight="@dimen/recycler_view_margin"
-                        android:layout_weight="4.5"
                         app:layoutManager="LinearLayoutManager"
                         tools:context=".EmergencyInformationActivity"
                         tools:listitem="@layout/item_emergency_info" />
@@ -95,7 +84,7 @@
             android:layout_margin="@dimen/floating_action_button_margin"
             android:clickable="true"
             android:focusable="true"
-            app:elevation="@dimen/floating_action_button_margin"
+            app:elevation="@dimen/floating_action_button_elevation"
             app:maxImageSize="56dp"
             app:srcCompat="@mipmap/help" />
 

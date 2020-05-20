@@ -8,16 +8,12 @@
     android:background="@color/blek_blue"
     android:gravity="center"
     android:orientation="vertical"
-    android:weightSum="10"
     tools:context=".view.festivalInformation.FestivalInformationFragment">
-
-    <include layout="@layout/freshness_info" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9.5">
+        android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_festival_info"
