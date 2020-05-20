@@ -20,6 +20,9 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Location;
 
+/**
+ * Utility class used to setup a location service
+ */
 public final class LocationUtils {
 
     private final static String TAG = LocationUtils.class.getSimpleName();
@@ -137,7 +140,7 @@ public final class LocationUtils {
         editor.apply();
     }
 
-    public static void updateLocation(boolean status) {
+    private static void updateLocation(boolean status) {
         Context ctx = BalelecbudApplication.getAppContext();
         if (status) {
             requestLocationUpdates(ctx);
@@ -150,7 +153,7 @@ public final class LocationUtils {
      * Compute distance between two points in latitude and longitude.
      *
      * lat1, lon1 Start point lat2, lon2 End point
-     * @returns Distance in km
+     * @return Distance in km
      *
      * Borrowed from https://stackoverflow.com/a/16794680
      */

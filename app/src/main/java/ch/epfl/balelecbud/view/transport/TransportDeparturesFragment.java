@@ -19,7 +19,7 @@ import ch.epfl.balelecbud.model.TransportDeparture;
 import ch.epfl.balelecbud.model.TransportStation;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class TransportDeparturesFragment extends Fragment {
+public final class TransportDeparturesFragment extends Fragment {
 
     private static final String STATION_KEY = "station";
 
@@ -30,6 +30,8 @@ public class TransportDeparturesFragment extends Fragment {
 
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_transport_departures);
+        View freshnessView = view.findViewById(R.id.freshness_info_layout);
+
 
         TransportStation station = getArguments().getParcelable(STATION_KEY);
 
@@ -37,7 +39,7 @@ public class TransportDeparturesFragment extends Fragment {
 
         TransportDepartureData data = new TransportDepartureData(station);
         final RefreshableRecyclerViewAdapter<TransportDeparture, TransportDepartureHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(TransportDepartureHolder::new, data, R.layout.item_transport_departure);
+                new RefreshableRecyclerViewAdapter<>(TransportDepartureHolder::new, freshnessView, data, R.layout.item_transport_departure);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
@@ -55,5 +57,4 @@ public class TransportDeparturesFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 }

@@ -15,7 +15,14 @@
     <dimen name="emergency_nb_height">640dp</dimen>
     <dimen name="emergency_nb_margin_top">66dp</dimen>
     <dimen name="emergency_nb_margin_bottom">25dp</dimen>
-    <dimen name="spotify_button_width">113.376dp</dimen>
-    <dimen name="spotify_button_height">32.784dp</dimen>
-    <dimen name="spotify_button_margin_top">420dp</dimen>
+    <dimen name="round_corner_radius">10dp</dimen>
+
+    <!-- SPOTIFY PLAYLIST -->
+    <dimen name="item_track_padding">10dp</dimen>
+    <dimen name="item_track_margin">5dp</dimen>
+    <dimen name="item_track_image_size">60dp</dimen>
+    <dimen name="item_track_title_size">20sp</dimen>
+    <dimen name="item_track_artist_size">17sp</dimen>
+    <dimen name="item_track_artist_margin">8dp</dimen>
+    <dimen name="fragment_playlist_message_size">15sp</dimen>
 </resources>

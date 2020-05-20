@@ -24,7 +24,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="blek_font_style">
-        <item name="fontFamily">@font/oldsansblack</item>
+        <item name="fontFamily">@font/old_sans_black</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 

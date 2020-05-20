@@ -13,7 +13,7 @@ import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.TransportStation;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 
-public class TransportFragment extends Fragment implements OnRecyclerViewInteractionListener<TransportStation> {
+public final class TransportFragment extends Fragment implements OnRecyclerViewInteractionListener<TransportStation> {
 
     private FragmentActivity activity;
 
@@ -27,7 +27,7 @@ public class TransportFragment extends Fragment implements OnRecyclerViewInterac
         return inflater.inflate(R.layout.fragment_transport, container, false);
     }
 
-    public void switchFragment(Fragment fragment) {
+    private void switchFragment(Fragment fragment) {
         activity.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.transport_fragment_container, fragment)
                 .addToBackStack(null)

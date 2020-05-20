@@ -12,7 +12,10 @@ import java.util.stream.Collectors;
 
 import ch.epfl.balelecbud.utility.TaskToCompletableFutureAdapter;
 
-public class FirebaseStorage implements Storage {
+/**
+ * A Firebase storage adapter
+ */
+public final class FirebaseStorage implements Storage {
 
     private static final String TAG = FirebaseStorage.class.getSimpleName();
 

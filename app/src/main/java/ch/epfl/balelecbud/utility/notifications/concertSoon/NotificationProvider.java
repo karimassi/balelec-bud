@@ -8,7 +8,10 @@ import android.content.Intent;
 
 import ch.epfl.balelecbud.utility.FlowUtils;
 
-public class NotificationProvider extends BroadcastReceiver {
+/**
+ * Broadcast receiver to handle communication with the system notification service
+ */
+public final class NotificationProvider extends BroadcastReceiver {
 
     public final static String NOTIFICATION_ID = "notification_id";
     public final static String NOTIFICATION = "notification";

@@ -17,7 +17,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class FriendFragment extends Fragment {
+public final class FriendFragment extends Fragment {
 
     @Nullable
     @Override
@@ -26,9 +26,11 @@ public class FriendFragment extends Fragment {
 
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friends);
+        View freshnessView = view.findViewById(R.id.freshness_info_layout);
+
         FriendData data = new FriendData((User) getArguments().get("user"));
         final RefreshableRecyclerViewAdapter<User, FriendViewHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(FriendViewHolder::new, data, R.layout.item_friend);
+                new RefreshableRecyclerViewAdapter<>(FriendViewHolder::new, freshnessView, data, R.layout.item_friend);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);

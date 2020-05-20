@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Interface modeling a file storage
+ */
 public interface Storage {
     String USER_PICTURE = "users_pictures";
 

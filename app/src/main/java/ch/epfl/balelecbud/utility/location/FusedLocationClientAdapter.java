@@ -7,10 +7,13 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-public class FusedLocationClientAdapter implements LocationClient {
+/**
+ * A Google's FusedLocationClient adapter
+ */
+public final class FusedLocationClientAdapter implements LocationClient {
     private final FusedLocationProviderClient client;
 
-    public FusedLocationClientAdapter(Context context) {
+    FusedLocationClientAdapter(Context context) {
         this.client = LocationServices.getFusedLocationProviderClient(context);
     }
 

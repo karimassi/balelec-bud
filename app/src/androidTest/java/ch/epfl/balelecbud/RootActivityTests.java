@@ -10,6 +10,7 @@ import androidx.test.uiautomator.UiDevice;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.view.map.MapViewFragment;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -18,12 +19,20 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
+import static ch.epfl.balelecbud.utility.database.MockDatabase.karim;
 
 public class RootActivityTests {
     private final UiDevice device = UiDevice.getInstance(getInstrumentation());
 
     @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<>(RootActivity.class);
+    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            setAppAuthenticator(MockAuthenticator.getInstance());
+            MockAuthenticator.getInstance().setCurrentUser(karim);
+        }
+    };
 
     private void openDrawer() {
         device.pressBack();
@@ -55,25 +64,43 @@ public class RootActivityTests {
     }
 
     @Test
-    public void canOpenInfoActivityFromDrawer() {
+    public void canOpenHomeFragmentFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_home, R.id.activity_home_linear_layout);
+    }
+
+    @Test
+    public void canOpenInfoFragmentFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_info, R.id.festivalInfoRecyclerView);
     }
 
     @Test
-    public void canOpenScheduleActivityFromDrawer() {
+    public void canOpenScheduleFragmentFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
     }
 
     @Test
-    public void canOpenPOIActivityFromDrawer() {
+    public void canOpenPOIFragmentFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_poi, R.id.pointOfInterestRecyclerView);
     }
 
     @Test
-    public void canOpenEmergencyInfoActivityFromDrawer() {
+    public void canOpenPlaylistFragmentFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_playlist, R.id.recycler_view_playlist);
+    }
+
+    @Test
+    public void canOpenSocialFragmentFomDrawerWhenSignedIn() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_social, R.id.tabs_social);
+    }
+
+    @Test
+    public void canOpenEmergencyInfoFragmentromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {
         });
         openDrawer();
@@ -81,7 +108,7 @@ public class RootActivityTests {
     }
 
     @Test
-    public void canOpenSettingsActivityFromDrawer() {
+    public void canOpenSettingsFragmentFromDrawer() {
         MapViewFragment.setMockCallback(googleMap -> {
         });
         openDrawer();
@@ -95,8 +122,14 @@ public class RootActivityTests {
     }
 
     @Test
-    public void canOpenTransportActivityFromDrawer() {
+    public void canOpenTransportFragmentFromDrawer() {
         openDrawer();
         clickItem(R.id.activity_main_drawer_transport, R.id.transport_fragment_container);
+    }
+
+    @Test
+    public void canOpenPicturesFragmentFromDrawer() {
+        openDrawer();
+        clickItem(R.id.activity_main_drawer_pictures, R.id.pictures_fragment_container);
     }
 }

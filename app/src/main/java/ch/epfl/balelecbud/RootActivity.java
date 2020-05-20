@@ -21,11 +21,13 @@ import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
+import ch.epfl.balelecbud.view.PicturesFragment;
 import ch.epfl.balelecbud.view.WelcomeFragment;
 import ch.epfl.balelecbud.view.emergency.EmergencyInformationFragment;
 import ch.epfl.balelecbud.view.festivalInformation.FestivalInformationFragment;
 import ch.epfl.balelecbud.view.friendship.SocialFragment;
 import ch.epfl.balelecbud.view.map.MapViewFragment;
+import ch.epfl.balelecbud.view.playlist.PlaylistFragment;
 import ch.epfl.balelecbud.view.pointOfInterest.PointOfInterestFragment;
 import ch.epfl.balelecbud.view.schedule.ScheduleFragment;
 import ch.epfl.balelecbud.view.settings.SettingsFragment;
@@ -33,7 +35,10 @@ import ch.epfl.balelecbud.view.transport.TransportFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+/**
+ * Root activity used to display all the different fragments
+ */
+public final class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = RootActivity.class.getSimpleName();
     private Toolbar toolbar;
@@ -93,6 +98,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_drawer_social:
                 this.showSocialFragment();
                 break;
+            case R.id.activity_main_drawer_playlist:
+                this.showPlaylistFragment();
+                break;
             case R.id.activity_main_drawer_emergency_info:
                 this.showEmergencyInfoFragment();
                 break;
@@ -101,6 +109,9 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.activity_main_drawer_gallery:
                 this.showGalleryFragment();
+                break;
+            case R.id.activity_main_drawer_pictures:
+                this.showPicturesFragment();
                 break;
             default:
                 break;
@@ -150,6 +161,11 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void showPlaylistFragment() {
+        Fragment fragmentPlaylist = PlaylistFragment.newInstance();
+        this.startTransactionFragment(fragmentPlaylist, "PLAYLIST");
+    }
+
     private void showEmergencyInfoFragment() {
         Fragment fragmentEmergencyInfo = EmergencyInformationFragment.newInstance();
         this.startTransactionFragment(fragmentEmergencyInfo, "EMERGENCY_INFO");
@@ -163,6 +179,11 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
     private void showGalleryFragment() {
         GalleryFragment fragmentGallery = GalleryFragment.newInstance();
         this.startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
+    }
+
+    private void showPicturesFragment() {
+        Fragment fragmentPictures = PicturesFragment.newInstance();
+        this.startTransactionFragment(fragmentPictures, "PICTURES");
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {
@@ -181,19 +202,19 @@ public class RootActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    protected void configureToolBar() {
+    private void configureToolBar() {
         this.toolbar = findViewById(R.id.root_activity_toolbar);
         setSupportActionBar(toolbar);
     }
 
-    protected void configureDrawerLayout() {
+    private void configureDrawerLayout() {
         this.drawerLayout = findViewById(R.id.root_activity_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
-    protected void configureNavigationView() {
+    private void configureNavigationView() {
         this.navigationView = findViewById(R.id.root_activity_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }

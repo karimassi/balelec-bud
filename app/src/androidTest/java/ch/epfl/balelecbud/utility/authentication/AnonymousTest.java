@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
+import ch.epfl.balelecbud.testUtils.CustomMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.view.map.MapViewFragment;
@@ -24,14 +25,12 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.setAppDatabase;
-import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class AnonymousTest {
@@ -75,7 +74,7 @@ public class AnonymousTest {
     public void whenNotSignedInSocialIsDisable() {
         openFragment(R.id.activity_main_drawer_social);
         onView(withText(R.string.require_sign_in))
-                .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
+                .inRoot(CustomMatcher.isToast())
                 .check(matches(isDisplayed()));
         onView(withId(R.id.tabs_social)).check(doesNotExist());
     }

@@ -13,12 +13,18 @@ import ch.epfl.balelecbud.utility.database.Database;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public class TokenUtils {
+/**
+ * Utility class used to manage messaging token
+ */
+public final class TokenUtils {
 
     private static final String TAG = TokenUtils.class.getSimpleName();
 
     private static String token = null;
 
+    /**
+     * Store the current token into the database
+     */
     public static void storeToken() {
         User user = getAppAuthenticator().getCurrentUser();
         if(user != null) {
@@ -35,6 +41,11 @@ public class TokenUtils {
         }
     }
 
+    /**
+     * Set the current token
+     *
+     * @param newToken the new token
+     */
     static void setToken(String newToken) {
         if(newToken != null) {
             Log.d(TAG, "Storing new token temporarily");

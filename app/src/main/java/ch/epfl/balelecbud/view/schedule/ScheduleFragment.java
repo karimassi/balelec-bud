@@ -17,7 +17,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class ScheduleFragment extends Fragment {
+public final class ScheduleFragment extends Fragment {
     
     private static final String TAG = ScheduleFragment.class.getSimpleName();
 
@@ -40,10 +40,11 @@ public class ScheduleFragment extends Fragment {
         super.onStart();
         Log.v(TAG, "onCreate: Creation of the activity");
         RecyclerView rvSchedule = getView().findViewById(R.id.scheduleRecyclerView);
+        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
 
         SlotData data = new SlotData(getActivity(), getArguments().getParcelableArrayList("slots"));
         RefreshableRecyclerViewAdapter<Slot, SlotHolder> adapter = new RefreshableRecyclerViewAdapter<>(
-                SlotHolder::new, data, R.layout.item_schedule);
+                SlotHolder::new, freshnessView, data, R.layout.item_schedule);
 
         rvSchedule.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSchedule.setAdapter(adapter);

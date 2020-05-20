@@ -15,7 +15,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public class SentRequestFragment extends Fragment {
+public final class SentRequestFragment extends Fragment {
 
     public SentRequestFragment() {
         // Required empty public constructor
@@ -28,9 +28,11 @@ public class SentRequestFragment extends Fragment {
 
         Context context = view.getContext();
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view_sent_request);
+        View freshnessView = view.findViewById(R.id.freshness_info_layout);
+
         SentRequestData data = new SentRequestData((User) getArguments().get("user"));
         final RefreshableRecyclerViewAdapter<User, SentRequestViewHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(SentRequestViewHolder::new, data, R.layout.item_sent_request);
+                new RefreshableRecyclerViewAdapter<>(SentRequestViewHolder::new, freshnessView, data, R.layout.item_sent_request);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);

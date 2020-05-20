@@ -9,14 +9,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocialAdapter extends FragmentStateAdapter {
+public final class SocialAdapter extends FragmentStateAdapter {
     private final List<Fragment> fragmentList = new ArrayList<>();
 
-    public SocialAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+    SocialAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
 
-    public void addFragment(Fragment fragment) {
+    void addFragment(Fragment fragment) {
         fragmentList.add(fragment);
     }
 

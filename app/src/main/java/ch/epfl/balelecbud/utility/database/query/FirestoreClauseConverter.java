@@ -12,13 +12,16 @@ import uk.co.mgbramwell.geofire.android.model.QueryLocation;
 
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 
-public class FirestoreClauseConverter implements MyClauseVisitor<Query> {
+/**
+ * A Firestore adapter clause
+ */
+public final class FirestoreClauseConverter implements MyClauseVisitor<Query> {
 
     private Query queryToCreate;
     private String collectionName;
     private boolean geoClauseVisited = false;
 
-    public FirestoreClauseConverter(String collectionName) {
+    FirestoreClauseConverter(String collectionName) {
         this.collectionName = collectionName;
         queryToCreate = FirebaseFirestore.getInstance().collection(collectionName);
     }
@@ -44,7 +47,7 @@ public class FirestoreClauseConverter implements MyClauseVisitor<Query> {
             // default is equal, necessary because java is stupid and does not see we are matching on
             // all possible values of the enum
             default:
-                if (leftOperand.equals(DOCUMENT_ID_OPERAND)) {
+                if (DOCUMENT_ID_OPERAND.equals(leftOperand)) {
                     queryToCreate = queryToCreate.whereEqualTo(FieldPath.documentId(), rightOperand);
                 } else {
                     queryToCreate = queryToCreate.whereEqualTo(leftOperand, rightOperand);

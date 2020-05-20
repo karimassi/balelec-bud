@@ -15,7 +15,10 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppCache;
 import static ch.epfl.balelecbud.BalelecbudApplication.getRemoteDatabase;
 
-public class CachedDatabase implements Database {
+/**
+ * Decorator class for a cached database
+ */
+public final class CachedDatabase implements Database {
 
     private static final String TAG = CachedDatabase.class.getSimpleName();
 
@@ -42,20 +45,21 @@ public class CachedDatabase implements Database {
     }
 
     @Override
-    public <T> CompletableFuture<List<T>> query(MyQuery query, Class<T> tClass) {
-        CompletableFuture<List<T>> result = CompletableFuture.completedFuture(new ArrayList<>());
-        if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
+    public <T> CompletableFuture<FetchedData<T>> query(MyQuery query, Class<T> tClass) {
+        CompletableFuture<FetchedData<T>> result = new CompletableFuture<>();
+        if (query.getSource().equals(Source.CACHE_ONLY) || (query.getSource().equals(Source.CACHE_FIRST) && cache.contains(query))) {
             try {
                 result = cache.get(query, tClass);
             } catch (IOException e) {
                 Log.d(TAG, "query: " + e.getLocalizedMessage());
+                result.completeExceptionally(e);
             }
         } else {
             result = getRemoteDatabase().query(query, tClass);
             result.whenComplete((ts, throwable) -> {
                 if (throwable == null) {
                     cache.flush(query.getCollectionName());
-                    for (T t : ts) {
+                    for (T t : ts.getList()) {
                         String id = query.hasDocumentIdOperand() ? query.getIdOperand() : String.valueOf(t.hashCode());
                         try {
                             cache.put(query.getCollectionName(), id, t);
@@ -70,20 +74,21 @@ public class CachedDatabase implements Database {
     }
 
     @Override
-    public CompletableFuture<List<Map<String, Object>>> query(MyQuery query) {
-        CompletableFuture<List<Map<String, Object>>> result = CompletableFuture.completedFuture(new ArrayList<>());
-        if (query.getSource().equals(Source.CACHE) && cache.contains(query)) {
+    public CompletableFuture<FetchedData<Map<String, Object>>> query(MyQuery query) {
+        CompletableFuture<FetchedData<Map<String, Object>>> result = new CompletableFuture<>();
+        if (query.getSource().equals(Source.CACHE_FIRST) && cache.contains(query)) {
             try {
                 result = cache.get(query);
             } catch (IOException e) {
                 Log.d(TAG, "query: " + e.getLocalizedMessage());
+                result.completeExceptionally(e);
             }
         } else {
             result = getRemoteDatabase().query(query);
-            result.whenComplete((maps, throwable) -> {
+            result.whenComplete((fetchedData, throwable) -> {
                if (throwable == null) {
                    cache.flush(query.getCollectionName());
-                   for (Map m : maps) {
+                   for (Map m : fetchedData.getList()) {
                        String id = query.hasDocumentIdOperand() ? query.getIdOperand() : String.valueOf(m.hashCode());
                        try {
                            cache.put(query.getCollectionName(), id, m);

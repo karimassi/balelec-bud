@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <FrameLayout
             android:id="@+id/transport_fragment_container"
             android:parentActivityName="ch.epfl.balelecbud.RootActivity"
             android:layout_width="match_parent"

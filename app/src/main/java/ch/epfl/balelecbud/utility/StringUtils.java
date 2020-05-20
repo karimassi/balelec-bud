@@ -14,7 +14,10 @@ import java.util.Locale;
 
 import ch.epfl.balelecbud.R;
 
-public class StringUtils {
+/**
+ * Collection of methods used to work with Strings
+ */
+public final class StringUtils {
 
     public static String timestampToScheduleString(Timestamp time) {
         Date date = time.toDate();

@@ -22,13 +22,11 @@ import ch.epfl.balelecbud.model.User;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public class SocialFragment extends Fragment {
+public final class SocialFragment extends Fragment {
     private SocialAdapter fragmentAdapter;
 
     private List<String> tabTitleList;
-
     private FragmentActivity activity;
-    private View view;
 
     public static SocialFragment newInstance() {
         return (new SocialFragment());
@@ -44,7 +42,7 @@ public class SocialFragment extends Fragment {
     public void onStart() {
         super.onStart();
         activity = getActivity();
-        view = getView();
+        View view = getView();
 
         tabTitleList = new ArrayList<>(Arrays.asList(getString(R.string.tab_friends), getString(R.string.tab_received_requests), getString(R.string.tab_sent_requests)));
 
@@ -69,5 +67,4 @@ public class SocialFragment extends Fragment {
         fragmentAdapter.addFragment(ReceivedFriendRequestsFragment.newInstance(currentUser));
         fragmentAdapter.addFragment(SentRequestFragment.newInstance(currentUser));
     }
-
 }

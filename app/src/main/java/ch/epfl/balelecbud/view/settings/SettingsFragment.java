@@ -17,13 +17,31 @@ import ch.epfl.balelecbud.utility.location.LocationUtils;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public final class SettingsFragment extends PreferenceFragmentCompat {
+    enum ConnectionStatus {
+        SIGNED_OUT(),
+        SIGNED_IN,
+        CONNECTING;
+
+        boolean isSignedIn() {
+            return this == SIGNED_IN;
+        }
+
+        boolean isSignedOut() {
+            return this == SIGNED_OUT;
+        }
+
+        boolean isConnecting() {
+            return this == CONNECTING;
+        }
+    }
     public static String TAG = SettingsFragment.class.getSimpleName();
     private String LOCATION_ENABLE_KEY;
     private String LOCATION_INFO_KEY;
     private String SIGN_IN_KEY;
     private String SIGN_OUT_KEY;
     private String DELETE_USER_KEY;
+    private String CONNECTING_KEY;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -36,7 +54,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         LOCATION_INFO_KEY = getString(R.string.location_info_key);
         SIGN_IN_KEY = getString(R.string.sign_in_key);
         SIGN_OUT_KEY = getString(R.string.sign_out_key);
-        DELETE_USER_KEY = getContext().getString(R.string.delete_user_key);
+        DELETE_USER_KEY = getString(R.string.delete_user_key);
+        CONNECTING_KEY = getString(R.string.connection_key);
 
         setUpLocationPreferences();
         setUpLoginPreferences();
@@ -51,11 +70,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 LocationUtils.disableLocation();
                 updateLocationPreferencesVisibility(false);
             }
-            updateLoginStatus(false);
+            updateLoginStatus(ConnectionStatus.SIGNED_OUT);
             return true;
         });
         linkPreferenceWithDialog(DELETE_USER_KEY, () -> DeleteAccountDialog.newInstance(this), DeleteAccountDialog.TAG);
-        updateLoginStatus(getAppAuthenticator().getCurrentUser() != null);
+
+        updateLoginStatus(getAppAuthenticator().getCurrentUser() != null ? ConnectionStatus.SIGNED_IN : ConnectionStatus.SIGNED_OUT);
     }
 
     private void linkPreferenceWithDialog(String preferenceKey, Supplier<DialogFragment> dialogSupplier, String tag) {
@@ -68,7 +88,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private void setUpLocationPreferences() {
         findPreference(LOCATION_ENABLE_KEY).setOnPreferenceChangeListener((preference, new_value) -> {
-            LocationUtils.updateLocation((boolean) new_value);
+            if ((boolean) new_value) {
+                LocationUtils.enableLocation();
+            } else {
+                LocationUtils.disableLocation();
+            }
             return true;
         });
         findPreference(LOCATION_INFO_KEY).setOnPreferenceClickListener(preference -> {
@@ -85,10 +109,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         findPreference(LOCATION_INFO_KEY).setVisible(!permissionGranted);
     }
 
-    void updateLoginStatus(boolean loggedIn) {
-        findPreference(SIGN_IN_KEY).setVisible(!loggedIn);
-        findPreference(SIGN_OUT_KEY).setVisible(loggedIn);
-        findPreference(DELETE_USER_KEY).setVisible(loggedIn);
+    void updateLoginStatus(ConnectionStatus status) {
+        findPreference(SIGN_IN_KEY).setVisible(status.isSignedOut());
+        findPreference(CONNECTING_KEY).setVisible(status.isConnecting());
+        findPreference(SIGN_OUT_KEY).setVisible(status.isSignedIn());
+        findPreference(DELETE_USER_KEY).setVisible(status.isSignedIn());
     }
 
     @Override

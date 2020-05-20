@@ -16,11 +16,18 @@ import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 
-public class FirebaseAuthenticator implements Authenticator {
+/**
+ * A FirebaseAuth adapter class
+ */
+public final class FirebaseAuthenticator implements Authenticator {
     private static final Authenticator instance = new FirebaseAuthenticator();
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private FirebaseAuthenticator() { }
+
+    public static Authenticator getInstance() {
+        return instance;
+    }
 
     @Override
     public CompletableFuture<Void> deleteCurrentUser() {
@@ -37,9 +44,9 @@ public class FirebaseAuthenticator implements Authenticator {
         return new TaskToCompletableFutureAdapter<>(mAuth.signInWithEmailAndPassword(email, password))
                 .thenCompose(authResult -> FirestoreDatabase.getInstance()
                         .query(new MyQuery(Database.USERS_PATH,
-                                new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, getCurrentUid())),
+                                        new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, getCurrentUid())),
                                 User.class)
-                        .thenApply(users -> users.get(0)));
+                        .thenApply(users -> users.getList().get(0)));
     }
 
     @Override
@@ -60,9 +67,5 @@ public class FirebaseAuthenticator implements Authenticator {
     public void signOut() {
         Authenticator.super.signOut();
         this.mAuth.signOut();
-    }
-
-    public static Authenticator getInstance() {
-        return instance;
     }
 }

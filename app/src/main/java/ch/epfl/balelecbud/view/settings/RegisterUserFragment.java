@@ -28,7 +28,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.StringUtils.isEmailValid;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 
-public class RegisterUserFragment extends DialogFragment {
+public final class RegisterUserFragment extends DialogFragment {
     public static final String TAG = RegisterUserFragment.class.getSimpleName();
     private final SettingsFragment settingsFragment;
     private EditText nameField;
@@ -84,16 +84,15 @@ public class RegisterUserFragment extends DialogFragment {
     }
 
     private void register(String name, String email, String password) {
-        if (!validateEntry())
-            return;
-
+        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.CONNECTING);
         getAppAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
             Log.d(TAG, "whenComplete() called with: aVoid = [" + aVoid + "], throwable = [" + throwable + "]");
             if (throwable != null) {
                 Toast.makeText(
                         getContext(),
-                        throwable.getLocalizedMessage(),
-                        Toast.LENGTH_SHORT).show();
+                        getString(R.string.register_failed),
+                        Toast.LENGTH_LONG).show();
+                settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
             } else {
                 onAuthComplete();
             }
@@ -163,11 +162,12 @@ public class RegisterUserFragment extends DialogFragment {
                     Log.d(TAG, "onAuthComplete() called with users = [ " + users + " ], throwable = [ " + throwable + " ]");
                     if (throwable != null) {
                         Toast.makeText(getContext(),
-                                throwable.getCause().getLocalizedMessage(),
+                                getString(R.string.register_failed),
                                 Toast.LENGTH_SHORT).show();
+                        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
                     } else {
-                        getAppAuthenticator().setCurrentUser(users.get(0));
-                        settingsFragment.updateLoginStatus(true);
+                        getAppAuthenticator().setCurrentUser(users.getList().get(0));
+                        settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_IN);
                         TokenUtils.storeToken();
                     }
                 });

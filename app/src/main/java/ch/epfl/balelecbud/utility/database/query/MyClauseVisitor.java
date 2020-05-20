@@ -1,6 +1,9 @@
 package ch.epfl.balelecbud.utility.database.query;
 
-public interface  MyClauseVisitor<T> {
+/**
+ * Interface modeling a clause visitor
+ */
+public interface MyClauseVisitor<T> {
 
     void visit(MyWhereClause clause);
 
