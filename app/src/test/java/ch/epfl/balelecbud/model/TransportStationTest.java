@@ -28,6 +28,11 @@ public class TransportStationTest {
     }
 
     @Test
+    public void testGetFormattedDistance() {
+        Assert.assertEquals("10 m.", station.getFormattedDistanceToUser(), 0);
+    }
+
+    @Test
     public void testEquals() {
         TransportStation other = new TransportStation(new Location(1, 2), "0", "Flon", 10);
         Assert.assertNotEquals(other, station);
