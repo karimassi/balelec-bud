@@ -7,6 +7,7 @@ import android.view.Gravity;
 import androidx.room.Room;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
@@ -47,6 +48,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
+import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
 import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -128,7 +130,8 @@ public class ConcertNotificationTest {
             openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
             Log.v("mySuperTag", "executed subscribeToAConcertKeepItSubscribed");
         }, s1, true);
-        onView(getItemInSchedule(0, 3)).perform(click());
+        onView(withId(R.id.scheduleRecyclerView)).perform(RecyclerViewActions.
+                actionOnItemAtPosition(0, clickChildViewWithId(R.id.ScheduleSubscribeSwitch)));
     }
 
     @Test
@@ -149,8 +152,8 @@ public class ConcertNotificationTest {
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
         assertNotNull(device.wait(Until.hasObject(By.text(s1.getArtistName())), 1000));
-        onView(getItemInSchedule(0, 3)).perform(click());
-        onView(getItemInSchedule(0, 3)).perform(click());
+        onView(getItemInSchedule(0, 2, 2)).perform(click());
+        onView(getItemInSchedule(0, 2, 2)).perform(click());
 
         device.openNotification();
         device.wait(Until.hasObject(By.text(expectedTitle)), 10_000);
@@ -168,11 +171,14 @@ public class ConcertNotificationTest {
 
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
-        onView(getItemInSchedule(0, 3)).perform(click());
+        onView(getItemInSchedule(0, 2, 2)).perform(click());
+
         runnable.run();
 
         refreshRecyclerView();
-        onView(getItemInSchedule(0, 3)).check(switchChecked(switchStateAfter));
+
+        onView(getItemInSchedule(0, 2, 2))
+                .check(switchChecked(switchStateAfter));
     }
 
     private void checkNotification() {

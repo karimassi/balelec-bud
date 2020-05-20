@@ -8,26 +8,21 @@
     android:gravity="center"
     android:background="@color/blek_blue"
     android:orientation="vertical"
-    android:weightSum="10"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <include layout="@layout/freshness_info" />
 
     <TextView
         android:id="@+id/spotify_message"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:fontFamily="@font/proxima_nova_bold"
         android:textColor="@android:color/white"
         android:textSize="@dimen/fragment_playlist_message_size"
-        android:layout_weight="0.5"
         android:text="@string/spotify_message"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9">
+        android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_playlist"
@@ -36,12 +31,11 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_playlist"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/recycler_view_margin"
+                android:layout_marginRight="@dimen/recycler_view_margin"
+                app:layoutManager="LinearLayoutManager"
                 tools:listitem="@layout/item_track"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,22 +4,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="@dimen/rv_item_side_margin"
+    android:layout_marginTop="@dimen/rv_item_top_bottom_margin"
+    android:layout_marginRight="@dimen/rv_item_side_margin"
+    android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
     android:background="@drawable/round_corner_background"
     android:orientation="horizontal"
-    android:paddingLeft="5dp"
-    android:paddingTop="10dp"
-    android:paddingRight="5dp"
-    android:paddingBottom="10dp">
+    android:paddingLeft="@dimen/rv_item_side_padding"
+    android:paddingTop="@dimen/rv_item_top_bottom_padding"
+    android:paddingRight="@dimen/rv_item_side_padding"
+    android:paddingBottom="@dimen/rv_item_top_bottom_padding">
 
     <TextView
         android:id="@+id/emergencyInfoName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.4"
+        android:textSize="@dimen/emergencies_title_size"
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white" />
 
@@ -27,7 +28,9 @@
         android:id="@+id/emergencyInfoInstruction"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.6"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white" />
 

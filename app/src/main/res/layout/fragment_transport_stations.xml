@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
     android:orientation="vertical"
-    android:weightSum="10">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include layout="@layout/freshness_info" />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout_transport_stations"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9.5">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_transport_stations"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:layoutManager="LinearLayoutManager" />
+            android:layout_marginLeft="@dimen/recycler_view_margin"
+            android:layout_marginRight="@dimen/recycler_view_margin"
+            app:layoutManager="LinearLayoutManager"
+            tools:context=".view.transport.TransportStationsFragment"
+            tools:listitem="@layout/item_transport_station" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

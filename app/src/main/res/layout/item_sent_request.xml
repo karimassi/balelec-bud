@@ -4,33 +4,41 @@
     android:id="@+id/item_received_request"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="@dimen/rv_item_side_margin"
+    android:layout_marginTop="@dimen/rv_item_top_bottom_margin"
+    android:layout_marginRight="@dimen/rv_item_side_margin"
+    android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
     android:background="@drawable/round_corner_background"
     android:orientation="horizontal"
-    android:paddingLeft="5dp"
-    android:paddingTop="10dp"
-    android:paddingRight="5dp"
-    android:paddingBottom="10dp">
+    android:paddingLeft="@dimen/rv_item_side_padding"
+    android:paddingTop="@dimen/rv_item_top_bottom_padding"
+    android:paddingRight="@dimen/rv_item_side_padding"
+    android:paddingBottom="@dimen/rv_item_top_bottom_padding">
 
     <TextView
         android:id="@+id/text_view_sent_request_item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textAlignment="center" />
-
-    <View
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:fontFamily="@font/old_sans_black"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/friend_name_size" />
+
+    <TextView
+        android:id="@+id/text_view_sent_request_item_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:fontFamily="@font/old_sans_black"
+        android:textColor="@android:color/white"/>
 
     <Button
         android:id="@+id/button_sent_request_item_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="@string/cancel_request" />
 
 </LinearLayout>
