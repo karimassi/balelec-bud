@@ -19,17 +19,26 @@
         android:id="@+id/text_view_sent_request_item_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.7"
+        android:layout_weight="1"
         android:gravity="bottom"
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white"
         android:textSize="@dimen/friend_name_size" />
 
+    <TextView
+        android:id="@+id/text_view_sent_request_item_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:fontFamily="@font/old_sans_black"
+        android:textColor="@android:color/white"/>
+
     <Button
         android:id="@+id/button_sent_request_item_cancel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.3"
+        android:layout_weight="1"
         android:text="@string/cancel_request" />
 
 </LinearLayout>
