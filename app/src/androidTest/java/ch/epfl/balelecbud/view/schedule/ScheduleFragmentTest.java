@@ -19,14 +19,12 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
-import ch.epfl.balelecbud.utility.DateFormatter;
 import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.storage.MockStorage;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
@@ -34,10 +32,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.balelecbud.testUtils.CustomMatcher.getItemInSchedule;
-import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
 import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickChildViewWithId;
-import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.slot1;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.slot2;
 import static org.junit.Assert.assertEquals;
@@ -91,10 +86,6 @@ public class ScheduleFragmentTest {
 
         onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(1)));
 
-//
-//        refreshRecyclerView();
-//
-//        onView(withId(R.id.scheduleRecyclerView)).check(matches(hasChildCount(2)));
     }
 
     @Test

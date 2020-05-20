@@ -24,7 +24,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.balelecbud.testUtils.CustomViewAssertion.switchChecked;
 
 public class CustomMatcher {
     public static void clickAndCheckDisplay(List<Integer> idsToClick,
