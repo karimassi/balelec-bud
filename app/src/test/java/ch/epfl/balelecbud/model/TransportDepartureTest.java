@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import ch.epfl.balelecbud.utility.StringUtils;
+import ch.epfl.balelecbud.utility.DateFormatter;
 
 public class TransportDepartureTest {
     private TransportDeparture t1 = new TransportDeparture("M", "m1", "Flon", new Date(Long.parseLong("1585866499")*1000));
@@ -27,7 +27,7 @@ public class TransportDepartureTest {
 
     @Test
     public void testGetTimeString() {
-        Assert.assertEquals(StringUtils.dateToString(new Date(Long.parseLong("1585866499")*1000)), t1.getTimeString());
+        Assert.assertEquals(DateFormatter.TRANSPORT_TIME.format(new Date(Long.parseLong("1585866499")*1000)), t1.getTimeString());
     }
 
     @Test

@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
-import ch.epfl.balelecbud.testUtils.CustomMatcher;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.Database;
@@ -177,9 +176,8 @@ public class RegisterUserTest {
             public void deleteDocumentWithID(String collectionName, String documentID) { }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
-        onView(withText(R.string.register_failed))
-                .inRoot(CustomMatcher.isToast())
-                .check(matches(isDisplayed()));
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.register_failed)));
         onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
@@ -192,9 +190,8 @@ public class RegisterUserTest {
             }
         });
         enterValuesAndClick("name", "testregister" + randomInt() + "@gmail.com", "123123", "123123");
-        onView(withText(R.string.register_failed))
-                .inRoot(CustomMatcher.isToast())
-                .check(matches(isDisplayed()));
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.register_failed)));
         onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 
@@ -229,9 +226,8 @@ public class RegisterUserTest {
             }
         });
         enterValuesAndClick("Alex", "alex@epfl.ch", "123456", "123456");
-        onView(withText(R.string.register_failed))
-                .inRoot(CustomMatcher.isToast())
-                .check(matches(isDisplayed()));
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+                .check(matches(withText(R.string.register_failed)));
         onView(withText(R.string.not_sign_in)).check(matches(isDisplayed()));
     }
 

@@ -12,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.StringUtils;
@@ -80,7 +80,7 @@ public final class LoginUserFragment extends DialogFragment {
                 onAuthComplete();
             } else {
                 Log.w(TAG, "login: fail", throwable);
-                Toast.makeText(getContext(), getString(R.string.sign_in_failed), Toast.LENGTH_LONG).show();
+                Snackbar.make(settingsFragment.getView(), R.string.sign_in_failed, Snackbar.LENGTH_LONG).show();
                 settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
             }
         });
