@@ -1,12 +1,33 @@
 [
   {
     "imageName": "blek_artist_pic",
-    "title": "the title of the help page",
-    "description": "what is without doubt an amazing description of the feature"
+    "title": "Welcome to BalelecBud!",
+    "description": "BalelecBud is a companion app for the best festival at EPFL. You can see the information about the festival, the transports near EPFL and take pictures all in the same app. You can open the menu and discover the app or swipe left to learn more about BalelecBud!"
   },
   {
     "imageName": "blek_artist_pic",
-    "title": "the title of the help page",
-    "description": "what is without doubt an amazing description of the feature"
-  }
+    "title": "Concert Schedule",
+    "description": "Don't you hate it when you miss the concert of your favorite band? Fear no more, BalelecBud is here to remind you of the performances you don't want!"
+  },
+  {
+    "imageName": "blek_artist_pic",
+    "title": "Social Network",
+    "description": "Balelec is not the same without your friends, so why don't you invite them? You can create an account or in Settings and send friend requests to all the other users of the app."
+  },
+  {
+    "imageName": "blek_artist_pic",
+    "title": "Friends and Map",
+    "description": "Something that we all can relate is losing our friends at the festival. But now with BalelecBud you can know the location of your friends, you just need to make sure to allow your location in Settings."
+  },
+  {
+    "imageName": "blek_artist_pic",
+    "title": "Points of Interest",
+    "description": "Want to buy a beer but don't know which is the busiest bar? BalelecBud is here to help you, you can go to Point of Interest and find out the affluence for each point. You can also see the points in the map to find them quickly."
+  },
+  {
+    "imageName": "blek_artist_pic",
+    "title": "Balelec Spotify Playlist",
+    "description": "BalelecBud is also useful before the festival, if you want to discover the artists that are going to play this year you can go to Playlist. The songs will play on Spotify, so you need to download the app and sign in to listen."
+  },
+
 ]
