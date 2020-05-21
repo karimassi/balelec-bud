@@ -30,13 +30,11 @@ public class JsonResourceReaderTest {
         List<HelpPage> result = JsonResourceReader.getHelpPageCollection(R.raw.help_page_list_test);
         assertEquals(2, result.size());
 
-        HelpPage res1 = result.get(0);
-
         assertEquals(expectedImageName1, result.get(0).getImageName());
         assertEquals(expectedTitle1, result.get(0).getTitle());
         assertEquals(expectedDescription1, result.get(0).getDescription());
 
-        String expectedImageName2 = "another image name";
+        String expectedImageName2 = "another_image_name";
         String expectedTitle2 = "another great title";
         String expectedDescription2 = "a superb description";
 
