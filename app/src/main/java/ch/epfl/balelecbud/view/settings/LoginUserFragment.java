@@ -49,21 +49,13 @@ public final class LoginUserFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_sign_in, null);
 
-        TextView title = new TextView(getContext());
-        title.setText(R.string.sign_in);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        title.setPaddingRelative(0, 10, 0, 10);
-        title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-
         emailField = view.findViewById(R.id.editTextEmailLogin);
         passwordField = view.findViewById(R.id.editTextPasswordLogin);
 
         emailField.addTextChangedListener(watcher);
         passwordField.addTextChangedListener(watcher);
 
-        builder.setView(view).setCustomTitle(title)
+        builder.setView(view).setCustomTitle(getDialogCustomTitle())
                 .setPositiveButton(R.string.action_sign_in, (dialog, id) ->
                         login(emailField.getText().toString(), passwordField.getText().toString()))
                 .setNeutralButton(R.string.action_no_account, (dialog, which) -> {
@@ -112,5 +104,16 @@ public final class LoginUserFragment extends DialogFragment {
     private void onAuthComplete() {
         TokenUtils.storeToken();
         settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_IN);
+    }
+
+    private TextView getDialogCustomTitle() {
+        TextView title = new TextView(getContext());
+        title.setText(R.string.sign_in);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        title.setPaddingRelative(0, 10, 0, 10);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        return title;
     }
 }

@@ -48,14 +48,6 @@ public final class SubmitEmergencyFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_emergency, null);
         Log.d(TAG, "onCreateDialog: view inflated");
 
-        TextView title = new TextView(getContext());
-        title.setText(R.string.emergency_ask_for_help);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        title.setPaddingRelative(0, 10, 0, 10);
-        title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-
         messageField = view.findViewById(R.id.edit_text_emergency_message);
         messageField.addTextChangedListener(watcher);
 
@@ -63,7 +55,7 @@ public final class SubmitEmergencyFragment extends DialogFragment {
         categorySpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, EmergencyCategory.values()));
 
         builder.setView(view)
-                .setCustomTitle(title)
+                .setCustomTitle(getDialogCustomTitle())
                 .setPositiveButton(R.string.submit_emergency, (dialog, id) -> {
                     if (validateEntry()) {
                         submitEmergency();
@@ -101,6 +93,17 @@ public final class SubmitEmergencyFragment extends DialogFragment {
         Bundle args = new Bundle();
         f.setArguments(args);
         return f;
+    }
+
+    private TextView getDialogCustomTitle() {
+        TextView title = new TextView(getContext());
+        title.setText(R.string.emergency_ask_for_help);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        title.setPaddingRelative(0, 10, 0, 10);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        return title;
     }
 
 }

@@ -44,16 +44,8 @@ public final class AddFriendFragment extends DialogFragment {
         editTextAddFriend = view.findViewById(R.id.edit_text_email_add_friend);
         editTextAddFriend.addTextChangedListener(watcher);
 
-        TextView title = new TextView(getContext());
-        title.setText(R.string.add_friend_title);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        title.setPaddingRelative(0, 10, 0, 10);
-        title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-
         builder.setView(view)
-                .setCustomTitle(title)
+                .setCustomTitle(getDialogCustomTitle())
                 .setPositiveButton(R.string.add_friend_request, (dialog, id) -> {
                     if (validateEmail()) {
                         FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), Database.Source.REMOTE_ONLY)
@@ -99,5 +91,16 @@ public final class AddFriendFragment extends DialogFragment {
             return false;
         }
         return true;
+    }
+
+    private TextView getDialogCustomTitle() {
+        TextView title = new TextView(getContext());
+        title.setText(R.string.add_friend_title);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        title.setPaddingRelative(0, 10, 0, 10);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        return title;
     }
 }

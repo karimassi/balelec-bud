@@ -51,15 +51,7 @@ public final class RegisterUserFragment extends DialogFragment {
 
         setUpFields(view);
 
-        TextView title = new TextView(getContext());
-        title.setText(R.string.register);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        title.setPaddingRelative(0, 10, 0, 10);
-        title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-
-        builder.setView(view).setCustomTitle(title)
+        builder.setView(view).setCustomTitle(getDialogCustomTitle())
                 .setPositiveButton(R.string.action_register, (dialog, id) ->
                         register(
                                 nameField.getText().toString(),
@@ -183,5 +175,16 @@ public final class RegisterUserFragment extends DialogFragment {
                         TokenUtils.storeToken();
                     }
                 });
+    }
+
+    private TextView getDialogCustomTitle() {
+        TextView title = new TextView(getContext());
+        title.setText(R.string.register);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        title.setPaddingRelative(0, 10, 0, 10);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        return title;
     }
 }
