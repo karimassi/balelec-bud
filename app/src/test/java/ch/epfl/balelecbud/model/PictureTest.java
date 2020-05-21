@@ -22,21 +22,4 @@ public class PictureTest {
         Assert.assertEquals("picture2ImageName", picture2.getImageFileName());
         Assert.assertEquals("picture1ImageName", picture1bis.getImageFileName());
     }
-
-    @Test
-    public void testEqualsTwoEqualPictures() {
-        Assert.assertEquals(picture1bis, picture1);
-        Assert.assertEquals(picture1, picture1bis);
-    }
-
-    @Test
-    public void testEqualsTwoNonEqualPictures() {
-        Assert.assertNotEquals(picture1, picture2);
-    }
-
-    @Test
-    public void testEqualsTwoDifferentObjects() {
-        Assert.assertNotEquals(picture1, new Object());
-        Assert.assertNotEquals(new Object(), picture1);
-    }
 }
