@@ -9,11 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
@@ -88,10 +89,7 @@ public final class RegisterUserFragment extends DialogFragment {
         getAppAuthenticator().createAccount(name, email, password).whenComplete((aVoid, throwable) -> {
             Log.d(TAG, "whenComplete() called with: aVoid = [" + aVoid + "], throwable = [" + throwable + "]");
             if (throwable != null) {
-                Toast.makeText(
-                        getContext(),
-                        getString(R.string.register_failed),
-                        Toast.LENGTH_LONG).show();
+                Snackbar.make(settingsFragment.getView(), R.string.register_failed, Snackbar.LENGTH_LONG).show();
                 settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
             } else {
                 onAuthComplete();
@@ -161,9 +159,7 @@ public final class RegisterUserFragment extends DialogFragment {
                 .whenComplete((users, throwable) -> {
                     Log.d(TAG, "onAuthComplete() called with users = [ " + users + " ], throwable = [ " + throwable + " ]");
                     if (throwable != null) {
-                        Toast.makeText(getContext(),
-                                getString(R.string.register_failed),
-                                Toast.LENGTH_SHORT).show();
+                        Snackbar.make(settingsFragment.getView(), R.string.register_failed, Snackbar.LENGTH_LONG).show();
                         settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
                     } else {
                         getAppAuthenticator().setCurrentUser(users.getList().get(0));
