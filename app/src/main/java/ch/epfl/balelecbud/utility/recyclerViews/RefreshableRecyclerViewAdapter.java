@@ -60,7 +60,7 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
     private void handleFreshness(Long freshness) {
         Log.v(TAG, "handling freshness : " + freshness);
         if (freshness != null) {
-            String result = BalelecbudApplication.getAppContext().getString(R.string.cache_info) + DateFormatter.format(freshness);
+            String result = BalelecbudApplication.getAppContext().getString(R.string.cache_info) + DateFormatter.IN_YEAR.format(freshness);
             Snackbar.make(freshnessView, result, LENGTH_SHORT).show();
 
             Log.d(TAG, result);

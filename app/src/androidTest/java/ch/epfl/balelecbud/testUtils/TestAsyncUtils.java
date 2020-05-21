@@ -56,10 +56,18 @@ public class TestAsyncUtils {
         assertThat(actual, is(expected));
     }
 
+    public void assertNull(Object o) {
+        if (o != null) {
+            hasFailed = true;
+            Log.wtf(TAG, "assertNull: test failed should be null but was",
+                    new AssertionFailedError());
+        }
+    }
+
     public void assertNotNull(Object o) {
         if (o == null) {
             hasFailed = true;
-            Log.wtf(TAG, "assertNotNull: test failed should be null but was",
+            Log.wtf(TAG, "assertNotNull: test failed should not be null but was",
                     new AssertionFailedError());
         }
     }
@@ -97,7 +105,7 @@ public class TestAsyncUtils {
             hasFailed = true;
             Log.wtf(TAG, "assertThat: match failed" +
                     "\n\texpected = " + matcher.toString() +
-                    "\n\tactual = " + actual.toString(), new AssertionFailedError());
+                    "\n\tactual = " + actual, new AssertionFailedError());
         }
     }
 
