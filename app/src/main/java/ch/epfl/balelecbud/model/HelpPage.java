@@ -13,14 +13,16 @@ public final class HelpPage {
 
     private String title;
     private String description;
+    private int id;
 
     public HelpPage(){
 
     }
 
-    public HelpPage(String title, String description) {
+    public HelpPage(String title, String description, int id) {
         this.title = title;
         this.description = description;
+        this.id = id;
     }
 
     public String getDescription() {
@@ -31,15 +33,20 @@ public final class HelpPage {
         return title;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof HelpPage) &&
                 Objects.equals(((HelpPage) obj).title, title) &&
-                Objects.equals(((HelpPage) obj).description, description);
+                Objects.equals(((HelpPage) obj).description, description) &&
+                Objects.equals(((HelpPage) obj).id, id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description);
+        return Objects.hash(title, description, id);
     }
 }

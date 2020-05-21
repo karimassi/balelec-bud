@@ -1,8 +1,12 @@
-[{
-  "title":"the title of the help page",
-  "description":"what is without doubt an amazing description of the feature"
-},
-{
-"title":"another great title",
-"description":"a superb description"
-}]
+[
+  {
+    "title": "the title of the help page",
+    "description": "what is without doubt an amazing description of the feature",
+    "id": 1
+  },
+  {
+    "title": "another great title",
+    "description": "a superb description",
+    "id": 2
+  }
+]
