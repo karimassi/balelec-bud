@@ -9,10 +9,14 @@ import java.util.Objects;
 /**
  * Class modeling a help page displayed in the welcome activity
  */
-public class HelpPage {
+public final class HelpPage {
 
     private String title;
     private String description;
+
+    public HelpPage(){
+
+    }
 
     public HelpPage(String title, String description) {
         this.title = title;
