@@ -47,11 +47,9 @@ public final class CachedStorage implements Storage {
         Log.d(TAG, "getAllFileNameIn " + collectionName);
         switch(source){
             case REMOTE_ONLY:
-                return inner.getAllFileNameIn(collectionName, source);
             case CACHE_FIRST:
-                //TODO
+                return inner.getAllFileNameIn(collectionName, source);
             case CACHE_ONLY:
-                //TODO
             default:
                 CompletableFuture<List<String>> res = new CompletableFuture<>();
                 res.complete(new LinkedList<>());

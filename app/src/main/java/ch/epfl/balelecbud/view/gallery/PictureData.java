@@ -20,11 +20,6 @@ public final class PictureData extends RecyclerViewData<Picture, PictureHolder> 
     @Override
     public CompletableFuture<Long> reload(InformationSource preferredSource) {
         super.clearAll();
-        /**CompletableFuture<List<String>> names = getAppStorage().getAllFileNameIn("users_pictures");
-         names.forEach(name -> {
-         Picture p = new Picture(name);
-         add(super.size(), p);
-         });**/
         CompletableFuture<List<String>> list = getAppStorage().getAllFileNameIn("users_pictures", preferredSource);
         return list.whenComplete((file, t) ->
                 file.forEach(path -> {
@@ -32,16 +27,6 @@ public final class PictureData extends RecyclerViewData<Picture, PictureHolder> 
                     add(size(), p);
                 })
         ).thenApply(x -> null);
-
-        /**StorageReference listRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReference().child("users_pictures");
-         listRef.listAll()
-         .addOnSuccessListener(listResult -> {
-         for (StorageReference item : listResult.getItems()) {
-         Picture p = new Picture(item.getPath().substring(1));
-         if(super.size() != listResult.getItems().size())
-         super.add(super.size(), p);
-         }
-         });**/
     }
 
     @Override

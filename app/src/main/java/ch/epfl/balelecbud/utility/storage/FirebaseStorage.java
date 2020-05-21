@@ -44,13 +44,6 @@ public final class FirebaseStorage implements Storage {
     @Override
     public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
         StorageReference ref = firebaseStorage.getReference().child(collectionName);
-        /**ArrayList<String> names = new ArrayList<String>();
-        ref.listAll().addOnSuccessListener(listResult -> {
-            for (StorageReference item : listResult.getItems()) {
-                names.add(item.getPath().substring(1));
-            }
-        });
-        return names;**/
         Log.d(TAG, "getAllFileNameIn " + collectionName);
         return new TaskToCompletableFutureAdapter<>(ref.listAll())
                 .thenApply(listResult ->
