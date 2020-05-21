@@ -1,7 +1,7 @@
 package ch.epfl.balelecbud.view.friendship;
 
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,7 +13,7 @@ final class FriendViewHolder extends RecyclerView.ViewHolder {
 
     final TextView friendName;
     final TextView friendEmail;
-    final Button deleteButton;
+    final ImageButton deleteButton;
 
     FriendViewHolder(@NonNull View itemView) {
         super(itemView);

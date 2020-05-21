@@ -18,7 +18,7 @@
         android:id="@+id/text_view_friend_request_item_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.4"
         android:gravity="bottom"
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white"
@@ -28,23 +28,27 @@
         android:id="@+id/text_view_friend_request_item_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.4"
         android:gravity="bottom"
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/button_request_item_accept_request"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/accept_request" />
+        android:layout_weight="0.1"
+        android:src="@drawable/icon_accept"
+        android:contentDescription="@string/accept_request"
+        style="?android:attr/borderlessButtonStyle"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/button_request_item_delete_request"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/reject_request" />
+        android:layout_weight="0.1"
+        android:src="@drawable/icon_cancel"
+        style="?android:attr/borderlessButtonStyle"
+        android:contentDescription="@string/reject_request" />
 
 </LinearLayout>

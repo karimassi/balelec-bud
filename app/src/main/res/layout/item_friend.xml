@@ -18,7 +18,7 @@
         android:id="@+id/text_view_friend_item_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:gravity="bottom"
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white"
@@ -28,17 +28,19 @@
         android:id="@+id/text_view_friend_item_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.4"
         android:gravity="bottom"
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white"/>
 
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonDeleteFriendItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/remove_friend" />
+        android:layout_weight="0.1"
+        android:src="@drawable/icon_cancel"
+        android:contentDescription="@string/remove_friend"
+        style="?android:attr/borderlessButtonStyle"/>
 
 </LinearLayout>

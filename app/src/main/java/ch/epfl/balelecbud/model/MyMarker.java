@@ -1,6 +1,8 @@
 package ch.epfl.balelecbud.model;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ColorSpace;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
@@ -8,6 +10,9 @@ import androidx.core.content.ContextCompat;
 
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+
+import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppContext;
 import static java.util.Objects.requireNonNull;
@@ -128,7 +133,9 @@ public interface MyMarker {
             }
             result.position(requireNonNull(location).toLatLng());
             if (type != null) {
+
                 Drawable iconDrawable = ContextCompat.getDrawable(getAppContext(), type.getDrawableId());
+                iconDrawable.setTint(ContextCompat.getColor(getAppContext(), R.color.secondaryColor));
                 Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
                 IconFactory iconFactory = IconFactory.getInstance(getAppContext());
                 result.icon(iconFactory.fromBitmap(bitmap));

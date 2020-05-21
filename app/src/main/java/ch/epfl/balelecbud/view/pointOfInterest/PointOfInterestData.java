@@ -45,6 +45,7 @@ public final class PointOfInterestData extends RecyclerViewData<PointOfInterest,
     public void bind(int index, PointOfInterestHolder viewHolder) {
         PointOfInterest poi = data.get(index);
         viewHolder.nameTextView.setText(poi.getName());
+        viewHolder.nameTextView.setCompoundDrawablesWithIntrinsicBounds(poi.getType().getDrawableId(), 0, 0, 0);
         viewHolder.typeTextView.setText(poi.getType().toString());
         viewHolder.amountNearPoiTextView.setText(String.valueOf(lastRecordedAffluence.get(index)));
         viewHolder.goToMapButton.setOnClickListener(v -> {

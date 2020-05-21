@@ -86,9 +86,10 @@
             android:clickable="true"
             android:focusable="true"
             app:elevation="@dimen/floating_action_button_elevation"
-            app:maxImageSize="56dp"
-            app:srcCompat="@mipmap/help" />
-
+            app:maxImageSize="30dp"
+            app:backgroundTintMode="add"
+            app:backgroundTint="@color/primaryDarkColor"
+            android:src="@drawable/icon_emergency"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

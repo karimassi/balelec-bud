@@ -55,8 +55,10 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:elevation="@dimen/floating_action_button_elevation"
-                app:maxImageSize="56dp"
-                app:srcCompat="@android:drawable/ic_input_add" />
+                app:maxImageSize="50dp"
+                app:backgroundTintMode="add"
+                app:backgroundTint="@color/primaryDarkColor"
+                android:src="@drawable/icon_add_friend"/>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -53,8 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.4"
             android:gravity="center_vertical"
-            android:drawableStart="@drawable/clock"
-            android:drawableTint="@color/secondaryColor"
+            android:drawableStart="@drawable/icon_concert_time"
+            android:drawableTint="@color/primaryDarkColor"
             android:drawablePadding="@dimen/text_view_drawable_padding"
             android:fontFamily="@font/proxima_nova"
             android:textColor="@android:color/white" />
@@ -67,8 +67,8 @@
             android:gravity="center_vertical"
             android:ellipsize="end"
             android:maxLines="1"
-            android:drawableStart="@drawable/map"
-            android:drawableTint="@color/secondaryColor"
+            android:drawableStart="@drawable/icon_poi"
+            android:drawableTint="@color/primaryDarkColor"
             android:drawablePadding="@dimen/text_view_drawable_padding"
             android:fontFamily="@font/proxima_nova"
             android:textColor="@android:color/white" />
@@ -80,9 +80,8 @@
             android:layout_weight="0.2"
             android:gravity="center"
             android:checked="false"
-
-            android:drawableStart="@drawable/my_notification_icone"
-            android:drawableTint="@color/secondaryColor"
+            android:drawableStart="@drawable/icon_concert_soon"
+            android:drawableTint="@color/primaryDarkColor"
             android:text="" />
     </LinearLayout>
 </LinearLayout>
