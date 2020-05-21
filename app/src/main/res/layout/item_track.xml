@@ -7,17 +7,18 @@
 
     <LinearLayout
         android:id="@+id/item_track_layout"
-        android:layout_weight="9.5"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_corner_background_grey"
+        android:background="@drawable/round_corner_background"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/item_track_padding"
-        android:paddingBottom="@dimen/item_track_padding"
-        android:paddingHorizontal="@dimen/item_track_padding"
-        android:paddingVertical="@dimen/item_track_padding"
-        android:layout_marginTop="@dimen/item_track_margin"
-        android:layout_marginBottom="@dimen/item_track_margin" >
+        android:paddingTop="@dimen/rv_item_top_bottom_padding"
+        android:paddingBottom="@dimen/rv_item_top_bottom_padding"
+        android:paddingHorizontal="@dimen/rv_item_side_padding"
+        android:paddingVertical="@dimen/rv_item_side_padding"
+        android:layout_marginTop="@dimen/rv_item_top_bottom_margin"
+        android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
+        android:layout_marginLeft="@dimen/rv_item_side_margin"
+        android:layout_marginRight="@dimen/rv_item_side_margin">
 
         <ImageView
             android:id="@+id/track_image"

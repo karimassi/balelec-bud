@@ -5,7 +5,7 @@
     android:id="@+id/activity_poi_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blek_blue"
+    android:background="@android:color/black"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".view.pointOfInterest.PointOfInterestFragment">
@@ -22,10 +22,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/pointOfInterestRecyclerView"
+                android:paddingTop="@dimen/rv_top_padding"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/recycler_view_margin"
-                android:layout_marginRight="@dimen/recycler_view_margin"
                 app:layoutManager="LinearLayoutManager"
                 tools:context=".view.pointOfInterest.PointOfInterestFragment"
                 tools:listitem="@layout/item_point_of_interest" />

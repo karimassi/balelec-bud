@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/old_sans_black"
+            android:fontFamily="@font/proxima_nova"
             android:gravity="start"
             android:textAlignment="viewStart"
             android:textColor="@android:color/white"
@@ -54,8 +54,9 @@
             android:layout_weight="0.4"
             android:gravity="center_vertical"
             android:drawableStart="@drawable/clock"
+            android:drawableTint="@color/secondaryColor"
             android:drawablePadding="@dimen/text_view_drawable_padding"
-            android:fontFamily="@font/old_sans_black"
+            android:fontFamily="@font/proxima_nova"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -67,8 +68,9 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:drawableStart="@drawable/map"
+            android:drawableTint="@color/secondaryColor"
             android:drawablePadding="@dimen/text_view_drawable_padding"
-            android:fontFamily="@font/old_sans_black"
+            android:fontFamily="@font/proxima_nova"
             android:textColor="@android:color/white" />
 
         <Switch
@@ -78,8 +80,9 @@
             android:layout_weight="0.2"
             android:gravity="center"
             android:checked="false"
+
             android:drawableStart="@drawable/my_notification_icone"
-            android:drawableTint="@color/blek_orange"
+            android:drawableTint="@color/secondaryColor"
             android:text="" />
     </LinearLayout>
 </LinearLayout>

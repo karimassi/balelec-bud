@@ -22,7 +22,7 @@
             android:id="@+id/root_activity_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/blek_blue"
+            android:background="@color/primaryDarkColor"
             app:theme="@style/ToolBarStyle"/>
 
         <!-- FrameLayout for our fragments -->
@@ -40,10 +40,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:background="@color/blek_blue"
+        android:background="@color/primaryDarkColor"
         app:headerLayout="@layout/activity_root_nav_header"
-        app:itemTextAppearance="@style/blek_font_style"
+        app:itemTextAppearance="@style/bold_font_style"
         app:menu="@menu/root_activity_menu_header"
-        app:itemIconTint="@color/blek_orange" />
+        app:itemIconTint="@color/secondaryColor" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

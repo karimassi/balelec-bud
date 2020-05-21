@@ -6,13 +6,17 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
@@ -47,7 +51,15 @@ public final class RegisterUserFragment extends DialogFragment {
 
         setUpFields(view);
 
-        builder.setView(view).setTitle(R.string.register)
+        TextView title = new TextView(getContext());
+        title.setText(R.string.register);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        title.setPaddingRelative(0, 10, 0, 10);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+
+        builder.setView(view).setCustomTitle(title)
                 .setPositiveButton(R.string.action_register, (dialog, id) ->
                         register(
                                 nameField.getText().toString(),

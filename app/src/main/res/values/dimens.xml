@@ -1,11 +1,13 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
 
+    <dimen name="rv_top_padding">10dp</dimen>
     <dimen name="recycler_view_margin">20dp</dimen>
     <dimen name="rv_item_side_padding">10dp</dimen>
     <dimen name="rv_item_top_bottom_padding">5dp</dimen>
-    <dimen name="rv_item_side_margin">10dp</dimen>
-    <dimen name="rv_item_top_bottom_margin">5dp</dimen>
+    <dimen name="rv_item_side_margin">15dp</dimen>
+    <dimen name="rv_item_top_bottom_margin">10dp</dimen>
+    
 
 
     <dimen name="text_view_drawable_padding">4dp</dimen>

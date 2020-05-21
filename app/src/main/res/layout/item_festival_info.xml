@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/rv_item_side_margin"
-    android:layout_marginTop="@dimen/festival_info_item_top_bottom_margin"
+    android:layout_marginTop="@dimen/rv_item_top_bottom_margin"
     android:layout_marginRight="@dimen/rv_item_side_margin"
-    android:layout_marginBottom="@dimen/festival_info_item_top_bottom_margin"
+    android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
     android:background="@drawable/round_corner_background"
     android:orientation="vertical"
     android:paddingLeft="@dimen/rv_item_side_padding"
@@ -27,7 +27,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="3dp"
-        android:background="#ffffff" />
+        android:background="@color/secondaryColor" />
 
     <TextView
         android:id="@+id/festivalInfoContent"

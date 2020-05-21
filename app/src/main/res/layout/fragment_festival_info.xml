@@ -5,7 +5,7 @@
     android:id="@+id/activity_festival_info_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blek_blue"
+    android:background="@android:color/black"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".view.festivalInformation.FestivalInformationFragment">
@@ -22,10 +22,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/festivalInfoRecyclerView"
+                android:paddingTop="@dimen/rv_top_padding"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/recycler_view_margin"
-                android:layout_marginRight="@dimen/recycler_view_margin"
                 app:layoutManager="LinearLayoutManager"
                 tools:context=".view.festivalInformation.FestivalInformationFragment"
                 tools:listitem="@layout/item_festival_info" />

@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="@android:color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/text_view_transport_departures_title"
-        android:layout_width="wrap_content"
+        android:paddingTop="@dimen/rv_top_padding"
+        android:paddingBottom="@dimen/rv_top_padding"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/recycler_view_margin"
-        android:paddingRight="@dimen/recycler_view_margin"
+        android:gravity="center"
         android:textSize="@dimen/departure_title_size"
         android:fontFamily="@font/old_sans_black"
         android:textColor="@android:color/white"/>
@@ -21,13 +23,10 @@
         android:layout_width="match_parent"
         android:id="@+id/swipe_refresh_layout_transport_departures">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_transport_departures"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/recycler_view_margin"
-            android:layout_marginRight="@dimen/recycler_view_margin"
             app:layoutManager="LinearLayoutManager"
             tools:context=".view.transport.TransportDeparturesFragment"
             tools:listitem="@layout/item_transport_departure" />

@@ -6,5 +6,5 @@
     android:layout_height="match_parent"
     tools:context=".view.WelcomeFragment"
     android:gravity="center"
-    android:background="@drawable/blek_main_root"
+    android:background="@color/primaryColor"
     android:orientation="vertical" />

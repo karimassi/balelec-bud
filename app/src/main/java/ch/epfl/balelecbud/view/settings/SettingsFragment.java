@@ -4,8 +4,12 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceFragmentCompat;
@@ -45,6 +49,13 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        view.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.black));
+        return view;
     }
 
     @Override
