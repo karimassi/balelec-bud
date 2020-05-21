@@ -24,10 +24,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.utility.DateFormatters;
 
 public final class PicturesFragment extends Fragment {
 
@@ -89,7 +89,7 @@ public final class PicturesFragment extends Fragment {
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = DateFormatters.FILE_TIMESTAMP.format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getActivity().getFilesDir();
         File image = File.createTempFile(

@@ -3,7 +3,7 @@ package ch.epfl.balelecbud.model;
 import java.util.Date;
 import java.util.Objects;
 
-import ch.epfl.balelecbud.utility.StringUtils;
+import ch.epfl.balelecbud.utility.DateFormatters;
 
 /**
  * Class modeling a public transport departure
@@ -47,7 +47,7 @@ public final class TransportDeparture {
     }
 
     public String getTimeString() {
-        return StringUtils.dateToString(time);
+        return DateFormatters.TRANSPORT_TIME.format(time);
     }
 
     @Override
