@@ -9,13 +9,22 @@ import java.util.Locale;
  */
 public final class DateFormatter {
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss", Locale.ENGLISH);
+    public enum Verbosity {
+        IN_YEAR("yyyy.MM.dd 'at' HH:mm:ss", Locale.ENGLISH),
+        IN_DAY("HH:mm", Locale.ENGLISH);
 
-    public static String format(Long date){
-        return format(new Date(date));
-    }
+        Verbosity(String format, Locale local){
+            sdf = new SimpleDateFormat(format, local);
+        }
 
-    public static String format(Date date){
-        return sdf.format(date);
+        private final SimpleDateFormat sdf;
+
+        public String format(Long date){
+            return format(new Date(date));
+        }
+
+        public String format(Date date){
+            return sdf.format(date);
+        }
     }
 }
