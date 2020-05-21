@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.location.LocationUtils;
 
@@ -50,7 +51,7 @@ public final class DeleteAccountDialog extends DialogFragment {
         getAppDatabase().deleteDocumentWithID(Database.LOCATIONS_PATH, uid);
         FriendshipUtils.getFriendsUids(getAppAuthenticator().getCurrentUser()).whenComplete(
                 (strings, throwable) ->
-                        FriendshipUtils.getUsersFromUids(strings, Database.Source.CACHE_FIRST)
+                        FriendshipUtils.getUsersFromUids(strings, InformationSource.CACHE_FIRST)
                                 .forEach(userCompletableFuture -> userCompletableFuture.whenComplete(
                                         (user, throwable1) -> FriendshipUtils.removeFriend(user))));
         getAppDatabase().deleteDocumentWithID(Database.SENT_REQUESTS_PATH, uid);

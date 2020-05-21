@@ -116,6 +116,12 @@ public class RootActivityTests {
     }
 
     @Test
+    public void canOpenGalleryActivityFromDrawer(){
+        openDrawer();
+        clickItem(R.id.fragment_main_drawer_gallery, R.id.gallery_recycler_view);
+    }
+
+    @Test
     public void canOpenTransportFragmentFromDrawer() {
         openDrawer();
         clickItem(R.id.fragment_main_drawer_transport, R.id.transport_fragment_container);

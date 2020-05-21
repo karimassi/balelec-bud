@@ -23,6 +23,7 @@ import ch.epfl.balelecbud.model.PointOfInterestType;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
@@ -181,7 +182,7 @@ public class MockDatabase implements Database {
             Object result = collection.get(MockQueryUtils.getRightOperandFromDocumentIdClause(query));
             queryResult.add((Map<String, Object>) result);
 
-            Long freshness = query.getSource() == Source.CACHE_FIRST || query.getSource() == Source.CACHE_ONLY ?
+            Long freshness = query.getSource() == InformationSource.CACHE_FIRST || query.getSource() == InformationSource.CACHE_ONLY ?
                     freshnessToReturn :
                     null;
 

@@ -1,12 +1,8 @@
 package ch.epfl.balelecbud.utility.connectivity;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 import static org.testng.Assert.assertEquals;
@@ -18,7 +14,7 @@ public class MockRecyclerViewData extends RecyclerViewData<Integer, MockViewHold
     private int remoteOnlyCount = 0;
 
     @Override
-    public CompletableFuture<Long> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(InformationSource preferredSource) {
         switch (preferredSource){
             case CACHE_ONLY:
                 cacheOnlyCount++;

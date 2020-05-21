@@ -44,6 +44,11 @@
         app:headerLayout="@layout/activity_root_nav_header"
         app:itemTextAppearance="@style/bold_font_style"
         app:menu="@menu/root_activity_menu_header"
-        app:itemIconTint="@color/secondaryColor" />
+        app:itemIconTint="@color/secondaryColor">
+
+        <include layout="@layout/activity_root_nav_header"/>
+
+    </com.google.android.material.navigation.NavigationView>
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

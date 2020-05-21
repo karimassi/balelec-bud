@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.PointOfInterest;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.PointOfInterestUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
@@ -31,7 +32,7 @@ public final class PointOfInterestData extends RecyclerViewData<PointOfInterest,
     //TODO change to not have rv flicker at some point
     //TODO cached ?
     @Override
-    public CompletableFuture<Long> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(InformationSource preferredSource) {
         clearAll();
         lastRecordedAffluence.clear();
         MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>(), preferredSource);

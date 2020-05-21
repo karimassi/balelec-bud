@@ -32,6 +32,10 @@ public final class FilesystemCache implements Cache {
         if(!artistsImagesDir.exists() && !artistsImagesDir.mkdir()){
                 Log.w(TAG, "could not create cache/artists_images directory");
         }
+        File usersPicturesDir = new File(dir, "users_pictures");
+        if(!usersPicturesDir.exists() && !usersPicturesDir.mkdir()){
+            Log.w(TAG, "could not create cache/users_pictures directory");
+        }
         return dir;
     }
 
@@ -49,6 +53,7 @@ public final class FilesystemCache implements Cache {
     public File put(File file, String name) throws IOException {
         File newFile = new File(cacheDir, name);
         Files.move(file, newFile);
+        Log.d(TAG, "put " + name);
         return newFile;
     }
 

@@ -5,12 +5,12 @@
     android:layout_height="wrap_content"
     android:background="@drawable/round_corner_background"
     android:orientation="vertical"
-    android:paddingTop="@dimen/schedule_item_top_bottom_padding"
-    android:paddingBottom="@dimen/schedule_item_top_bottom_padding"
+    android:paddingTop="@dimen/rv_item_top_bottom_padding"
+    android:paddingBottom="@dimen/rv_item_top_bottom_padding"
     android:paddingLeft="@dimen/rv_item_side_padding"
     android:paddingRight="@dimen/rv_item_side_padding"
-    android:layout_marginTop="@dimen/schedule_item_top_bottom_margin"
-    android:layout_marginBottom="@dimen/schedule_item_top_bottom_margin"
+    android:layout_marginTop="@dimen/rv_item_top_bottom_margin"
+    android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
     android:layout_marginLeft="@dimen/rv_item_side_margin"
     android:layout_marginRight="@dimen/rv_item_side_margin">
 

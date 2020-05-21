@@ -170,5 +170,6 @@
     <string name="msg_token_fmt" />
     <string name="camera_permission_refused_msg">The app needs camera permission to take a picture</string>
     <string name="take_a_pic">Take a pic</string>
+    <string name="drawer_photo_gallery">Photo Gallery</string>
 
 </resources>

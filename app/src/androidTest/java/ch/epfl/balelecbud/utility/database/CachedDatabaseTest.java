@@ -30,8 +30,8 @@ import static ch.epfl.balelecbud.utility.database.Database.FESTIVAL_INFORMATION_
 import static ch.epfl.balelecbud.utility.database.Database.FRIENDSHIPS_PATH;
 import static ch.epfl.balelecbud.utility.database.Database.FRIEND_REQUESTS_PATH;
 import static ch.epfl.balelecbud.utility.database.Database.LOCATIONS_PATH;
-import static ch.epfl.balelecbud.utility.database.Database.Source.CACHE_FIRST;
-import static ch.epfl.balelecbud.utility.database.Database.Source.REMOTE_ONLY;
+import static ch.epfl.balelecbud.utility.InformationSource.CACHE_FIRST;
+import static ch.epfl.balelecbud.utility.InformationSource.REMOTE_ONLY;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.assertQueryMapResults;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.assertQueryResults;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.karim;
