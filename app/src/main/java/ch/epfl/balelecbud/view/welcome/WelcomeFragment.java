@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public final class WelcomeFragment extends Fragment {
 
     private ViewPager viewPager;
     private WelcomePagerAdapter pagerAdapter;
+    //private TabLayout tabIndicator;
 
     public static WelcomeFragment newInstance() {
         return (new WelcomeFragment());
@@ -38,11 +41,16 @@ public final class WelcomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        //tabIndicator = getActivity().findViewById(R.id.welcome_tab_indicator);
+
         List<HelpPage> pages = getHelpPageCollection(R.raw.help_page);
 
         viewPager = getActivity().findViewById(R.id.welcome_view_pager);
         pagerAdapter = new WelcomePagerAdapter(BalelecbudApplication.getAppContext(), pages);
 
         viewPager.setAdapter(pagerAdapter);
+
+        //tabIndicator.setupWithViewPager(viewPager);
     }
 }

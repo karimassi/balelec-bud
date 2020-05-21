@@ -36,7 +36,7 @@
             android:textColor="@color/design_default_color_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_view_image" />
+            app:layout_constraintTop_toBottomOf="@+id/welcome_tab_indicators" />
 
         <TextView
             android:id="@+id/welcome_view_description"

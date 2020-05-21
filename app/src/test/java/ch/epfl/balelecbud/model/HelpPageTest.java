@@ -12,8 +12,6 @@ public class HelpPageTest {
     private String myTitle2 = "my other title";
     private String myDesc1 = "my description";
     private String myDesc2 = "my other description";
-    private int id1 = 1;
-    private int id2 = 2;
 
     private HelpPage helpPage1 = new HelpPage(imageName, myTitle1, myDesc1);
     private HelpPage helpPage2 = new HelpPage(imageName, myTitle2, myDesc2);
