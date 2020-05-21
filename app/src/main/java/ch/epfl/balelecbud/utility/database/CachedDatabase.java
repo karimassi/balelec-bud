@@ -3,12 +3,11 @@ package ch.epfl.balelecbud.utility.database;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.cache.Cache;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 
@@ -47,7 +46,7 @@ public final class CachedDatabase implements Database {
     @Override
     public <T> CompletableFuture<FetchedData<T>> query(MyQuery query, Class<T> tClass) {
         CompletableFuture<FetchedData<T>> result = new CompletableFuture<>();
-        if (query.getSource().equals(Source.CACHE_ONLY) || (query.getSource().equals(Source.CACHE_FIRST) && cache.contains(query))) {
+        if (query.getSource().equals(InformationSource.CACHE_ONLY) || (query.getSource().equals(InformationSource.CACHE_FIRST) && cache.contains(query))) {
             try {
                 result = cache.get(query, tClass);
             } catch (IOException e) {
@@ -76,7 +75,7 @@ public final class CachedDatabase implements Database {
     @Override
     public CompletableFuture<FetchedData<Map<String, Object>>> query(MyQuery query) {
         CompletableFuture<FetchedData<Map<String, Object>>> result = new CompletableFuture<>();
-        if (query.getSource().equals(Source.CACHE_FIRST) && cache.contains(query)) {
+        if (query.getSource().equals(InformationSource.CACHE_FIRST) && cache.contains(query)) {
             try {
                 result = cache.get(query);
             } catch (IOException e) {

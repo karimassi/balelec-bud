@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.model.Track;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
@@ -29,7 +30,7 @@ public final class TrackData extends RecyclerViewData<Track, TrackHolder> {
     }
 
     @Override
-    public CompletableFuture<Long> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(InformationSource preferredSource) {
         MyQuery query = new MyQuery(Database.PLAYLIST_PATH, new LinkedList<>(), preferredSource);
         return getAppDatabase().query(query, Track.class)
                 .thenApply(playlistTracks -> {

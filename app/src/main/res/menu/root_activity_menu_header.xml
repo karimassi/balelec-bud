@@ -44,6 +44,10 @@
             android:icon="@mipmap/info"
             android:title="@string/drawer_emergency" />
         <item
+            android:id="@+id/activity_main_drawer_gallery"
+            android:icon="@mipmap/info"
+            android:title="Photo Gallery" />
+        <item
             android:id="@+id/activity_main_drawer_settings"
             android:icon="@drawable/settings"
             android:title="@string/drawer_settings" />

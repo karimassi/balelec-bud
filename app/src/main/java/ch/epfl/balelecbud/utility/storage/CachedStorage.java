@@ -1,8 +1,14 @@
 package ch.epfl.balelecbud.utility.storage;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import ch.epfl.balelecbud.utility.InformationSource;
 
 /**
  * Uses the decorator pattern, may seem slightly redundant now since the inner Storage already
@@ -33,6 +39,21 @@ public final class CachedStorage implements Storage {
                             return innerFile;
                         }
                     });
+        }
+    }
+
+    @Override
+    public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
+        Log.d(TAG, "getAllFileNameIn " + collectionName);
+        switch(source){
+            case REMOTE_ONLY:
+            case CACHE_FIRST:
+                return inner.getAllFileNameIn(collectionName, source);
+            case CACHE_ONLY:
+            default:
+                CompletableFuture<List<String>> res = new CompletableFuture<>();
+                res.complete(new LinkedList<>());
+                return res;
         }
     }
 

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.InformationSource;
 
 public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
 
@@ -18,7 +18,7 @@ public abstract class RecyclerViewData <A, B extends RecyclerView.ViewHolder> {
         this.rvAdapter = adapter;
     }
 
-    public abstract CompletableFuture<Long> reload(Database.Source preferredSource);
+    public abstract CompletableFuture<Long> reload(InformationSource preferredSource);
 
     public abstract void bind(int index, B viewHolder);
 

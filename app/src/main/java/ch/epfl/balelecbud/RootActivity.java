@@ -17,6 +17,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
@@ -106,6 +107,9 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
             case R.id.activity_main_drawer_settings:
                 this.showSettingsFragment();
                 break;
+            case R.id.activity_main_drawer_gallery:
+                this.showGalleryFragment();
+                break;
             case R.id.activity_main_drawer_pictures:
                 this.showPicturesFragment();
                 break;
@@ -170,6 +174,11 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     private void showSettingsFragment() {
         Fragment fragmentSettings = SettingsFragment.newInstance();
         this.startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
+    }
+
+    private void showGalleryFragment() {
+        GalleryFragment fragmentGallery = GalleryFragment.newInstance();
+        this.startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
     }
 
     private void showPicturesFragment() {

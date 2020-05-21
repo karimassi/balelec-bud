@@ -24,12 +24,12 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.utility.DateFormatter;
 
-public class PicturesFragment extends Fragment {
+public final class PicturesFragment extends Fragment {
 
     public static PicturesFragment newInstance() {
         return (new PicturesFragment());
@@ -48,8 +48,6 @@ public class PicturesFragment extends Fragment {
         Button cameraButton = activity.findViewById(R.id.takePicBtn);
         cameraButton.setOnClickListener(v -> askCameraPermissions());
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,7 +89,7 @@ public class PicturesFragment extends Fragment {
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = DateFormatter.FILE_TIMESTAMP.format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getActivity().getFilesDir();
         File image = File.createTempFile(
@@ -125,6 +123,4 @@ public class PicturesFragment extends Fragment {
     public String getCurrentPhotoPath() {
         return currentPhotoPath;
     }
-
-
 }

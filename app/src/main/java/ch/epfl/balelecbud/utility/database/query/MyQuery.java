@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 
 /**
@@ -15,33 +16,33 @@ public final class MyQuery {
     private final String collectionName;
     private final List<MyWhereClause> whereClauses;
     private final MyGeoClause geoClause;
-    private final Database.Source source;
+    private final InformationSource source;
 
-    public MyQuery(String collectionName, MyWhereClause whereClause, Database.Source source) {
+    public MyQuery(String collectionName, MyWhereClause whereClause, InformationSource source) {
         this(collectionName, Lists.newArrayList(whereClause), source);
     }
 
     public MyQuery(String collectionName, MyWhereClause whereClause) {
-        this(collectionName, whereClause, Database.Source.REMOTE_ONLY);
+        this(collectionName, whereClause, InformationSource.REMOTE_ONLY);
     }
 
     public MyQuery(String collectionName, MyGeoClause geoClause) {
-        this(collectionName, Collections.emptyList(), geoClause, Database.Source.REMOTE_ONLY);
+        this(collectionName, Collections.emptyList(), geoClause, InformationSource.REMOTE_ONLY);
     }
 
-    public MyQuery(String collectionName, MyGeoClause geoClause, Database.Source source) {
+    public MyQuery(String collectionName, MyGeoClause geoClause, InformationSource source) {
         this(collectionName, Collections.emptyList(), geoClause, source);
     }
 
     public MyQuery(String collectionName, List<MyWhereClause> whereClauses) {
-        this(collectionName, whereClauses, null, Database.Source.REMOTE_ONLY);
+        this(collectionName, whereClauses, null, InformationSource.REMOTE_ONLY);
     }
 
-    public MyQuery(String collectionName, List<MyWhereClause> whereClauses, Database.Source source) {
+    public MyQuery(String collectionName, List<MyWhereClause> whereClauses, InformationSource source) {
         this(collectionName, whereClauses, null, source);
     }
 
-    public MyQuery(String collectionName, List<MyWhereClause> whereClauses, MyGeoClause geoClause, Database.Source source) {
+    public MyQuery(String collectionName, List<MyWhereClause> whereClauses, MyGeoClause geoClause, InformationSource source) {
         this.collectionName = collectionName;
         this.whereClauses = whereClauses;
         this.geoClause = geoClause;
@@ -78,7 +79,7 @@ public final class MyQuery {
         throw new IllegalArgumentException();
     }
 
-    public Database.Source getSource() {
+    public InformationSource getSource() {
         return source;
     }
 }

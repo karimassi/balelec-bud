@@ -18,8 +18,8 @@ import androidx.fragment.app.DialogFragment;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.StringUtils;
-import ch.epfl.balelecbud.utility.database.Database;
 
 public final class AddFriendFragment extends DialogFragment {
 
@@ -42,7 +42,7 @@ public final class AddFriendFragment extends DialogFragment {
                 .setTitle(R.string.add_friend_title)
                 .setPositiveButton(R.string.add_friend_request, (dialog, id) -> {
                     if (validateEmail()) {
-                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), Database.Source.REMOTE_ONLY)
+                        FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), InformationSource.REMOTE_ONLY)
                                 .whenComplete((user, throwable) -> FriendshipUtils.requestFriend(user));
                         Toast.makeText(
                                 getContext(),

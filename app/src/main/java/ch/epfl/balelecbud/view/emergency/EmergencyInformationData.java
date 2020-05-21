@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.model.EmergencyInformation;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
@@ -25,7 +26,7 @@ public final class EmergencyInformationData extends RecyclerViewData<EmergencyIn
     }
 
     @Override
-    public CompletableFuture<Long> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(InformationSource preferredSource) {
         MyQuery query = new MyQuery(Database.EMERGENCY_INFO_PATH, new LinkedList<>(), preferredSource);
         return BalelecbudApplication.getAppDatabase().query(query, EmergencyInformation.class)
                 .thenApply(emergencyInfos -> {
