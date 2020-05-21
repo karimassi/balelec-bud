@@ -7,20 +7,22 @@ import java.util.Objects;
 /**
  * Class modeling a help page displayed in the welcome fragment
  */
-public class HelpPage {
+public final class HelpPage {
 
-    private String image;
-    private String title;
+    private String imageName;
+    private String title
     private String description;
 
-    public HelpPage(String image, String title, String description) {
-        this.image = image;
+    public HelpPage() {}
+
+    public HelpPage(String imageName, String title, String description) {
+        this.imageName = imageName;
         this.title = title;
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageName() {
+        return imageName;
     }
 
     public String getTitle() {
@@ -34,13 +36,13 @@ public class HelpPage {
     @Override
     public boolean equals(@Nullable Object obj) {
         return (obj instanceof HelpPage) &&
-                Objects.equals(((HelpPage) obj).image, image) &&
+                Objects.equals(((HelpPage) obj).imageName, imageName) &&
                 Objects.equals(((HelpPage) obj).title, title) &&
                 Objects.equals(((HelpPage) obj).description, description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(image, title, description);
+        return Objects.hash(imageName, title, description);
     }
 }
