@@ -70,6 +70,9 @@ public final class Location implements Parcelable {
         latitude = in.readDouble();
         longitude = in.readDouble();
         geoFireLocation = in.readDouble();
+        timestamp = in.readLong();
+        if(timestamp == -1)
+            timestamp = null;
     }
 
     public double getLongitude() {
@@ -127,6 +130,6 @@ public final class Location implements Parcelable {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeDouble(geoFireLocation);
-        dest.writeLong(timestamp);
+        dest.writeLong(timestamp == null ? -1 : timestamp);
     }
 }
