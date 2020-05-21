@@ -22,7 +22,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.karim;
 
-public class RootActivityTests {
+public class RootActivityTest {
     private final UiDevice device = UiDevice.getInstance(getInstrumentation());
 
     @Rule
@@ -60,7 +60,7 @@ public class RootActivityTests {
     @Test
     public void testDrawer() {
         openDrawer();
-        onView(withId(R.id.headerImageView)).check(matches(isDisplayed()));
+        onView(withId(R.id.root_activity_drawer_layout)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class RootActivityTests {
     @Test
     public void canOpenScheduleFragmentFromDrawer() {
         openDrawer();
-        clickItem(R.id.fragment_main_drawer_schedule, R.id.scheduleRecyclerView);
+        clickItem(R.id.fragment_main_drawer_schedule, R.id.fragment_schedule_linear_layout);
     }
 
     @Test
