@@ -15,6 +15,7 @@ import static org.junit.Assert.assertNull;
 public class MyMarkerBuilderTest {
     private final Location location = new Location(1, 2);
     private final String title = "abcd";
+    private final String snippet = "abc";
 
     @Test
     public void canSetLocation() {
@@ -29,6 +30,11 @@ public class MyMarkerBuilderTest {
     @Test
     public void canSetType() {
         assertNull(new MyMarker.Builder().type(null).getType());
+    }
+
+    @Test
+    public void canSetSnippet() {
+        assertEquals(snippet, new MyMarker.Builder().snippet(snippet).getSnippet());
     }
 
     @Test

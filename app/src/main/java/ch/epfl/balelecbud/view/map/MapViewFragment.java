@@ -26,6 +26,7 @@ import ch.epfl.balelecbud.model.MyMap;
 import ch.epfl.balelecbud.model.MyMarker;
 import ch.epfl.balelecbud.model.PointOfInterest;
 import ch.epfl.balelecbud.model.User;
+import ch.epfl.balelecbud.utility.DateFormatter;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
@@ -153,12 +154,19 @@ public final class MapViewFragment extends Fragment {
         waitingPOI.clear();
     }
 
+    private void putFriendLocationOnTheMap(User friend, Location location) {
+        MyMarker.Builder builder = new MyMarker.Builder()
+                .location(location)
+                .title(friend.getDisplayName())
+                .type(MarkerType.FRIEND);
+        if (location.getTimestamp() != null)
+            builder.snippet(getString(R.string.was_here) + DateFormatter.Verbosity.IN_DAY.format(location.getTimestamp()));
+        friendsMarkers.put(friend, myMap.addMarker(builder));
+    }
+
     private void displayWaitingFriends() {
         for (User friend : waitingFriendsLocation.keySet()) {
-            friendsMarkers.put(friend, myMap.addMarker(new MyMarker.Builder()
-                    .location(waitingFriendsLocation.get(friend))
-                    .title(friend.getDisplayName())
-                    .type(MarkerType.FRIEND)));
+            putFriendLocationOnTheMap(friend, waitingFriendsLocation.get(friend));
         }
         waitingFriendsLocation.clear();
     }
@@ -195,10 +203,7 @@ public final class MapViewFragment extends Fragment {
         } else if (friendsMarkers.containsKey(friend)) {
             friendsMarkers.get(friend).setLocation(location);
         } else {
-            friendsMarkers.put(friend, myMap.addMarker(new MyMarker.Builder()
-                    .location(location)
-                    .title(friend.getDisplayName())
-                    .type(MarkerType.FRIEND)));
+            putFriendLocationOnTheMap(friend, location);
         }
     }
 

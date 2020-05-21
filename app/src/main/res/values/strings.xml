@@ -8,6 +8,7 @@
 
     <string name="title_activity_map">MapActivity</string>
     <string name="map_view">Map View</string>
+    <string name="was_here">was here at\u0020</string>
 
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

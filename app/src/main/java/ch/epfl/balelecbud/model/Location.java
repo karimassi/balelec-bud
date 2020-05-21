@@ -63,7 +63,7 @@ public final class Location implements Parcelable {
         this.longitude = longitude;
         this.latitude = latitude;
         this.geoFireLocation = (latitude + 90) * 180 + longitude;
-        this.timestamp = createTimestamp ? System.currentTimeMillis() : -1;
+        this.timestamp = createTimestamp ? System.currentTimeMillis() : null;
     }
 
     protected Location(Parcel in) {
@@ -84,7 +84,7 @@ public final class Location implements Parcelable {
         return geoFireLocation;
     }
 
-    public long getTimestamp() {return timestamp; }
+    public Long getTimestamp() {return timestamp; }
 
     /**
      * Convert the location into Mapbox's {@code LatLng}
