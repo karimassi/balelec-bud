@@ -26,16 +26,15 @@ public final class ReceivedFriendRequestsFragment extends Fragment {
 
         Context context = view.getContext();
         final RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friend_requests);
-        View freshnessView = view.findViewById(R.id.freshness_info_layout);
+        final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_friend_requests);
 
         ReceivedFriendRequestData data = new ReceivedFriendRequestData((User) getArguments().get("user"));
         final RefreshableRecyclerViewAdapter<User, ReceivedRequestViewHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(ReceivedRequestViewHolder::new, freshnessView, data, R.layout.item_friend_request);
+                new RefreshableRecyclerViewAdapter<>(ReceivedRequestViewHolder::new, refreshLayout, data, R.layout.item_friend_request);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
 
-        final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_friend_requests);
         adapter.setOnRefreshListener(refreshLayout);
 
         return view;

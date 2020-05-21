@@ -54,13 +54,11 @@ public class CustomMatcher {
     }
 
     @NotNull
-    public static Matcher<View> getItemInSchedule(int itemPosition, int infoPosition) {
+    public static Matcher<View> getItemInSchedule(int itemPosition, int subPosition, int infoPosition) {
         return nthChildOf(
                     nthChildOf(
-                            nthChildOf(
-                                nthChildOf(withId(R.id.scheduleRecyclerView), itemPosition),
-                                    0),
-                        1),
+                            nthChildOf(withId(R.id.scheduleRecyclerView), itemPosition),
+                        subPosition),
                     infoPosition);
     }
 
