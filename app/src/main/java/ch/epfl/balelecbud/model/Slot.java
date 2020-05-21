@@ -12,7 +12,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.Objects;
 
-import ch.epfl.balelecbud.utility.StringUtils;
+import ch.epfl.balelecbud.utility.DateFormatters;
 
 /**
  * Class modeling a concert slot
@@ -63,7 +63,8 @@ public final class Slot implements Parcelable {
      * Empty constructor used by FireStore
      */
     @Ignore
-    public Slot() { }
+    public Slot() {
+    }
 
     protected Slot(Parcel in) {
         id = in.readInt();
@@ -99,8 +100,8 @@ public final class Slot implements Parcelable {
     }
 
     public String getTimeSlot() {
-        return StringUtils.timestampToScheduleString(startTime) + " - " +
-                StringUtils.timestampToScheduleString(endTime);
+        return DateFormatters.IN_DAY.format(startTime) + " - " +
+                DateFormatters.IN_DAY.format(endTime);
     }
 
     @Override
