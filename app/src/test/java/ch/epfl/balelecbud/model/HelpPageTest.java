@@ -7,14 +7,20 @@ import static org.junit.Assert.assertNotEquals;
 
 public class HelpPageTest {
 
+    private String name = "123456";
     private String myTitle1 = "my title";
     private String myTitle2 = "my other title";
     private String myDesc1 = "my description";
     private String myDesc2 = "my other description";
 
-    private HelpPage helpPage1 = new HelpPage(myTitle1, myDesc1);
-    private HelpPage helpPage2 = new HelpPage(myTitle2, myDesc2);
-    private HelpPage sameAsHelpPage1 = new HelpPage(new String(myTitle1), new String(myDesc1));
+    private HelpPage helpPage1 = new HelpPage(name, myTitle1, myDesc1);
+    private HelpPage helpPage2 = new HelpPage(name, myTitle2, myDesc2);
+    private HelpPage sameAsHelpPage1 = new HelpPage(name, new String(myTitle1), new String(myDesc1));
+
+    @Test
+    public void testGetId() {
+        assertEquals(name, helpPage1.getImage());
+    }
 
     @Test
     public void getTitleReturnsCorrectTitle(){
@@ -41,5 +47,4 @@ public class HelpPageTest {
         assertEquals(helpPage1, sameAsHelpPage1);
         assertEquals(helpPage1.hashCode(), sameAsHelpPage1.hashCode());
     }
-
 }

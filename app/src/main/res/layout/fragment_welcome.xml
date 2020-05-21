@@ -4,31 +4,15 @@
     android:id="@+id/activity_home_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_google_signin_btn_text_light"
+    android:background="@color/black"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".view.WelcomeFragment">
+    tools:context=".view.welcome.WelcomeFragment">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/welcome_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="685dp">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="." />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="." />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="." />
-    </androidx.viewpager.widget.ViewPager>
+        android:layout_height="685dp"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/welcome_screen_icons"
@@ -50,6 +34,5 @@
             android:layout_height="wrap_content"
             android:text="Wednesday" />
     </com.google.android.material.tabs.TabLayout>
-
 
 </LinearLayout>

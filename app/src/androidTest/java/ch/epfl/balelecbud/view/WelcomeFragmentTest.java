@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.view.WelcomeFragment;
+import ch.epfl.balelecbud.view.welcome.WelcomeFragment;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

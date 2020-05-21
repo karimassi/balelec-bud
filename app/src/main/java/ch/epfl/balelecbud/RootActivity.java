@@ -21,7 +21,7 @@ import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
 import ch.epfl.balelecbud.utility.notifications.concertFlow.ConcertFlow;
 import ch.epfl.balelecbud.view.PicturesFragment;
-import ch.epfl.balelecbud.view.WelcomeFragment;
+import ch.epfl.balelecbud.view.welcome.WelcomeFragment;
 import ch.epfl.balelecbud.view.emergency.EmergencyInformationFragment;
 import ch.epfl.balelecbud.view.festivalInformation.FestivalInformationFragment;
 import ch.epfl.balelecbud.view.friendship.SocialFragment;
