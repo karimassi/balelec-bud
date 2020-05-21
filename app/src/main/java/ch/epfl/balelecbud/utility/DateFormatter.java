@@ -9,14 +9,13 @@ import java.util.Locale;
 /**
  * Simple enum to centralize all date formatting
  */
-
-public enum DateFormatters {
+public enum DateFormatter {
     IN_YEAR("yyyy.MM.dd 'at' HH:mm:ss", Locale.ENGLISH),
     IN_DAY("HH:mm", Locale.ENGLISH),
     FILE_TIMESTAMP("yyyyMMdd_HHmmss", Locale.ENGLISH),
     TRANSPORT_TIME("dd-MM HH:mm", Locale.ENGLISH);
 
-    DateFormatters(String format, Locale local) {
+    DateFormatter(String format, Locale local) {
         sdf = new SimpleDateFormat(format, local);
     }
 

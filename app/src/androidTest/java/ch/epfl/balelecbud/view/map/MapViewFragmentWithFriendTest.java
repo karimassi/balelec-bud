@@ -67,7 +67,7 @@ public class MapViewFragmentWithFriendTest {
             public MyMarker addMarker(MyMarker.Builder markerBuilder) {
                 sync.assertNotNull(markerBuilder);
                 sync.assertThat(markerBuilder.getSnippet(),
-                        is("was here at " + DateFormatter.Verbosity.IN_DAY.format(karimLocation.getTimestamp())));
+                        is("was here at " + DateFormatter.IN_DAY.format(karimLocation.getTimestamp())));
                 sync.call();
                 return null;
             }

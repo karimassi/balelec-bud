@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.DateFormatters;
+import ch.epfl.balelecbud.utility.DateFormatter;
 
 public final class PicturesFragment extends Fragment {
 
@@ -89,7 +89,7 @@ public final class PicturesFragment extends Fragment {
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = DateFormatters.FILE_TIMESTAMP.format(new Date());
+        String timeStamp = DateFormatter.FILE_TIMESTAMP.format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getActivity().getFilesDir();
         File image = File.createTempFile(

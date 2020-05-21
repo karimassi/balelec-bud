@@ -12,7 +12,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.Objects;
 
-import ch.epfl.balelecbud.utility.DateFormatters;
+import ch.epfl.balelecbud.utility.DateFormatter;
 
 /**
  * Class modeling a concert slot
@@ -100,8 +100,8 @@ public final class Slot implements Parcelable {
     }
 
     public String getTimeSlot() {
-        return DateFormatters.IN_DAY.format(startTime) + " - " +
-                DateFormatters.IN_DAY.format(endTime);
+        return DateFormatter.IN_DAY.format(startTime) + " - " +
+                DateFormatter.IN_DAY.format(endTime);
     }
 
     @Override

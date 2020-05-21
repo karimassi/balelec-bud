@@ -160,7 +160,7 @@ public final class MapViewFragment extends Fragment {
                 .title(friend.getDisplayName())
                 .type(MarkerType.FRIEND);
         if (location.getTimestamp() != null)
-            builder.snippet(getString(R.string.was_here) + DateFormatter.Verbosity.IN_DAY.format(location.getTimestamp()));
+            builder.snippet(getString(R.string.was_here) + DateFormatter.IN_DAY.format(location.getTimestamp()));
         friendsMarkers.put(friend, myMap.addMarker(builder));
     }
 
