@@ -46,6 +46,8 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textColor="@android:color/white"
+            android:fontFamily="@font/proxima_nova"
+            android:textSize="@dimen/rv_item_subtitle"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal" />
@@ -55,6 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@android:id/title"
             android:layout_alignLeft="@android:id/title"
+            android:fontFamily="@font/proxima_nova"
+            android:textSize="@dimen/rv_item_text"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/secondary_text_dark"
             android:maxLines="4" />

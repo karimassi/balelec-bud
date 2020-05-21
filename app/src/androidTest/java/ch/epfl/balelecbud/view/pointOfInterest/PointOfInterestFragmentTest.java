@@ -66,7 +66,6 @@ public class PointOfInterestFragmentTest  {
 
     private void testInfoInView(ViewInteraction viewInteraction, PointOfInterest poi) {
         viewInteraction.check(matches(hasDescendant(withText(poi.getName()))));
-        viewInteraction.check(matches(hasDescendant(withText(poi.getType().toString()))));
     }
 
 }

@@ -17,9 +17,9 @@
         android:paddingTop="@dimen/rv_top_padding"
         android:paddingBottom="@dimen/rv_top_padding"
         android:gravity="center"
-        android:fontFamily="@font/proxima_nova_bold"
+        android:fontFamily="@font/proxima_nova"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/fragment_playlist_message_size"
+        android:textSize="@dimen/rv_item_text"
         android:text="@string/spotify_message"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout

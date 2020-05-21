@@ -34,11 +34,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/proxima_nova"
+            android:fontFamily="@font/proxima_nova_bold"
             android:gravity="start"
             android:textAlignment="viewStart"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/slot_artist_size" />
+            android:textSize="@dimen/rv_item_title" />
 
     </LinearLayout>
 
@@ -57,6 +57,7 @@
             android:drawableTint="@color/primaryDarkColor"
             android:drawablePadding="@dimen/text_view_drawable_padding"
             android:fontFamily="@font/proxima_nova"
+            android:textSize="@dimen/rv_item_text"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -71,6 +72,7 @@
             android:drawableTint="@color/primaryDarkColor"
             android:drawablePadding="@dimen/text_view_drawable_padding"
             android:fontFamily="@font/proxima_nova"
+            android:textSize="@dimen/rv_item_text"
             android:textColor="@android:color/white" />
 
         <Switch

@@ -8,11 +8,14 @@
     <dimen name="rv_item_side_margin">15dp</dimen>
     <dimen name="rv_item_top_bottom_margin">10dp</dimen>
     
-
+    
+    <dimen name="rv_item_title">30sp</dimen>
+    <dimen name="rv_item_subtitle">20sp</dimen>
+    <dimen name="rv_item_text">15sp</dimen>
 
     <dimen name="text_view_drawable_padding">4dp</dimen>
 
-    <dimen name="floating_action_button_margin">15dp</dimen>
+    <dimen name="floating_action_button_margin">20dp</dimen>
     <dimen name="floating_action_button_elevation">20dp</dimen>
 
     <!--  FESTIVAL INFORMATION  -->
@@ -25,6 +28,7 @@
 
     <!--  SCHEDULE  -->
     <dimen name="slot_artist_size">30sp</dimen>
+    <dimen name="slot_text">20sp</dimen>
     <dimen name="schedule_item_top_bottom_margin">10dp</dimen>
     <dimen name="schedule_item_top_bottom_padding">10dp</dimen>
 

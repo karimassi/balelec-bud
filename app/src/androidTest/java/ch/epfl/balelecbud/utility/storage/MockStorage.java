@@ -26,7 +26,7 @@ public class MockStorage implements Storage {
         try {
             File tmpFile = File.createTempFile("mockFile", "png");
             InputStream inputStream = BalelecbudApplication.getAppContext()
-                    .getResources().openRawResource(R.drawable.blek_artist_pic); // id drawable
+                    .getResources().openRawResource(R.drawable.balelec_artist_pic); // id drawable
             OutputStream out = new FileOutputStream(tmpFile);
             byte buf[] = new byte[1024];
             int len;

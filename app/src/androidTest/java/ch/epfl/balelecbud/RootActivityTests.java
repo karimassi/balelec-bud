@@ -66,37 +66,37 @@ public class RootActivityTests {
     @Test
     public void canOpenHomeFragmentFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_home, R.id.activity_home_linear_layout);
+        clickItem(R.id.fragment_main_drawer_home, R.id.activity_home_linear_layout);
     }
 
     @Test
     public void canOpenInfoFragmentFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_info, R.id.festivalInfoRecyclerView);
+        clickItem(R.id.fragment_main_drawer_info, R.id.festivalInfoRecyclerView);
     }
 
     @Test
     public void canOpenScheduleFragmentFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_schedule, R.id.scheduleRecyclerView);
+        clickItem(R.id.fragment_main_drawer_schedule, R.id.scheduleRecyclerView);
     }
 
     @Test
     public void canOpenPOIFragmentFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_poi, R.id.pointOfInterestRecyclerView);
+        clickItem(R.id.fragment_main_drawer_poi, R.id.pointOfInterestRecyclerView);
     }
 
     @Test
     public void canOpenPlaylistFragmentFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_playlist, R.id.recycler_view_playlist);
+        clickItem(R.id.fragment_main_drawer_playlist, R.id.recycler_view_playlist);
     }
 
     @Test
     public void canOpenSocialFragmentFomDrawerWhenSignedIn() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_social, R.id.tabs_social);
+        clickItem(R.id.fragment_main_drawer_social, R.id.tabs_social);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class RootActivityTests {
         MapViewFragment.setMockCallback(googleMap -> {
         });
         openDrawer();
-        clickItem(R.id.activity_main_drawer_emergency_info, R.id.emergency_info_constraint_layout);
+        clickItem(R.id.fragment_main_drawer_emergency_info, R.id.emergency_info_constraint_layout);
     }
 
     @Test
@@ -112,18 +112,18 @@ public class RootActivityTests {
         MapViewFragment.setMockCallback(googleMap -> {
         });
         openDrawer();
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_settings));
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.fragment_main_drawer_settings));
     }
 
     @Test
     public void canOpenTransportFragmentFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_transport, R.id.transport_fragment_container);
+        clickItem(R.id.fragment_main_drawer_transport, R.id.transport_fragment_container);
     }
 
     @Test
     public void canOpenPicturesFragmentFromDrawer() {
         openDrawer();
-        clickItem(R.id.activity_main_drawer_pictures, R.id.pictures_fragment_container);
+        clickItem(R.id.fragment_main_drawer_pictures, R.id.fragment_pictures_linear_layout);
     }
 }

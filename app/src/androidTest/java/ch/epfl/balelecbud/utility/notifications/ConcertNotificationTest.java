@@ -201,13 +201,13 @@ public class ConcertNotificationTest {
 
     private void openScheduleActivityFrom(int layout_id, int nav_id) {
         openDrawerFrom(layout_id, nav_id);
-        clickItemFrom(R.id.activity_main_drawer_schedule, nav_id);
+        clickItemFrom(R.id.fragment_main_drawer_schedule, nav_id);
         device.waitForIdle(10000);
     }
 
     private void openInfoActivityFrom(int layout_id, int nav_id) {
         openDrawerFrom(layout_id, nav_id);
-        clickItemFrom(R.id.activity_main_drawer_info, nav_id);
+        clickItemFrom(R.id.fragment_main_drawer_info, nav_id);
         device.waitForIdle(10000);
     }
 

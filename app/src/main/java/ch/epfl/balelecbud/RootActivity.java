@@ -76,37 +76,37 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.activity_main_drawer_home:
+            case R.id.fragment_main_drawer_home:
                 this.showHomeFragment();
                 break;
-            case R.id.activity_main_drawer_info:
+            case R.id.fragment_main_drawer_info:
                 this.showInfoFragment();
                 break;
-            case R.id.activity_main_drawer_schedule:
+            case R.id.fragment_main_drawer_schedule:
                 this.showScheduleFragment();
                 break;
-            case R.id.activity_main_drawer_poi:
+            case R.id.fragment_main_drawer_poi:
                 this.showPoiFragment();
                 break;
-            case R.id.activity_main_drawer_map:
+            case R.id.fragment_main_drawer_map:
                 this.showMapFragment();
                 break;
-            case R.id.activity_main_drawer_transport:
+            case R.id.fragment_main_drawer_transport:
                 this.showTransportFragment();
                 break;
-            case R.id.activity_main_drawer_social:
+            case R.id.fragment_main_drawer_social:
                 this.showSocialFragment();
                 break;
-            case R.id.activity_main_drawer_playlist:
+            case R.id.fragment_main_drawer_playlist:
                 this.showPlaylistFragment();
                 break;
-            case R.id.activity_main_drawer_emergency_info:
+            case R.id.fragment_main_drawer_emergency_info:
                 this.showEmergencyInfoFragment();
                 break;
-            case R.id.activity_main_drawer_settings:
+            case R.id.fragment_main_drawer_settings:
                 this.showSettingsFragment();
                 break;
-            case R.id.activity_main_drawer_pictures:
+            case R.id.fragment_main_drawer_pictures:
                 this.showPicturesFragment();
                 break;
             default:
