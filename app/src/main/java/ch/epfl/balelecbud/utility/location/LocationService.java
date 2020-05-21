@@ -51,7 +51,7 @@ public final class LocationService extends IntentService {
             android.location.Location lastLocation = result.getLastLocation();
             getAppDatabase().storeDocumentWithID(
                     Database.LOCATIONS_PATH, userId,
-                    new Location(lastLocation.getLatitude(), lastLocation.getLongitude())
+                    new Location(lastLocation.getLatitude(), lastLocation.getLongitude(), true)
             );
         }
     }
