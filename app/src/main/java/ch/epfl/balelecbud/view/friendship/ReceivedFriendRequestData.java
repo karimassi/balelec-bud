@@ -40,6 +40,7 @@ public final class ReceivedFriendRequestData extends RecyclerViewData<User, Rece
     @Override
     public void bind(final int index, ReceivedRequestViewHolder viewHolder) {
         viewHolder.friendName.setText(data.get(index).getDisplayName());
+        viewHolder.friendEmail.setText(data.get(index).getEmail());
         viewHolder.acceptButton.setOnClickListener(v -> {
             FriendshipUtils.acceptRequest(data.get(index));
             remove(index);

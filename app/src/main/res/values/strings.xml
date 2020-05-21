@@ -63,6 +63,9 @@
     <string name="drawer_settings">Settings</string>
     <string name="drawer_pictures">Pictures</string>
 
+    <!--  SCHEDULE  -->
+
+    <string name="schedule_image_description">Image for a concert</string>
 
     <!--  SOCIAL FEATURES  -->
 

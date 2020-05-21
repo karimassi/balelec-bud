@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
@@ -26,16 +28,15 @@ public final class FriendFragment extends Fragment {
 
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_friends);
-        View freshnessView = view.findViewById(R.id.freshness_info_layout);
+        final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_friends);
 
         FriendData data = new FriendData((User) getArguments().get("user"));
         final RefreshableRecyclerViewAdapter<User, FriendViewHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(FriendViewHolder::new, freshnessView, data, R.layout.item_friend);
+                new RefreshableRecyclerViewAdapter<>(FriendViewHolder::new, refreshLayout, data, R.layout.item_friend);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
 
-        final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_friends);
         adapter.setOnRefreshListener(refreshLayout);
 
         return view;

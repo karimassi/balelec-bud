@@ -42,7 +42,7 @@ public class TransportFragmentTest {
 
     private void compareViewAndItem(ViewInteraction viewInt, TransportStation transport){
         viewInt.check(matches(hasDescendant(withText(transport.getStationName()))));
-        viewInt.check(matches(hasDescendant(withText(String.valueOf(transport.getDistanceToUser())))));
+        viewInt.check(matches(hasDescendant(withText(transport.getFormattedDistanceToUser()))));
     }
 
     @Test

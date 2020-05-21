@@ -43,15 +43,15 @@ public final class PlaylistFragment extends Fragment implements OnRecyclerViewIn
     public void onStart() {
         super.onStart();
         RecyclerView recyclerView = getView().findViewById(R.id.recycler_view_playlist);
-        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
+        SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_playlist);
+
         TrackData data = new TrackData(this);
         RefreshableRecyclerViewAdapter<Track, TrackHolder> adapter = new RefreshableRecyclerViewAdapter<>(
-                TrackHolder::new, freshnessView, data, R.layout.item_track);
+                TrackHolder::new, swipeRefreshLayout, data, R.layout.item_track);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
-        SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_playlist);
         adapter.setOnRefreshListener(swipeRefreshLayout);
     }
 
