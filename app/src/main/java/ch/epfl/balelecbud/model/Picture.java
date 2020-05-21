@@ -9,9 +9,4 @@ public final class Picture {
     }
 
     public String getImageFileName() { return imageFileName; }
-
-    @Override
-    public boolean equals(Object picture){
-        return (picture instanceof Picture) && (this.imageFileName == ((Picture)picture).imageFileName);
-    }
 }

@@ -10,14 +10,16 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 import ch.epfl.balelecbud.utility.storage.MockStorage;
+import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
 
 @RunWith(AndroidJUnit4.class)
 public class GalleryFragmentTest {
@@ -49,6 +51,20 @@ public class GalleryFragmentTest {
     @Test
     public void testConstraintLayoutVisible() {
         onView(ViewMatchers.withId(R.id.gallery_constraint_layout)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testImagesAreRetrievedFromMockStorage(){
+        refreshRecyclerView();
+        onView(ViewMatchers.withId(R.id.galleryRecyclerView)).check(matches(hasChildCount(9)));
+    }
+
+    @Test
+    public void testImagesAreBindedToView(){
+        refreshRecyclerView();
+        for(int i = 0 ; i < 9 ; ++i){
+            onView(nthChildOf(withId(R.id.galleryRecyclerView), i)).check(matches(isDisplayed()));
+        }
     }
 
     private void refreshRecyclerView() {
