@@ -39,6 +39,7 @@ public final class SentRequestData extends RecyclerViewData<User, SentRequestVie
     @Override
     public void bind(int index, SentRequestViewHolder viewHolder) {
         viewHolder.friendName.setText(data.get(index).getDisplayName());
+        viewHolder.friendEmail.setText(data.get(index).getEmail());
         viewHolder.cancelButton.setOnClickListener(v -> {
             FriendshipUtils.deleteRequest(currentUser, data.get(index));
             remove(index);

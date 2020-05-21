@@ -35,8 +35,7 @@ public final class FriendshipUtils {
         toStore.put(friend.getUid(), true);
         getAppDatabase().storeDocumentWithID(Database.SENT_REQUESTS_PATH, getAppAuthenticator().getCurrentUser().getUid(), toStore);
 
-        Message.sendFriendshipMessage(getAppAuthenticator().getCurrentUser(), friend.getUid(),
-                Message.Type.FRIEND_REQUEST);
+        Message.sendFriendshipMessage(getAppAuthenticator().getCurrentUser(), friend.getUid(), Message.Type.FRIEND_REQUEST);
     }
 
     public static void removeFriend(User friend) {
@@ -62,8 +61,7 @@ public final class FriendshipUtils {
 
         deleteRequest(sender, getAppAuthenticator().getCurrentUser());
 
-        Message.sendFriendshipMessage(getAppAuthenticator().getCurrentUser(), sender.getUid(),
-                Message.Type.ACCEPT_REQUEST);
+        Message.sendFriendshipMessage(getAppAuthenticator().getCurrentUser(), sender.getUid(), Message.Type.ACCEPT_REQUEST);
     }
 
     public static void deleteRequest(User sender, User receiver) {

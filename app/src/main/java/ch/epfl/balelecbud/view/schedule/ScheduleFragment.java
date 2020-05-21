@@ -40,16 +40,15 @@ public final class ScheduleFragment extends Fragment {
         super.onStart();
         Log.v(TAG, "onCreate: Creation of the activity");
         RecyclerView rvSchedule = getView().findViewById(R.id.scheduleRecyclerView);
-        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
+        SwipeRefreshLayout refreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_schedule);
 
         SlotData data = new SlotData(getActivity(), getArguments().getParcelableArrayList("slots"));
         RefreshableRecyclerViewAdapter<Slot, SlotHolder> adapter = new RefreshableRecyclerViewAdapter<>(
-                SlotHolder::new, freshnessView, data, R.layout.item_schedule);
+                SlotHolder::new, refreshLayout, data, R.layout.item_schedule);
 
         rvSchedule.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSchedule.setAdapter(adapter);
 
-        SwipeRefreshLayout refreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_schedule);
         adapter.setOnRefreshListener(refreshLayout);
     }
 }

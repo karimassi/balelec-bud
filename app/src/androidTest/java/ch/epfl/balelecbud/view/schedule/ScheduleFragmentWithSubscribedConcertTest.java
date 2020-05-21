@@ -69,7 +69,7 @@ public class ScheduleFragmentWithSubscribedConcertTest {
 
         refreshRecyclerView();
 
-        onView(getItemInSchedule(0, 3)).perform(click());
+        onView(getItemInSchedule(0, 2, 2)).perform(click());
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
@@ -82,9 +82,9 @@ public class ScheduleFragmentWithSubscribedConcertTest {
 
         refreshRecyclerView();
 
-        onView(getItemInSchedule(0, 3))
+        onView(getItemInSchedule(0, 2, 2))
                 .check(switchChecked(true));
-        onView(getItemInSchedule(1, 3))
+        onView(getItemInSchedule(1, 2, 2))
                 .check(switchChecked(false));
     }
 

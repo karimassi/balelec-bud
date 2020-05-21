@@ -40,6 +40,7 @@ public final class FriendData extends RecyclerViewData<User, FriendViewHolder> {
     @Override
     public void bind(final int index, FriendViewHolder viewHolder) {
         viewHolder.friendName.setText(data.get(index).getDisplayName());
+        viewHolder.friendEmail.setText(data.get(index).getEmail());
         viewHolder.deleteButton.setOnClickListener(v -> {
             FriendshipUtils.removeFriend(data.get(index));
             remove(index);
