@@ -76,7 +76,7 @@ public final class FriendshipUtils {
                 sender.getUid(), updates);
     }
 
-    public static List<CompletableFuture<User>> getUsersFromUids(List<String> uidList, Database.Source preferredSource) {
+    public static List<CompletableFuture<User>> getUsersFromUids(List<String> uidList, InformationSource preferredSource) {
         final List<CompletableFuture<User>> cfs = new ArrayList<>();
         for (String uid : uidList) {
             cfs.add(FriendshipUtils.getUserFromUid(uid, preferredSource));
@@ -84,12 +84,12 @@ public final class FriendshipUtils {
         return cfs;
     }
 
-    public static CompletableFuture<User> getUserFromUid(String uid, Database.Source preferredSource) {
+    public static CompletableFuture<User> getUserFromUid(String uid, InformationSource preferredSource) {
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, uid), preferredSource);
         return getAppDatabase().query(query, User.class).thenApply(users -> users.getList().get(0));
     }
 
-    public static CompletableFuture<User> getUserFromEmail(String email, Database.Source preferredSource) {
+    public static CompletableFuture<User> getUserFromEmail(String email, InformationSource preferredSource) {
         MyQuery query = new MyQuery(Database.USERS_PATH, new MyWhereClause("email", EQUAL, email), preferredSource);
         return getAppDatabase()
                 .query(query, User.class).thenApply(users -> users.getList().get(0));

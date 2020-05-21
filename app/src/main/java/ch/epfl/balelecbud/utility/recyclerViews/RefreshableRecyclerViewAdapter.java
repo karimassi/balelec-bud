@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.DateFormatter;
-import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.utility.InformationSource;
 
 import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
 
@@ -40,12 +40,12 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
         this.data = data;
         this.itemId = itemId;
         data.setAdapter(this);
-        checkConnectivityAndReload(Database.Source.CACHE_FIRST).thenAccept(this::handleFreshness);
+        checkConnectivityAndReload(InformationSource.CACHE_FIRST).thenAccept(this::handleFreshness);
     }
 
     @VisibleForTesting //could trigger it with UI in the tests, but conceptually cleaner
     public CompletableFuture<Long> reloadData() {
-        return checkConnectivityAndReload(Database.Source.REMOTE_ONLY);
+        return checkConnectivityAndReload(InformationSource.REMOTE_ONLY);
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout refreshLayout) {
@@ -85,9 +85,9 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
         return data.size();
     }
 
-    private CompletableFuture<Long> checkConnectivityAndReload(Database.Source preferredSource) {
+    private CompletableFuture<Long> checkConnectivityAndReload(InformationSource preferredSource) {
         return BalelecbudApplication.getConnectivityChecker().isConnectionAvailable() ?
                 data.reload(preferredSource) :
-                data.reload(Database.Source.CACHE_ONLY);
+                data.reload(InformationSource.CACHE_ONLY);
     }
 }

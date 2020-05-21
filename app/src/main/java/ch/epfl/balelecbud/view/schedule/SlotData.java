@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.CompletableFutureUtils;
 import ch.epfl.balelecbud.utility.FlowUtils;
+import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
@@ -44,7 +45,7 @@ public final class SlotData extends RecyclerViewData<Slot, SlotHolder> {
     }
 
     @Override
-    public CompletableFuture<Long> reload(Database.Source preferredSource) {
+    public CompletableFuture<Long> reload(InformationSource preferredSource) {
         MyQuery query = new MyQuery(Database.CONCERT_SLOTS_PATH, new LinkedList<>(), preferredSource);
         return getAppDatabase().query(query, Slot.class)
                 .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
