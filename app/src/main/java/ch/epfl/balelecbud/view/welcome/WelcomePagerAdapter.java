@@ -40,7 +40,7 @@ public class WelcomePagerAdapter extends PagerAdapter {
 
         int resID = context
                 .getResources()
-                .getIdentifier(pages.get(position).getImage(), "drawable", context.getPackageName());
+                .getIdentifier(pages.get(position).getImageName(), "drawable", context.getPackageName());
 
         image.setImageResource(resID);
         title.setText(pages.get(position).getTitle());

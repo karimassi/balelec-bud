@@ -10,7 +10,7 @@ import java.util.Objects;
 public final class HelpPage {
 
     private String imageName;
-    private String title
+    private String title;
     private String description;
 
     public HelpPage() {}

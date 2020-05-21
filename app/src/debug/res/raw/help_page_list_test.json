@@ -1,12 +1,12 @@
 [
   {
+    "imageName": "the_name_of_the_image",
     "title": "the title of the help page",
-    "description": "what is without doubt an amazing description of the feature",
-    "id": 1
+    "description": "what is without doubt an amazing description of the feature"
   },
   {
+    "imageName": "the_name_of_the_image",
     "title": "another great title",
-    "description": "a superb description",
-    "id": 2
+    "description": "a superb description"
   }
 ]

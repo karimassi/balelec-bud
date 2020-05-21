@@ -16,6 +16,8 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.HelpPage;
 
+import static ch.epfl.balelecbud.utility.json.JsonResourceReader.getHelpPageCollection;
+
 public final class WelcomeFragment extends Fragment {
 
     private static final String TAG = WelcomeFragment.class.getSimpleName();
@@ -36,7 +38,7 @@ public final class WelcomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        List<HelpPage> pages = new LinkedList<>();
+        List<HelpPage> pages = getHelpPageCollection(R.raw.help_page);
 
         viewPager = getActivity().findViewById(R.id.welcome_view_pager);
         pagerAdapter = new WelcomePagerAdapter(BalelecbudApplication.getAppContext(), pages);

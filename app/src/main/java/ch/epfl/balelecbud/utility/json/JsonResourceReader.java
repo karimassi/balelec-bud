@@ -37,7 +37,7 @@ public final class JsonResourceReader {
      * @param resId
      * @return
      */
-    static List<HelpPage> getHelpPageCollection(int resId) {
+    public static List<HelpPage> getHelpPageCollection(int resId) {
         Type listType = new TypeToken<ArrayList<HelpPage>>(){}.getType();
         return gson.fromJson(getReader(resId), listType);
     }
