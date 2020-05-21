@@ -34,11 +34,13 @@ public final class Location implements Parcelable {
     private Double longitude;
     private Double latitude;
     private Double geoFireLocation;
+    private Long timestamp;
 
     /**
      * Empty constructor used by FireStore
      */
     public Location() { }
+
 
     /**
      * Constructor for location
@@ -47,15 +49,30 @@ public final class Location implements Parcelable {
      * @param longitude the longitude
      */
     public Location(double latitude, double longitude) {
+        this(latitude, longitude, false);
+    }
+
+    /**
+     * Constructor for location
+     *
+     * @param latitude  the latitude
+     * @param longitude the longitude
+     * @param createTimestamp if a timestamp should be created or instantiated to 1
+     */
+    public Location(double latitude, double longitude, boolean createTimestamp) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.geoFireLocation = (latitude + 90) * 180 + longitude;
+        this.timestamp = createTimestamp ? System.currentTimeMillis() : null;
     }
 
     protected Location(Parcel in) {
         latitude = in.readDouble();
         longitude = in.readDouble();
         geoFireLocation = in.readDouble();
+        timestamp = in.readLong();
+        if(timestamp == -1)
+            timestamp = null;
     }
 
     public double getLongitude() {
@@ -69,6 +86,8 @@ public final class Location implements Parcelable {
     public double getGeoFireLocation() {
         return geoFireLocation;
     }
+
+    public Long getTimestamp() {return timestamp; }
 
     /**
      * Convert the location into Mapbox's {@code LatLng}
@@ -86,6 +105,7 @@ public final class Location implements Parcelable {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        //timestamp intentionally not considered
         if (obj instanceof Location) {
             Location that = (Location) obj;
             return this.latitude.equals(that.latitude)
@@ -110,5 +130,6 @@ public final class Location implements Parcelable {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeDouble(geoFireLocation);
+        dest.writeLong(timestamp == null ? -1 : timestamp);
     }
 }

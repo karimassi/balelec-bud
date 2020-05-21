@@ -17,21 +17,24 @@ import ch.epfl.balelecbud.model.MyMap;
 import ch.epfl.balelecbud.model.MyMarker;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.DateFormatter;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 
+import static ch.epfl.balelecbud.utility.database.Database.LOCATIONS_PATH;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.alex;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.celine;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.karim;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class MapViewFragmentWithFriendTest {
     private final MockDatabase mockDB = MockDatabase.getInstance();
     private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
-    private final Location karimLocation = new Location(2, 4);
+    private final Location karimLocation = new Location(2, 4, true);
     private final Location newKarimLocation = new Location(1, 2);
     private final Location alexLocation = new Location(3, 3);
 
@@ -53,6 +56,62 @@ public class MapViewFragmentWithFriendTest {
         mockDB.resetDocument(Database.LOCATIONS_PATH);
         mockDB.resetDocument(Database.FRIENDSHIPS_PATH);
         mockDB.resetDocument(Database.FRIEND_REQUESTS_PATH);
+    }
+
+    @Test
+    public void whenLocationHaveTimestampShowItOnTheMap() throws Throwable {
+        TestAsyncUtils sync = new TestAsyncUtils();
+
+        MyMap mockMap = new MyMap() {
+            @Override
+            public MyMarker addMarker(MyMarker.Builder markerBuilder) {
+                sync.assertNotNull(markerBuilder);
+                sync.assertThat(markerBuilder.getSnippet(),
+                        is("was here at " + DateFormatter.IN_DAY.format(karimLocation.getTimestamp())));
+                sync.call();
+                return null;
+            }
+
+            @Override
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
+                sync.call();
+            }
+        };
+
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        scenario.onFragment(fragment -> fragment.onMapReady(mockMap));
+
+        sync.waitCall(2);
+        sync.assertCalled(2);
+        sync.assertNoFailedTests();
+    }
+
+    @Test
+    public void whenLocationHaveNoTimestampDoNotShowItOnTheMap() throws Throwable {
+        mockDB.storeDocumentWithID(LOCATIONS_PATH, karim.getUid(), newKarimLocation);
+        TestAsyncUtils sync = new TestAsyncUtils();
+
+        MyMap mockMap = new MyMap() {
+            @Override
+            public MyMarker addMarker(MyMarker.Builder markerBuilder) {
+                sync.assertNotNull(markerBuilder);
+                sync.assertNull(markerBuilder.getSnippet());
+                sync.call();
+                return null;
+            }
+
+            @Override
+            public void initialiseMap(boolean locationEnabled, Location defaultLocation, double zoom) {
+                sync.call();
+            }
+        };
+
+        FragmentScenario<MapViewFragment> scenario = FragmentScenario.launchInContainer(MapViewFragment.class);
+        scenario.onFragment(fragment -> fragment.onMapReady(mockMap));
+
+        sync.waitCall(2);
+        sync.assertCalled(2);
+        sync.assertNoFailedTests();
     }
 
     @Test

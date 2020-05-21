@@ -32,6 +32,7 @@ public interface MyMarker {
         private Location location;
         private String title;
         private MarkerType type;
+        private String snippet;
 
         /**
          * Set the location for the marker under construction
@@ -68,6 +69,17 @@ public interface MyMarker {
         }
 
         /**
+         * Set the snippet of the marker under construction
+         *
+         * @param snippet the snippet
+         * @return        this builder
+         */
+        public Builder snippet(String snippet) {
+            this.snippet = snippet;
+            return this;
+        }
+
+        /**
          * Return the location of the marker under construction
          *
          * @return the location or {@code null} if it has not been set yet
@@ -95,6 +107,15 @@ public interface MyMarker {
         }
 
         /**
+         * Return the snippet of the marker under construction
+         *
+         * @return the snippet or {@code null} if it has not been set yet
+         */
+        public String getSnippet() {
+            return this.snippet;
+        }
+
+        /**
          * Transform this builder into a {@code MapboxMarkerOption}
          *
          * @return this converted builder
@@ -103,14 +124,17 @@ public interface MyMarker {
         public MarkerOptions toMapboxMarkerOptions() {
             MarkerOptions result = new MarkerOptions();
             if (title != null) {
-                result = result.title(title);
+                result.title(title);
             }
-            result = result.position(requireNonNull(location).toLatLng());
+            result.position(requireNonNull(location).toLatLng());
             if (type != null) {
                 Drawable iconDrawable = ContextCompat.getDrawable(getAppContext(), type.getDrawableId());
                 Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
                 IconFactory iconFactory = IconFactory.getInstance(getAppContext());
-                result = result.icon(iconFactory.fromBitmap(bitmap));
+                result.icon(iconFactory.fromBitmap(bitmap));
+            }
+            if (snippet != null) {
+                result.setSnippet(snippet);
             }
             return result;
         }
