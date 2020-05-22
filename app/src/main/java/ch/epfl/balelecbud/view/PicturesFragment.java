@@ -96,6 +96,7 @@ public final class PicturesFragment extends Fragment {
                 CompletableFuture<UploadTask.TaskSnapshot> imageUplaod = getAppStorage().putFile(filename,imageBitmap );
                 imageUplaod.whenComplete((snapshot, t) -> {
                     Log.d("tag", "Image uploaded " + filename+": "+snapshot.getBytesTransferred());
+                    Toast.makeText(getActivity(), R.string.pic_uploaded_message, Toast.LENGTH_SHORT).show();
                 });
             }
         }
