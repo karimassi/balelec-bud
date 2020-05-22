@@ -2,8 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="ring"
-            android:innerRadius="0dp"
-            android:thickness="4dp"
+            android:innerRadius="@dimen/indicator_inner_radius"
+            android:thickness="@dimen/indicator_thickness"
             android:useLevel="false">
 
             <solid android:color="@color/grey" />

@@ -57,4 +57,19 @@
     <dimen name="item_track_artist_size">17sp</dimen>
     <dimen name="item_track_artist_margin">8dp</dimen>
     <dimen name="fragment_playlist_message_size">15sp</dimen>
+
+    <!-- WELCOME SCREEN -->
+    <dimen name="indicator_inner_radius">0dp</dimen>
+    <dimen name="indicator_thickness">4dp</dimen>
+    <dimen name="welcome_fragment_height">0dp</dimen>
+    <dimen name="welcome_pager_weight">0.95</dimen>
+    <dimen name="welcome_indicator_weight">0.05</dimen>
+    <dimen name="welcome_indicator_width">122dp</dimen>
+    <dimen name="welcome_page_margin">20dp</dimen>
+    <dimen name="welcome_page_image_height">200dp</dimen>
+    <dimen name="welcome_page_image_margin">30dp</dimen>
+    <dimen name="welcome_page_title_margin">30dp</dimen>
+    <dimen name="welcome_page_description_margin">50dp</dimen>
+    <dimen name="welcome_page_description_padding">10dp</dimen>
+    <dimen name="welcome_page_text_spacing">5dp</dimen>
 </resources>

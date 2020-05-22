@@ -13,15 +13,15 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/welcome_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.95"/>
+        android:layout_height="@dimen/welcome_fragment_height"
+        android:layout_weight="@dimen/welcome_pager_weight"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/welcome_tab_indicator"
         app:tabBackground="@drawable/indicator_selector"
-        android:layout_width="122dp"
-        android:layout_height="0dp"
-        android:layout_weight="0.05"
+        android:layout_width="@dimen/welcome_indicator_width"
+        android:layout_height="@dimen/welcome_fragment_height"
+        android:layout_weight="@dimen/welcome_indicator_weight"
         app:layout_constraintEnd_toEndOf="parent" >
     </com.google.android.material.tabs.TabLayout>
 </LinearLayout>

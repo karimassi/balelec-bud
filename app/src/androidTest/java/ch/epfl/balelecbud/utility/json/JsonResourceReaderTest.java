@@ -7,8 +7,7 @@ import java.util.List;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.HelpPage;
 
-import static org.testng.AssertJUnit.assertEquals;
-
+import static org.testng.Assert.assertEquals;
 
 public class JsonResourceReaderTest {
 

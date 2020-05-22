@@ -18,12 +18,12 @@ import ch.epfl.balelecbud.model.HelpPage;
 /**
  * Class adapting a page displayed in the welcome fragment
  */
-public class WelcomePagerAdapter extends PagerAdapter {
+public final class WelcomePagerAdapter extends PagerAdapter {
 
     private Context context;
     private List<HelpPage> pages;
 
-    public WelcomePagerAdapter(Context context, List<HelpPage> pages) {
+    WelcomePagerAdapter(Context context, List<HelpPage> pages) {
         this.context = context;
         this.pages = pages;
     }
