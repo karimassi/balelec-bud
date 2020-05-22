@@ -1,5 +1,9 @@
 package ch.epfl.balelecbud.utility.storage;
 
+import android.graphics.Bitmap;
+
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -16,5 +20,7 @@ public interface Storage {
     CompletableFuture<File> getFile(String path);
 
     CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source);
+
+    CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image);
 
 }

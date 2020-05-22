@@ -1,9 +1,16 @@
 package ch.epfl.balelecbud.utility.storage;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.google.firebase.storage.StorageReference;
+import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -48,6 +55,24 @@ public final class FirebaseStorage implements Storage {
         return new TaskToCompletableFutureAdapter<>(ref.listAll())
                 .thenApply(listResult ->
                         listResult.getItems().stream().map(StorageReference::getPath).collect(Collectors.toList()));
+    }
+
+    @Override
+    public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filename, Bitmap image){
+        CompletableFuture<UploadTask.TaskSnapshot> future = new CompletableFuture<>();
+        StorageReference storageRef = firebaseStorage.getReference();
+        StorageReference picRef = storageRef.child(filename);
+
+        try {
+            final File localFile = File.createTempFile("images", "jpg");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            future = new TaskToCompletableFutureAdapter<UploadTask.TaskSnapshot>(picRef.putBytes(data));
+        } catch (IOException e) {
+            future.completeExceptionally(e);
+        }
+        return future;
     }
 }
 

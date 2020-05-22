@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,12 +24,17 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.DateFormatter;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 
 public final class PicturesFragment extends Fragment {
 
@@ -83,6 +90,13 @@ public final class PicturesFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
                 Log.d("tag", "Absolute Url of Image is " + Uri.fromFile(f));
+                String filename = f.getName();
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                CompletableFuture<UploadTask.TaskSnapshot> imageUplaod = getAppStorage().putFile(filename,imageBitmap );
+                imageUplaod.whenComplete((snapshot, t) -> {
+                    Log.d("tag", "Image uploaded " + filename+": "+snapshot.getBytesTransferred());
+                });
             }
         }
 
