@@ -19,7 +19,8 @@
         <ImageView
             android:id="@+id/welcome_view_image"
             android:layout_width="match_parent"
-            android:layout_height="163dp"
+            android:layout_height="234dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +37,7 @@
             android:textColor="@color/design_default_color_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_tab_indicators" />
+            app:layout_constraintTop_toBottomOf="@+id/welcome_view_image" />
 
         <TextView
             android:id="@+id/welcome_view_description"

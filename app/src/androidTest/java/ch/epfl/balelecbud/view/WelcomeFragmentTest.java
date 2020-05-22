@@ -53,14 +53,21 @@ public class WelcomeFragmentTest {
     }
 
     @Test
+    public void tabIndicatorIsDisplayed() {
+        onView(ViewMatchers.withId(R.id.welcome_tab_indicator)).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testPageViewer() {
         List<HelpPage> pages = getHelpPageCollection(R.raw.help_page);
         onView(withId(R.id.welcome_view_pager)).check(matches(hasDescendant(withText(pages.get(0).getTitle()))));
+        onView(withId(R.id.welcome_view_pager)).check(matches(hasDescendant(withText(pages.get(0).getDescription()))));
 
         onView(withId(R.id.welcome_view_pager)).perform(ViewActions.swipeLeft());
         SystemClock.sleep(500);
 
         onView(withId(R.id.welcome_view_pager)).check(matches(hasDescendant(withText(pages.get(1).getTitle()))));
+        onView(withId(R.id.welcome_view_pager)).check(matches(hasDescendant(withText(pages.get(1).getDescription()))));
     }
 
     @Test
@@ -71,5 +78,6 @@ public class WelcomeFragmentTest {
         SystemClock.sleep(500);
 
         onView(withId(R.id.welcome_view_pager)).check(matches(hasDescendant(withText(pages.get(1).getTitle()))));
+        onView(withId(R.id.welcome_view_pager)).check(matches(hasDescendant(withText(pages.get(1).getDescription()))));
     }
 }
