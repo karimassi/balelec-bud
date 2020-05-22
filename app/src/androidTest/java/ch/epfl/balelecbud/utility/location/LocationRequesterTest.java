@@ -75,7 +75,7 @@ public class LocationRequesterTest {
         onView(withId(R.id.root_activity_drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
         device.waitForIdle();
         onView(withId(R.id.root_activity_nav_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_settings));
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.fragment_main_drawer_settings));
         device.waitForIdle();
     }
 

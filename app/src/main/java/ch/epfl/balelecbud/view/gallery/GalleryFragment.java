@@ -31,7 +31,7 @@ public final class GalleryFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        RecyclerView rvGallery = getView().findViewById(R.id.galleryRecyclerView);
+        RecyclerView rvGallery = getView().findViewById(R.id.gallery_recycler_view);
         View freshnessView = getView().findViewById(R.id.freshness_info_layout);
 
 

@@ -72,7 +72,7 @@ public class AnonymousTest {
 
     @Test
     public void whenNotSignedInSocialIsDisable() {
-        openFragment(R.id.activity_main_drawer_social);
+        openFragment(R.id.fragment_main_drawer_social);
         onView(withText(R.string.require_sign_in))
                 .inRoot(CustomMatcher.isToast())
                 .check(matches(isDisplayed()));
@@ -82,7 +82,7 @@ public class AnonymousTest {
     @Test
     public void whenNotSignedInMapWorks() {
         MapViewFragment.setMockCallback(mapboxMap -> {});
-        openFragment(R.id.activity_main_drawer_map);
+        openFragment(R.id.fragment_main_drawer_map);
         onView(withId(R.id.map_view)).check(matches(isDisplayed()));
     }
 }

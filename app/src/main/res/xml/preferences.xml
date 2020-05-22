@@ -4,28 +4,34 @@
 
     <SwitchPreferenceCompat
         app:key="@string/location_enable_key"
-        app:title="@string/location_enable_title"/>
+        app:title="@string/location_enable_title"
+        app:layout="@layout/item_preferences"/>
 
     <Preference
         app:key="@string/location_info_key"
         app:title="@string/location_info_title"
-        app:summary="@string/location_info_summary"/>
+        app:summary="@string/location_info_summary"
+        app:layout="@layout/item_preferences"/>
 
     <Preference
         app:key="@string/sign_in_key"
         app:title="@string/not_sign_in"
-        app:summary="@string/click_to_sign_in"/>
+        app:summary="@string/click_to_sign_in"
+        app:layout="@layout/item_preferences"/>
 
     <Preference
         app:key="@string/sign_out_key"
-        app:title="@string/sign_out_text"/>
+        app:title="@string/sign_out_text"
+        app:layout="@layout/item_preferences"/>
 
     <Preference
         app:key="@string/delete_user_key"
-        app:title="@string/delete_account"/>
+        app:title="@string/delete_account"
+        app:layout="@layout/item_preferences"/>
 
     <Preference
         app:key="@string/connection_key"
-        app:title="@string/connecting"/>
+        app:title="@string/connecting"
+        app:layout="@layout/item_preferences"/>
 
 </PreferenceScreen>

@@ -9,36 +9,46 @@
     android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
     android:background="@drawable/round_corner_background"
     android:orientation="horizontal"
+    android:gravity="center"
     android:paddingLeft="@dimen/rv_item_side_padding"
     android:paddingTop="@dimen/rv_item_top_bottom_padding"
     android:paddingRight="@dimen/rv_item_side_padding"
     android:paddingBottom="@dimen/rv_item_top_bottom_padding">
 
-    <TextView
-        android:id="@+id/text_view_friend_item_name"
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="bottom"
-        android:fontFamily="@font/old_sans_black"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/friend_name_size" />
+        android:layout_height="match_parent"
+        android:layout_weight="0.9"
+        android:gravity="center|start"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_view_friend_item_email"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="bottom"
-        android:fontFamily="@font/old_sans_black"
-        android:textColor="@android:color/white"/>
+        <TextView
+            android:id="@+id/text_view_friend_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:fontFamily="@font/proxima_nova_bold"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/rv_item_subtitle" />
 
+        <TextView
+            android:id="@+id/text_view_friend_item_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:fontFamily="@font/proxima_nova"
+            android:textSize="@dimen/rv_item_text"
+            android:textColor="@android:color/white"/>
 
-    <Button
+    </LinearLayout>
+
+    <ImageButton
         android:id="@+id/buttonDeleteFriendItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/remove_friend" />
+        android:layout_weight="0.1"
+        android:src="@drawable/icon_cancel"
+        android:contentDescription="@string/remove_friend"
+        style="?android:attr/borderlessButtonStyle"/>
 
 </LinearLayout>
