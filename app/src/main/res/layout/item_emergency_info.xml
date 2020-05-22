@@ -9,7 +9,7 @@
     android:layout_marginRight="@dimen/rv_item_side_margin"
     android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
     android:background="@drawable/round_corner_background"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/rv_item_side_padding"
     android:paddingTop="@dimen/rv_item_top_bottom_padding"
     android:paddingRight="@dimen/rv_item_side_padding"
@@ -17,21 +17,26 @@
 
     <TextView
         android:id="@+id/emergencyInfoName"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.4"
-        android:textSize="@dimen/emergencies_title_size"
-        android:fontFamily="@font/old_sans_black"
+        android:textSize="@dimen/rv_item_subtitle"
+        android:fontFamily="@font/proxima_nova_bold"
         android:textColor="@android:color/white" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="3dp"
+        android:background="@color/secondaryColor" />
+
 
     <TextView
         android:id="@+id/emergencyInfoInstruction"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.6"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:fontFamily="@font/old_sans_black"
+        android:textSize="@dimen/rv_item_text"
+        android:fontFamily="@font/proxima_nova"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

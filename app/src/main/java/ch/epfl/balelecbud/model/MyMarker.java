@@ -128,6 +128,7 @@ public interface MyMarker {
             }
             result.position(requireNonNull(location).toLatLng());
             if (type != null) {
+
                 Drawable iconDrawable = ContextCompat.getDrawable(getAppContext(), type.getDrawableId());
                 Bitmap bitmap = ((BitmapDrawable) iconDrawable).getBitmap();
                 IconFactory iconFactory = IconFactory.getInstance(getAppContext());

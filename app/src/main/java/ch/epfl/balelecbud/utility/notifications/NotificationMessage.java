@@ -53,7 +53,7 @@ public final class NotificationMessage implements NotificationInterface<Map<Stri
                 .setContentTitle(object.get(getAppContext().getString(R.string.data_key_title)))
                 .setContentText(object.get(getAppContext().getString(R.string.data_key_body)))
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.my_notification_icone)
+                .setSmallIcon(R.drawable.icon_friend_request)
                 .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageView android:id="@+id/galleryImageView"
-    android:layout_width="150dp"
-    android:padding="5dp"
+    android:layout_width="@dimen/gallery_item_width"
+    android:layout_height="@dimen/gallery_item_width"
     android:scaleType="fitXY"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
     android:visibility="visible"
-    android:layout_height="150dp"
     xmlns:android="http://schemas.android.com/apk/res/android" />

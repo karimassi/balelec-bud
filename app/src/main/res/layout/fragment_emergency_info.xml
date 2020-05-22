@@ -5,14 +5,14 @@
     android:id="@+id/emergency_info_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blek_blue"
+    android:background="@android:color/black"
     android:gravity="center"
     android:orientation="vertical">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blek_blue"
+        android:background="@android:color/black"
         android:orientation="vertical">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <ScrollView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fillViewport="true">
 
@@ -30,42 +30,43 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-
                     <TextView
                         android:id="@+id/emergency_info_numbers_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/rv_top_padding"
+                        android:paddingBottom="@dimen/rv_top_padding"
                         android:text="@string/emergency_numbers_title"
-                        android:textSize="@dimen/emergencies_title_size"
-                        android:fontFamily="@font/old_sans_black"
-                        android:textColor="@android:color/white" />
+                        android:textSize="@dimen/rv_item_subtitle"
+                        android:gravity="center"
+                        android:fontFamily="@font/proxima_nova_bold"
+                        android:textColor="@color/primaryColor" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_emergency_numbers"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/recycler_view_margin"
-                        android:layout_marginRight="@dimen/recycler_view_margin"
                         app:layoutManager="LinearLayoutManager"
                         tools:context=".EmergencyInformationActivity"
-                        tools:listitem="@layout/item_emergency_info" />
+                        tools:listitem="@layout/item_emergency_number" />
 
                     <TextView
                         android:id="@+id/emergency_info_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/rv_top_padding"
+                        android:paddingBottom="@dimen/rv_top_padding"
                         android:text="@string/emergency_information_title"
-                        android:textSize="@dimen/emergencies_title_size"
-                        android:fontFamily="@font/old_sans_black"
-                        android:textColor="@android:color/white" />
+                        android:textSize="@dimen/rv_item_subtitle"
+                        android:gravity="center"
+                        android:fontFamily="@font/proxima_nova_bold"
+                        android:textColor="@color/primaryColor" />
 
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_emergency_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/recycler_view_margin"
-                        android:layout_marginRight="@dimen/recycler_view_margin"
                         app:layoutManager="LinearLayoutManager"
                         tools:context=".EmergencyInformationActivity"
                         tools:listitem="@layout/item_emergency_info" />
@@ -85,9 +86,10 @@
             android:clickable="true"
             android:focusable="true"
             app:elevation="@dimen/floating_action_button_elevation"
-            app:maxImageSize="56dp"
-            app:srcCompat="@mipmap/help" />
-
+            app:maxImageSize="30dp"
+            app:backgroundTintMode="add"
+            app:backgroundTint="@color/primaryDarkColor"
+            android:src="@drawable/icon_emergency"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,14 +7,14 @@ import ch.epfl.balelecbud.R;
  */
 public enum MarkerType {
 
-    FRIEND("Friend", R.drawable.friend_icon),
-    BAR("Bar", R.drawable.poi_bar_icon),
-    FOOD("Food", R.drawable.poi_food_icon),
-    FIRST_AID("First aid", R.drawable.poi_firstaid),
-    ATM("ATM", R.drawable.poi_atm),
-    STAGE("Stage", R.drawable.poi_stage),
-    WC("WC", R.drawable.poi_wc),
-    NO_TYPE("None", R.drawable.map);
+    FRIEND("Friend", R.drawable.icon_map_friend),
+    BAR("Bar", R.drawable.icon_map_bar),
+    FOOD("Food", R.drawable.icon_map_food),
+    FIRST_AID("First aid", R.drawable.icon_map_first_aid),
+    ATM("ATM", R.drawable.icon_map_atm),
+    STAGE("Stage", R.drawable.icon_map_stage),
+    WC("WC", R.drawable.icon_map_wc),
+    NO_TYPE("None", R.drawable.icon_map_poi);
 
     private String type;
     private int drawableId;

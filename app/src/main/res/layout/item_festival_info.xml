@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/rv_item_side_margin"
-    android:layout_marginTop="@dimen/festival_info_item_top_bottom_margin"
+    android:layout_marginTop="@dimen/rv_item_top_bottom_margin"
     android:layout_marginRight="@dimen/rv_item_side_margin"
-    android:layout_marginBottom="@dimen/festival_info_item_top_bottom_margin"
+    android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
     android:background="@drawable/round_corner_background"
     android:orientation="vertical"
     android:paddingLeft="@dimen/rv_item_side_padding"
@@ -18,23 +18,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:fontFamily="@font/old_sans_black"
+        android:fontFamily="@font/proxima_nova_bold"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/festival_information_title_size" />
+        android:textSize="@dimen/rv_item_title" />
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="3dp"
-        android:background="#ffffff" />
+        android:background="@color/secondaryColor" />
 
     <TextView
         android:id="@+id/festivalInfoContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:fontFamily="@font/old_sans_black"
+        android:fontFamily="@font/proxima_nova"
+        android:textSize="@dimen/rv_item_text"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

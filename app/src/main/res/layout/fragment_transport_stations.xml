@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
+    android:background="@android:color/black"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,10 +14,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_transport_stations"
+            android:paddingTop="@dimen/rv_top_padding"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/recycler_view_margin"
-            android:layout_marginRight="@dimen/recycler_view_margin"
             app:layoutManager="LinearLayoutManager"
             tools:context=".view.transport.TransportStationsFragment"
             tools:listitem="@layout/item_transport_station" />

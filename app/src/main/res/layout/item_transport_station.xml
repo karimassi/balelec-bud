@@ -18,9 +18,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.8"
-        android:textSize="@dimen/departure_title_size"
-        android:gravity="center_vertical"
-        android:fontFamily="@font/old_sans_black"
+        android:textSize="@dimen/rv_item_subtitle"
+        android:gravity="center|start"
+        android:fontFamily="@font/proxima_nova_bold"
         android:textColor="@android:color/white"/>
 
     <TextView
@@ -28,9 +28,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.2"
-        android:gravity="end"
-        android:textAlignment="viewEnd"
-        android:fontFamily="@font/old_sans_black"
+        android:gravity="center|end"
+        android:fontFamily="@font/proxima_nova"
+        android:textSize="@dimen/rv_item_text"
         android:textColor="@android:color/white"/>
 
 </LinearLayout>
