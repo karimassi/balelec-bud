@@ -6,7 +6,7 @@
             android:thickness="@dimen/indicator_thickness"
             android:useLevel="false">
 
-            <solid android:color="@android:color/white" />
+            <solid android:color="@color/secondaryColor" />
         </shape>
     </item>
 </layer-list>
