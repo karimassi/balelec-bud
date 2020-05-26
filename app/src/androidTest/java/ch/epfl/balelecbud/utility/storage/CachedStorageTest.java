@@ -1,5 +1,9 @@
 package ch.epfl.balelecbud.utility.storage;
 
+import android.graphics.Bitmap;
+
+import com.google.firebase.storage.UploadTask;
+
 import org.junit.Test;
 
 import java.io.File;
@@ -54,6 +58,11 @@ public class CachedStorageTest {
             public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
                 return null;
             }
+
+            @Override
+            public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) throws IOException {
+                return null;
+            }
         };
         Cache mockCache = new Cache() {
             @Override
@@ -104,6 +113,11 @@ public class CachedStorageTest {
 
         @Override
         public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
+            return null;
+        }
+
+        @Override
+        public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) {
             return null;
         }
     }

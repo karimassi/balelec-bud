@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.testing.FragmentScenario;
@@ -18,9 +19,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.storage.MockStorage;
 import ch.epfl.balelecbud.view.PicturesFragment;
 
 import static android.app.Instrumentation.ActivityResult;
@@ -37,6 +41,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 public class PicturesFragmentTest {
 
     private FragmentScenario<PicturesFragment> scenario;
+    private final MockStorage mockStorage = new MockStorage();
 
     @Rule
     public GrantPermissionRule permissionRuleCamera = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -44,6 +49,8 @@ public class PicturesFragmentTest {
 
     @Before
     public void setUp(){
+        mockStorage.setAccessCount(0);
+        BalelecbudApplication.setAppStorage(mockStorage);
         scenario = FragmentScenario.launchInContainer(PicturesFragment.class);
     }
 
@@ -84,6 +91,43 @@ public class PicturesFragmentTest {
         intending(toPackage("com.android.camera2")).respondWith(result);
         onView(withId(R.id.takePicBtn)).perform(click());
         intended(toPackage("com.android.camera2"));
+        scenario.onFragment(fragment -> {
+                    File file = null;
+                    try {
+                        file = mockStorage.getFile("test").get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    sync.assertNotNull(file);
+            });
+
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
+        Intents.release();
+    }
+
+
+    @Test
+    public void buttonIsDisplayed() {
+        onView(withId(R.id.takePicBtn)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void cameraIsSendingToFirebaseStorage() throws InterruptedException {
+        TestAsyncUtils sync = new TestAsyncUtils();
+        Intents.init();
+        Bundle bundle = new Bundle();
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ALPHA_8);
+        bundle.putParcelable("IMG_DATA", bitmap );
+        Intent resultImg = new Intent();
+        resultImg.putExtras(bundle);
+        ActivityResult result = new ActivityResult(Activity.RESULT_OK, resultImg);
+        intending(toPackage("com.android.camera2")).respondWith(result);
+        onView(withId(R.id.takePicBtn)).perform(click());
+        intended(toPackage("com.android.camera2"));
 
         scenario.onFragment(fragment -> {
             File file = fragment.getActivity().getFilesDir();
@@ -101,12 +145,6 @@ public class PicturesFragmentTest {
         sync.assertCalled(1);
         sync.assertNoFailedTests();
         Intents.release();
-    }
-
-
-    @Test
-    public void buttonIsDisplayed() {
-        onView(withId(R.id.takePicBtn)).check(matches(isDisplayed()));
     }
 
 }

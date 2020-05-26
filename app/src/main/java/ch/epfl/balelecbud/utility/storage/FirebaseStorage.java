@@ -63,15 +63,11 @@ public final class FirebaseStorage implements Storage {
         StorageReference storageRef = firebaseStorage.getReference();
         StorageReference picRef = storageRef.child(filename);
 
-        try {
-            final File localFile = File.createTempFile("images", "jpg");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-            future = new TaskToCompletableFutureAdapter<UploadTask.TaskSnapshot>(picRef.putBytes(data));
-        } catch (IOException e) {
-            future.completeExceptionally(e);
-        }
+        //  final File localFile = File.createTempFile("images", "jpg");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        future = new TaskToCompletableFutureAdapter<UploadTask.TaskSnapshot>(picRef.putBytes(data));
         return future;
     }
 }

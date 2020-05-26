@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -21,6 +22,6 @@ public interface Storage {
 
     CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source);
 
-    CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image);
+    CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) throws IOException;
 
 }

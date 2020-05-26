@@ -1,7 +1,13 @@
 package ch.epfl.balelecbud.utility.storage;
 
+import android.graphics.Bitmap;
+
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -37,6 +43,23 @@ public class MockStorage implements Storage {
         CompletableFuture<List<String>> future = new CompletableFuture<>();
         future.complete(list);
         return future;
+    }
+
+    @Override
+    public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) throws IOException {
+
+        File f = File.createTempFile("filname", "jpg");
+        f.createNewFile();
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+        FileOutputStream fos = new FileOutputStream(f);
+        fos.write(bitmapdata);
+        fos.flush();
+        fos.close();
+        CompletableFuture<UploadTask.TaskSnapshot> future = new CompletableFuture<>();
+        return future ;
     }
 
     private File createFile() {

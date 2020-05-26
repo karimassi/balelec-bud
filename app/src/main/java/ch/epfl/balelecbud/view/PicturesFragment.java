@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.DateFormatter;
@@ -93,7 +94,12 @@ public final class PicturesFragment extends Fragment {
                 String filename = f.getName();
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                CompletableFuture<UploadTask.TaskSnapshot> imageUplaod = getAppStorage().putFile(filename,imageBitmap );
+                CompletableFuture<UploadTask.TaskSnapshot> imageUplaod = null;
+                try {
+                    imageUplaod = getAppStorage().putFile(filename,imageBitmap );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 imageUplaod.whenComplete((snapshot, t) -> {
                     Log.d("tag", "Image uploaded " + filename+": "+snapshot.getBytesTransferred());
                     Toast.makeText(getActivity(), R.string.pic_uploaded_message, Toast.LENGTH_SHORT).show();

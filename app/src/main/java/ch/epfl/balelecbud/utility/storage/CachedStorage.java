@@ -1,6 +1,9 @@
 package ch.epfl.balelecbud.utility.storage;
 
+import android.graphics.Bitmap;
 import android.util.Log;
+
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +58,11 @@ public final class CachedStorage implements Storage {
                 res.complete(new LinkedList<>());
                 return res;
         }
+    }
+
+    @Override
+    public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) {
+        return null;
     }
 
 }
