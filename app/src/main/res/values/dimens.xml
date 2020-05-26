@@ -1,60 +1,48 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
 
+    <dimen name="rv_top_padding">10dp</dimen>
     <dimen name="recycler_view_margin">20dp</dimen>
     <dimen name="rv_item_side_padding">10dp</dimen>
     <dimen name="rv_item_top_bottom_padding">5dp</dimen>
-    <dimen name="rv_item_side_margin">10dp</dimen>
-    <dimen name="rv_item_top_bottom_margin">5dp</dimen>
-
+    <dimen name="rv_item_side_margin">15dp</dimen>
+    <dimen name="rv_item_top_bottom_margin">10dp</dimen>
+    
+    <dimen name="rv_item_title">30sp</dimen>
+    <dimen name="rv_item_subtitle">20sp</dimen>
+    <dimen name="rv_item_text">15sp</dimen>
 
     <dimen name="text_view_drawable_padding">4dp</dimen>
 
-    <dimen name="floating_action_button_margin">15dp</dimen>
+    <dimen name="floating_action_button_margin">20dp</dimen>
     <dimen name="floating_action_button_elevation">20dp</dimen>
-
-    <!--  FESTIVAL INFORMATION  -->
-    <dimen name="festival_information_title_size">20sp</dimen>
-    <dimen name="festival_info_item_top_bottom_margin">10dp</dimen>
-
-    <!--  TRANSPORT  -->
-    <dimen name="departure_title_size">20sp</dimen>
-    <dimen name="departure_line_number_size">20sp</dimen>
-
-    <!--  SCHEDULE  -->
-    <dimen name="slot_artist_size">30sp</dimen>
-    <dimen name="schedule_item_top_bottom_margin">10dp</dimen>
-    <dimen name="schedule_item_top_bottom_padding">10dp</dimen>
 
     <!--  SOCIAL  -->
     <dimen name="view_pager_top_bottom_padding">10dp</dimen>
-    <dimen name="friend_name_size">20sp</dimen>
-
-    <!--  EMERGENCIES  -->
-    <dimen name="emergencies_title_size">20sp</dimen>
-
-    <dimen name="welcome_text_size">30sp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
-    <dimen name="transport_icon_size">24px</dimen>
-    <dimen name="emergency_button_margin_top">58dp</dimen>
-    <dimen name="emergency_button_margin_bottom">420dp</dimen>
-    <dimen name="emergency_text_margin_top">186dp</dimen>
-    <dimen name="emergency_text_margin_bottom">30dp</dimen>
-    <dimen name="emergency_button_constraint_hor_bias">0.498</dimen>
+
     <dimen name="map_camera_zoom">12</dimen>
-    <dimen name="poi_margin">16dp</dimen>
-    <dimen name="emergency_nb_width">399dp</dimen>
-    <dimen name="emergency_nb_height">640dp</dimen>
-    <dimen name="emergency_nb_margin_top">66dp</dimen>
-    <dimen name="emergency_nb_margin_bottom">25dp</dimen>
-    <dimen name="round_corner_radius">10dp</dimen>
+
+    <!--  GALLERY  -->
+    <dimen name="gallery_item_width">150dp</dimen>
 
     <!-- SPOTIFY PLAYLIST -->
     <dimen name="item_track_padding">10dp</dimen>
-    <dimen name="item_track_margin">5dp</dimen>
     <dimen name="item_track_image_size">60dp</dimen>
-    <dimen name="item_track_title_size">20sp</dimen>
-    <dimen name="item_track_artist_size">17sp</dimen>
     <dimen name="item_track_artist_margin">8dp</dimen>
-    <dimen name="fragment_playlist_message_size">15sp</dimen>
+
+    <!-- WELCOME SCREEN -->
+    <dimen name="indicator_inner_radius">0dp</dimen>
+    <dimen name="indicator_thickness">4dp</dimen>
+    <dimen name="welcome_fragment_height">0dp</dimen>
+    <dimen name="welcome_pager_weight">0.95</dimen>
+    <dimen name="welcome_indicator_weight">0.05</dimen>
+    <dimen name="welcome_indicator_width">122dp</dimen>
+    <dimen name="welcome_page_margin">20dp</dimen>
+    <dimen name="welcome_page_image_height">200dp</dimen>
+    <dimen name="welcome_page_image_margin">30dp</dimen>
+    <dimen name="welcome_page_title_margin">5dp</dimen>
+    <dimen name="welcome_page_description_margin">45dp</dimen>
+    <dimen name="welcome_page_description_padding">10dp</dimen>
+    <dimen name="welcome_page_text_spacing">6dp</dimen>
 </resources>

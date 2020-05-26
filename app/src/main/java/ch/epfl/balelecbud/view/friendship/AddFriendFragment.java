@@ -6,13 +6,17 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
@@ -20,6 +24,8 @@ import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.StringUtils;
+
+import static android.app.AlertDialog.THEME_DEVICE_DEFAULT_DARK;
 
 public final class AddFriendFragment extends DialogFragment {
 
@@ -39,7 +45,7 @@ public final class AddFriendFragment extends DialogFragment {
         editTextAddFriend.addTextChangedListener(watcher);
 
         builder.setView(view)
-                .setTitle(R.string.add_friend_title)
+                .setCustomTitle(getDialogCustomTitle())
                 .setPositiveButton(R.string.add_friend_request, (dialog, id) -> {
                     if (validateEmail()) {
                         FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), InformationSource.REMOTE_ONLY)
@@ -85,5 +91,16 @@ public final class AddFriendFragment extends DialogFragment {
             return false;
         }
         return true;
+    }
+
+    private TextView getDialogCustomTitle() {
+        TextView title = new TextView(getContext());
+        title.setText(R.string.add_friend_title);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        title.setPaddingRelative(0, 10, 0, 10);
+        title.setGravity(Gravity.CENTER_VERTICAL);
+        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        return title;
     }
 }

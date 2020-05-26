@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".view.transport.TransportFragment"
     android:gravity="center"
-    android:background="@color/blek_blue">
+    android:background="@android:color/black">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"

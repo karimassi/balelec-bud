@@ -35,7 +35,7 @@ public class GalleryFragmentTest {
 
     @Test
     public void testRecyclerViewVisible() {
-        onView(ViewMatchers.withId(R.id.galleryRecyclerView)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.gallery_recycler_view)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -56,14 +56,14 @@ public class GalleryFragmentTest {
     @Test
     public void testImagesAreRetrievedFromMockStorage(){
         refreshRecyclerView();
-        onView(ViewMatchers.withId(R.id.galleryRecyclerView)).check(matches(hasChildCount(9)));
+        onView(ViewMatchers.withId(R.id.gallery_recycler_view)).check(matches(hasChildCount(9)));
     }
 
     @Test
     public void testImagesAreBindedToView(){
         refreshRecyclerView();
         for(int i = 0 ; i < 9 ; ++i){
-            onView(nthChildOf(withId(R.id.galleryRecyclerView), i)).check(matches(isDisplayed()));
+            onView(nthChildOf(withId(R.id.gallery_recycler_view), i)).check(matches(isDisplayed()));
         }
     }
 

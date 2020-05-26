@@ -53,7 +53,7 @@ public class PointOfInterestToMapButtonTest {
     @Before
     public void openPOI() {
         onView(withId(R.id.root_activity_drawer_layout)).perform(DrawerActions.open());
-        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.activity_main_drawer_poi));
+        onView(withId(R.id.root_activity_nav_view)).perform(NavigationViewActions.navigateTo(R.id.fragment_main_drawer_poi));
     }
 
     private void clickOnButtonAndCheckMapOpen(int i) {

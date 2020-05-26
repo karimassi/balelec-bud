@@ -10,6 +10,7 @@
     android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
     android:background="@drawable/round_corner_background"
     android:orientation="horizontal"
+    android:gravity="center"
     android:paddingLeft="@dimen/rv_item_side_padding"
     android:paddingTop="@dimen/rv_item_top_bottom_padding"
     android:paddingRight="@dimen/rv_item_side_padding"
@@ -19,19 +20,21 @@
         android:id="@+id/emergencyInfoName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.7"
-        android:textSize="@dimen/emergencies_title_size"
-        android:fontFamily="@font/old_sans_black"
+        android:layout_weight="0.8"
+        android:textAlignment="viewStart"
+        android:textSize="@dimen/rv_item_subtitle"
+        android:fontFamily="@font/proxima_nova_bold"
         android:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/emergencyInfoInstruction"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.3"
+        android:layout_weight="0.2"
         android:textAlignment="viewEnd"
         android:gravity="end"
-        android:fontFamily="@font/old_sans_black"
+        android:textSize="@dimen/rv_item_subtitle"
+        android:fontFamily="@font/proxima_nova"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

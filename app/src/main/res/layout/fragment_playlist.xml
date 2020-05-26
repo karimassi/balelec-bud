@@ -6,17 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".view.playlist.PlaylistFragment"
     android:gravity="center"
-    android:background="@color/blek_blue"
+    android:background="@android:color/black"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/spotify_message"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/proxima_nova_bold"
+        android:paddingTop="@dimen/rv_top_padding"
+        android:paddingBottom="@dimen/rv_top_padding"
+        android:gravity="center"
+        android:fontFamily="@font/proxima_nova"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/fragment_playlist_message_size"
+        android:textSize="@dimen/rv_item_text"
         android:text="@string/spotify_message"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,8 +36,6 @@
                 android:id="@+id/recycler_view_playlist"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/recycler_view_margin"
-                android:layout_marginRight="@dimen/recycler_view_margin"
                 app:layoutManager="LinearLayoutManager"
                 tools:listitem="@layout/item_track"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

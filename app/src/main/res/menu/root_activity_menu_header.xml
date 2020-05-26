@@ -7,54 +7,65 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/activity_main_drawer_home"
-            android:icon="@mipmap/info"
+            android:id="@+id/fragment_main_drawer_home"
+            android:icon="@drawable/icon_home"
             android:title="@string/drawer_home" />
+
         <item
-            android:id="@+id/activity_main_drawer_info"
-            android:icon="@mipmap/info"
-            android:title="@string/drawer_festival_information" />
-        <item
-            android:id="@+id/activity_main_drawer_schedule"
-            android:icon="@mipmap/schedule"
+            android:id="@+id/fragment_main_drawer_schedule"
+            android:icon="@drawable/icon_schedule"
             android:title="@string/drawer_schedule" />
+
         <item
-            android:id="@+id/activity_main_drawer_poi"
-            android:icon="@mipmap/point_of_interest"
-            android:title="@string/drawer_poi" />
+            android:id="@+id/fragment_main_drawer_info"
+            android:icon="@drawable/icon_information"
+            android:title="@string/drawer_festival_information" />
+
         <item
-            android:id="@+id/activity_main_drawer_map"
-            android:icon="@mipmap/map"
+            android:id="@+id/fragment_main_drawer_map"
+            android:icon="@drawable/icon_map"
             android:title="@string/drawer_map" />
+
         <item
-            android:id="@+id/activity_main_drawer_transport"
-            android:icon="@mipmap/bus"
-            android:title="@string/drawer_transport" />
+            android:id="@+id/fragment_main_drawer_emergency_info"
+            android:icon="@drawable/icon_emergency"
+            android:title="@string/drawer_emergency" />
+
         <item
-            android:id="@+id/activity_main_drawer_social"
-            android:icon="@mipmap/social"
+            android:id="@+id/fragment_main_drawer_poi"
+            android:icon="@drawable/icon_poi"
+            android:title="@string/drawer_poi" />
+
+        <item
+            android:id="@+id/fragment_main_drawer_social"
+            android:icon="@drawable/icon_social"
             android:title="@string/drawer_social" />
+
         <item
-            android:id="@+id/activity_main_drawer_playlist"
-            android:icon="@drawable/ic_play_arrow_24dp"
+            android:id="@+id/fragment_main_drawer_pictures"
+            android:icon="@drawable/icon_pictures"
+            android:title="@string/drawer_pictures" />
+
+        <item
+            android:id="@+id/fragment_main_drawer_gallery"
+            android:icon="@drawable/icon_gallery"
+            android:title="@string/drawer_photo_gallery" />
+
+        <item
+            android:id="@+id/fragment_main_drawer_playlist"
+            android:icon="@drawable/icon_playlist"
             android:title="@string/playlist_navigation_title" />
 
         <item
-            android:id="@+id/activity_main_drawer_emergency_info"
-            android:icon="@mipmap/info"
-            android:title="@string/drawer_emergency" />
+            android:id="@+id/fragment_main_drawer_transport"
+            android:icon="@drawable/icon_transport"
+            android:title="@string/drawer_transport" />
+
         <item
-            android:id="@+id/activity_main_drawer_gallery"
-            android:icon="@mipmap/info"
-            android:title="Photo Gallery" />
-        <item
-            android:id="@+id/activity_main_drawer_settings"
-            android:icon="@drawable/settings"
+            android:id="@+id/fragment_main_drawer_settings"
+            android:icon="@drawable/icon_settings"
             android:title="@string/drawer_settings" />
-        <item
-            android:id="@+id/activity_main_drawer_pictures"
-            android:icon="@mipmap/info"
-            android:title="@string/drawer_pictures" />
+
     </group>
 
 </menu>
