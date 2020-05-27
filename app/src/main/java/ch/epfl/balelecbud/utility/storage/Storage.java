@@ -16,12 +16,12 @@ import ch.epfl.balelecbud.utility.InformationSource;
  */
 public interface Storage {
 
-    String USER_PICTURE = "users_pictures";
+    String USER_PICTURES = "users_pictures";
 
     CompletableFuture<File> getFile(String path);
 
     CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source);
 
-    CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) throws IOException;
+    void putFile(String filename, File file) throws IOException;
 
 }

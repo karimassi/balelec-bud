@@ -33,6 +33,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import ch.epfl.balelecbud.R;
+import ch.epfl.balelecbud.model.Picture;
 import ch.epfl.balelecbud.utility.DateFormatter;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
@@ -44,6 +45,8 @@ public final class PicturesFragment extends Fragment {
     }
 
     private String currentPhotoPath;
+
+    private static String TAG = PicturesFragment.class.getSimpleName();
 
     private static final int CAMERA_PERM_CODE = 101;
     private static final int CAMERA_REQUEST_CODE = 102;
@@ -90,20 +93,13 @@ public final class PicturesFragment extends Fragment {
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
-                Log.d("tag", "Absolute Url of Image is " + Uri.fromFile(f));
+                Log.d(TAG, "Absolute Url of Image is " + Uri.fromFile(f));
                 String filename = f.getName();
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                CompletableFuture<UploadTask.TaskSnapshot> imageUplaod = null;
                 try {
-                    imageUplaod = getAppStorage().putFile(filename,imageBitmap );
+                    getAppStorage().putFile(filename, f);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(TAG, e.getLocalizedMessage());
                 }
-                imageUplaod.whenComplete((snapshot, t) -> {
-                    Log.d("tag", "Image uploaded " + filename+": "+snapshot.getBytesTransferred());
-                    Toast.makeText(getActivity(), R.string.pic_uploaded_message, Toast.LENGTH_SHORT).show();
-                });
             }
         }
 
@@ -128,8 +124,8 @@ public final class PicturesFragment extends Fragment {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-            } catch (IOException ex) {
-
+            } catch (IOException e) {
+                Log.d(TAG, e.getLocalizedMessage());
             }
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getActivity(),

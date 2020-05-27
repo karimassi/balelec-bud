@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud.utility.storage;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
@@ -58,17 +60,10 @@ public final class FirebaseStorage implements Storage {
     }
 
     @Override
-    public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filename, Bitmap image){
-        CompletableFuture<UploadTask.TaskSnapshot> future = new CompletableFuture<>();
+    public void putFile(String filename, File file){
         StorageReference storageRef = firebaseStorage.getReference();
-        StorageReference picRef = storageRef.child(filename);
-
-        //  final File localFile = File.createTempFile("images", "jpg");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        future = new TaskToCompletableFutureAdapter<UploadTask.TaskSnapshot>(picRef.putBytes(data));
-        return future;
+        StorageReference picRef = storageRef.child(USER_PICTURES + "/" + filename);
+        picRef.putFile(Uri.fromFile(file));
     }
 }
 

@@ -61,8 +61,8 @@ public final class CachedStorage implements Storage {
     }
 
     @Override
-    public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) {
-        return null;
+    public void putFile(String filename, File file) throws IOException{
+        inner.putFile(filename, file);
     }
 
 }

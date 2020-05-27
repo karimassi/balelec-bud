@@ -60,8 +60,8 @@ public class CachedStorageTest {
             }
 
             @Override
-            public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) throws IOException {
-                return null;
+            public void putFile(String filename, File file) {
+
             }
         };
         Cache mockCache = new Cache() {
@@ -117,8 +117,8 @@ public class CachedStorageTest {
         }
 
         @Override
-        public CompletableFuture<UploadTask.TaskSnapshot> putFile(String filname, Bitmap image) {
-            return null;
+        public void putFile(String filename, File file) {
+
         }
     }
 

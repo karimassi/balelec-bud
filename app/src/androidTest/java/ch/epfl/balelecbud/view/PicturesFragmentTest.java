@@ -91,6 +91,7 @@ public class PicturesFragmentTest {
         intending(toPackage("com.android.camera2")).respondWith(result);
         onView(withId(R.id.takePicBtn)).perform(click());
         intended(toPackage("com.android.camera2"));
+
         scenario.onFragment(fragment -> {
                     File file = null;
                     try {
@@ -101,6 +102,7 @@ public class PicturesFragmentTest {
                         e.printStackTrace();
                     }
                     sync.assertNotNull(file);
+                    sync.call();
             });
 
         sync.waitCall(1);
@@ -116,7 +118,7 @@ public class PicturesFragmentTest {
     }
 
     @Test
-    public void cameraIsSendingToFirebaseStorage() throws InterruptedException {
+    public void cameraIsSavingImageToLocalStorage() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();
         Intents.init();
         Bundle bundle = new Bundle();
