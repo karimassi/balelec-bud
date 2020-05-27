@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
@@ -36,8 +37,9 @@ public final class PlaylistFragment extends Fragment implements OnRecyclerViewIn
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_playlist, container, false);
         spotifyConnect();
-        return inflater.inflate(R.layout.fragment_playlist, container, false);
+        return view;
     }
 
     @Override
