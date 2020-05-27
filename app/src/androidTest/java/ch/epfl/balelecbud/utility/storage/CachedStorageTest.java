@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -91,6 +92,37 @@ public class CachedStorageTest {
         assertNotNull(resultFile);
         FileUtils.checkContent(resultFile, expectedContent);
 
+    }
+
+    @Test
+    public void storageCanPutAndRetrieveFilesCorrectly() throws IOException {
+        TestAsyncUtils sync = new TestAsyncUtils();
+        String filename = "Any filename will do";
+
+        Storage mockStorage = new Storage() {
+            File storedFile = null;
+
+            @Override
+            public CompletableFuture<File> getFile(String path) {
+                sync.call();
+                return CompletableFuture.completedFuture(storedFile);
+           }
+
+            @Override
+            public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
+                return null;
+            }
+
+            @Override
+            public void putFile(String filename, File file) {
+              this.storedFile = file;
+            }
+        };
+
+        File inputFile = FileUtils.createFileWithContent("any content will do", filename);
+        mockStorage.putFile(filename, inputFile);
+        File resultFile = mockStorage.getFile(filename).getNow(null);
+        assertNotNull(resultFile);
     }
 
     private static class MockStorages implements Storage {
