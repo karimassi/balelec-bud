@@ -12,14 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import ch.epfl.balelecbud.R;
@@ -28,7 +26,6 @@ import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.StringUtils;
 
-import static android.app.AlertDialog.THEME_DEVICE_DEFAULT_DARK;
 import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
 
 public final class AddFriendFragment extends DialogFragment {
