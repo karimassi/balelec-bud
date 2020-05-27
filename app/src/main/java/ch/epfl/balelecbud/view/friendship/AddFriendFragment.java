@@ -67,6 +67,12 @@ public final class AddFriendFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getTargetFragment().onResume();
+    }
+
     static AddFriendFragment newInstance(User user) {
         AddFriendFragment f = new AddFriendFragment();
         Bundle args = new Bundle();

@@ -29,10 +29,10 @@ public final class SentRequestData extends RecyclerViewData<User, SentRequestVie
     @Override
     public CompletableFuture<Long> reload(InformationSource preferredSource) {
         MyQuery myQuery = new MyQuery(Database.SENT_REQUESTS_PATH,
-                new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()), preferredSource);
+                new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()));
         return getAppDatabase().query(myQuery)
                 .thenApply(fetchedData -> new ArrayList<>(fetchedData.getList().get(0).keySet()))
-                .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(uids, preferredSource)))
+                .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(uids, InformationSource.REMOTE_ONLY)))
                 .thenApply(FetchedData::new)
                 .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
