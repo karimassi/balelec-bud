@@ -51,7 +51,7 @@ public final class AddFriendFragment extends DialogFragment {
                     if (validateEmail()) {
                         FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), InformationSource.REMOTE_ONLY)
                                 .whenComplete((user, throwable) -> FriendshipUtils.requestFriend(user));
-                        Snackbar.make(getTargetFragment().getView(),
+                        Snackbar.make(getActivity().findViewById(android.R.id.content),
                                 getString(R.string.add_friend_request_sent) + editTextAddFriend.getText(), LENGTH_SHORT ).show();
                     }
 
