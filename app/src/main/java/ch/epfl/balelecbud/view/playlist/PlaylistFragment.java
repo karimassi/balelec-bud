@@ -29,6 +29,7 @@ public final class PlaylistFragment extends Fragment implements OnRecyclerViewIn
 
     private static final String TAG = PlaylistFragment.class.getSimpleName();
     private SpotifyAppRemote spotifyAppRemote;
+    View view;
 
     public static PlaylistFragment newInstance() {
         return (new PlaylistFragment());
@@ -37,7 +38,7 @@ public final class PlaylistFragment extends Fragment implements OnRecyclerViewIn
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_playlist, container, false);
+        view = inflater.inflate(R.layout.fragment_playlist, container, false);
         spotifyConnect();
         return view;
     }
@@ -97,7 +98,7 @@ public final class PlaylistFragment extends Fragment implements OnRecyclerViewIn
 
                     public void onFailure(Throwable throwable) {
                         Log.d(TAG, "Failed to connect Spotify", throwable);
-                        Snackbar.make(getView().findViewById(R.id.recycler_view_playlist), (throwable.getMessage() != null)
+                        Snackbar.make(view, (throwable.getMessage() != null)
                                 ? getContext().getString(R.string.login_spotify_message)
                                 : getContext().getString(R.string.download_spotify_message), LENGTH_LONG)
                                 .show();
