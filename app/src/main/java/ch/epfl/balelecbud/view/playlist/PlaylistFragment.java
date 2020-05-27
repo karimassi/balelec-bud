@@ -95,7 +95,7 @@ public final class PlaylistFragment extends Fragment implements OnRecyclerViewIn
 
                     public void onFailure(Throwable throwable) {
                         Log.d(TAG, "Failed to connect Spotify", throwable);
-                        Snackbar.make(getView(), (throwable.getMessage() != null)
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), (throwable.getMessage() != null)
                                 ? getContext().getString(R.string.login_spotify_message)
                                 : getContext().getString(R.string.download_spotify_message), LENGTH_LONG)
                                 .show();
