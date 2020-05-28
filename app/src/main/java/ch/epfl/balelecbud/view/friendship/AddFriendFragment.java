@@ -12,12 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
@@ -25,7 +26,7 @@ import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.StringUtils;
 
-import static android.app.AlertDialog.THEME_DEVICE_DEFAULT_DARK;
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
 
 public final class AddFriendFragment extends DialogFragment {
 
@@ -50,10 +51,8 @@ public final class AddFriendFragment extends DialogFragment {
                     if (validateEmail()) {
                         FriendshipUtils.getUserFromEmail(editTextAddFriend.getText().toString(), InformationSource.REMOTE_ONLY)
                                 .whenComplete((user, throwable) -> FriendshipUtils.requestFriend(user));
-                        Toast.makeText(
-                                getContext(),
-                                getString(R.string.add_friend_request_sent) + editTextAddFriend.getText(),
-                                Toast.LENGTH_SHORT).show();
+                        Snackbar.make(getActivity().findViewById(android.R.id.content),
+                                getString(R.string.add_friend_request_sent) + editTextAddFriend.getText(), LENGTH_SHORT ).show();
                     }
 
                 })
@@ -65,6 +64,12 @@ public final class AddFriendFragment extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getTargetFragment().onResume();
     }
 
     static AddFriendFragment newInstance(User user) {
@@ -84,10 +89,7 @@ public final class AddFriendFragment extends DialogFragment {
             editTextAddFriend.setError(getString(R.string.invalid_email));
             return false;
         } else if (email.equals(((User)getArguments().get("user")).getEmail())) {
-            Toast.makeText(
-                    getContext(),
-                    R.string.add_own_as_friend,
-                    Toast.LENGTH_SHORT).show();
+            editTextAddFriend.setError(getString(R.string.add_own_as_friend));
             return false;
         }
         return true;

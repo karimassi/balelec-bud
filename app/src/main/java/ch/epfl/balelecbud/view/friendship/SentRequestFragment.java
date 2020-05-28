@@ -17,9 +17,7 @@ import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
 public final class SentRequestFragment extends Fragment {
 
-    public SentRequestFragment() {
-        // Required empty public constructor
-    }
+    private RefreshableRecyclerViewAdapter<User, SentRequestViewHolder> adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,8 +29,8 @@ public final class SentRequestFragment extends Fragment {
         final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_sent_requests);
 
         SentRequestData data = new SentRequestData((User) getArguments().get("user"));
-        final RefreshableRecyclerViewAdapter<User, SentRequestViewHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(SentRequestViewHolder::new, refreshLayout, data, R.layout.item_sent_request);
+
+        adapter = new RefreshableRecyclerViewAdapter<>(SentRequestViewHolder::new, refreshLayout, data, R.layout.item_sent_request);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
@@ -40,6 +38,12 @@ public final class SentRequestFragment extends Fragment {
         adapter.setOnRefreshListener(refreshLayout);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.reloadData();
     }
 
     public static SentRequestFragment newInstance(User user) {

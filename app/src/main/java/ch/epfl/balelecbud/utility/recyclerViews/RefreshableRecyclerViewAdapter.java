@@ -43,7 +43,6 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
         checkConnectivityAndReload(InformationSource.CACHE_FIRST).thenAccept(this::handleFreshness);
     }
 
-    @VisibleForTesting //could trigger it with UI in the tests, but conceptually cleaner
     public CompletableFuture<Long> reloadData() {
         return checkConnectivityAndReload(InformationSource.REMOTE_ONLY);
     }
@@ -62,7 +61,6 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
         if (freshness != null) {
             String result = BalelecbudApplication.getAppContext().getString(R.string.cache_info) + DateFormatter.IN_YEAR.format(freshness);
             Snackbar.make(freshnessView, result, LENGTH_SHORT).show();
-
             Log.d(TAG, result);
         }
     }

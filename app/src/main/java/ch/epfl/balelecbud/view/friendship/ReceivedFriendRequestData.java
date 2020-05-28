@@ -31,7 +31,7 @@ public final class ReceivedFriendRequestData extends RecyclerViewData<User, Rece
         MyQuery query = new MyQuery(Database.FRIEND_REQUESTS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, currentUser.getUid()));
         return getAppDatabase().query(query)
                 .thenApply(fetchedData -> new ArrayList<>(fetchedData.getList().get(0).keySet()))
-                .thenCompose(strings -> CompletableFutureUtils.unify(FriendshipUtils.getUsersFromUids(strings, preferredSource)))
+                .thenCompose(strings -> CompletableFutureUtils.unify(FriendshipUtils.getUsersFromUids(strings, InformationSource.REMOTE_ONLY)))
                 //Wrap in a FetchedData with a freshness set to null
                 .thenApply(FetchedData::new)
                 .thenApply(new CompletableFutureUtils.MergeFunction<>(this));

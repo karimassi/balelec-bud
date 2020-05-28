@@ -20,6 +20,10 @@ public final class SocialAdapter extends FragmentStateAdapter {
         fragmentList.add(fragment);
     }
 
+    Fragment getFragmentAtPosition(int position) {
+        return fragmentList.get(position);
+    }
+
     @NonNull
     @Override
     public Fragment createFragment(int position) {

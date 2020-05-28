@@ -56,6 +56,7 @@ public final class SocialFragment extends Fragment {
         FloatingActionButton fabAddFriends = view.findViewById(R.id.fab_add_friends);
         fabAddFriends.setOnClickListener(v -> {
             AddFriendFragment dialog = AddFriendFragment.newInstance(getAppAuthenticator().getCurrentUser());
+            dialog.setTargetFragment(fragmentAdapter.getFragmentAtPosition(viewPager.getCurrentItem()), 0);
             dialog.show(activity.getSupportFragmentManager(), getString(R.string.add_friend_title));
         });
     }
