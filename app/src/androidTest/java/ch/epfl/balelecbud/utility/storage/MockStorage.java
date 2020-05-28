@@ -1,72 +1,75 @@
 package ch.epfl.balelecbud.utility.storage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
-import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.InformationSource;
 
 public class MockStorage implements Storage {
 
     private int accessCount = 0;
-    private File fileToReturn = createFile();
+//    private File fileToReturn = createFile();
+
+    private Map<String, Map<String, File>> storage;
+
+    private static final MockStorage instance = new MockStorage();
+
+    public static MockStorage getInstance() {
+        return instance;
+    }
+
+    private MockStorage() {
+        storage = new HashMap<>();
+        HashMap<String, File> artistImages = new HashMap<>();
+        for (int i = 1; i < 4; ++i) {
+            artistImages.put("path"+i, createFile("path"+i, ".png"));
+        }
+
+        HashMap<String, File> userImages = new HashMap<>();
+        for (int i = 0; i < 9; ++i) {
+            userImages.put("image"+i, createFile("image"+i, ".png"));
+        }
+
+        storage.put(ARTISTS_IMAGES, artistImages);
+        storage.put(USER_PICTURES, userImages);
+    }
 
     @Override
     public CompletableFuture<File> getFile(String path) {
+        String[] paths = path.split("/");
+        if (paths.length != 2 || !storage.containsKey(paths[0])) {
+            throw new IllegalArgumentException("Invalid path");
+        }
         accessCount += 1;
-        CompletableFuture<File> future = new CompletableFuture<>();
-        future.complete(fileToReturn);
-        return future;
+        return CompletableFuture.completedFuture(storage.get(paths[0]).get(paths[1]));
     }
 
     @Override
     public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
-        accessCount += 9;
         List<String> list = new ArrayList();
-        for(int i = 1 ; i < 10 ; ++i){
-            list.add("mockFile.png");
-            CompletableFuture<File> future = new CompletableFuture<>();
-            future.complete(fileToReturn);
+        if (storage.containsKey(collectionName)) {
+            for (File f : storage.get(collectionName).values()) {
+                list.add(collectionName + "/" + f.getName());
+            }
         }
-        CompletableFuture<List<String>> future = new CompletableFuture<>();
-        future.complete(list);
-        return future;
+        return CompletableFuture.completedFuture(list);
     }
 
     @Override
-    public void putFile(String filename, File file) throws IOException {
-        File f = File.createTempFile("test", "jpg");
-        OutputStream out = new FileOutputStream(f);
-        InputStream inputStream = new FileInputStream(file);
-        byte buf[] = new byte[1024];
-        int len;
-        while ((len = inputStream.read(buf)) > 0)
-            out.write(buf, 0, len);
-        out.close();
-        inputStream.close();
+    public void putFile(String collectionName, String filename, File file) {
+        if (!storage.containsKey(collectionName)) {
+            storage.put(collectionName, new HashMap<>());
+        }
+        storage.get(collectionName).put(filename, file);
     }
 
-    private File createFile() {
+    private File createFile(String prefix, String suffix) {
         try {
-            File tmpFile = File.createTempFile("mockFile", "png");
-            InputStream inputStream = BalelecbudApplication.getAppContext()
-                    .getResources().openRawResource(R.drawable.balelec_artist_pic); // id drawable
-            OutputStream out = new FileOutputStream(tmpFile);
-            byte buf[] = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buf)) > 0)
-                out.write(buf, 0, len);
-            out.close();
-            inputStream.close();
-            return tmpFile;
+            return File.createTempFile(prefix, suffix);
         } catch (Exception e) {
             throw new RuntimeException("Create file failed");
         }

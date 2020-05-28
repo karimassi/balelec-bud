@@ -60,9 +60,9 @@ public final class FirebaseStorage implements Storage {
     }
 
     @Override
-    public void putFile(String filename, File file){
+    public void putFile(String collectionName, String filename, File file){
         StorageReference storageRef = firebaseStorage.getReference();
-        StorageReference picRef = storageRef.child(USER_PICTURES + "/" + filename);
+        StorageReference picRef = storageRef.child(collectionName + "/" + filename);
         picRef.putFile(Uri.fromFile(file));
     }
 }

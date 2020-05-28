@@ -35,8 +35,10 @@ import java.util.concurrent.ExecutionException;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Picture;
 import ch.epfl.balelecbud.utility.DateFormatter;
+import ch.epfl.balelecbud.utility.storage.Storage;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
+import static ch.epfl.balelecbud.utility.storage.Storage.USER_PICTURES;
 
 public final class PicturesFragment extends Fragment {
 
@@ -96,7 +98,7 @@ public final class PicturesFragment extends Fragment {
                 Log.d(TAG, "Absolute Url of Image is " + Uri.fromFile(f));
                 String filename = f.getName();
                 try {
-                    getAppStorage().putFile(filename, f);
+                    getAppStorage().putFile(USER_PICTURES, filename, f);
                 } catch (IOException e) {
                     Log.d(TAG, e.getLocalizedMessage());
                 }

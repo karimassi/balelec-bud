@@ -13,6 +13,7 @@ import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
+import static ch.epfl.balelecbud.utility.storage.Storage.USER_PICTURES;
 
 public final class PictureData extends RecyclerViewData<Picture, PictureHolder> {
     private static final String TAG = PictureData.class.getSimpleName();
@@ -20,7 +21,7 @@ public final class PictureData extends RecyclerViewData<Picture, PictureHolder> 
     @Override
     public CompletableFuture<Long> reload(InformationSource preferredSource) {
         super.clearAll();
-        CompletableFuture<List<String>> list = getAppStorage().getAllFileNameIn("users_pictures", preferredSource);
+        CompletableFuture<List<String>> list = getAppStorage().getAllFileNameIn(USER_PICTURES, preferredSource);
         return list.whenComplete((file, t) ->
                 file.forEach(path -> {
                     Picture p = new Picture(path);

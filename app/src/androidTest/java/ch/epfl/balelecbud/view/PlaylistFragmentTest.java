@@ -15,6 +15,7 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Track;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
+import ch.epfl.balelecbud.utility.storage.MockStorage;
 import ch.epfl.balelecbud.view.playlist.PlaylistFragment;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -25,6 +26,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.balelecbud.BalelecbudApplication.setAppStorage;
 import static ch.epfl.balelecbud.utility.database.Database.PLAYLIST_PATH;
 import static junit.framework.TestCase.assertFalse;
 
@@ -38,6 +40,7 @@ public class PlaylistFragmentTest {
     public void setup() {
         mock.resetDatabase();
         BalelecbudApplication.setAppDatabase(mock);
+        setAppStorage(MockStorage.getInstance());
         mock.storeDocument(PLAYLIST_PATH, track);
         FragmentScenario.launchInContainer(PlaylistFragment.class);
     }

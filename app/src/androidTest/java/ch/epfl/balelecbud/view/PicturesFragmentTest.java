@@ -36,12 +36,13 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.balelecbud.utility.storage.Storage.USER_PICTURES;
 
 @RunWith(AndroidJUnit4.class)
 public class PicturesFragmentTest {
 
     private FragmentScenario<PicturesFragment> scenario;
-    private final MockStorage mockStorage = new MockStorage();
+    private final MockStorage mockStorage = MockStorage.getInstance();
 
     @Rule
     public GrantPermissionRule permissionRuleCamera = GrantPermissionRule.grant(Manifest.permission.CAMERA);
@@ -50,7 +51,7 @@ public class PicturesFragmentTest {
     @Before
     public void setUp(){
         mockStorage.setAccessCount(0);
-        BalelecbudApplication.setAppStorage(mockStorage);
+        BalelecbudApplication.setRemoteStorage(mockStorage);
         scenario = FragmentScenario.launchInContainer(PicturesFragment.class);
     }
 
@@ -95,7 +96,8 @@ public class PicturesFragmentTest {
         scenario.onFragment(fragment -> {
                     File file = null;
                     try {
-                        file = mockStorage.getFile("test").get();
+                        String[] paths = fragment.getCurrentPhotoPath().split("/");
+                        file = mockStorage.getFile(USER_PICTURES + "/" + paths[paths.length-1]).get();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {

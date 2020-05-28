@@ -24,12 +24,12 @@ import static ch.epfl.balelecbud.testUtils.CustomMatcher.nthChildOf;
 @RunWith(AndroidJUnit4.class)
 public class GalleryFragmentTest {
 
-    private final MockStorage mockStorage = new MockStorage();
+    private final MockStorage mockStorage = MockStorage.getInstance();
 
     @Before
     public void setup() {
         mockStorage.setAccessCount(0);
-        BalelecbudApplication.setAppStorage(mockStorage);
+        BalelecbudApplication.setRemoteStorage(mockStorage);
         FragmentScenario.launchInContainer(GalleryFragment.class);
     }
 

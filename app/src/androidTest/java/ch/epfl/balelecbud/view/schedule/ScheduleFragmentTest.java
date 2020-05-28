@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class ScheduleFragmentTest {
     private final MockDatabase mockDatabase = MockDatabase.getInstance();
-    private final MockStorage mockStorage = new MockStorage();
+    private final MockStorage mockStorage = MockStorage.getInstance();
 
     @Before
     public void setup() {

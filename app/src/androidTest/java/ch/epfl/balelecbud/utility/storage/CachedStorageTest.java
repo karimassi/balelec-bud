@@ -1,14 +1,9 @@
 package ch.epfl.balelecbud.utility.storage;
 
-import android.graphics.Bitmap;
-
-import com.google.firebase.storage.UploadTask;
-
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,6 +11,7 @@ import ch.epfl.balelecbud.testUtils.FileUtils;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.InformationSource;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.setRemoteStorage;
 import static junit.framework.TestCase.assertNotNull;
 
 public class CachedStorageTest {
@@ -24,7 +20,8 @@ public class CachedStorageTest {
     public void innerStorageAccessedWhenCacheEmpty(){
         TestAsyncUtils sync = new TestAsyncUtils();
         Storage mockStorage = new MockStorages(sync);
-        Storage cached = new CachedStorage(mockStorage, new MockCache());
+        setRemoteStorage(mockStorage);
+        Storage cached = new CachedStorage(new MockCache());
         cached.getFile("randomName");
         sync.assertCalled(1);
     }
@@ -33,9 +30,10 @@ public class CachedStorageTest {
     public void innerStorageNotAccessedWhenCacheFull(){
         TestAsyncUtils sync = new TestAsyncUtils();
         Storage mockStorage = new MockStorages(sync);
+        setRemoteStorage(mockStorage);
         MockCache mockCache = new MockCache();
         mockCache.storedFiles.add("randomName");
-        Storage cached = new CachedStorage(mockStorage, mockCache);
+        Storage cached = new CachedStorage(mockCache);
         cached.getFile("randomName");
         sync.assertCalled(0);
     }
@@ -61,7 +59,7 @@ public class CachedStorageTest {
             }
 
             @Override
-            public void putFile(String filename, File file) {
+            public void putFile(String collectionName, String filename, File file) {
 
             }
         };
@@ -86,8 +84,8 @@ public class CachedStorageTest {
 
             }
         };
-
-        CachedStorage cachedStorage = new CachedStorage(mockStorage, mockCache);
+        setRemoteStorage(mockStorage);
+        CachedStorage cachedStorage = new CachedStorage(mockCache);
         File resultFile = cachedStorage.getFile("any filename will do").getNow(null);
         assertNotNull(resultFile);
         FileUtils.checkContent(resultFile, expectedContent);
@@ -96,32 +94,12 @@ public class CachedStorageTest {
 
     @Test
     public void storageCanPutAndRetrieveFilesCorrectly() throws IOException {
-        TestAsyncUtils sync = new TestAsyncUtils();
+        MockStorage mockStorage = MockStorage.getInstance();
         String filename = "Any filename will do";
-
-        Storage mockStorage = new Storage() {
-            File storedFile = null;
-
-            @Override
-            public CompletableFuture<File> getFile(String path) {
-                sync.call();
-                return CompletableFuture.completedFuture(storedFile);
-           }
-
-            @Override
-            public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
-                return null;
-            }
-
-            @Override
-            public void putFile(String filename, File file) {
-              this.storedFile = file;
-            }
-        };
-
+        setRemoteStorage(MockStorage.getInstance());
         File inputFile = FileUtils.createFileWithContent("any content will do", filename);
-        mockStorage.putFile(filename, inputFile);
-        File resultFile = mockStorage.getFile(filename).getNow(null);
+        mockStorage.putFile("any collection", filename, inputFile);
+        File resultFile = mockStorage.getFile("any collection/" + filename).getNow(null);
         assertNotNull(resultFile);
     }
 
@@ -149,7 +127,7 @@ public class CachedStorageTest {
         }
 
         @Override
-        public void putFile(String filename, File file) {
+        public void putFile(String collectionName, String filename, File file) {
 
         }
     }

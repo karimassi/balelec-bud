@@ -17,11 +17,13 @@ import ch.epfl.balelecbud.utility.InformationSource;
 public interface Storage {
 
     String USER_PICTURES = "users_pictures";
+    String ARTISTS_IMAGES = "artists_images";
+    String TRACKS_IMAGES = "tracks_images";
 
     CompletableFuture<File> getFile(String path);
 
     CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source);
 
-    void putFile(String filename, File file) throws IOException;
+    void putFile(String collectionName, String filename, File file) throws IOException;
 
 }
