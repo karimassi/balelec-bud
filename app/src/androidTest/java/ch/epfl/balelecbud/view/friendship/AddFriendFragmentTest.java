@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.view.friendship;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.testing.FragmentScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -51,12 +52,15 @@ public class AddFriendFragmentTest {
     @Before
     public void setup() {
         mockDb.resetDatabase();
+        mockAuth.setCurrentUser(currentUser);
         BalelecbudApplication.setAppAuthenticator(mockAuth);
         BalelecbudApplication.setAppDatabase(mockDb);
-        mockAuth.setCurrentUser(currentUser);
         bundle = new Bundle();
         bundle.putParcelable("user", currentUser);
         scenario = FragmentScenario.launch(AddFriendFragment.class, bundle, R.style.Theme_AppCompat, null);
+        Fragment targetFragment = new Fragment();
+        targetFragment.getView();
+        scenario.onFragment( fragment -> fragment.setTargetFragment(targetFragment, 0));
     }
 
     @Test
