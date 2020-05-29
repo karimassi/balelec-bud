@@ -45,6 +45,7 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private Fragment fragmentHome = WelcomeFragment.newInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,6 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
 
         setupUser();
 
-
         ArrayList<Slot> slots = FlowUtils.unpackCallback(getIntent());
         if (slots != null) {
             ScheduleFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
@@ -66,6 +66,19 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
         } else {
             showFirstFragment();
         }
+
+        Log.d(WelcomeFragment.TAG, "RootActivityCreate: trying to restore last saved instance");
+        if(savedInstanceState != null) {
+            fragmentHome = getSupportFragmentManager().getFragment(savedInstanceState, WelcomeFragment.TAG);
+            Log.d(WelcomeFragment.TAG, "RootActivityCreate: successfully restored fragment");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(WelcomeFragment.TAG, "RootActivitySave: save instance state");
+        getSupportFragmentManager().putFragment(outState, WelcomeFragment.TAG, fragmentHome);
     }
 
     @Override
@@ -133,7 +146,6 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showHomeFragment() {
-        Fragment fragmentHome = WelcomeFragment.newInstance();
         startTransactionFragment(fragmentHome, WelcomeFragment.TAG);
     }
 
