@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiDevice;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,8 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.cache.Cache;
+import ch.epfl.balelecbud.utility.cache.FilesystemCache;
+import ch.epfl.balelecbud.utility.connectivity.AndroidConnectivityChecker;
 import ch.epfl.balelecbud.utility.database.CachedDatabase;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.FetchedData;
@@ -66,10 +69,18 @@ public class NoConnectionNoCacheTest {
             BalelecbudApplication.setConnectivityChecker(() -> false);
             BalelecbudApplication.setAppAuthenticator(mockAuth);
             mockAuth.setCurrentUser(alex);
+            BalelecbudApplication.setAppCache(emptyCache);
             CachedDatabase.getInstance().setCache(emptyCache);
             BalelecbudApplication.setRemoteDatabase(mockDB);
         }
     };
+
+    @After
+    public void cleanUp() {
+        BalelecbudApplication.setAppCache(FilesystemCache.getInstance());
+        CachedDatabase.getInstance().setCache(FilesystemCache.getInstance());
+        BalelecbudApplication.setConnectivityChecker(AndroidConnectivityChecker.getInstance());
+    }
 
     private void openDrawer() {
         device.pressBack();

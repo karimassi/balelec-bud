@@ -135,4 +135,9 @@ public final class BalelecbudApplication extends Application {
     public static void setConnectivityChecker(ConnectivityChecker connectivityChecker) {
         BalelecbudApplication.connectivityChecker = connectivityChecker;
     }
+
+    @VisibleForTesting
+    public static void setAppCache(Cache cache) {
+        appCache = cache;
+    }
 }
