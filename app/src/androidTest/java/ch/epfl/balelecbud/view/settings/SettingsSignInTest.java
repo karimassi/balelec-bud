@@ -46,6 +46,8 @@ public class SettingsSignInTest {
     @Test
     public void whenSignedInSignOutIsDisplayed() {
         onView(withText(R.string.sign_out_text)).check(matches(isDisplayed()));
+        String summaryRes = BalelecbudApplication.getAppContext().getResources().getString(R.string.sign_out_summary);
+        onView(withText(summaryRes + alex.getDisplayName())).check(matches(isDisplayed()));
     }
 
     @Test

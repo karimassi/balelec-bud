@@ -171,5 +171,6 @@
     <string name="camera_permission_refused_msg">The app needs camera permission to take a picture</string>
     <string name="take_a_pic">Take a pic</string>
     <string name="drawer_photo_gallery">Photo Gallery</string>
+    <string name="sign_out_summary">Currently logged in as\u0020</string>
 
 </resources>
