@@ -19,6 +19,7 @@ import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
+import static ch.epfl.balelecbud.utility.storage.Storage.TRACKS_IMAGES;
 
 public final class TrackData extends RecyclerViewData<Track, TrackHolder> {
 
@@ -47,7 +48,7 @@ public final class TrackData extends RecyclerViewData<Track, TrackHolder> {
         viewHolder.artist.setText(data.get(index).getArtist());
 
         CompletableFuture<File> imageDownload = getAppStorage()
-                .getFile("tracks_images/" + data.get(index).getUri() + ".jpeg");
+                .getFile(TRACKS_IMAGES + "/" + data.get(index).getUri() + ".jpeg");
         imageDownload.whenComplete((file, t) -> {
             Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
             viewHolder.image.setImageBitmap(bitmap);
