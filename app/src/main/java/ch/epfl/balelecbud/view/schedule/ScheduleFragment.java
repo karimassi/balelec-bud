@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -15,9 +14,11 @@ import java.util.ArrayList;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
+import ch.epfl.balelecbud.view.ConnectivityFragment;
 
-public final class ScheduleFragment extends Fragment {
+public final class ScheduleFragment extends ConnectivityFragment {
     
     private static final String TAG = ScheduleFragment.class.getSimpleName();
 
@@ -27,6 +28,11 @@ public final class ScheduleFragment extends Fragment {
         arguments.putParcelableArrayList("slots", subscribedSlots);
         scheduleFragment.setArguments(arguments);
         return scheduleFragment;
+    }
+
+    @Override
+    public String collectionName() {
+        return Database.CONCERT_SLOTS_PATH;
     }
 
     @Override

@@ -17,6 +17,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import ch.epfl.balelecbud.view.ConnectivityFragment;
+import ch.epfl.balelecbud.view.NoConnectionFragment;
 import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
@@ -57,10 +59,11 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
 
         ArrayList<Slot> slots = FlowUtils.unpackCallback(getIntent());
         if (slots != null) {
-            ScheduleFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
-            if (!fragmentSchedule.isVisible()) {
+            ConnectivityFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
+            if (fragmentSchedule.canBeDisplayed())
                 startTransactionFragment(fragmentSchedule, "SCHEDULE");
-            }
+            else
+                startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
         } else {
             this.showFirstFragment();
         }
@@ -126,8 +129,11 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showInfoFragment() {
-        Fragment fragmentInfo = FestivalInformationFragment.newInstance();
-        this.startTransactionFragment(fragmentInfo, "INFO");
+        ConnectivityFragment fragmentInfo = FestivalInformationFragment.newInstance();
+        if (fragmentInfo.canBeDisplayed())
+            this.startTransactionFragment(fragmentInfo, "INFO");
+        else
+            this.startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
     }
 
     private void showScheduleFragment() {
@@ -138,37 +144,55 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showPoiFragment() {
-        Fragment fragmentPoi = PointOfInterestFragment.newInstance();
-        this.startTransactionFragment(fragmentPoi, "POI");
+        ConnectivityFragment fragmentPoi = PointOfInterestFragment.newInstance();
+        if (fragmentPoi.canBeDisplayed())
+            this.startTransactionFragment(fragmentPoi, "POI");
+        else
+            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
     }
 
     private void showMapFragment() {
-        MapViewFragment fragmentMap = MapViewFragment.newInstance();
-        this.startTransactionFragment(fragmentMap, MapViewFragment.TAG);
+        ConnectivityFragment fragmentMap = MapViewFragment.newInstance();
+        if (fragmentMap.canBeDisplayed())
+            this.startTransactionFragment(fragmentMap, MapViewFragment.TAG);
+        else
+            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
     }
 
     private void showTransportFragment() {
-        Fragment fragmentTransport = TransportFragment.newInstance();
-        this.startTransactionFragment(fragmentTransport, "TRANSPORT");
+        ConnectivityFragment fragmentTransport = TransportFragment.newInstance();
+        if (fragmentTransport.canBeDisplayed())
+            this.startTransactionFragment(fragmentTransport, "TRANSPORT");
+        else
+            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
     }
 
     private void showSocialFragment() {
         if (getAppAuthenticator().getCurrentUser() == null) {
             Toast.makeText(this, R.string.require_sign_in, Toast.LENGTH_LONG).show();
         } else {
-            Fragment fragmentSocial = SocialFragment.newInstance();
-            this.startTransactionFragment(fragmentSocial, "SOCIAL");
+            ConnectivityFragment fragmentSocial = SocialFragment.newInstance();
+            if (fragmentSocial.canBeDisplayed())
+                this.startTransactionFragment(fragmentSocial, "SOCIAL");
+            else
+                startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
         }
     }
 
     private void showPlaylistFragment() {
-        Fragment fragmentPlaylist = PlaylistFragment.newInstance();
-        this.startTransactionFragment(fragmentPlaylist, "PLAYLIST");
+        ConnectivityFragment fragmentPlaylist = PlaylistFragment.newInstance();
+        if (fragmentPlaylist.canBeDisplayed())
+            this.startTransactionFragment(fragmentPlaylist, "PLAYLIST");
+        else
+            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
     }
 
     private void showEmergencyInfoFragment() {
-        Fragment fragmentEmergencyInfo = EmergencyInformationFragment.newInstance();
-        this.startTransactionFragment(fragmentEmergencyInfo, "EMERGENCY_INFO");
+        ConnectivityFragment fragmentEmergencyInfo = EmergencyInformationFragment.newInstance();
+        if (fragmentEmergencyInfo.canBeDisplayed())
+            this.startTransactionFragment(fragmentEmergencyInfo, "EMERGENCY_INFO");
+        else
+            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
     }
 
     private void showSettingsFragment() {
@@ -177,8 +201,11 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showGalleryFragment() {
-        GalleryFragment fragmentGallery = GalleryFragment.newInstance();
-        this.startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
+        ConnectivityFragment fragmentGallery = GalleryFragment.newInstance();
+        if (fragmentGallery.canBeDisplayed())
+            this.startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
+        else
+            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
     }
 
     private void showPicturesFragment() {

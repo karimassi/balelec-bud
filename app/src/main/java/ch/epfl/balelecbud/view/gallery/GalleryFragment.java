@@ -5,21 +5,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Picture;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
+import ch.epfl.balelecbud.view.ConnectivityFragment;
 
-public final class GalleryFragment extends Fragment {
+public final class GalleryFragment extends ConnectivityFragment {
 
     public final static String TAG = GalleryFragment.class.getSimpleName();
 
     public static GalleryFragment newInstance() {
         return new GalleryFragment();
+    }
+
+    @Override
+    public String collectionName() {
+        return null;
+    }
+
+    @Override
+    public boolean canBeDisplayed() {
+        return BalelecbudApplication.getConnectivityChecker().isConnectionAvailable();
     }
 
     @Override

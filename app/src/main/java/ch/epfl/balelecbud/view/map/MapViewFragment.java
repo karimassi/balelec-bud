@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.fragment.app.Fragment;
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.MarkerType;
@@ -32,11 +32,12 @@ import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.location.LocationUtils;
+import ch.epfl.balelecbud.view.ConnectivityFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public final class MapViewFragment extends Fragment {
+public final class MapViewFragment extends ConnectivityFragment {
     public final static String TAG = MapViewFragment.class.getSimpleName();
     private static com.mapbox.mapboxsdk.maps.OnMapReadyCallback mockCallback;
     private MapView mapView;
@@ -54,6 +55,16 @@ public final class MapViewFragment extends Fragment {
 
     public static MapViewFragment newInstance() {
         return new MapViewFragment();
+    }
+
+    @Override
+    public String collectionName() {
+        return null;
+    }
+
+    @Override
+    public boolean canBeDisplayed() {
+        return BalelecbudApplication.getConnectivityChecker().isConnectionAvailable();
     }
 
     @Override
