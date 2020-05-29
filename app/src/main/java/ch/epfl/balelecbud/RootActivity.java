@@ -77,8 +77,10 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(WelcomeFragment.TAG, "RootActivitySave: save instance state");
-        getSupportFragmentManager().putFragment(outState, WelcomeFragment.TAG, fragmentHome);
+        if(fragmentHome.isAdded()) {
+            Log.d(WelcomeFragment.TAG, "RootActivitySave: save instance state");
+            getSupportFragmentManager().putFragment(outState, WelcomeFragment.TAG, fragmentHome);
+        }
     }
 
     @Override
