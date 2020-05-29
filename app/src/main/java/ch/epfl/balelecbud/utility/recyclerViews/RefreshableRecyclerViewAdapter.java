@@ -43,7 +43,6 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
         checkConnectivityAndReload(InformationSource.CACHE_FIRST).thenAccept(this::handleFreshness);
     }
 
-    @VisibleForTesting //could trigger it with UI in the tests, but conceptually cleaner
     public CompletableFuture<Long> reloadData() {
         return checkConnectivityAndReload(InformationSource.REMOTE_ONLY);
     }

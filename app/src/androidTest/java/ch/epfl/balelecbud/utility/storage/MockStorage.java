@@ -12,7 +12,6 @@ import ch.epfl.balelecbud.utility.InformationSource;
 public class MockStorage implements Storage {
 
     private int accessCount = 0;
-//    private File fileToReturn = createFile();
 
     private Map<String, Map<String, File>> storage;
 
@@ -23,23 +22,7 @@ public class MockStorage implements Storage {
     }
 
     private MockStorage() {
-        storage = new HashMap<>();
-        HashMap<String, File> artistImages = new HashMap<>();
-        for (int i = 1; i < 4; ++i) {
-            artistImages.put("path"+i, createFile("path"+i, ".png"));
-        }
-
-        HashMap<String, File> userImages = new HashMap<>();
-        for (int i = 0; i < 9; ++i) {
-            userImages.put("image"+i, createFile("image"+i, ".png"));
-        }
-
-        HashMap<String, File> trackImages = new HashMap<>();
-        trackImages.put("uri", createFile("uri", ".jpeg"));
-
-        storage.put(ARTISTS_IMAGES, artistImages);
-        storage.put(USER_PICTURES, userImages);
-        storage.put(TRACKS_IMAGES, trackImages);
+        resetStorage();
     }
 
     @Override
@@ -85,5 +68,25 @@ public class MockStorage implements Storage {
 
     public void setAccessCount(int accessCount) {
         this.accessCount = accessCount;
+    }
+
+    public void resetStorage() {
+        storage = new HashMap<>();
+        HashMap<String, File> artistImages = new HashMap<>();
+        for (int i = 1; i < 4; ++i) {
+            artistImages.put("path"+i, createFile("path"+i, ".png"));
+        }
+
+        HashMap<String, File> userImages = new HashMap<>();
+        for (int i = 0; i < 9; ++i) {
+            userImages.put("image"+i, createFile("image"+i, ".png"));
+        }
+
+        HashMap<String, File> trackImages = new HashMap<>();
+        trackImages.put("uri", createFile("uri", ".jpeg"));
+
+        storage.put(ARTISTS_IMAGES, artistImages);
+        storage.put(USER_PICTURES, userImages);
+        storage.put(TRACKS_IMAGES, trackImages);
     }
 }

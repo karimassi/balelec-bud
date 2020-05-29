@@ -41,7 +41,7 @@
     <string name="social_view">Social</string>
     <string name="festival_info_view">Information</string>
 
-    <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it !</string>
+    <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it!</string>
 
     <string name="transport_view">Transport</string>
     <string name="toggle_location_view">Toggle Location</string>
@@ -54,7 +54,7 @@
     <string name="concert_soon_notification_title">A concert is starting soon</string>
     <string name="concert_soon_channel_description">A channel to convey information about concerts starting soon</string>
 
-    <string name="pic_uploaded_message">Picture uploaded to the photos wall</string>
+    <string name="pic_uploaded_message">Your picture was uploaded to the photos wall!</string>
 
     <!--  APP DRAWER  -->
 
