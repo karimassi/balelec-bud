@@ -1,6 +1,8 @@
 package ch.epfl.balelecbud.view.welcome;
 
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +22,15 @@ import static ch.epfl.balelecbud.utility.json.JsonResourceReader.getHelpPageColl
 
 public final class WelcomeFragment extends Fragment {
 
-    private static final String TAG = WelcomeFragment.class.getSimpleName();
+    public static final String TAG = WelcomeFragment.class.getSimpleName();
 
     private ViewPager welcomeViewPager;
     private WelcomePagerAdapter welcomePagerAdapter;
     private TabLayout tabIndicator;
+    private Parcelable state;
 
     public static WelcomeFragment newInstance() {
-        return (new WelcomeFragment());
+        return new WelcomeFragment();
     }
 
     @Override
@@ -49,5 +52,19 @@ public final class WelcomeFragment extends Fragment {
         welcomeViewPager.setAdapter(welcomePagerAdapter);
 
         tabIndicator.setupWithViewPager(welcomeViewPager);
+
+        Log.d(TAG, "onStart: trying to restore last state of the welcome screen");
+        if(state != null) {
+            welcomeViewPager.onRestoreInstanceState(state);
+            Log.d(TAG, "onStart: restored saved state successfully --> " + state);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: trying to save last state of the welcome screen");
+        state = welcomeViewPager.onSaveInstanceState();
+        Log.d(TAG, "onPause: saved state successfully --> " + state);
     }
 }

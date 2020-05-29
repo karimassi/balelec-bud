@@ -31,15 +31,15 @@ import ch.epfl.balelecbud.utility.DateFormatter;
 
 public final class PicturesFragment extends Fragment {
 
-    public static PicturesFragment newInstance() {
-        return (new PicturesFragment());
-    }
-
-    private String currentPhotoPath;
+    public static final String TAG = PicturesFragment.class.getSimpleName();
 
     private static final int CAMERA_PERM_CODE = 101;
     private static final int CAMERA_REQUEST_CODE = 102;
+    private String currentPhotoPath;
 
+    public static PicturesFragment newInstance() {
+        return (new PicturesFragment());
+    }
 
     @Override
     public void onStart() {

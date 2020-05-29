@@ -19,7 +19,7 @@ import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
 public final class ScheduleFragment extends Fragment {
     
-    private static final String TAG = ScheduleFragment.class.getSimpleName();
+    public static final String TAG = ScheduleFragment.class.getSimpleName();
 
     public static ScheduleFragment newInstance(ArrayList<Slot> subscribedSlots) {
         ScheduleFragment scheduleFragment = new ScheduleFragment();

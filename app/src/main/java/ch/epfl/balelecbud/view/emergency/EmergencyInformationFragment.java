@@ -24,11 +24,13 @@ import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListene
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
-public final class EmergencyInformationFragment extends Fragment implements OnRecyclerViewInteractionListener<EmergencyInformation> {
+public final class EmergencyInformationFragment extends Fragment
+        implements OnRecyclerViewInteractionListener<EmergencyInformation> {
+
+    public static final String TAG = EmergencyInformationFragment.class.getSimpleName();
 
     private boolean callPermissionGranted;
     private static final int PERMISSION_TO_CALL_CODE = 991;
-
 
     public static EmergencyInformationFragment newInstance() {
         return (new EmergencyInformationFragment());
