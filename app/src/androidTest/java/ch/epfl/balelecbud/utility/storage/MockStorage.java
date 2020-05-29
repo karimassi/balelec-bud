@@ -35,12 +35,11 @@ public class MockStorage implements Storage {
         }
 
         HashMap<String, File> trackImages = new HashMap<>();
-        userImages.put("uri", createFile("uri", ".jpeg"));
+        trackImages.put("uri", createFile("uri", ".jpeg"));
 
         storage.put(ARTISTS_IMAGES, artistImages);
         storage.put(USER_PICTURES, userImages);
         storage.put(TRACKS_IMAGES, trackImages);
-
     }
 
     @Override
