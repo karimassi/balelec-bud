@@ -48,12 +48,12 @@ public final class ReceivedFriendRequestData extends RecyclerViewData<User, Rece
         viewHolder.acceptButton.setOnClickListener(v -> {
             FriendshipUtils.acceptRequest(data.get(index));
             remove(index);
-            Log.d(TAG, "Accepted request from: " + data.get(index).getDisplayName());
+            Log.d(TAG, "Accepted request");
         });
         viewHolder.deleteButton.setOnClickListener(v -> {
             FriendshipUtils.deleteRequest(data.get(index), currentUser);
             remove(index);
-            Log.d(TAG, "Rejected request from: " + data.get(index).getDisplayName());
+            Log.d(TAG, "Rejected request");
         });
     }
 }

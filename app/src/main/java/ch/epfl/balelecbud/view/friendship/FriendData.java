@@ -48,7 +48,7 @@ public final class FriendData extends RecyclerViewData<User, FriendViewHolder> {
         viewHolder.deleteButton.setOnClickListener(v -> {
             FriendshipUtils.removeFriend(data.get(index));
             remove(index);
-            Log.d(TAG, "Unfriended: " + data.get(index).getDisplayName());
+            Log.d(TAG, "Unfriended.");
         });
     }
 }

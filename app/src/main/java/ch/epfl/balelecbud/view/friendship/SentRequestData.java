@@ -48,7 +48,7 @@ public final class SentRequestData extends RecyclerViewData<User, SentRequestVie
         viewHolder.cancelButton.setOnClickListener(v -> {
             FriendshipUtils.deleteRequest(currentUser, data.get(index));
             remove(index);
-            Log.d(TAG, "Deleted request from:" + data.get(index).getDisplayName());
+            Log.d(TAG, "Deleted request");
         });
     }
 }

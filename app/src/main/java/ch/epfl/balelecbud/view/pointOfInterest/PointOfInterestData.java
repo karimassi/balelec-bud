@@ -52,7 +52,7 @@ public final class PointOfInterestData extends RecyclerViewData<PointOfInterest,
         viewHolder.nameTextView.setCompoundDrawablesWithIntrinsicBounds(poi.getType().getDrawableId(), 0, 0, 0);
         viewHolder.amountNearPoiTextView.setText(String.valueOf(lastRecordedAffluence.get(index)));
         viewHolder.goToMapButton.setOnClickListener(v -> {
-            Log.d(TAG, "Going to map centered on poi: " + poi.getName());
+            Log.d(TAG, "Going to map centered on poi");
             Fragment map = MapViewFragment.newInstance();
             Bundle arguments = new Bundle();
             arguments.putParcelable("location", poi.getLocation());
