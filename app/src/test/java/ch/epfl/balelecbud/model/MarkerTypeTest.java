@@ -14,4 +14,15 @@ public class MarkerTypeTest {
         Assert.assertEquals(MarkerType.STAGE, MarkerType.getMarkerType(PointOfInterestType.STAGE));
         Assert.assertEquals(MarkerType.WC, MarkerType.getMarkerType(PointOfInterestType.WC));
     }
+
+    @Test
+    public void toStringTest() {
+        Assert.assertEquals(MarkerType.ATM.toString(), "ATM");
+        Assert.assertEquals(MarkerType.BAR.toString(), "Bar");
+        Assert.assertEquals(MarkerType.FIRST_AID.toString(), "First aid");
+        Assert.assertEquals(MarkerType.FOOD.toString(), "Food");
+        Assert.assertEquals(MarkerType.STAGE.toString(), "Stage");
+        Assert.assertEquals(MarkerType.WC.toString(), "WC");
+
+    }
 }

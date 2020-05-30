@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.testUtils.FileUtils;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
+import ch.epfl.balelecbud.utility.CompletableFutureUtils;
 import ch.epfl.balelecbud.utility.InformationSource;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.setRemoteStorage;
@@ -90,6 +91,25 @@ public class CachedStorageTest {
         assertNotNull(resultFile);
         FileUtils.checkContent(resultFile, expectedContent);
 
+    }
+
+    @Test
+    public void getAllFileNamesReturnsEmptyListOnCacheOnly() throws Throwable {
+        TestAsyncUtils sync = new TestAsyncUtils();
+        Storage mockStorage = new MockStorages(sync);
+        setRemoteStorage(mockStorage);
+        Storage cached = new CachedStorage(new MockCache());
+        CompletableFuture<List<String>> res = cached.getAllFileNameIn(Storage.USER_PICTURES, InformationSource.CACHE_ONLY);
+        res.whenComplete((strings, throwable) -> {
+            if (throwable != null) sync.fail();
+            else {
+                sync.assertTrue(strings.isEmpty());
+                sync.call();
+            }
+        });
+        sync.waitCall(1);
+        sync.assertCalled(1);
+        sync.assertNoFailedTests();
     }
 
     @Test
