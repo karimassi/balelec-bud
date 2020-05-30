@@ -52,19 +52,18 @@ public final class GalleryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         return inflater.inflate(R.layout.fragment_gallery, container, false);
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         RecyclerView rvGallery = getView().findViewById(R.id.gallery_recycler_view);
-        View freshnessView = getView().findViewById(R.id.freshness_info_layout);
 
         PictureData data = new PictureData();
-        adapter = new RefreshableRecyclerViewAdapter<>(PictureHolder::new, freshnessView, data, R.layout.item_gallery);
+        adapter = new RefreshableRecyclerViewAdapter<>(PictureHolder::new, rvGallery, data, R.layout.item_gallery);
 
         rvGallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         rvGallery.setAdapter(adapter);
@@ -77,10 +76,9 @@ public final class GalleryFragment extends Fragment {
     }
 
     private void askCameraPermissions() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
-        }else{
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
             dispatchTakePictureIntent();
         }
 
@@ -88,10 +86,10 @@ public final class GalleryFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == CAMERA_PERM_CODE){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == CAMERA_PERM_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakePictureIntent();
-            }else {
+            } else {
                 Toast.makeText(getActivity(), R.string.camera_permission_refused_msg, Toast.LENGTH_SHORT).show();
             }
         }
@@ -104,9 +102,8 @@ public final class GalleryFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
                 Log.d(TAG, "Absolute Url of Image is " + Uri.fromFile(f));
-                String filename = f.getName();
                 try {
-                    getAppStorage().putFile(USER_PICTURES, filename, f);
+                    getAppStorage().putFile(USER_PICTURES, f.getName(), f);
                     Snackbar.make(getView(), R.string.pic_uploaded_message, LENGTH_SHORT).show();
                 } catch (IOException e) {
                     Log.d(TAG, e.getLocalizedMessage());
@@ -118,13 +115,10 @@ public final class GalleryFragment extends Fragment {
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = DateFormatter.FILE_TIMESTAMP.format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getFilesDir();
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                "JPEG_" + DateFormatter.FILE_TIMESTAMP.format(new Date()) + "_",  /* prefix */
+                ".jpg",                                                           /* suffix */
+                getActivity().getFilesDir()                                              /* directory */
         );
         currentPhotoPath = image.getAbsolutePath();
         return image;

@@ -72,12 +72,10 @@ public final class SlotData extends RecyclerViewData<Slot, SlotHolder> {
         viewHolder.subscribeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Log.d(TAG, "Notification switched: ON");
-                intentLauncher.accept(
-                        FlowUtils.packSubscribeIntentWithSlot(mainActivity, slot));
+                intentLauncher.accept(FlowUtils.packSubscribeIntentWithSlot(mainActivity, slot));
             } else {
                 Log.d(TAG, "Notification switched: OFF");
-                intentLauncher.accept(
-                        FlowUtils.packCancelIntentWithSlot(mainActivity, slot));
+                intentLauncher.accept(FlowUtils.packCancelIntentWithSlot(mainActivity, slot));
             }
         });
 
