@@ -60,9 +60,13 @@ public final class SlotData extends RecyclerViewData<Slot, SlotHolder> {
 
         CompletableFuture<File> imageDownload = getAppStorage().getFile("artists_images/" + slot.getImageFileName());
         imageDownload.whenComplete((file, t) -> {
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-            viewHolder.artistImageView.setImageBitmap(bitmap);
-            viewHolder.artistImageView.setVisibility(View.VISIBLE);
+            if (t == null) {
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                viewHolder.artistImageView.setImageBitmap(bitmap);
+                viewHolder.artistImageView.setVisibility(View.VISIBLE);
+            } else {
+                Log.d(TAG, "Couldn't load artist image");
+            }
         });
 
         viewHolder.subscribeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {

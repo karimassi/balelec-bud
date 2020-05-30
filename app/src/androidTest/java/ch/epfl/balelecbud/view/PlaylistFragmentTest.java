@@ -35,6 +35,8 @@ public class PlaylistFragmentTest {
 
     private final MockDatabase mock = MockDatabase.getInstance();
     private final Track track = new Track("i'm cool.", "C-line ft. K-rim", "uri", 0);
+    private final Track otherTrack = new Track("so cool.", "C-line Dion", "fakeuri", 0);
+
 
     @Before
     public void setup() {
@@ -42,6 +44,7 @@ public class PlaylistFragmentTest {
         BalelecbudApplication.setAppDatabase(mock);
         setAppStorage(MockStorage.getInstance());
         mock.storeDocument(PLAYLIST_PATH, track);
+        mock.storeDocument(PLAYLIST_PATH, otherTrack);
         FragmentScenario.launchInContainer(PlaylistFragment.class);
     }
 

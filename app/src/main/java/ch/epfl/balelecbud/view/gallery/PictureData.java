@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.view.gallery;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
@@ -35,9 +36,13 @@ public final class PictureData extends RecyclerViewData<Picture, PictureHolder> 
         final Picture picture = data.get(index);
         CompletableFuture<File> imageDownload = getAppStorage().getFile(picture.getImageFileName());
         imageDownload.whenComplete((file, t) -> {
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-            viewHolder.imageView.setImageBitmap(bitmap);
-            viewHolder.imageView.setVisibility(View.VISIBLE);
+            if (t == null) {
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                viewHolder.imageView.setImageBitmap(bitmap);
+                viewHolder.imageView.setVisibility(View.VISIBLE);
+            } else {
+                Log.d(TAG, "Could not load picture");
+            }
         });
     }
 }
