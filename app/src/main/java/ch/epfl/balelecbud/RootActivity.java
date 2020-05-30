@@ -1,7 +1,10 @@
 package ch.epfl.balelecbud;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -15,9 +18,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
+import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
@@ -42,6 +48,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 public final class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = RootActivity.class.getSimpleName();
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -67,19 +74,16 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
             showFirstFragment();
         }
 
-        Log.d(WelcomeFragment.TAG, "RootActivityCreate: trying to restore last saved instance");
-        if(savedInstanceState != null) {
-            fragmentHome = getSupportFragmentManager().getFragment(savedInstanceState, WelcomeFragment.TAG);
-            Log.d(WelcomeFragment.TAG, "RootActivityCreate: successfully restored fragment");
-        }
-    }
+        Log.d(WelcomeFragment.TAG, "RootActivityCreate");
+        fragmentHome = WelcomeFragment.newInstance();
+        SharedPreferences preferences = BalelecbudApplication
+                .getAppContext().getSharedPreferences(WelcomeFragment.TAG, Context.MODE_PRIVATE);
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if(fragmentHome.isAdded()) {
-            Log.d(WelcomeFragment.TAG, "RootActivitySave: save instance state");
-            getSupportFragmentManager().putFragment(outState, WelcomeFragment.TAG, fragmentHome);
+        if(WelcomeFragment.isSavedState(preferences)) {
+            Gson gson = new Gson();
+            Bundle savedState = gson.fromJson(WelcomeFragment.restoreState(preferences), Bundle.class);
+            ((WelcomeFragment) fragmentHome).setState(savedState);
+            Log.d(WelcomeFragment.TAG, "RootActivityCreate: successfully restoring state");
         }
     }
 
