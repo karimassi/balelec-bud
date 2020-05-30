@@ -47,6 +47,7 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: created successfully");
         setContentView(R.layout.activity_root);
         this.configureToolBar();
         this.configureDrawerLayout();
