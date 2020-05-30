@@ -46,6 +46,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
     private String SIGN_OUT_KEY;
     private String DELETE_USER_KEY;
     private String CONNECTING_KEY;
+    private String SIGNED_IN_INFO_KEY;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -125,6 +126,9 @@ public final class SettingsFragment extends PreferenceFragmentCompat {
         findPreference(CONNECTING_KEY).setVisible(status.isConnecting());
         findPreference(SIGN_OUT_KEY).setVisible(status.isSignedIn());
         findPreference(DELETE_USER_KEY).setVisible(status.isSignedIn());
+        if(status.isSignedIn()){
+            findPreference(SIGN_OUT_KEY).setSummary(getString(R.string.sign_out_summary) + getAppAuthenticator().getCurrentUser().getDisplayName());
+        }
     }
 
     @Override
