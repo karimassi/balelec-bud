@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.view.friendship;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,6 +20,8 @@ import static ch.epfl.balelecbud.utility.database.Database.FRIENDSHIPS_PATH;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 
 public final class FriendData extends RecyclerViewData<User, FriendViewHolder> {
+
+    private static String TAG = FriendData.class.getSimpleName();
 
     private final User currentUser;
 
@@ -44,6 +48,7 @@ public final class FriendData extends RecyclerViewData<User, FriendViewHolder> {
         viewHolder.deleteButton.setOnClickListener(v -> {
             FriendshipUtils.removeFriend(data.get(index));
             remove(index);
+            Log.d(TAG, "Unfriended: " + data.get(index).getDisplayName());
         });
     }
 }

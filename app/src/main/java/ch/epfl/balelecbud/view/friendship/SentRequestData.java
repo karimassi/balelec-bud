@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.view.friendship;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,6 +20,8 @@ import static ch.epfl.balelecbud.utility.FriendshipUtils.getUsersFromUids;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 
 public final class SentRequestData extends RecyclerViewData<User, SentRequestViewHolder> {
+
+    private static String TAG = SentRequestData.class.getSimpleName();
 
     private final User currentUser;
 
@@ -44,6 +48,7 @@ public final class SentRequestData extends RecyclerViewData<User, SentRequestVie
         viewHolder.cancelButton.setOnClickListener(v -> {
             FriendshipUtils.deleteRequest(currentUser, data.get(index));
             remove(index);
+            Log.d(TAG, "Deleted request from:" + data.get(index).getDisplayName());
         });
     }
 }

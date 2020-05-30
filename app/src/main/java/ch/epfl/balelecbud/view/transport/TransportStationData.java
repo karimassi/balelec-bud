@@ -1,6 +1,8 @@
 package ch.epfl.balelecbud.view.transport;
 
 
+import android.util.Log;
+
 import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.model.Location;
@@ -13,6 +15,8 @@ import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListene
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 public final class TransportStationData extends RecyclerViewData<TransportStation, TransportStationHolder> {
+
+    private static String TAG = TransportStationData.class.getSimpleName();
 
     private Location userLocation;
     private OnRecyclerViewInteractionListener<TransportStation> interactionListener;
@@ -36,6 +40,7 @@ public final class TransportStationData extends RecyclerViewData<TransportStatio
         viewHolder.distanceView.setText(data.get(index).getFormattedDistanceToUser());
         viewHolder.itemView.setOnClickListener(v -> {
             interactionListener.onItemSelected(data.get(index));
+            Log.d(TAG, "Selected station: " + data.get(index).getStationName());
         });
     }
 }

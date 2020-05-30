@@ -98,10 +98,10 @@ public final class EmergencyInformationFragment extends Fragment implements OnRe
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 callPermissionGranted = true;
-                Log.w("Call permission", "allowed");
+                Log.d("Call permission", "allowed");
             } else {
                 callPermissionGranted = false;
-                Log.w("Call permission", "denied");
+                Log.d("Call permission", "denied");
             }
         }
     }
