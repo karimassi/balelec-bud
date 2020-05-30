@@ -1,12 +1,17 @@
 package ch.epfl.balelecbud.utility.storage;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
+import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.InformationSource;
 
 public class MockStorage implements Storage {
@@ -56,7 +61,17 @@ public class MockStorage implements Storage {
 
     private File createFile(String prefix, String suffix) {
         try {
-            return File.createTempFile(prefix, suffix);
+            File tmpFile = File.createTempFile(prefix, suffix);
+            InputStream inputStream = BalelecbudApplication.getAppContext()
+                    .getResources().openRawResource(R.drawable.balelec_artist_pic); // id drawable
+            OutputStream out = new FileOutputStream(tmpFile);
+            byte buf[] = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buf)) > 0)
+                out.write(buf, 0, len);
+            out.close();
+            inputStream.close();
+            return tmpFile;
         } catch (Exception e) {
             throw new RuntimeException("Create file failed");
         }
@@ -74,16 +89,16 @@ public class MockStorage implements Storage {
         storage = new HashMap<>();
         HashMap<String, File> artistImages = new HashMap<>();
         for (int i = 1; i < 4; ++i) {
-            artistImages.put("path"+i, createFile("path"+i, ".png"));
+            artistImages.put("path"+i+".png", createFile("path"+i, ".png"));
         }
 
         HashMap<String, File> userImages = new HashMap<>();
         for (int i = 0; i < 9; ++i) {
-            userImages.put("image"+i, createFile("image"+i, ".png"));
+            userImages.put("image"+i+".png", createFile("image"+i, ".png"));
         }
 
         HashMap<String, File> trackImages = new HashMap<>();
-        trackImages.put("uri", createFile("uri", ".jpeg"));
+        trackImages.put("uri.jpeg", createFile("uri", ".jpeg"));
 
         storage.put(ARTISTS_IMAGES, artistImages);
         storage.put(USER_PICTURES, userImages);

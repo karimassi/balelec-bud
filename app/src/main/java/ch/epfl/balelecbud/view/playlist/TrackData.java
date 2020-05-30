@@ -2,6 +2,7 @@ package ch.epfl.balelecbud.view.playlist;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
@@ -22,6 +23,8 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 import static ch.epfl.balelecbud.utility.storage.Storage.TRACKS_IMAGES;
 
 public final class TrackData extends RecyclerViewData<Track, TrackHolder> {
+
+    private static String TAG = TrackData.class.getSimpleName();
 
     private OnRecyclerViewInteractionListener<Track> interactionListener;
 
@@ -50,9 +53,13 @@ public final class TrackData extends RecyclerViewData<Track, TrackHolder> {
         CompletableFuture<File> imageDownload = getAppStorage()
                 .getFile(TRACKS_IMAGES + "/" + data.get(index).getUri() + ".jpeg");
         imageDownload.whenComplete((file, t) -> {
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-            viewHolder.image.setImageBitmap(bitmap);
-            viewHolder.image.setVisibility(View.VISIBLE);
+            if (t == null) {
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                viewHolder.image.setImageBitmap(bitmap);
+                viewHolder.image.setVisibility(View.VISIBLE);
+            } else {
+                Log.d(TAG, "Couldn't load track image");
+            }
         });
 
         viewHolder.itemView.setOnClickListener(v -> interactionListener.onItemSelected(data.get(index)));
