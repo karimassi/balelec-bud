@@ -40,6 +40,7 @@ import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 public final class RootActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = RootActivity.class.getSimpleName();
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -49,27 +50,20 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: created successfully");
         setContentView(R.layout.activity_root);
-        this.configureToolBar();
-        this.configureDrawerLayout();
-        this.configureNavigationView();
+        configureToolBar();
+        configureDrawerLayout();
+        configureNavigationView();
 
-        setUpUser();
+        setupUser();
 
         ArrayList<Slot> slots = FlowUtils.unpackCallback(getIntent());
         if (slots != null) {
             ScheduleFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
             if (!fragmentSchedule.isVisible()) {
-                startTransactionFragment(fragmentSchedule, "SCHEDULE");
+                startTransactionFragment(fragmentSchedule, ScheduleFragment.TAG);
             }
         } else {
-            this.showFirstFragment();
-        }
-    }
-
-    private void setUpUser() {
-        if (getAppAuthenticator().getCurrentUser() == null || getAppAuthenticator().getCurrentUid() == null) {
-            Log.d(TAG, "setUpUser: creating anonymous user");
-            getAppAuthenticator().signInAnonymously();
+            showFirstFragment();
         }
     }
 
@@ -78,53 +72,70 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
         int id = item.getItemId();
         switch (id) {
             case R.id.fragment_main_drawer_home:
-                this.showHomeFragment();
+                showHomeFragment();
                 break;
             case R.id.fragment_main_drawer_info:
-                this.showInfoFragment();
+                showInfoFragment();
                 break;
             case R.id.fragment_main_drawer_schedule:
-                this.showScheduleFragment();
+                showScheduleFragment();
                 break;
             case R.id.fragment_main_drawer_poi:
-                this.showPoiFragment();
+                showPoiFragment();
                 break;
             case R.id.fragment_main_drawer_map:
-                this.showMapFragment();
+                showMapFragment();
                 break;
             case R.id.fragment_main_drawer_transport:
-                this.showTransportFragment();
+                showTransportFragment();
                 break;
             case R.id.fragment_main_drawer_social:
-                this.showSocialFragment();
+                showSocialFragment();
                 break;
             case R.id.fragment_main_drawer_playlist:
-                this.showPlaylistFragment();
+                showPlaylistFragment();
                 break;
             case R.id.fragment_main_drawer_emergency_info:
-                this.showEmergencyInfoFragment();
+                showEmergencyInfoFragment();
                 break;
             case R.id.fragment_main_drawer_settings:
-                this.showSettingsFragment();
+                showSettingsFragment();
                 break;
             case R.id.fragment_main_drawer_gallery:
-                this.showGalleryFragment();
+                showGalleryFragment();
                 break;
             default:
                 break;
         }
-        this.drawerLayout.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        // 5 - Handle back click to close menu
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    private void setupUser() {
+        if (getAppAuthenticator().getCurrentUser() == null || getAppAuthenticator().getCurrentUid() == null) {
+            Log.d(TAG, "setupUser: creating anonymous user");
+            getAppAuthenticator().signInAnonymously();
+        }
     }
 
     private void showHomeFragment() {
         WelcomeFragment fragmentHome = WelcomeFragment.newInstance();
-        this.startTransactionFragment(fragmentHome, "HOME");
+        startTransactionFragment(fragmentHome, WelcomeFragment.TAG);
     }
 
     private void showInfoFragment() {
         Fragment fragmentInfo = FestivalInformationFragment.newInstance();
-        this.startTransactionFragment(fragmentInfo, "INFO");
+        startTransactionFragment(fragmentInfo, FestivalInformationFragment.TAG);
     }
 
     private void showScheduleFragment() {
@@ -136,17 +147,17 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
 
     private void showPoiFragment() {
         Fragment fragmentPoi = PointOfInterestFragment.newInstance();
-        this.startTransactionFragment(fragmentPoi, "POI");
+        startTransactionFragment(fragmentPoi, PointOfInterestFragment.TAG);
     }
 
     private void showMapFragment() {
         MapViewFragment fragmentMap = MapViewFragment.newInstance();
-        this.startTransactionFragment(fragmentMap, MapViewFragment.TAG);
+        startTransactionFragment(fragmentMap, MapViewFragment.TAG);
     }
 
     private void showTransportFragment() {
         Fragment fragmentTransport = TransportFragment.newInstance();
-        this.startTransactionFragment(fragmentTransport, "TRANSPORT");
+        startTransactionFragment(fragmentTransport, TransportFragment.TAG);
     }
 
     private void showSocialFragment() {
@@ -154,28 +165,28 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
             Toast.makeText(this, R.string.require_sign_in, Toast.LENGTH_LONG).show();
         } else {
             Fragment fragmentSocial = SocialFragment.newInstance();
-            this.startTransactionFragment(fragmentSocial, "SOCIAL");
+            startTransactionFragment(fragmentSocial, SocialFragment.TAG);
         }
     }
 
     private void showPlaylistFragment() {
         Fragment fragmentPlaylist = PlaylistFragment.newInstance();
-        this.startTransactionFragment(fragmentPlaylist, "PLAYLIST");
+        startTransactionFragment(fragmentPlaylist, PlaylistFragment.TAG);
     }
 
     private void showEmergencyInfoFragment() {
         Fragment fragmentEmergencyInfo = EmergencyInformationFragment.newInstance();
-        this.startTransactionFragment(fragmentEmergencyInfo, "EMERGENCY_INFO");
+        startTransactionFragment(fragmentEmergencyInfo, EmergencyInformationFragment.TAG);
     }
 
     private void showSettingsFragment() {
         Fragment fragmentSettings = SettingsFragment.newInstance();
-        this.startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
+        startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
     }
 
     private void showGalleryFragment() {
         GalleryFragment fragmentGallery = GalleryFragment.newInstance();
-        this.startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
+        startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {
@@ -189,35 +200,25 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     private void showFirstFragment() {
         Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.root_activity_frame_layout);
         if (visibleFragment == null) {
-            this.showHomeFragment();
-            this.navigationView.getMenu().getItem(0).setChecked(true);
+            showHomeFragment();
+            navigationView.getMenu().getItem(0).setChecked(true);
         }
     }
 
     private void configureToolBar() {
-        this.toolbar = findViewById(R.id.root_activity_toolbar);
+        toolbar = findViewById(R.id.root_activity_toolbar);
         setSupportActionBar(toolbar);
     }
 
     private void configureDrawerLayout() {
-        this.drawerLayout = findViewById(R.id.root_activity_drawer_layout);
+        drawerLayout = findViewById(R.id.root_activity_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
     private void configureNavigationView() {
-        this.navigationView = findViewById(R.id.root_activity_nav_view);
+        navigationView = findViewById(R.id.root_activity_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    @Override
-    public void onBackPressed() {
-        // 5 - Handle back click to close menu
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStack();
-        }
     }
 }

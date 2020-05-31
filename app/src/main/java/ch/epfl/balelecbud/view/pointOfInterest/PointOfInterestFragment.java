@@ -17,8 +17,10 @@ import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
 public final class PointOfInterestFragment extends Fragment {
 
+    public static final String TAG = PointOfInterestFragment.class.getSimpleName();
+
     public static PointOfInterestFragment newInstance() {
-        return (new PointOfInterestFragment());
+        return new PointOfInterestFragment();
     }
 
     @Override

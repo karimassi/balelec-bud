@@ -1,5 +1,6 @@
 package ch.epfl.balelecbud;
 
+import android.os.SystemClock;
 import android.view.Gravity;
 
 import androidx.test.espresso.contrib.DrawerActions;
@@ -10,17 +11,24 @@ import androidx.test.uiautomator.UiDevice;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.List;
+
+import ch.epfl.balelecbud.model.HelpPage;
 import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.view.map.MapViewFragment;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.balelecbud.BalelecbudApplication.setAppAuthenticator;
+import static ch.epfl.balelecbud.testUtils.CustomViewAction.clickTabWithPosition;
 import static ch.epfl.balelecbud.utility.database.MockDatabase.karim;
+import static ch.epfl.balelecbud.utility.json.JsonResourceReader.getHelpPageCollection;
 
 public class RootActivityTest {
     private final UiDevice device = UiDevice.getInstance(getInstrumentation());
@@ -125,5 +133,21 @@ public class RootActivityTest {
     public void canOpenTransportFragmentFromDrawer() {
         openDrawer();
         clickItem(R.id.fragment_main_drawer_transport, R.id.transport_fragment_container);
+    }
+
+    @Test
+    public void testWelcomeViewSavedState() {
+        List<HelpPage> pages = getHelpPageCollection(R.raw.help_page);
+        onView(withId(R.id.welcome_tab_indicator)).perform(clickTabWithPosition(2));
+        SystemClock.sleep(500);
+
+        openDrawer();
+        clickItem(R.id.fragment_main_drawer_info, R.id.festivalInfoRecyclerView);
+        openDrawer();
+        clickItem(R.id.fragment_main_drawer_home, R.id.activity_home_linear_layout);
+
+        SystemClock.sleep(500);
+        onView(withId(R.id.welcome_view_pager)).check(matches(hasDescendant(withText(pages.get(2).getTitle()))));
+        onView(withId(R.id.welcome_view_pager)).check(matches(hasDescendant(withText(pages.get(2).getDescription()))));
     }
 }

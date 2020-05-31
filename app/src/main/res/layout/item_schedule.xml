@@ -18,6 +18,7 @@
         android:id="@+id/ScheduleArtistImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/rv_item_top_bottom_padding"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:visibility="invisible"

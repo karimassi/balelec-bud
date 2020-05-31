@@ -12,8 +12,10 @@
         android:background="@android:color/black"
         android:gravity="center|top"
         android:orientation="vertical"
-        android:layout_marginStart="@dimen/welcome_page_margin"
-        android:layout_marginEnd="@dimen/welcome_page_margin"
+        android:layout_marginLeft="@dimen/welcome_page_margin"
+        android:layout_marginRight="@dimen/welcome_page_margin"
+        android:layout_marginTop="@dimen/rv_item_top_bottom_margin"
+        android:layout_marginBottom="@dimen/rv_item_top_bottom_margin"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
@@ -26,37 +28,44 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/welcome_view_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/welcome_page_title_margin"
-            android:layout_marginBottom="@dimen/welcome_page_title_margin"
-            android:textAlignment="center"
-            android:textSize="@dimen/rv_item_subtitle"
-            android:fontFamily="@font/proxima_nova_bold"
-            android:textColor="@color/design_default_color_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_view_image" />
-
-        <TextView
-            android:id="@+id/welcome_view_description"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/welcome_page_description_margin"
+            android:layout_marginTop="@dimen/welcome_page_title_margin"
+            android:layout_marginStart="@dimen/welcome_page_title_margin"
+            android:layout_marginEnd="@dimen/welcome_page_title_margin"
             android:background="@drawable/round_corner_background"
-            android:textAlignment="center"
-            android:textSize="@dimen/rv_item_text"
-            android:textColor="@android:color/white"
-            android:fontFamily="@font/proxima_nova_bold"
-            android:lineSpacingExtra="@dimen/welcome_page_text_spacing"
-            android:paddingStart="@dimen/welcome_page_description_padding"
-            android:paddingTop="@dimen/welcome_page_description_padding"
-            android:paddingBottom="@dimen/welcome_page_description_padding"
-            android:paddingEnd="@dimen/welcome_page_description_padding"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_view_title" />
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/rv_item_side_padding"
+            android:paddingTop="@dimen/rv_item_top_bottom_padding"
+            android:paddingRight="@dimen/rv_item_side_padding"
+            android:paddingBottom="@dimen/rv_item_top_bottom_padding">
+
+            <TextView
+                android:id="@+id/welcome_view_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/rv_item_subtitle"
+                android:fontFamily="@font/proxima_nova_bold"
+                android:textColor="@android:color/white" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/rv_item_top_bottom_padding"
+                android:layout_marginBottom="@dimen/rv_item_top_bottom_padding"
+                android:background="@color/secondaryColor" />
+
+
+            <TextView
+                android:id="@+id/welcome_view_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/rv_item_text"
+                android:fontFamily="@font/proxima_nova_bold"
+                android:lineSpacingExtra="@dimen/welcome_page_text_spacing"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
