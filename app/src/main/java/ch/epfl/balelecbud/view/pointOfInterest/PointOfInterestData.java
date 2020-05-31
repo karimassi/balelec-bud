@@ -1,6 +1,7 @@
 package ch.epfl.balelecbud.view.pointOfInterest;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -21,6 +22,8 @@ import ch.epfl.balelecbud.view.map.MapViewFragment;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
 public final class PointOfInterestData extends RecyclerViewData<PointOfInterest, PointOfInterestHolder> {
+
+    private static String TAG = PointOfInterestData.class.getSimpleName();
 
     private final List<Integer> lastRecordedAffluence = new LinkedList<>();
     private final FragmentActivity activity;
@@ -49,6 +52,7 @@ public final class PointOfInterestData extends RecyclerViewData<PointOfInterest,
         viewHolder.nameTextView.setCompoundDrawablesWithIntrinsicBounds(poi.getType().getDrawableId(), 0, 0, 0);
         viewHolder.amountNearPoiTextView.setText(String.valueOf(lastRecordedAffluence.get(index)));
         viewHolder.goToMapButton.setOnClickListener(v -> {
+            Log.d(TAG, "Going to map centered on poi");
             Fragment map = MapViewFragment.newInstance();
             Bundle arguments = new Bundle();
             arguments.putParcelable("location", poi.getLocation());

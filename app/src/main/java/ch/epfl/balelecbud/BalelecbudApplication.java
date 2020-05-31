@@ -31,6 +31,7 @@ public final class BalelecbudApplication extends Application {
 
     private static Context appContext;
     private static Storage appStorage;
+    private static Storage remoteStorage;
     private static Database appDatabase;
     private static Cache appCache;
     private static Database remoteDatabase;
@@ -72,6 +73,11 @@ public final class BalelecbudApplication extends Application {
     }
 
     public static ConnectivityChecker getConnectivityChecker() { return connectivityChecker; }
+
+    public static Storage getRemoteStorage() {
+        return remoteStorage;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -84,8 +90,10 @@ public final class BalelecbudApplication extends Application {
             appDatabase = CachedDatabase.getInstance();
         if (appAuthenticator == null)
             appAuthenticator = FirebaseAuthenticator.getInstance();
+        if (remoteStorage == null)
+            remoteStorage = FirebaseStorage.getInstance();
         if (appStorage == null)
-            appStorage = new CachedStorage(FirebaseStorage.getInstance(), new ch.epfl.balelecbud.utility.storage.FilesystemCache());
+            appStorage = new CachedStorage(new ch.epfl.balelecbud.utility.storage.FilesystemCache());
         if (httpClient == null)
             httpClient = VolleyHttpClient.getInstance();
         if (appMessagingService == null)
@@ -134,5 +142,10 @@ public final class BalelecbudApplication extends Application {
     @VisibleForTesting
     public static void setConnectivityChecker(ConnectivityChecker connectivityChecker) {
         BalelecbudApplication.connectivityChecker = connectivityChecker;
+    }
+
+    @VisibleForTesting
+    public static void setRemoteStorage(Storage remoteStorage) {
+        BalelecbudApplication.remoteStorage = remoteStorage;
     }
 }

@@ -60,20 +60,22 @@ public final class SlotData extends RecyclerViewData<Slot, SlotHolder> {
 
         CompletableFuture<File> imageDownload = getAppStorage().getFile("artists_images/" + slot.getImageFileName());
         imageDownload.whenComplete((file, t) -> {
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-            viewHolder.artistImageView.setImageBitmap(bitmap);
-            viewHolder.artistImageView.setVisibility(View.VISIBLE);
+            if (t == null) {
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                viewHolder.artistImageView.setImageBitmap(bitmap);
+                viewHolder.artistImageView.setVisibility(View.VISIBLE);
+            } else {
+                Log.d(TAG, "Couldn't load artist image");
+            }
         });
 
         viewHolder.subscribeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Log.d(TAG, "Notification switched: ON");
-                intentLauncher.accept(
-                        FlowUtils.packSubscribeIntentWithSlot(mainActivity, slot));
+                intentLauncher.accept(FlowUtils.packSubscribeIntentWithSlot(mainActivity, slot));
             } else {
                 Log.d(TAG, "Notification switched: OFF");
-                intentLauncher.accept(
-                        FlowUtils.packCancelIntentWithSlot(mainActivity, slot));
+                intentLauncher.accept(FlowUtils.packCancelIntentWithSlot(mainActivity, slot));
             }
         });
 

@@ -10,6 +10,8 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.utility.InformationSource;
 
+import static ch.epfl.balelecbud.BalelecbudApplication.getRemoteStorage;
+
 /**
  * Uses the decorator pattern, may seem slightly redundant now since the inner Storage already
  * returns a file but if we want to implement a caching strategy (like LRU for example) then having
@@ -18,11 +20,9 @@ import ch.epfl.balelecbud.utility.InformationSource;
 public final class CachedStorage implements Storage {
 
     private static final String TAG = CachedStorage.class.getSimpleName();
-    private final Storage inner;
     private final Cache cache;
 
-    public CachedStorage(Storage inner, Cache cache) {
-        this.inner = inner;
+    public CachedStorage(Cache cache) {
         this.cache = cache;
     }
 
@@ -31,7 +31,7 @@ public final class CachedStorage implements Storage {
         if (cache.contains(name)) {
             return cache.get(name);
         } else {
-            return inner.getFile(name)
+            return getRemoteStorage().getFile(name)
                     .thenApply(innerFile -> {
                         try {
                             return cache.put(innerFile, name);
@@ -48,13 +48,18 @@ public final class CachedStorage implements Storage {
         switch(source){
             case REMOTE_ONLY:
             case CACHE_FIRST:
-                return inner.getAllFileNameIn(collectionName, source);
+                return getRemoteStorage().getAllFileNameIn(collectionName, source);
             case CACHE_ONLY:
             default:
                 CompletableFuture<List<String>> res = new CompletableFuture<>();
                 res.complete(new LinkedList<>());
                 return res;
         }
+    }
+
+    @Override
+    public void putFile(String collectionName, String filename, File file) throws IOException{
+        getRemoteStorage().putFile(collectionName, filename, file);
     }
 
 }
