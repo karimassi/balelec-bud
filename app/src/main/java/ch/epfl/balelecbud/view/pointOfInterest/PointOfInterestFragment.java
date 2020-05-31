@@ -18,8 +18,10 @@ import ch.epfl.balelecbud.view.ConnectivityFragment;
 
 public final class PointOfInterestFragment extends ConnectivityFragment {
 
+    public static final String TAG = PointOfInterestFragment.class.getSimpleName();
+
     public static PointOfInterestFragment newInstance() {
-        return (new PointOfInterestFragment());
+        return new PointOfInterestFragment();
     }
 
     @Override

@@ -23,8 +23,10 @@ import ch.epfl.balelecbud.view.ConnectivityFragment;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
 public final class SocialFragment extends ConnectivityFragment {
-    private SocialAdapter fragmentAdapter;
 
+    public static final String TAG = SocialFragment.class.getSimpleName();
+
+    private SocialAdapter fragmentAdapter;
     private List<String> tabTitleList;
     private FragmentActivity activity;
 

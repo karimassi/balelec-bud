@@ -1,6 +1,9 @@
 package ch.epfl.balelecbud.view.welcome;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +23,14 @@ import static ch.epfl.balelecbud.utility.json.JsonResourceReader.getHelpPageColl
 
 public final class WelcomeFragment extends Fragment {
 
-    private static final String TAG = WelcomeFragment.class.getSimpleName();
+    public static final String TAG = WelcomeFragment.class.getSimpleName();
 
     private ViewPager welcomeViewPager;
     private WelcomePagerAdapter welcomePagerAdapter;
-    private TabLayout tabIndicator;
+    private TabLayout pageIndicator;
 
     public static WelcomeFragment newInstance() {
-        return (new WelcomeFragment());
+        return new WelcomeFragment();
     }
 
     @Override
@@ -40,7 +43,7 @@ public final class WelcomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        tabIndicator = getActivity().findViewById(R.id.welcome_tab_indicator);
+        pageIndicator = getActivity().findViewById(R.id.welcome_tab_indicator);
 
         List<HelpPage> pages = getHelpPageCollection(R.raw.help_page);
 
@@ -48,6 +51,36 @@ public final class WelcomeFragment extends Fragment {
         welcomePagerAdapter = new WelcomePagerAdapter(BalelecbudApplication.getAppContext(), pages);
         welcomeViewPager.setAdapter(welcomePagerAdapter);
 
-        tabIndicator.setupWithViewPager(welcomeViewPager);
+        pageIndicator.setupWithViewPager(welcomeViewPager);
+
+        SharedPreferences preferences = BalelecbudApplication
+                .getAppContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
+
+        if(isPageNumberSaved(preferences)) {
+            int pageNumber = preferences.getInt(TAG, -1);
+            if(pageNumber == -1) {
+                Log.d(TAG, "onStart: Failed to restore page");
+            } else {
+                welcomeViewPager.setCurrentItem(pageNumber);
+                Log.d(TAG, "onStart: restored page number successfully --> " + pageNumber);
+            }
+            preferences.edit().clear().apply();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: trying to save last page of the welcome screen");
+        int page = pageIndicator.getSelectedTabPosition();
+        SharedPreferences preferences = BalelecbudApplication
+                .getAppContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        preferences.edit().putInt(TAG, page).apply();
+        Log.d(TAG, "onPause: saved page number successfully --> " + page);
+        Log.d(TAG, "onPause: isPageNumberSaved: " + isPageNumberSaved(preferences));
+    }
+
+    private boolean isPageNumberSaved(SharedPreferences preferences) {
+        return preferences.contains(TAG);
     }
 }

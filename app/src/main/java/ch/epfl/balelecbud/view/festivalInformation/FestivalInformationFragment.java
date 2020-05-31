@@ -18,6 +18,8 @@ import ch.epfl.balelecbud.view.ConnectivityFragment;
 
 public final class FestivalInformationFragment extends ConnectivityFragment {
 
+    public static final String TAG = FestivalInformationFragment.class.getSimpleName();
+
     public static FestivalInformationFragment newInstance() {
         return new FestivalInformationFragment();
     }

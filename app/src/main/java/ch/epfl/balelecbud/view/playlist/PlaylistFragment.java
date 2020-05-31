@@ -25,7 +25,8 @@ import ch.epfl.balelecbud.view.ConnectivityFragment;
 
 public final class PlaylistFragment extends ConnectivityFragment implements OnRecyclerViewInteractionListener<Track> {
 
-    private static final String TAG = PlaylistFragment.class.getSimpleName();
+    public static final String TAG = PlaylistFragment.class.getSimpleName();
+
     private SpotifyAppRemote spotifyAppRemote;
 
     public static PlaylistFragment newInstance() {

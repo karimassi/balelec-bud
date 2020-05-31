@@ -20,7 +20,7 @@ import ch.epfl.balelecbud.view.ConnectivityFragment;
 
 public final class ScheduleFragment extends ConnectivityFragment {
     
-    private static final String TAG = ScheduleFragment.class.getSimpleName();
+    public static final String TAG = ScheduleFragment.class.getSimpleName();
 
     public static ScheduleFragment newInstance(ArrayList<Slot> subscribedSlots) {
         ScheduleFragment scheduleFragment = new ScheduleFragment();

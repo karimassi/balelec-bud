@@ -16,6 +16,8 @@ import ch.epfl.balelecbud.view.ConnectivityFragment;
 
 public final class TransportFragment extends ConnectivityFragment implements OnRecyclerViewInteractionListener<TransportStation> {
 
+    public static final String TAG = TransportFragment.class.getSimpleName();
+
     private FragmentActivity activity;
 
     public static TransportFragment newInstance() {
