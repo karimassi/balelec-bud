@@ -27,7 +27,8 @@ import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH
 
 public final class PlaylistFragment extends Fragment implements OnRecyclerViewInteractionListener<Track> {
 
-    private static final String TAG = PlaylistFragment.class.getSimpleName();
+    public static final String TAG = PlaylistFragment.class.getSimpleName();
+
     private SpotifyAppRemote spotifyAppRemote;
 
     public static PlaylistFragment newInstance() {

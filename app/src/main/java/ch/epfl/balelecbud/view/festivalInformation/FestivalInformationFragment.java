@@ -17,6 +17,8 @@ import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
 public final class FestivalInformationFragment extends Fragment {
 
+    public static final String TAG = FestivalInformationFragment.class.getSimpleName();
+
     public static FestivalInformationFragment newInstance() {
         return new FestivalInformationFragment();
     }

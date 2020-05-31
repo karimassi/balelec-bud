@@ -61,7 +61,7 @@
     <string name="drawer_home">Home</string>
     <string name="drawer_social">Social</string>
     <string name="drawer_festival_information">Information</string>
-    <string name="drawer_schedule">Schedule</string>
+    <string name="drawer_schedule">Line Up</string>
     <string name="drawer_poi">Points of Interest</string>
     <string name="drawer_map">Map</string>
     <string name="drawer_transport">Transport</string>
