@@ -60,10 +60,8 @@ public final class WelcomeFragment extends Fragment {
             int pageNumber = preferences.getInt(TAG, -1);
             if(pageNumber == -1) {
                 Log.d(TAG, "onStart: Failed to restore page");
-            }
-            else {
+            } else {
                 welcomeViewPager.setCurrentItem(pageNumber);
-                //pageIndicator.getTabAt(pageNumber);
                 Log.d(TAG, "onStart: restored page number successfully --> " + pageNumber);
             }
             preferences.edit().clear().apply();
