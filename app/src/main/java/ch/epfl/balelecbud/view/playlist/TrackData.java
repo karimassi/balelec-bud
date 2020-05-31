@@ -1,11 +1,5 @@
 package ch.epfl.balelecbud.view.playlist;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.view.View;
-
-import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.concurrent.CompletableFuture;
@@ -19,7 +13,6 @@ import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListene
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 import static ch.epfl.balelecbud.utility.storage.Storage.TRACKS_IMAGES;
 
 public final class TrackData extends RecyclerViewData<Track, TrackHolder> {
@@ -50,17 +43,8 @@ public final class TrackData extends RecyclerViewData<Track, TrackHolder> {
         viewHolder.title.setText(data.get(index).getTitle());
         viewHolder.artist.setText(data.get(index).getArtist());
 
-        CompletableFuture<File> imageDownload = getAppStorage()
-                .getFile(TRACKS_IMAGES + "/" + data.get(index).getUri() + ".jpeg");
-        imageDownload.whenComplete((file, t) -> {
-            if (t == null) {
-                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-                viewHolder.image.setImageBitmap(bitmap);
-                viewHolder.image.setVisibility(View.VISIBLE);
-            } else {
-                Log.d(TAG, "Couldn't load track image");
-            }
-        });
+        CompletableFutureUtils.downloadAndSetImageView(TRACKS_IMAGES + "/" + data.get(index).getUri() + ".jpeg",
+                viewHolder.image, TAG, "Couldn't load track image");
 
         viewHolder.itemView.setOnClickListener(v -> interactionListener.onItemSelected(data.get(index)));
     }
