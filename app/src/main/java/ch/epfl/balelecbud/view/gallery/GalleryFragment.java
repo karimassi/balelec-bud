@@ -76,12 +76,7 @@ public final class GalleryFragment extends Fragment {
     }
 
     private void askCameraPermissions() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
-        } else {
-            dispatchTakePictureIntent();
-        }
-
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
     }
 
     @Override
@@ -106,7 +101,7 @@ public final class GalleryFragment extends Fragment {
                     getAppStorage().putFile(USER_PICTURES, f.getName(), f);
                     Snackbar.make(getView(), R.string.pic_uploaded_message, LENGTH_SHORT).show();
                 } catch (IOException e) {
-                    Log.d(TAG, e.getLocalizedMessage());
+                    Log.w(TAG, "Error while putting the image in the storage", e);
                 }
                 adapter.reloadData();
             }
