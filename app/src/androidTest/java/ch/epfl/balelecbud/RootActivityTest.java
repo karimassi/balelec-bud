@@ -136,12 +136,6 @@ public class RootActivityTest {
     }
 
     @Test
-    public void canOpenPicturesFragmentFromDrawer() {
-        openDrawer();
-        clickItem(R.id.fragment_main_drawer_pictures, R.id.fragment_pictures_linear_layout);
-    }
-
-    @Test
     public void testWelcomeViewSavedState() {
         List<HelpPage> pages = getHelpPageCollection(R.raw.help_page);
         onView(withId(R.id.welcome_tab_indicator)).perform(clickTabWithPosition(2));

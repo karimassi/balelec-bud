@@ -1,6 +1,9 @@
 <resources>
+
+
     <string name="app_name">BalelecBud</string>
     <string name="title_activity_authentication">Sign in</string>
+
 
     <string name="cache_info">Cached on\u0020</string>
 
@@ -38,7 +41,7 @@
     <string name="social_view">Social</string>
     <string name="festival_info_view">Information</string>
 
-    <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it !</string>
+    <string name="subscribe_explanation_text">Subscribe to upcoming concerts to be sure not to miss it!</string>
 
     <string name="transport_view">Transport</string>
     <string name="toggle_location_view">Toggle Location</string>
@@ -50,6 +53,8 @@
     <string name="concert_soon_channel_name">Concert Soon Channel</string>
     <string name="concert_soon_notification_title">A concert is starting soon</string>
     <string name="concert_soon_channel_description">A channel to convey information about concerts starting soon</string>
+
+    <string name="pic_uploaded_message">Your picture was uploaded to the photos wall!</string>
 
     <!--  APP DRAWER  -->
 
@@ -171,5 +176,6 @@
     <string name="camera_permission_refused_msg">The app needs camera permission to take a picture</string>
     <string name="take_a_pic">Take a pic</string>
     <string name="drawer_photo_gallery">Photo Gallery</string>
+    <string name="sign_out_summary">Currently logged in as\u0020</string>
 
 </resources>

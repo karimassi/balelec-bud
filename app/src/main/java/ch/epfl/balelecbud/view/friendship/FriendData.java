@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.view.friendship;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
@@ -19,6 +21,8 @@ import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.E
 
 public final class FriendData extends RecyclerViewData<User, FriendViewHolder> {
 
+    private static String TAG = FriendData.class.getSimpleName();
+
     private final User currentUser;
 
     FriendData(User user) {
@@ -31,7 +35,7 @@ public final class FriendData extends RecyclerViewData<User, FriendViewHolder> {
         MyQuery query = new MyQuery(FRIENDSHIPS_PATH, new MyWhereClause(DOCUMENT_ID_OPERAND, EQUAL, currentUser.getUid()));
         return getAppDatabase().query(query)
                 .thenApply(fetchedData -> new ArrayList<>(fetchedData.getList().get(0).keySet()))
-                .thenCompose(strings -> CompletableFutureUtils.unify(FriendshipUtils.getUsersFromUids(strings, preferredSource)))
+                .thenCompose(strings -> CompletableFutureUtils.unify(FriendshipUtils.getUsersFromUids(strings, InformationSource.REMOTE_ONLY)))
                 //Wrap in a FetchedData with a freshness set to null
                 .thenApply(FetchedData::new)
                 .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
@@ -44,6 +48,7 @@ public final class FriendData extends RecyclerViewData<User, FriendViewHolder> {
         viewHolder.deleteButton.setOnClickListener(v -> {
             FriendshipUtils.removeFriend(data.get(index));
             remove(index);
+            Log.d(TAG, "Unfriended.");
         });
     }
 }

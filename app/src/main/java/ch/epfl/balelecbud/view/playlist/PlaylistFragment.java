@@ -13,15 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Track;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
+
+import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG;
 
 public final class PlaylistFragment extends Fragment implements OnRecyclerViewInteractionListener<Track> {
 
@@ -36,8 +38,9 @@ public final class PlaylistFragment extends Fragment implements OnRecyclerViewIn
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_playlist, container, false);
         spotifyConnect();
-        return inflater.inflate(R.layout.fragment_playlist, container, false);
+        return view;
     }
 
     @Override
@@ -95,10 +98,9 @@ public final class PlaylistFragment extends Fragment implements OnRecyclerViewIn
 
                     public void onFailure(Throwable throwable) {
                         Log.d(TAG, "Failed to connect Spotify", throwable);
-                        Toast.makeText(BalelecbudApplication.getAppContext(), (throwable.getMessage() != null)
-                                        ? getContext().getString(R.string.login_spotify_message)
-                                        : getContext().getString(R.string.download_spotify_message),
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), (throwable.getMessage() != null)
+                                ? getContext().getString(R.string.login_spotify_message)
+                                : getContext().getString(R.string.download_spotify_message), Toast.LENGTH_LONG).show();
                     }
                 });
     }

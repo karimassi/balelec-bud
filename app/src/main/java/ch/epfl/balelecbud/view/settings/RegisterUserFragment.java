@@ -107,6 +107,8 @@ public final class RegisterUserFragment extends DialogFragment {
     }
 
     private boolean validateEntry() {
+        // Not using boolean operator because we want to avoid short circuiting and ensure that
+        // all failing fields are displayed at once to the user
         boolean valid = true;
         if (!isNameValid())
             valid = false;
@@ -121,9 +123,6 @@ public final class RegisterUserFragment extends DialogFragment {
     }
 
     private boolean isPasswordsValid() {
-        passwordField.setError(null);
-        repeatPasswordField.setError(null);
-
         boolean valid = true;
         String password = passwordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
@@ -145,6 +144,12 @@ public final class RegisterUserFragment extends DialogFragment {
             repeatPasswordField.setError(getString(R.string.mismatch_password));
             valid = false;
         }
+
+        if(valid){
+            passwordField.setError(null);
+            repeatPasswordField.setError(null);
+        }
+
         return valid;
     }
 
@@ -153,8 +158,10 @@ public final class RegisterUserFragment extends DialogFragment {
         if (TextUtils.isEmpty(name)) {
             nameField.setError(getString(R.string.require_name));
             return false;
+        }else{
+            nameField.setError(null);
+            return true;
         }
-        return true;
     }
 
     private void onAuthComplete() {

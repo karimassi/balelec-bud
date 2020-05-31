@@ -19,6 +19,8 @@ import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
 public final class ReceivedFriendRequestsFragment extends Fragment {
 
+    private RefreshableRecyclerViewAdapter<User, ReceivedRequestViewHolder> adapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -29,8 +31,7 @@ public final class ReceivedFriendRequestsFragment extends Fragment {
         final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_friend_requests);
 
         ReceivedFriendRequestData data = new ReceivedFriendRequestData((User) getArguments().get("user"));
-        final RefreshableRecyclerViewAdapter<User, ReceivedRequestViewHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(ReceivedRequestViewHolder::new, refreshLayout, data, R.layout.item_friend_request);
+        adapter = new RefreshableRecyclerViewAdapter<>(ReceivedRequestViewHolder::new, refreshLayout, data, R.layout.item_friend_request);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
@@ -38,6 +39,12 @@ public final class ReceivedFriendRequestsFragment extends Fragment {
         adapter.setOnRefreshListener(refreshLayout);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.reloadData();
     }
 
     public static ReceivedFriendRequestsFragment newInstance(User user) {

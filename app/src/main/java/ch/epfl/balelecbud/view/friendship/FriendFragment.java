@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
 
 public final class FriendFragment extends Fragment {
+
+    private RefreshableRecyclerViewAdapter<User, FriendViewHolder> adapter;
 
     @Nullable
     @Override
@@ -31,8 +31,7 @@ public final class FriendFragment extends Fragment {
         final SwipeRefreshLayout refreshLayout = view.findViewById(R.id.swipe_refresh_layout_friends);
 
         FriendData data = new FriendData((User) getArguments().get("user"));
-        final RefreshableRecyclerViewAdapter<User, FriendViewHolder> adapter =
-                new RefreshableRecyclerViewAdapter<>(FriendViewHolder::new, refreshLayout, data, R.layout.item_friend);
+        adapter = new RefreshableRecyclerViewAdapter<>(FriendViewHolder::new, refreshLayout, data, R.layout.item_friend);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
@@ -40,6 +39,12 @@ public final class FriendFragment extends Fragment {
         adapter.setOnRefreshListener(refreshLayout);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.reloadData();
     }
 
     public static FriendFragment newInstance(User user) {

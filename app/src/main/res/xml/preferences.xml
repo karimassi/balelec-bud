@@ -22,6 +22,7 @@
     <Preference
         app:key="@string/sign_out_key"
         app:title="@string/sign_out_text"
+        app:summary="Currently signed in as Axel Marmet"
         app:layout="@layout/item_preferences"/>
 
     <Preference

@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.view.friendship;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
@@ -19,6 +21,8 @@ import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 
 public final class SentRequestData extends RecyclerViewData<User, SentRequestViewHolder> {
 
+    private static String TAG = SentRequestData.class.getSimpleName();
+
     private final User currentUser;
 
     SentRequestData(User currentUser) {
@@ -29,10 +33,10 @@ public final class SentRequestData extends RecyclerViewData<User, SentRequestVie
     @Override
     public CompletableFuture<Long> reload(InformationSource preferredSource) {
         MyQuery myQuery = new MyQuery(Database.SENT_REQUESTS_PATH,
-                new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()), preferredSource);
+                new MyWhereClause(DOCUMENT_ID_OPERAND, MyWhereClause.Operator.EQUAL, currentUser.getUid()));
         return getAppDatabase().query(myQuery)
                 .thenApply(fetchedData -> new ArrayList<>(fetchedData.getList().get(0).keySet()))
-                .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(uids, preferredSource)))
+                .thenCompose(uids -> CompletableFutureUtils.unify(getUsersFromUids(uids, InformationSource.REMOTE_ONLY)))
                 .thenApply(FetchedData::new)
                 .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
@@ -44,6 +48,7 @@ public final class SentRequestData extends RecyclerViewData<User, SentRequestVie
         viewHolder.cancelButton.setOnClickListener(v -> {
             FriendshipUtils.deleteRequest(currentUser, data.get(index));
             remove(index);
+            Log.d(TAG, "Deleted request");
         });
     }
 }
