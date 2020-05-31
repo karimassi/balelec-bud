@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.view.friendship;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,6 +20,8 @@ import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.EQUAL;
 
 public final class ReceivedFriendRequestData extends RecyclerViewData<User, ReceivedRequestViewHolder> {
+
+    private static String TAG = ReceivedFriendRequestsFragment.class.getSimpleName();
 
     private final User currentUser;
 
@@ -44,10 +48,12 @@ public final class ReceivedFriendRequestData extends RecyclerViewData<User, Rece
         viewHolder.acceptButton.setOnClickListener(v -> {
             FriendshipUtils.acceptRequest(data.get(index));
             remove(index);
+            Log.d(TAG, "Accepted request");
         });
         viewHolder.deleteButton.setOnClickListener(v -> {
             FriendshipUtils.deleteRequest(data.get(index), currentUser);
             remove(index);
+            Log.d(TAG, "Rejected request");
         });
     }
 }

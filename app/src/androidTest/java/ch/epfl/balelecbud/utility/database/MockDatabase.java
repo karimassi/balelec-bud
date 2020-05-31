@@ -119,7 +119,7 @@ public class MockDatabase implements Database {
         }
         slot1 = new Slot(0, "Mr Oizo", "Grande scène", "path1", timestamps.get(0), timestamps.get(1));
         slot2 = new Slot(1, "Walking Furret", "Les Azimutes", "path2", timestamps.get(2), timestamps.get(3));
-        slot3 = new Slot(2, "Upset", "Scène Sat'", "path3", timestamps.get(4), timestamps.get(5));
+        slot3 = new Slot(2, "Upset", "Scène Sat'", "fakePath", timestamps.get(4), timestamps.get(5));
     }
 
     public static MockDatabase getInstance() {

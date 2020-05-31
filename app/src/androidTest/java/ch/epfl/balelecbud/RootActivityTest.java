@@ -126,10 +126,4 @@ public class RootActivityTest {
         openDrawer();
         clickItem(R.id.fragment_main_drawer_transport, R.id.transport_fragment_container);
     }
-
-    @Test
-    public void canOpenPicturesFragmentFromDrawer() {
-        openDrawer();
-        clickItem(R.id.fragment_main_drawer_pictures, R.id.fragment_pictures_linear_layout);
-    }
 }
