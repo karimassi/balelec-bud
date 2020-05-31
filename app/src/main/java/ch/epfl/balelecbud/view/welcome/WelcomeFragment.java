@@ -3,8 +3,6 @@ package ch.epfl.balelecbud.view.welcome;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -32,8 +27,7 @@ public final class WelcomeFragment extends Fragment {
 
     private ViewPager welcomeViewPager;
     private WelcomePagerAdapter welcomePagerAdapter;
-    private TabLayout tabIndicator;
-    private Bundle state;
+    private TabLayout pageIndicator;
 
     public static WelcomeFragment newInstance() {
         return new WelcomeFragment();
@@ -49,7 +43,7 @@ public final class WelcomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        tabIndicator = getActivity().findViewById(R.id.welcome_tab_indicator);
+        pageIndicator = getActivity().findViewById(R.id.welcome_tab_indicator);
 
         List<HelpPage> pages = getHelpPageCollection(R.raw.help_page);
 
@@ -57,52 +51,38 @@ public final class WelcomeFragment extends Fragment {
         welcomePagerAdapter = new WelcomePagerAdapter(BalelecbudApplication.getAppContext(), pages);
         welcomeViewPager.setAdapter(welcomePagerAdapter);
 
-        tabIndicator.setupWithViewPager(welcomeViewPager);
+        pageIndicator.setupWithViewPager(welcomeViewPager);
 
-        Log.d(TAG, "onStart: trying to restore last state of the welcome screen, state " + state);
         SharedPreferences preferences = BalelecbudApplication
-                .getAppContext().getSharedPreferences(WelcomeFragment.TAG, Context.MODE_PRIVATE);
-        if(isSavedState(preferences) && state != null) {
-            welcomeViewPager.onRestoreInstanceState(state.getParcelable(TAG));
-            Log.d(TAG, "onStart: restored saved state successfully --> " + state);
+                .getAppContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
+
+        if(isPageNumberSaved(preferences)) {
+            int pageNumber = preferences.getInt(TAG, -1);
+            if(pageNumber == -1) {
+                Log.d(TAG, "onStart: Failed to restore page");
+            }
+            else {
+                welcomeViewPager.setCurrentItem(pageNumber);
+                //pageIndicator.getTabAt(pageNumber);
+                Log.d(TAG, "onStart: restored page number successfully --> " + pageNumber);
+            }
+            preferences.edit().clear().apply();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause: trying to save last state of the welcome screen");
-        state = new Bundle();
-        state.putParcelable(TAG, welcomeViewPager.onSaveInstanceState());
+        Log.d(TAG, "onPause: trying to save last page of the welcome screen");
+        int page = pageIndicator.getSelectedTabPosition();
         SharedPreferences preferences = BalelecbudApplication
-                .getAppContext().getSharedPreferences(WelcomeFragment.TAG, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        storeState(editor, state);
-        editor.apply();
-        Log.d(TAG, "onPause: saved state successfully --> " + state);
-        Log.d(TAG, "onPause: isSavedState: " + isSavedState(preferences));
+                .getAppContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        preferences.edit().putInt(TAG, page).apply();
+        Log.d(TAG, "onPause: saved page number successfully --> " + page);
+        Log.d(TAG, "onPause: isPageNumberSaved: " + isPageNumberSaved(preferences));
     }
 
-    public static String restoreState(SharedPreferences preferences) {
-        Log.d(TAG, "Restoring state");
-        return isSavedState(preferences) ? preferences.getString(TAG, null) : null;
-    }
-
-    public static boolean isSavedState(SharedPreferences preferences) {
+    private boolean isPageNumberSaved(SharedPreferences preferences) {
         return preferences.contains(TAG);
-    }
-
-    static void storeState(SharedPreferences.Editor editor, Bundle state) {
-        Log.d(TAG, "Storing state: " + state);
-        if (state != null) {
-            Gson gson = new Gson();
-            String serializedState = gson.toJson(state);
-            editor.putString(TAG, serializedState);
-        }
-    }
-
-    public void setState(Bundle state) {
-        Log.d(TAG, "Setting state: " + state);
-        this.state = state;
     }
 }
