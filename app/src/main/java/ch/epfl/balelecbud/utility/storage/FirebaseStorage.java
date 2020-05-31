@@ -19,7 +19,7 @@ import ch.epfl.balelecbud.utility.TaskToCompletableFutureAdapter;
 public final class FirebaseStorage implements Storage {
 
     private static final FirebaseStorage instance = new FirebaseStorage();
-    private final com.google.firebase.storage.FirebaseStorage firebaseStorage = com.google.firebase.storage.FirebaseStorage.getInstance();
+    private final StorageReference firebaseStorageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReference();
 
     private FirebaseStorage() {}
 
@@ -30,7 +30,7 @@ public final class FirebaseStorage implements Storage {
         CompletableFuture<File> future = new CompletableFuture<>();
         try {
             final File localFile = File.createTempFile("images", "jpg");
-            future = new TaskToCompletableFutureAdapter<>(firebaseStorage.getReference().child(path).getFile(localFile)).thenApply(x -> localFile);
+            future = new TaskToCompletableFutureAdapter<>(firebaseStorageRef.child(path).getFile(localFile)).thenApply(x -> localFile);
         } catch (IOException e) {
             future.completeExceptionally(e);
         }
@@ -39,13 +39,13 @@ public final class FirebaseStorage implements Storage {
 
     @Override
     public CompletableFuture<List<String>> getAllFileNameIn(String collectionName, InformationSource source) {
-        return new TaskToCompletableFutureAdapter<>(firebaseStorage.getReference().child(collectionName).listAll())
+        return new TaskToCompletableFutureAdapter<>(firebaseStorageRef.child(collectionName).listAll())
                 .thenApply(listResult -> listResult.getItems().stream().map(StorageReference::getPath).collect(Collectors.toList()));
     }
 
     @Override
     public void putFile(String collectionName, String filename, File file){
-        firebaseStorage.getReference().child(collectionName + "/" + filename).putFile(Uri.fromFile(file));
+        firebaseStorageRef.child(collectionName + "/" + filename).putFile(Uri.fromFile(file));
     }
 }
 

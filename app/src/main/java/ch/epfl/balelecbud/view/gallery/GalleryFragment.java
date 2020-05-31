@@ -76,7 +76,11 @@ public final class GalleryFragment extends Fragment {
     }
 
     private void askCameraPermissions() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+        } else {
+            dispatchTakePictureIntent();
+        }
     }
 
     @Override
@@ -93,18 +97,16 @@ public final class GalleryFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                File f = new File(currentPhotoPath);
-                Log.d(TAG, "Absolute Url of Image is " + Uri.fromFile(f));
-                try {
-                    getAppStorage().putFile(USER_PICTURES, f.getName(), f);
-                    Snackbar.make(getView(), R.string.pic_uploaded_message, LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    Log.w(TAG, "Error while putting the image in the storage", e);
-                }
-                adapter.reloadData();
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            File f = new File(currentPhotoPath);
+            Log.d(TAG, "Absolute Url of Image is " + Uri.fromFile(f));
+            try {
+                getAppStorage().putFile(USER_PICTURES, f.getName(), f);
+                Snackbar.make(getView(), R.string.pic_uploaded_message, LENGTH_SHORT).show();
+            } catch (IOException e) {
+                Log.w(TAG, "Error while putting the image in the storage", e);
             }
+            adapter.reloadData();
         }
 
     }
