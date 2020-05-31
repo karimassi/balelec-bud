@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.MarkerType;
@@ -55,16 +54,6 @@ public final class MapViewFragment extends ConnectivityFragment {
 
     public static MapViewFragment newInstance() {
         return new MapViewFragment();
-    }
-
-    @Override
-    public String collectionName() {
-        return null;
-    }
-
-    @Override
-    public boolean canBeDisplayed() {
-        return BalelecbudApplication.getConnectivityChecker().isConnectionAvailable();
     }
 
     @Override

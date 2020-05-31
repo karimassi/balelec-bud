@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Picture;
 import ch.epfl.balelecbud.utility.DateFormatter;
@@ -50,16 +49,6 @@ public final class GalleryFragment extends ConnectivityFragment {
 
     public static GalleryFragment newInstance() {
         return new GalleryFragment();
-    }
-
-    @Override
-    public String collectionName() {
-        return null;
-    }
-
-    @Override
-    public boolean canBeDisplayed() {
-        return BalelecbudApplication.getConnectivityChecker().isConnectionAvailable();
     }
 
     @Override

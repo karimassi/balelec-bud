@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
 import ch.epfl.balelecbud.view.ConnectivityFragment;
@@ -31,16 +30,6 @@ public final class SocialFragment extends ConnectivityFragment {
 
     public static SocialFragment newInstance() {
         return (new SocialFragment());
-    }
-
-    @Override
-    public String collectionName() {
-        return null;
-    }
-
-    @Override
-    public boolean canBeDisplayed() {
-        return BalelecbudApplication.getConnectivityChecker().isConnectionAvailable();
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Location;
 import ch.epfl.balelecbud.model.TransportStation;
@@ -21,16 +20,6 @@ public final class TransportFragment extends ConnectivityFragment implements OnR
 
     public static TransportFragment newInstance() {
         return (new TransportFragment());
-    }
-
-    @Override
-    public String collectionName() {
-        return null;
-    }
-
-    @Override
-    public boolean canBeDisplayed() {
-        return BalelecbudApplication.getConnectivityChecker().isConnectionAvailable();
     }
 
     @Override

@@ -59,11 +59,7 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
 
         ArrayList<Slot> slots = FlowUtils.unpackCallback(getIntent());
         if (slots != null) {
-            ConnectivityFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
-            if (fragmentSchedule.canBeDisplayed())
-                startTransactionFragment(fragmentSchedule, "SCHEDULE");
-            else
-                startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+            startTransactionFragment(ScheduleFragment.newInstance(slots), "SCHEDULE");
         } else {
             this.showFirstFragment();
         }
@@ -121,16 +117,11 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showHomeFragment() {
-        WelcomeFragment fragmentHome = WelcomeFragment.newInstance();
-        this.startTransactionFragment(fragmentHome, "HOME");
+        startTransactionFragment(WelcomeFragment.newInstance(), "HOME");
     }
 
     private void showInfoFragment() {
-        ConnectivityFragment fragmentInfo = FestivalInformationFragment.newInstance();
-        if (fragmentInfo.canBeDisplayed())
-            this.startTransactionFragment(fragmentInfo, "INFO");
-        else
-            this.startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+        startTransactionFragment(FestivalInformationFragment.newInstance(), "INFO");
     }
 
     private void showScheduleFragment() {
@@ -141,72 +132,47 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showPoiFragment() {
-        ConnectivityFragment fragmentPoi = PointOfInterestFragment.newInstance();
-        if (fragmentPoi.canBeDisplayed())
-            this.startTransactionFragment(fragmentPoi, "POI");
-        else
-            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+        startTransactionFragment(PointOfInterestFragment.newInstance(), "POI");
     }
 
     private void showMapFragment() {
-        ConnectivityFragment fragmentMap = MapViewFragment.newInstance();
-        if (fragmentMap.canBeDisplayed())
-            this.startTransactionFragment(fragmentMap, MapViewFragment.TAG);
-        else
-            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+        startTransactionFragment(MapViewFragment.newInstance(), MapViewFragment.TAG);
     }
 
     private void showTransportFragment() {
-        ConnectivityFragment fragmentTransport = TransportFragment.newInstance();
-        if (fragmentTransport.canBeDisplayed())
-            this.startTransactionFragment(fragmentTransport, "TRANSPORT");
-        else
-            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+        startTransactionFragment(TransportFragment.newInstance(), "TRANSPORT");
     }
 
     private void showSocialFragment() {
         if (getAppAuthenticator().getCurrentUser() == null) {
             Toast.makeText(this, R.string.require_sign_in, Toast.LENGTH_LONG).show();
         } else {
-            ConnectivityFragment fragmentSocial = SocialFragment.newInstance();
-            if (fragmentSocial.canBeDisplayed())
-                this.startTransactionFragment(fragmentSocial, "SOCIAL");
-            else
-                startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+            startTransactionFragment(SocialFragment.newInstance(), "SOCIAL");
         }
     }
 
     private void showPlaylistFragment() {
-        ConnectivityFragment fragmentPlaylist = PlaylistFragment.newInstance();
-        if (fragmentPlaylist.canBeDisplayed())
-            this.startTransactionFragment(fragmentPlaylist, "PLAYLIST");
-        else
-            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+        startTransactionFragment(PlaylistFragment.newInstance(), "PLAYLIST");
     }
 
     private void showEmergencyInfoFragment() {
-        ConnectivityFragment fragmentEmergencyInfo = EmergencyInformationFragment.newInstance();
-        if (fragmentEmergencyInfo.canBeDisplayed())
-            this.startTransactionFragment(fragmentEmergencyInfo, "EMERGENCY_INFO");
-        else
-            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+        startTransactionFragment(EmergencyInformationFragment.newInstance(), "EMERGENCY_INFO");
     }
 
     private void showSettingsFragment() {
-        Fragment fragmentSettings = SettingsFragment.newInstance();
-        this.startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
+        startTransactionFragment(SettingsFragment.newInstance(), SettingsFragment.TAG);
     }
 
     private void showGalleryFragment() {
-        ConnectivityFragment fragmentGallery = GalleryFragment.newInstance();
-        if (fragmentGallery.canBeDisplayed())
-            this.startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
-        else
-            startTransactionFragment(NoConnectionFragment.newInstance(), "NO_CONNECTION");
+        startTransactionFragment(GalleryFragment.newInstance(), GalleryFragment.TAG);
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {
         if (!fragment.isVisible()) {
+            if ((fragment instanceof ConnectivityFragment) && !((ConnectivityFragment) fragment).canBeDisplayed()) {
+                fragment = NoConnectionFragment.newInstance();
+                tag = "NO_CONNECTION";
+            }
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.root_activity_frame_layout, fragment, tag)
                     .addToBackStack(tag).commit();
