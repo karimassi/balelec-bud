@@ -17,6 +17,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import ch.epfl.balelecbud.view.ConnectivityFragment;
+import ch.epfl.balelecbud.view.NoConnectionFragment;
 import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 import ch.epfl.balelecbud.model.Slot;
 import ch.epfl.balelecbud.utility.FlowUtils;
@@ -58,10 +60,8 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
 
         ArrayList<Slot> slots = FlowUtils.unpackCallback(getIntent());
         if (slots != null) {
-            ScheduleFragment fragmentSchedule = ScheduleFragment.newInstance(slots);
-            if (!fragmentSchedule.isVisible()) {
-                startTransactionFragment(fragmentSchedule, ScheduleFragment.TAG);
-            }
+            Log.d(TAG, "onCreate: received intent from ConcertFlow");
+            startTransactionFragment(ScheduleFragment.newInstance(slots), ScheduleFragment.TAG);
         } else {
             showFirstFragment();
         }
@@ -129,68 +129,67 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showHomeFragment() {
-        WelcomeFragment fragmentHome = WelcomeFragment.newInstance();
-        startTransactionFragment(fragmentHome, WelcomeFragment.TAG);
+        startTransactionFragment(WelcomeFragment.newInstance(), WelcomeFragment.TAG);
     }
 
     private void showInfoFragment() {
-        Fragment fragmentInfo = FestivalInformationFragment.newInstance();
-        startTransactionFragment(fragmentInfo, FestivalInformationFragment.TAG);
+        startTransactionFragment(FestivalInformationFragment.newInstance(), FestivalInformationFragment.TAG);
     }
 
     private void showScheduleFragment() {
-        Intent intent = new Intent(this, ConcertFlow.class);
-        intent.setAction(FlowUtils.GET_ALL_CONCERT);
-        intent.putExtra(FlowUtils.CALLBACK_INTENT, new Intent(this, RootActivity.class));
-        startService(intent);
+        if (ScheduleFragment.newInstance(null).canBeDisplayed()) {
+            Log.d(TAG, "showScheduleFragment: Able to display Schedule, sending intent to ConcertFlow");
+            Intent intent = new Intent(this, ConcertFlow.class);
+            intent.setAction(FlowUtils.GET_ALL_CONCERT);
+            intent.putExtra(FlowUtils.CALLBACK_INTENT, new Intent(this, RootActivity.class));
+            startService(intent);
+        } else {
+            startTransactionFragment(NoConnectionFragment.newInstance(), NoConnectionFragment.TAG);
+        }
     }
 
     private void showPoiFragment() {
-        Fragment fragmentPoi = PointOfInterestFragment.newInstance();
-        startTransactionFragment(fragmentPoi, PointOfInterestFragment.TAG);
+        startTransactionFragment(PointOfInterestFragment.newInstance(), PointOfInterestFragment.TAG);
     }
 
     private void showMapFragment() {
-        MapViewFragment fragmentMap = MapViewFragment.newInstance();
-        startTransactionFragment(fragmentMap, MapViewFragment.TAG);
+        startTransactionFragment(MapViewFragment.newInstance(), MapViewFragment.TAG);
     }
 
     private void showTransportFragment() {
-        Fragment fragmentTransport = TransportFragment.newInstance();
-        startTransactionFragment(fragmentTransport, TransportFragment.TAG);
+        startTransactionFragment(TransportFragment.newInstance(), TransportFragment.TAG);
     }
 
     private void showSocialFragment() {
         if (getAppAuthenticator().getCurrentUser() == null) {
             Toast.makeText(this, R.string.require_sign_in, Toast.LENGTH_LONG).show();
         } else {
-            Fragment fragmentSocial = SocialFragment.newInstance();
-            startTransactionFragment(fragmentSocial, SocialFragment.TAG);
+            startTransactionFragment(SocialFragment.newInstance(), SocialFragment.TAG);
         }
     }
 
     private void showPlaylistFragment() {
-        Fragment fragmentPlaylist = PlaylistFragment.newInstance();
-        startTransactionFragment(fragmentPlaylist, PlaylistFragment.TAG);
+        startTransactionFragment(PlaylistFragment.newInstance(), PlaylistFragment.TAG);
     }
 
     private void showEmergencyInfoFragment() {
-        Fragment fragmentEmergencyInfo = EmergencyInformationFragment.newInstance();
-        startTransactionFragment(fragmentEmergencyInfo, EmergencyInformationFragment.TAG);
+        startTransactionFragment(EmergencyInformationFragment.newInstance(), EmergencyInformationFragment.TAG);
     }
 
     private void showSettingsFragment() {
-        Fragment fragmentSettings = SettingsFragment.newInstance();
-        startTransactionFragment(fragmentSettings, SettingsFragment.TAG);
+        startTransactionFragment(SettingsFragment.newInstance(), SettingsFragment.TAG);
     }
 
     private void showGalleryFragment() {
-        GalleryFragment fragmentGallery = GalleryFragment.newInstance();
-        startTransactionFragment(fragmentGallery, GalleryFragment.TAG);
+        startTransactionFragment(GalleryFragment.newInstance(), GalleryFragment.TAG);
     }
 
     private void startTransactionFragment(Fragment fragment, String tag) {
         if (!fragment.isVisible()) {
+            if ((fragment instanceof ConnectivityFragment) && !((ConnectivityFragment) fragment).canBeDisplayed()) {
+                fragment = NoConnectionFragment.newInstance();
+                tag = NoConnectionFragment.TAG;
+            }
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.root_activity_frame_layout, fragment, tag)
                     .addToBackStack(tag).commit();

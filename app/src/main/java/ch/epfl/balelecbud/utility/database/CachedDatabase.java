@@ -2,6 +2,8 @@ package ch.epfl.balelecbud.utility.database;
 
 import android.util.Log;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -31,6 +33,11 @@ public final class CachedDatabase implements Database {
 
     public static CachedDatabase getInstance() {
         return instance;
+    }
+
+    @VisibleForTesting
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 
     @Override

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/fragment_no_connection"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.NoConnectionFragment"
+    android:gravity="center"
+    android:background="@color/primaryDarkColor"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/no_connection_image_view"
+        android:tint="@color/secondaryColor"
+        android:padding="30dp"
+        app:srcCompat="@drawable/icon_no_connection" />
+
+</LinearLayout>

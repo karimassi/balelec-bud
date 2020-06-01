@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,11 +19,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.EmergencyInformation;
+import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
+import ch.epfl.balelecbud.view.ConnectivityFragment;
 
-public final class EmergencyInformationFragment extends Fragment
+public final class EmergencyInformationFragment extends ConnectivityFragment
         implements OnRecyclerViewInteractionListener<EmergencyInformation> {
 
     public static final String TAG = EmergencyInformationFragment.class.getSimpleName();
@@ -34,6 +35,11 @@ public final class EmergencyInformationFragment extends Fragment
 
     public static EmergencyInformationFragment newInstance() {
         return (new EmergencyInformationFragment());
+    }
+
+    @Override
+    public String collectionName() {
+        return Database.EMERGENCY_INFO_PATH;
     }
 
     @Override

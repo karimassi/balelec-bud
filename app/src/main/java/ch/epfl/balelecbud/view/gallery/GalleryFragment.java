@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -34,12 +33,13 @@ import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Picture;
 import ch.epfl.balelecbud.utility.DateFormatter;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
+import ch.epfl.balelecbud.view.ConnectivityFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 import static ch.epfl.balelecbud.utility.storage.Storage.USER_PICTURES;
 import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
 
-public final class GalleryFragment extends Fragment {
+public final class GalleryFragment extends ConnectivityFragment {
 
     public final static String TAG = GalleryFragment.class.getSimpleName();
     private static final int CAMERA_PERM_CODE = 101;
