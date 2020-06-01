@@ -2,14 +2,10 @@ package ch.epfl.balelecbud.view.schedule;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.VisibleForTesting;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -24,7 +20,7 @@ import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
-import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
+import static ch.epfl.balelecbud.utility.storage.Storage.ARTISTS_IMAGES;
 
 public final class SlotData extends RecyclerViewData<Slot, SlotHolder> {
 
@@ -58,16 +54,8 @@ public final class SlotData extends RecyclerViewData<Slot, SlotHolder> {
         viewHolder.artistNameView.setText(slot.getArtistName());
         viewHolder.sceneNameView.setText(slot.getSceneName());
 
-        CompletableFuture<File> imageDownload = getAppStorage().getFile("artists_images/" + slot.getImageFileName());
-        imageDownload.whenComplete((file, t) -> {
-            if (t == null) {
-                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-                viewHolder.artistImageView.setImageBitmap(bitmap);
-                viewHolder.artistImageView.setVisibility(View.VISIBLE);
-            } else {
-                Log.d(TAG, "Couldn't load artist image");
-            }
-        });
+        CompletableFutureUtils.downloadAndSetImageView(ARTISTS_IMAGES + "/" + slot.getImageFileName(),
+                viewHolder.artistImageView, TAG, "Couldn't load artist image");
 
         viewHolder.subscribeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
