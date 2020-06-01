@@ -182,7 +182,7 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
         if (!fragment.isVisible()) {
             if ((fragment instanceof ConnectivityFragment) && !((ConnectivityFragment) fragment).canBeDisplayed()) {
                 fragment = NoConnectionFragment.newInstance();
-                tag = "NO_CONNECTION";
+                tag = NoConnectionFragment.TAG;
             }
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.root_activity_frame_layout, fragment, tag)

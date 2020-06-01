@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import ch.epfl.balelecbud.R;
 
 public final class NoConnectionFragment extends Fragment {
+    public static final String TAG = NoConnectionFragment.class.getSimpleName();
+
     private NoConnectionFragment() {}
     public static NoConnectionFragment newInstance() {
         return new NoConnectionFragment();
