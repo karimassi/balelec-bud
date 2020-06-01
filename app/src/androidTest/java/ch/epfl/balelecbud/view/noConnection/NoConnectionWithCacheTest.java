@@ -1,5 +1,7 @@
 package ch.epfl.balelecbud.view.noConnection;
 
+import android.os.SystemClock;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
@@ -50,6 +52,8 @@ public class NoConnectionWithCacheTest extends NoConnectionSuit {
     public void noConnectionIsNotDisplayedWhenOpenSchedule() {
         openDrawer();
         clickItem(R.id.fragment_main_drawer_schedule);
+        device.waitForIdle();
+        SystemClock.sleep(100);
         onView(withId(R.id.no_connection_image_view)).check(doesNotExist());
     }
 

@@ -42,9 +42,9 @@ public final class ScheduleFragment extends ConnectivityFragment {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
-        Log.v(TAG, "onCreate: Creation of the activity");
+        Log.v(TAG, "onCreate: Creation of the fragment");
         RecyclerView rvSchedule = getView().findViewById(R.id.scheduleRecyclerView);
         SwipeRefreshLayout refreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_schedule);
 

@@ -28,7 +28,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static ch.epfl.balelecbud.utility.database.MockDatabase.alex;
 
 abstract class NoConnectionSuit {
-    private final UiDevice device = UiDevice.getInstance(getInstrumentation());
+    final UiDevice device = UiDevice.getInstance(getInstrumentation());
 
     @Rule
     public final ActivityTestRule<RootActivity> testRule = new ActivityTestRule<RootActivity>(RootActivity.class) {

@@ -60,6 +60,7 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
 
         ArrayList<Slot> slots = FlowUtils.unpackCallback(getIntent());
         if (slots != null) {
+            Log.d(TAG, "onCreate: received intent from ConcertFlow");
             startTransactionFragment(ScheduleFragment.newInstance(slots), ScheduleFragment.TAG);
         } else {
             showFirstFragment();
@@ -136,10 +137,15 @@ public final class RootActivity extends AppCompatActivity implements NavigationV
     }
 
     private void showScheduleFragment() {
-        Intent intent = new Intent(this, ConcertFlow.class);
-        intent.setAction(FlowUtils.GET_ALL_CONCERT);
-        intent.putExtra(FlowUtils.CALLBACK_INTENT, new Intent(this, RootActivity.class));
-        startService(intent);
+        if (ScheduleFragment.newInstance(null).canBeDisplayed()) {
+            Log.d(TAG, "showScheduleFragment: Able to display Schedule, sending intent to ConcertFlow");
+            Intent intent = new Intent(this, ConcertFlow.class);
+            intent.setAction(FlowUtils.GET_ALL_CONCERT);
+            intent.putExtra(FlowUtils.CALLBACK_INTENT, new Intent(this, RootActivity.class));
+            startService(intent);
+        } else {
+            startTransactionFragment(NoConnectionFragment.newInstance(), NoConnectionFragment.TAG);
+        }
     }
 
     private void showPoiFragment() {
