@@ -27,6 +27,7 @@ import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 
 import ch.epfl.balelecbud.utility.cache.FilesystemCache;
 import ch.epfl.balelecbud.utility.connectivity.AndroidConnectivityChecker;
+import ch.epfl.balelecbud.utility.database.CachedDatabase;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 
@@ -59,6 +60,7 @@ public class PointOfInterestIntegrationTest {
         mock.resetDatabase();
         BalelecbudApplication.setAppCache(FilesystemCache.getInstance());
         BalelecbudApplication.setRemoteDatabase(mock);
+        BalelecbudApplication.setAppDatabase(CachedDatabase.getInstance());
         BalelecbudApplication.setConnectivityChecker(() -> true);
 
         BalelecbudApplication.getAppCache().flush();
