@@ -104,7 +104,7 @@ public class PointOfInterestUtilsTest {
     }
 
     @Test
-    public void testGetAmountNearPointOfInterest() throws ExecutionException, InterruptedException {
+    public void testGetRemoteAmountNearPointOfInterest() throws ExecutionException, InterruptedException {
         db.resetDocument(Database.LOCATIONS_PATH);
         ArrayList<Location> locations = Lists.newArrayList(
                 new Location(46.51808, 6.56905),
