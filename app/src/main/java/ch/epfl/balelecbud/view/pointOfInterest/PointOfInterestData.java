@@ -34,7 +34,6 @@ public final class PointOfInterestData extends RecyclerViewData<PointOfInterest,
     }
 
     //TODO change to not have rv flicker at some point
-    //TODO cached ?
     @Override
     public CompletableFuture<Long> reload(InformationSource preferredSource) {
         MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>(), preferredSource);
