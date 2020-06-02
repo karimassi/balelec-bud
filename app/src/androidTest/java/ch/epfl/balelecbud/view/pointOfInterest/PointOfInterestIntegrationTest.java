@@ -25,6 +25,8 @@ import ch.epfl.balelecbud.model.PointOfInterest;
 import ch.epfl.balelecbud.model.PointOfInterestType;
 import ch.epfl.balelecbud.testUtils.RecyclerViewMatcher;
 
+import ch.epfl.balelecbud.utility.cache.FilesystemCache;
+import ch.epfl.balelecbud.utility.connectivity.AndroidConnectivityChecker;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 
@@ -55,7 +57,12 @@ public class PointOfInterestIntegrationTest {
     @Before
     public void setup() {
         mock.resetDatabase();
+        BalelecbudApplication.setAppCache(FilesystemCache.getInstance());
+        BalelecbudApplication.setRemoteDatabase(mock);
+        BalelecbudApplication.setConnectivityChecker(() -> true);
+
         BalelecbudApplication.getAppCache().flush();
+
         device = UiDevice.getInstance(getInstrumentation());
 
         int index = 0;
@@ -63,8 +70,6 @@ public class PointOfInterestIntegrationTest {
             mock.storeDocumentWithID(Database.LOCATIONS_PATH, Integer.toString(index++), loc);
         }
 
-        BalelecbudApplication.setRemoteDatabase(mock);
-        BalelecbudApplication.setConnectivityChecker(() -> true);
         mock.storeDocument(Database.POINT_OF_INTEREST_PATH, p);
         FragmentScenario.launchInContainer(PointOfInterestFragment.class);
         refreshRecyclerView();
@@ -73,10 +78,11 @@ public class PointOfInterestIntegrationTest {
     @After
     public void teardown(){
         BalelecbudApplication.getAppCache().flush();
+        BalelecbudApplication.setConnectivityChecker(AndroidConnectivityChecker.getInstance());
     }
 
     @Test
-    public void testGetRemoteAmountNearPointOfInterest() throws InterruptedException {
+    public void fetchRemoteAndThenCache() throws InterruptedException {
         testInfoInView(onView(new RecyclerViewMatcher(R.id.pointOfInterestRecyclerView).
                 atPosition(0)), p, "2");
 
