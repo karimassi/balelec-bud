@@ -14,7 +14,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,6 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.testUtils.TestAsyncUtils;
 import ch.epfl.balelecbud.utility.storage.MockStorage;
-import ch.epfl.balelecbud.view.emergency.EmergencyInformationFragment;
 import ch.epfl.balelecbud.view.gallery.GalleryFragment;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -143,19 +141,17 @@ public class GalleryFragmentTest {
             try {
                 String[] paths = fragment.getCurrentPhotoPath().split("/");
                 file = mockStorage.getFile(USER_PICTURES + "/" + paths[paths.length-1]).get();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
             sync.assertNotNull(file);
             sync.call();
         });
 
+        Intents.release();
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
-        Intents.release();
     }
 
 
@@ -190,10 +186,10 @@ public class GalleryFragmentTest {
             sync.call();
             sync.assertTrue(found);
         });
+        Intents.release();
         sync.waitCall(1);
         sync.assertCalled(1);
         sync.assertNoFailedTests();
-        Intents.release();
     }
 
 }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -15,11 +14,13 @@ import java.util.ArrayList;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
+import ch.epfl.balelecbud.view.ConnectivityFragment;
 
-public final class ScheduleFragment extends Fragment {
-    
-    private static final String TAG = ScheduleFragment.class.getSimpleName();
+public final class ScheduleFragment extends ConnectivityFragment {
+
+    public static final String TAG = ScheduleFragment.class.getSimpleName();
 
     public static ScheduleFragment newInstance(ArrayList<Slot> subscribedSlots) {
         ScheduleFragment scheduleFragment = new ScheduleFragment();
@@ -30,15 +31,20 @@ public final class ScheduleFragment extends Fragment {
     }
 
     @Override
+    public String collectionName() {
+        return Database.CONCERT_SLOTS_PATH;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         return inflater.inflate(R.layout.fragment_schedule, container, false);
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
-        Log.v(TAG, "onCreate: Creation of the activity");
+        Log.v(TAG, "onCreate: Creation of the fragment");
         RecyclerView rvSchedule = getView().findViewById(R.id.scheduleRecyclerView);
         SwipeRefreshLayout refreshLayout = getActivity().findViewById(R.id.swipe_refresh_layout_schedule);
 

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -19,12 +18,15 @@ import java.util.List;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.User;
+import ch.epfl.balelecbud.view.ConnectivityFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 
-public final class SocialFragment extends Fragment {
-    private SocialAdapter fragmentAdapter;
+public final class SocialFragment extends ConnectivityFragment {
 
+    public static final String TAG = SocialFragment.class.getSimpleName();
+
+    private SocialAdapter fragmentAdapter;
     private List<String> tabTitleList;
     private FragmentActivity activity;
 

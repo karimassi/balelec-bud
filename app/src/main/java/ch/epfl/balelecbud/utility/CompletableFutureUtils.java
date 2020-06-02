@@ -1,15 +1,23 @@
 package ch.epfl.balelecbud.utility;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import ch.epfl.balelecbud.utility.database.FetchedData;
 import ch.epfl.balelecbud.utility.recyclerViews.RecyclerViewData;
+
+import static ch.epfl.balelecbud.BalelecbudApplication.getAppStorage;
 
 /**
  * Collection of useful methods to work with {@code CompletableFuture}
@@ -64,5 +72,26 @@ public final class CompletableFutureUtils {
             }
             return fetchedData.getFreshness();
         }
+    }
+
+    /**
+     * Download an image from storage and display it in the given {@code ImageView}
+     *
+     * @param filepath  the path of the image
+     * @param imageView the {@code ImageView} used to display the image
+     * @param TAG       the TAG of the calling class
+     * @param log       the log message in case of failure
+     */
+    public static void downloadAndSetImageView(String filepath, ImageView imageView, String TAG, String log) {
+        CompletableFuture<File> imageDownload = getAppStorage().getFile(filepath);
+        imageDownload.whenComplete((file, t) -> {
+            if (t == null) {
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
+            } else {
+                Log.w(TAG, log, t);
+            }
+        });
     }
 }

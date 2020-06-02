@@ -8,30 +8,34 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.VisibleForTesting;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.Track;
+import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.recyclerViews.OnRecyclerViewInteractionListener;
 import ch.epfl.balelecbud.utility.recyclerViews.RefreshableRecyclerViewAdapter;
+import ch.epfl.balelecbud.view.ConnectivityFragment;
 
-import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG;
+public final class PlaylistFragment extends ConnectivityFragment implements OnRecyclerViewInteractionListener<Track> {
 
-public final class PlaylistFragment extends Fragment implements OnRecyclerViewInteractionListener<Track> {
+    public static final String TAG = PlaylistFragment.class.getSimpleName();
 
-    private static final String TAG = PlaylistFragment.class.getSimpleName();
     private SpotifyAppRemote spotifyAppRemote;
 
     public static PlaylistFragment newInstance() {
         return (new PlaylistFragment());
+    }
+
+    @Override
+    public String collectionName() {
+        return Database.PLAYLIST_PATH;
     }
 
     @Override
