@@ -58,10 +58,13 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
         Log.v(TAG, "handling freshness : " + freshness);
         if (freshness != null) {
             String result = BalelecbudApplication.getAppContext().getString(R.string.cache_info_start)
-                    + ((System.nanoTime() - freshness) / 60_000_000_000L) +
+                    + ((System.currentTimeMillis() - freshness) / 60_000L) +
                     BalelecbudApplication.getAppContext().getString(R.string.cache_info_end);
-                    //+ DateFormatter.IN_YEAR.format(freshness);
-            Snackbar.make(freshnessView, result, LENGTH_SHORT).show();
+            try {
+                Snackbar.make(freshnessView, result, LENGTH_SHORT).show();
+            }catch(Exception e){
+                Log.d(TAG, e.getMessage());
+            }
             Log.d(TAG, result);
         }
     }
