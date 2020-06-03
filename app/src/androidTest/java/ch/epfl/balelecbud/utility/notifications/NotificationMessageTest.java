@@ -75,6 +75,7 @@ public class NotificationMessageTest {
         UiObject2 titleFound = device.findObject(By.text(title));
         assertNotNull(titleFound);
         assertNotNull(device.findObject(By.text(body)));
+        clearNotifications(device);
         return titleFound;
     }
 
