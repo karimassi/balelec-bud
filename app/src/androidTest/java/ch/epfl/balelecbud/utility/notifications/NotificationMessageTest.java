@@ -48,11 +48,6 @@ public class NotificationMessageTest {
         clearNotifications(device);
     }
 
-    @After
-    public void tearDown() {
-        clearNotifications(device);
-    }
-
     @Test
     public void scheduleGeneralNotificationTest() {
         scheduleNotificationTest(getAppContext().getString(R.string.message_type_general));
