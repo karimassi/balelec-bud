@@ -70,6 +70,11 @@ public class MessageTest {
         mockMessagingService.setContext(mActivityRule.getActivity());
     }
 
+    @After
+    public void tearDown() {
+        NotificationMessageTest.clearNotifications(device);
+    }
+
     @Test
     public void sendFriendshipMessageNullType() {
         Message.sendFriendshipMessage(friend, user.getUid(), null);
@@ -116,7 +121,6 @@ public class MessageTest {
     public void sendMessageToUserWithoutToken() {
         Message message = new Message(title, body, getAppContext().getString(R.string.message_type_general));
         message.sendMessage(MockDatabase.axel.getUid());
-        device.openNotification();
         assertNull(device.findObject(By.text(title)));
     }
 
@@ -124,7 +128,6 @@ public class MessageTest {
     public void sendNullMessageTest() {
         Message message = new Message(null, null, getAppContext().getString(R.string.message_type_general));
         message.sendMessage(user.getUid());
-        device.openNotification();
         assertNull(device.findObject(By.text(title)));
     }
 
