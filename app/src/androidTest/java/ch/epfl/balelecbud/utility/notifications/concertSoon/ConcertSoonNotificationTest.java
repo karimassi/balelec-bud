@@ -20,12 +20,15 @@ import org.junit.runner.RunWith;
 
 import java.util.Calendar;
 
+import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.location.LocationClient;
 import ch.epfl.balelecbud.utility.location.LocationUtils;
+import ch.epfl.balelecbud.utility.notifications.NotificationMessageTest;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertEquals;
@@ -34,12 +37,23 @@ import static junit.framework.TestCase.assertNull;
 @RunWith(AndroidJUnit4.class)
 public class ConcertSoonNotificationTest {
 
+    private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
+
     @Rule
-    public final ActivityTestRule<RootActivity> mActivityRule = new ActivityTestRule<RootActivity>(RootActivity.class);
+    public final ActivityTestRule<RootActivity> mActivityRule =
+            new ActivityTestRule<RootActivity>(RootActivity.class) {
+        @Override
+        protected void beforeActivityLaunched() {
+            super.beforeActivityLaunched();
+            MockDatabase.getInstance().resetDatabase();
+            BalelecbudApplication.setAppAuthenticator(mockAuth);
+            mockAuth.signOut();
+            mockAuth.setCurrentUser(MockDatabase.celine);
+        }
+    };
 
     @Before
     public void setup() {
-        MockDatabase.getInstance().resetDatabase();
         LocationUtils.setLocationClient(new LocationClient() {
             @Override
             public void requestLocationUpdates(LocationRequest lr, PendingIntent intent) {
@@ -56,13 +70,7 @@ public class ConcertSoonNotificationTest {
             device.findObject(By.text("ALLOW")).click();
             device.waitForWindowUpdate(null, 1000);
         }
-        device.openNotification();
-        UiObject2 button = device.findObject(By.text("CLEAR ALL"));
-        if (button != null) {
-            button.click();
-        } else {
-            device.pressBack();
-        }
+        NotificationMessageTest.clearNotifications(device);
     }
 
     @Test
@@ -78,7 +86,7 @@ public class ConcertSoonNotificationTest {
 
         UiDevice device = UiDevice.getInstance(getInstrumentation());
         device.openNotification();
-        device.wait(Until.hasObject(By.textStartsWith(expectedTitle)), 30_000);
+        device.wait(Until.hasObject(By.textStartsWith(expectedTitle)), 10_000);
 
         UiObject2 title = device.findObject(By.text(expectedTitle));
         assertEquals(title.getText(), expectedTitle);

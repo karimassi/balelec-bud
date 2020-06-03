@@ -30,6 +30,7 @@ import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.RootActivity;
 import ch.epfl.balelecbud.model.Slot;
+import ch.epfl.balelecbud.utility.authentication.MockAuthenticator;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.MockDatabase;
 import ch.epfl.balelecbud.utility.location.LocationClient;
@@ -56,7 +57,9 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class ConcertNotificationTest {
 
-    private final MockDatabase mock = MockDatabase.getInstance();
+    private final MockDatabase mockDatabase = MockDatabase.getInstance();
+    private final MockAuthenticator mockAuth = MockAuthenticator.getInstance();
+
     @Rule
     public final ActivityTestRule<RootActivity> mActivityRule =
             new ActivityTestRule<RootActivity>(RootActivity.class) {
@@ -73,7 +76,10 @@ public class ConcertNotificationTest {
                         public void removeLocationUpdates(PendingIntent intent) {
                         }
                     });
-                    BalelecbudApplication.setAppDatabase(mock);
+                    BalelecbudApplication.setAppDatabase(mockDatabase);
+                    BalelecbudApplication.setAppAuthenticator(mockAuth);
+                    mockAuth.signOut();
+                    mockAuth.setCurrentUser(MockDatabase.celine);
                 }
             };
     private final Slot s = new Slot(0, "Le nom de mon artiste", "Scene 3", "path1",
@@ -91,7 +97,7 @@ public class ConcertNotificationTest {
         // quit the notifications center if it happens to be open
         NotificationMessageTest.clearNotifications(device);
 
-        mock.resetDocument(Database.CONCERT_SLOTS_PATH);
+        mockDatabase.resetDocument(Database.CONCERT_SLOTS_PATH);
         SlotData.setIntentLauncher(null);
         this.db = Room.inMemoryDatabaseBuilder(
                 getApplicationContext(),
@@ -110,7 +116,7 @@ public class ConcertNotificationTest {
     public void subscribeToAConcertScheduleANotification() throws Throwable {
         checkSwitchAfter(() -> {
             checkNotification();
-            device.waitForWindowUpdate(null, 10000);
+            device.waitForWindowUpdate(null, 10_000);
             openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
             Log.v("mySuperTag", "executed subscribeToAConcertScheduleANotification");
         }, s, false);
@@ -147,7 +153,7 @@ public class ConcertNotificationTest {
         Slot s1 = new Slot(0, "Le nom de mon artiste", "Scene 3", "path1",
                 new Timestamp(cal.getTime()), new Timestamp(cal.getTime()));
 
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, s1);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, s1);
 
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
@@ -167,7 +173,7 @@ public class ConcertNotificationTest {
 
     private void checkSwitchAfter(Runnable runnable, Slot s, boolean switchStateAfter) throws Throwable {
 
-        mock.storeDocument(Database.CONCERT_SLOTS_PATH, s);
+        mockDatabase.storeDocument(Database.CONCERT_SLOTS_PATH, s);
 
         openScheduleActivityFrom(R.id.root_activity_drawer_layout, R.id.root_activity_nav_view);
 
@@ -186,7 +192,7 @@ public class ConcertNotificationTest {
         String expectedText = "Le nom de mon artiste starts in 15 minutes on Scene 3";
 
         device.openNotification();
-        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(expectedTitle)), 30_000));
+        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(expectedTitle)), 10_000));
         UiObject2 title = device.findObject(By.text(expectedTitle));
         assertNotNull(title);
         assertNotNull(device.findObject(By.text(expectedText)));
@@ -206,13 +212,13 @@ public class ConcertNotificationTest {
     private void openScheduleActivityFrom(int layout_id, int nav_id) {
         openDrawerFrom(layout_id, nav_id);
         clickItemFrom(R.id.fragment_main_drawer_schedule, nav_id);
-        device.waitForIdle(10000);
+        device.waitForIdle(10_000);
     }
 
     private void openInfoActivityFrom(int layout_id, int nav_id) {
         openDrawerFrom(layout_id, nav_id);
         clickItemFrom(R.id.fragment_main_drawer_info, nav_id);
-        device.waitForIdle(10000);
+        device.waitForIdle(10_000);
     }
 
     private void refreshRecyclerView() {

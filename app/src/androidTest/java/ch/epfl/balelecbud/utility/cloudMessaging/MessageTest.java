@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.Until;
 
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -31,6 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
 public class MessageTest {
@@ -116,14 +118,14 @@ public class MessageTest {
     public void sendMessageToUserWithoutToken() {
         Message message = new Message(title, body, getAppContext().getString(R.string.message_type_general));
         message.sendMessage(MockDatabase.axel.getUid());
-        assertNull(device.findObject(By.text(title)));
+        assertFalse(device.wait(Until.hasObject(By.textStartsWith(title)), 5_000));
     }
 
     @Test
     public void sendNullMessageTest() {
         Message message = new Message(null, null, getAppContext().getString(R.string.message_type_general));
         message.sendMessage(user.getUid());
-        assertNull(device.findObject(By.text(title)));
+        assertFalse(device.wait(Until.hasObject(By.textStartsWith(title)), 5_000));
     }
 
     @Test
