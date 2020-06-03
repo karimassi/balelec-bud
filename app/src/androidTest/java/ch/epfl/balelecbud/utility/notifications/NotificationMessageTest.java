@@ -71,9 +71,18 @@ public class NotificationMessageTest {
 
     public static void verifyNotification(UiDevice device, String title, String body) {
         assertNotNull(device.wait(Until.hasObject(By.textStartsWith(title)), 30_000));
+
+        device.openNotification();
         assertNotNull(device.findObject(By.text(title)));
         assertNotNull(device.findObject(By.text(body)));
-        clearNotifications(device);
+
+        device.openNotification();
+        UiObject2 button = device.findObject(By.text("CLEAR ALL"));
+        if (button != null) {
+            button.click();
+        } else {
+            device.pressBack();
+        }
     }
 
     public static void clearNotifications(UiDevice device) {
