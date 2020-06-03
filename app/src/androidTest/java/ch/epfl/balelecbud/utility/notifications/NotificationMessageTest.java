@@ -45,12 +45,7 @@ public class NotificationMessageTest {
     @Before
     public void setup() {
         device = UiDevice.getInstance(getInstrumentation());
-        NotificationMessageTest.clearNotifications(device);
-    }
-
-    @After
-    public void tearDown() {
-        NotificationMessageTest.clearNotifications(device);
+        clearNotifications(device);
     }
 
     @Test
@@ -70,14 +65,10 @@ public class NotificationMessageTest {
     }
 
     public static void verifyNotification(UiDevice device, String title, String body) {
-        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(title)), 30_000));
+        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(title)), 10_000));
 
         device.openNotification();
-        assertNotNull(device.findObject(By.text(title)));
-        assertNotNull(device.findObject(By.text(body)));
-
-        device.openNotification();
-        UiObject2 button = device.findObject(By.text("CLEAR ALL"));
+        UiObject2 button = device.wait(Until.findObject(By.text("CLEAR ALL")), 10_000);
         if (button != null) {
             button.click();
         } else {

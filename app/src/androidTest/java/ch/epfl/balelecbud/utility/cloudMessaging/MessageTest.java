@@ -70,11 +70,6 @@ public class MessageTest {
         mockMessagingService.setContext(mActivityRule.getActivity());
     }
 
-    @After
-    public void tearDown() {
-        NotificationMessageTest.clearNotifications(device);
-    }
-
     @Test
     public void sendFriendshipMessageNullType() {
         Message.sendFriendshipMessage(friend, user.getUid(), null);
