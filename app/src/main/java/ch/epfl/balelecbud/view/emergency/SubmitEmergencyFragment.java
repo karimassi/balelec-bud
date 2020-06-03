@@ -6,20 +6,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.Timestamp;
 
@@ -28,17 +23,22 @@ import ch.epfl.balelecbud.model.Emergency;
 import ch.epfl.balelecbud.model.EmergencyCategory;
 import ch.epfl.balelecbud.utility.StringUtils;
 import ch.epfl.balelecbud.utility.database.Database;
+import ch.epfl.balelecbud.view.CustomDialogFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public final class SubmitEmergencyFragment extends DialogFragment {
+public final class SubmitEmergencyFragment extends CustomDialogFragment {
 
     private static final String TAG = SubmitEmergencyFragment.class.getSimpleName();
     private EditText messageField;
     private Spinner categorySpinner;
     private TextWatcher watcher = StringUtils.getTextWatcher(() ->
             ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(validateEntry()));
+
+    public SubmitEmergencyFragment() {
+        super(R.string.emergency_ask_for_help);
+    }
 
     @NonNull
     @Override
@@ -94,16 +94,4 @@ public final class SubmitEmergencyFragment extends DialogFragment {
         f.setArguments(args);
         return f;
     }
-
-    private TextView getDialogCustomTitle() {
-        TextView title = new TextView(getContext());
-        title.setText(R.string.emergency_ask_for_help);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        title.setPaddingRelative(0, 10, 0, 10);
-        title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        return title;
-    }
-
 }

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -16,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.BalelecbudApplication;
 import ch.epfl.balelecbud.R;
-import ch.epfl.balelecbud.utility.DateFormatter;
 import ch.epfl.balelecbud.utility.InformationSource;
 
 import static com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT;
@@ -59,8 +57,14 @@ public final class RefreshableRecyclerViewAdapter<A, B extends RecyclerView.View
     private void handleFreshness(Long freshness) {
         Log.v(TAG, "handling freshness : " + freshness);
         if (freshness != null) {
-            String result = BalelecbudApplication.getAppContext().getString(R.string.cache_info) + DateFormatter.IN_YEAR.format(freshness);
-            Snackbar.make(freshnessView, result, LENGTH_SHORT).show();
+            String result = BalelecbudApplication.getAppContext().getString(R.string.cache_info_start)
+                    + ((System.currentTimeMillis() - freshness) / 60_000L) +
+                    BalelecbudApplication.getAppContext().getString(R.string.cache_info_end);
+            try {
+                Snackbar.make(freshnessView, result, LENGTH_SHORT).show();
+            }catch(Exception e){
+                Log.d(TAG, e.getMessage());
+            }
             Log.d(TAG, result);
         }
     }

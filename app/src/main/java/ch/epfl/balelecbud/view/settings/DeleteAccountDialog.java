@@ -2,30 +2,26 @@ package ch.epfl.balelecbud.view.settings;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.utility.FriendshipUtils;
 import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.location.LocationUtils;
+import ch.epfl.balelecbud.view.CustomDialogFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 
-public final class DeleteAccountDialog extends DialogFragment {
+public final class DeleteAccountDialog extends CustomDialogFragment {
     public static final String TAG = DeleteAccountDialog.class.getSimpleName();
     private final SettingsFragment settingsFragment;
 
     private DeleteAccountDialog(SettingsFragment settingsFragment) {
+        super(R.string.delete_account);
         this.settingsFragment = settingsFragment;
     }
 
@@ -67,16 +63,5 @@ public final class DeleteAccountDialog extends DialogFragment {
         getAppAuthenticator().signOut();
         getAppAuthenticator().signInAnonymously();
         settingsFragment.updateLoginStatus(SettingsFragment.ConnectionStatus.SIGNED_OUT);
-    }
-
-    private TextView getDialogCustomTitle() {
-        TextView title = new TextView(getContext());
-        title.setText(R.string.delete_account);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        title.setPaddingRelative(0, 10, 0, 10);
-        title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        return title;
     }
 }

@@ -145,6 +145,11 @@ public final class BalelecbudApplication extends Application {
     }
 
     @VisibleForTesting
+    public static void setAppCache(Cache cache) {
+        appCache = cache;
+    }
+
+    @VisibleForTesting
     public static void setRemoteStorage(Storage remoteStorage) {
         BalelecbudApplication.remoteStorage = remoteStorage;
     }

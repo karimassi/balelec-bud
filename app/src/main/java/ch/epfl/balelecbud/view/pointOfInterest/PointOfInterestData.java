@@ -12,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 import ch.epfl.balelecbud.R;
 import ch.epfl.balelecbud.model.PointOfInterest;
+import ch.epfl.balelecbud.utility.CompletableFutureUtils;
 import ch.epfl.balelecbud.utility.InformationSource;
 import ch.epfl.balelecbud.utility.PointOfInterestUtils;
 import ch.epfl.balelecbud.utility.database.Database;
@@ -34,21 +35,18 @@ public final class PointOfInterestData extends RecyclerViewData<PointOfInterest,
 
     @Override
     public CompletableFuture<Long> reload(InformationSource preferredSource) {
-        clearAll();
-        lastRecordedAffluence.clear();
         MyQuery query = new MyQuery(Database.POINT_OF_INTEREST_PATH, new LinkedList<>(), preferredSource);
         return getAppDatabase().query(query, PointOfInterest.class)
-                .thenCompose(fetchedData -> PointOfInterestUtils.computeAffluence(fetchedData.getList()))
-                .thenApply(results -> {
-                    this.postResults(results); return null;
-                });
+                .thenCompose(fetchedData -> PointOfInterestUtils.computeAffluence(fetchedData, preferredSource))
+                .thenApply(new CompletableFutureUtils.MergeFunction<>(this));
     }
+
     @Override
     public void bind(int index, PointOfInterestHolder viewHolder) {
         PointOfInterest poi = data.get(index);
         viewHolder.nameTextView.setText(poi.getName());
         viewHolder.nameTextView.setCompoundDrawablesWithIntrinsicBounds(poi.getType().getDrawableId(), 0, 0, 0);
-        viewHolder.amountNearPoiTextView.setText(String.valueOf(lastRecordedAffluence.get(index)));
+        viewHolder.amountNearPoiTextView.setText(poi.getAffluence() == null ? "?" : String.valueOf(poi.getAffluence()));
         viewHolder.goToMapButton.setOnClickListener(v -> {
             Log.d(TAG, "Going to map centered on poi");
             Fragment map = MapViewFragment.newInstance();
@@ -59,13 +57,5 @@ public final class PointOfInterestData extends RecyclerViewData<PointOfInterest,
                     .replace(R.id.root_activity_frame_layout, map, MapViewFragment.TAG)
                     .commit();
         });
-    }
-
-    private void postResults(List<PointOfInterestUtils.PoiAffluenceTuple> results) {
-        for (PointOfInterestUtils.PoiAffluenceTuple tuple : results) {
-            int index = data.size();
-            lastRecordedAffluence.add(index, tuple.getAffluence());
-            add(index, tuple.getPoi());
-        }
     }
 }

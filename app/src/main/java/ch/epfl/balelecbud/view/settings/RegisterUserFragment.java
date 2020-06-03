@@ -6,16 +6,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -27,13 +23,14 @@ import ch.epfl.balelecbud.utility.cloudMessaging.TokenUtils;
 import ch.epfl.balelecbud.utility.database.Database;
 import ch.epfl.balelecbud.utility.database.query.MyQuery;
 import ch.epfl.balelecbud.utility.database.query.MyWhereClause;
+import ch.epfl.balelecbud.view.CustomDialogFragment;
 
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppAuthenticator;
 import static ch.epfl.balelecbud.BalelecbudApplication.getAppDatabase;
 import static ch.epfl.balelecbud.utility.StringUtils.isEmailValid;
 import static ch.epfl.balelecbud.utility.database.Database.DOCUMENT_ID_OPERAND;
 
-public final class RegisterUserFragment extends DialogFragment {
+public final class RegisterUserFragment extends CustomDialogFragment {
     public static final String TAG = RegisterUserFragment.class.getSimpleName();
     private final SettingsFragment settingsFragment;
     private EditText nameField;
@@ -85,6 +82,7 @@ public final class RegisterUserFragment extends DialogFragment {
     }
 
     private RegisterUserFragment(SettingsFragment settingsFragment) {
+        super(R.string.register);
         this.settingsFragment = settingsFragment;
     }
 
@@ -178,16 +176,5 @@ public final class RegisterUserFragment extends DialogFragment {
                         TokenUtils.storeToken();
                     }
                 });
-    }
-
-    private TextView getDialogCustomTitle() {
-        TextView title = new TextView(getContext());
-        title.setText(R.string.register);
-        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        title.setPaddingRelative(0, 10, 0, 10);
-        title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryColor));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        return title;
     }
 }
