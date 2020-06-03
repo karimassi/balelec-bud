@@ -25,7 +25,6 @@ import static ch.epfl.balelecbud.utility.database.query.MyWhereClause.Operator.E
  */
 public final class FriendshipUtils {
 
-    //TODO Consider displaying freshness for the social tab
     public static void requestFriend(User friend) {
         Map<String, Boolean> toStore = new HashMap<>();
         toStore.put(getAppAuthenticator().getCurrentUser().getUid(), true);

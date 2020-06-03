@@ -164,6 +164,7 @@ public class GalleryFragmentTest {
         onView(withId(R.id.fab_upload_picture)).check(matches(isDisplayed()));
     }
 
+    @Ignore("Testing that the file is stored locally is not pertinent")
     @Test
     public void cameraIsSavingImageToLocalStorage() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();

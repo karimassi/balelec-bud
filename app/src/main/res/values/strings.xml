@@ -170,7 +170,6 @@
     <string name="spotify_message">Listen to the Balelec Playlist on Spotify</string>
     <string name="playlist_navigation_title">Playlist</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="msg_token_fmt" />
     <string name="camera_permission_refused_msg">The app needs camera permission to take a picture</string>

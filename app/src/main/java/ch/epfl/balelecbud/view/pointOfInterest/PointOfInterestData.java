@@ -32,8 +32,6 @@ public final class PointOfInterestData extends RecyclerViewData<PointOfInterest,
         this.activity = activity;
     }
 
-    //TODO change to not have rv flicker at some point
-    //TODO cached ?
     @Override
     public CompletableFuture<Long> reload(InformationSource preferredSource) {
         clearAll();
