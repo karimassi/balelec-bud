@@ -79,7 +79,10 @@ public class NotificationMessageTest {
     public static void clearNotifications(UiDevice device) {
         device.openNotification();
         UiObject2 button = device.findObject(By.text("CLEAR ALL"));
-        if (button != null) button.click();
-        device.pressBack();
+        if (button != null) {
+            button.click();
+        } else {
+            device.pressBack();
+        }
     }
 }
