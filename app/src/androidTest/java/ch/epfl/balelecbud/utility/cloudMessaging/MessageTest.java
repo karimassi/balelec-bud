@@ -114,7 +114,7 @@ public class MessageTest {
     public void sendMessageToUserWithToken() {
         Message message = new Message(title, body, getAppContext().getString(R.string.message_type_general));
         message.sendMessage(user.getUid());
-        NotificationMessageTest.verifyNotification(device, title, body);
+        NotificationMessageTest.verifyNotification(device, title);
     }
 
     @Test
@@ -152,7 +152,6 @@ public class MessageTest {
 
     private void sendFriendshipMessageTest(Message.Type type, String title, String body) {
         Message.sendFriendshipMessage(friend, user.getUid(), type);
-        NotificationMessageTest.verifyNotification(device, title,
-                friend.getDisplayName() + body);
+        NotificationMessageTest.verifyNotification(device, title);
     }
 }

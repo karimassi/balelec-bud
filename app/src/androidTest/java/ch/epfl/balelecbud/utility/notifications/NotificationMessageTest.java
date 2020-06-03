@@ -66,12 +66,11 @@ public class NotificationMessageTest {
     private void scheduleNotificationTest(String type) {
         Map<String, String> message = Message.createMessage(title, body, type);
         NotificationMessage.getInstance().scheduleNotification(mActivityRule.getActivity(), message);
-        verifyNotification(device, title, body);
+        verifyNotification(device, title);
     }
 
-    public static void verifyNotification(UiDevice device, String title, String body) {
+    public static void verifyNotification(UiDevice device, String title) {
         assertNotNull(device.wait(Until.hasObject(By.textStartsWith(title)), 10_000));
-        assertNotNull(device.findObject(By.text(body)));
         clearNotifications(device);
     }
 
