@@ -45,12 +45,7 @@ public class NotificationMessageTest {
     @Before
     public void setup() {
         device = UiDevice.getInstance(getInstrumentation());
-        NotificationMessageTest.clearNotifications(device);
-    }
-
-    @After
-    public void tearDown() {
-        NotificationMessageTest.clearNotifications(device);
+        clearNotifications(device);
     }
 
     @Test
@@ -66,22 +61,21 @@ public class NotificationMessageTest {
     private void scheduleNotificationTest(String type) {
         Map<String, String> message = Message.createMessage(title, body, type);
         NotificationMessage.getInstance().scheduleNotification(mActivityRule.getActivity(), message);
-        verifyNotification(device, title, body);
+        verifyNotification(device, title);
     }
 
-    public static UiObject2 verifyNotification(UiDevice device, String title, String body) {
-        device.openNotification();
-        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(title)), 30_000));
-        UiObject2 titleFound = device.findObject(By.text(title));
-        assertNotNull(titleFound);
-        assertNotNull(device.findObject(By.text(body)));
-        return titleFound;
+    public static void verifyNotification(UiDevice device, String title) {
+        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(title)), 10_000));
+        clearNotifications(device);
     }
 
     public static void clearNotifications(UiDevice device) {
         device.openNotification();
-        UiObject2 button = device.findObject(By.text("CLEAR ALL"));
-        if (button != null) button.click();
-        device.pressBack();
+        UiObject2 button = device.wait(Until.findObject(By.text("CLEAR ALL")), 10_000);
+        if (button != null) {
+            button.click();
+        } else {
+            device.pressBack();
+        }
     }
 }

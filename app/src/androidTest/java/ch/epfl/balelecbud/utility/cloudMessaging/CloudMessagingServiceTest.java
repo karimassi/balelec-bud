@@ -62,11 +62,6 @@ public class CloudMessagingServiceTest {
         NotificationMessageTest.clearNotifications(device);
     }
 
-    @After
-    public void tearDown() {
-        NotificationMessageTest.clearNotifications(device);
-    }
-
     @Test
     public void onNewTokenTest() {
         cloudMessagingService.onNewToken(token);

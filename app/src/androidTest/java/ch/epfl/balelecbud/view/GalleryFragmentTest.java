@@ -14,6 +14,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -160,6 +161,7 @@ public class GalleryFragmentTest {
         onView(withId(R.id.fab_upload_picture)).check(matches(isDisplayed()));
     }
 
+    @Ignore("Testing that the file is stored locally is not pertinent")
     @Test
     public void cameraIsSavingImageToLocalStorage() throws InterruptedException {
         TestAsyncUtils sync = new TestAsyncUtils();

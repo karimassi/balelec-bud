@@ -168,11 +168,7 @@ public class LocationRequesterTest {
                 LocationUtils.LOCATION_PERMISSIONS_REQUEST_CODE,
                 permissions,
                 permissionStatus);
-        if (b) {
-            checkDisplayed(LOCATION_ENABLE_TITLE);
-        } else {
-            checkDisplayed(LOCATION_INFO_TITLE);
-        }
+        checkDisplayed(b ? LOCATION_ENABLE_TITLE : LOCATION_INFO_TITLE);
     }
 
     @Test
