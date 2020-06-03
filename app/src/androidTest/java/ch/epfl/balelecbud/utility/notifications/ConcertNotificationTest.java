@@ -185,9 +185,15 @@ public class ConcertNotificationTest {
         String expectedTitle = mActivityRule.getActivity().getString(R.string.concert_soon_notification_title);
         String expectedText = "Le nom de mon artiste starts in 15 minutes on Scene 3";
 
-        UiObject2 title = NotificationMessageTest.verifyNotification(device, expectedTitle, expectedText);
+        device.openNotification();
+        assertNotNull(device.wait(Until.hasObject(By.textStartsWith(expectedTitle)), 40_000));
+        UiObject2 title = device.findObject(By.text(expectedTitle));
+        assertNotNull(title);
+        assertNotNull(device.findObject(By.text(expectedText)));
 
         title.click();
+
+        NotificationMessageTest.clearNotifications(device);
     }
 
     private void openDrawerFrom(int layout_id, int nav_id) {

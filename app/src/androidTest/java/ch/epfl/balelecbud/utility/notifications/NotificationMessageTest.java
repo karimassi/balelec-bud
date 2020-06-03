@@ -69,14 +69,11 @@ public class NotificationMessageTest {
         verifyNotification(device, title, body);
     }
 
-    public static UiObject2 verifyNotification(UiDevice device, String title, String body) {
-        device.openNotification();
+    public static void verifyNotification(UiDevice device, String title, String body) {
         assertNotNull(device.wait(Until.hasObject(By.textStartsWith(title)), 30_000));
-        UiObject2 titleFound = device.findObject(By.text(title));
-        assertNotNull(titleFound);
+        assertNotNull(device.findObject(By.text(title)));
         assertNotNull(device.findObject(By.text(body)));
         clearNotifications(device);
-        return titleFound;
     }
 
     public static void clearNotifications(UiDevice device) {
